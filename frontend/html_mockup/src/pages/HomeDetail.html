@@ -5,39 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Responsive Template After Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="../js/components.js" defer></script>
+    <link href="../js/components.js" rel="stylesheet">
 </head>
 <body class="font-serif bg-[#f5f5f5] text-gray-900">
     <!-- Navigation -->
-    <nav class="bg-[#f5f5f5] py-4">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <div class="flex items-center">
-                <span class="text-2xl font-bold">Medium</span>
-            </div>
-            <div class="hidden md:flex space-x-8">
-                <a href="#" class="text-gray-700 hover:text-gray-900 py-2">Home</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900 py-2">Following</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900 py-2">Topics</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900 py-2">Bookmarks</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900 py-2">Profile</a>
-                <a href="#" class="bg-black text-white px-4 py-2 rounded-full">Write</a>
-            </div>
-            <div class="md:hidden"> 
-                <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
-                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-        <div class="md:hidden hidden" id="mobile-menu">
-            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Home</a>
-            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Following</a>
-            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Topics</a>
-            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Bookmarks</a>
-            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
-            <a href="#" class="block px-4 py-2 bg-black text-white rounded-full text-center">Write</a>
-        </div>
-    </nav>
+    <div id="navbar-user"></div>
 
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -107,24 +81,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-[#f5f5f5] py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex justify-between">
-            <span class="text-gray-700">© 2025 <a href="https://flowbite.com/" class="hover:underline">QuickBlog™</a>. All Rights Reserved.
-            </span>
-            <nav class="flex flex-wrap justify-center space-x-4">
-                <a href="#" class="text-gray-700 hover:text-gray-900">Help</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900">Status</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900">About</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900">Careers</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900">Press</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900">Blog</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900">Privacy</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900">Terms</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900">Text to speech</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900">Teams</a>
-            </nav>
-        </div>
-    </footer>
+    <div id="footer"></div>
 
     <script>
         // Mobile menu toggle

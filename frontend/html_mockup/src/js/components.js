@@ -10,7 +10,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   
     loadComponent("#navbar", "../components/NavBar.html");
-    loadComponent('#navbar-out','../components/NavBar-logout.html');
+    loadComponent('#navbar-guest','../components/NavBar-guest.html');
+    loadComponent("#navbar-user", "../components/Navbar-user.html");
+    loadComponent("#navbar-owner", "../components/Navbar-user.html");
+
     loadComponent("#footer", "../components/Footer.html");
   });
   
