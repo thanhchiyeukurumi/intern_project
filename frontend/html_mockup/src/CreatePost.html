@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Post - Medium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="font-serif bg-[#f5f5f5] text-gray-900">
+    <!-- Navigation -->
+    <nav class="bg-[#f5f5f5] py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="text-2xl font-bold">Medium</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#" class="text-gray-700 hover:text-gray-900 py-2">Our story</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900 py-2">Membership</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900 py-2">Write</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900 py-2">Sign in</a>
+                <a href="#" class="bg-black text-white px-4 py-2 rounded-full">Get started</a>
+            </div>
+            <div class="md:hidden"> 
+                <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="md:hidden hidden" id="mobile-menu">
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Our story</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Membership</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Write</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Sign in</a>
+            <a href="#" class="block px-4 py-2 bg-black text-white rounded-full text-center">Get started</a>
+        </div>
+    </nav>
+
+    <!-- Create Post Header -->
+    <div class="bg-[#f5f5f5] py-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl font-bold mb-4">Create a New Post</h1>
+            <p class="text-xl text-gray-700">Share your ideas with millions of readers.</p>
+        </div>
+    </div>
+
+    <!-- Create Post Form -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <form class="bg-white rounded-lg shadow-sm p-6">
+            <!-- Post Title -->
+            <div class="mb-6">
+                <label for="post-title" class="block text-gray-700 font-medium mb-2">Title</label>
+                <input type="text" id="post-title" name="post-title" placeholder="Enter your post title" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black">
+            </div>
+
+            <!-- Post Category -->
+            <div class="mb-6">
+                <label for="post-category" class="block text-gray-700 font-medium mb-2">Category</label>
+                <select id="post-category" name="post-category" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black">
+                    <option value="">Select a category</option>
+                    <option value="programming">Programming</option>
+                    <option value="data-science">Data Science</option>
+                    <option value="technology">Technology</option>
+                    <option value="self-improvement">Self Improvement</option>
+                    <option value="writing">Writing</option>
+                    <option value="psychology">Psychology</option>
+                    <option value="creativity">Creativity</option>
+                    <option value="health">Health</option>
+                    <option value="politics">Politics</option>
+                </select>
+            </div>
+
+            <!-- Post Tags -->
+            <div class="mb-6">
+                <label for="post-tags" class="block text-gray-700 font-medium mb-2">Tags (comma separated)</label>
+                <input type="text" id="post-tags" name="post-tags" placeholder="e.g., javascript, webdev, beginners" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black">
+            </div>
+
+            <!-- Featured Image -->
+            <div class="mb-6">
+                <label for="featured-image" class="block text-gray-700 font-medium mb-2">Featured Image</label>
+                <div class="flex items-center justify-center w-full">
+                    <label for="featured-image-upload" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                            <svg class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                            <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                            <p class="text-xs text-gray-500">PNG, JPG or GIF (MAX. 2MB)</p>
+                        </div>
+                        <input id="featured-image-upload" type="file" class="hidden" accept="image/*" />
+                    </label>
+                </div>
+            </div>
+
+            <!-- WYSIWYG Editor Toolbar -->
+            <div class="mb-2">
+                <div class="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-t-lg bg-gray-50">
+                    <button type="button" data-command="bold" class="editor-btn p-2 hover:bg-gray-200 rounded">
+                        <i class="fas fa-bold"></i>
+                    </button>
+                    <button type="button" data-command="italic" class="editor-btn p-2 hover:bg-gray-200 rounded">
+                        <i class="fas fa-italic"></i>
+                    </button>
+                    <button type="button" data-command="underline" class="editor-btn p-2 hover:bg-gray-200 rounded">
+                        <i class="fas fa-underline"></i>
+                    </button>
+                    <button type="button" data-command="strikeThrough" class="editor-btn p-2 hover:bg-gray-200 rounded">
+                        <i class="fas fa-strikethrough"></i>
+                    </button>
+                    <span class="border-r border-gray-300 h-6 my-auto mx-2"></span>
+                    <button type="button" data-command="justifyLeft" class="editor-btn p-2 hover:bg-gray-200 rounded">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <button type="button" data-command="justifyCenter" class="editor-btn p-2 hover:bg-gray-200 rounded">
+                        <i class="fas fa-align-center"></i>
+                    </button>
+                    <button type="button" data-command="justifyRight" class="editor-btn p-2 hover:bg-gray-200 rounded">
+                        <i class="fas fa-align-right"></i>
+                    </button>
+                    <button type="button" data-command="justifyFull" class="editor-btn p-2 hover:bg-gray-200 rounded">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+                    <span class="border-r border-gray-300 h-6 my-auto mx-2"></span>
+                    <button type="button" data-command="insertUnorderedList" class="editor-btn p-2 hover:bg-gray-200 rounded">
+                        <i class="fas fa-list-ul"></i>
+                    </button>
+                    <button type="button" data-command="insertOrderedList" class="editor-btn p-2 hover:bg-gray-200 rounded">
+                        <i class="fas fa-list-ol"></i>
+                    </button>
+                    <span class="border-r border-gray-300 h-6 my-auto mx-2"></span>
+                    <button type="button" data-command="createLink" class="editor-btn p-2 hover:bg-gray-200 rounded">
+                        <i class="fas fa-link"></i>
+                    </button>
+                    <button type="button" data-command="unlink" class="editor-btn p-2 hover:bg-gray-200 rounded">
+                        <i class="fas fa-unlink"></i>
+                    </button>
+                    <span class="border-r border-gray-300 h-6 my-auto mx-2"></span>
+                    <button type="button" data-command="h1" class="editor-btn p-2 hover:bg-gray-200 rounded font-bold">
+                        H1
+                    </button>
+                    <button type="button" data-command="h2" class="editor-btn p-2 hover:bg-gray-200 rounded font-bold">
+                        H2
+                    </button>
+                    <button type="button" data-command="h3" class="editor-btn p-2 hover:bg-gray-200 rounded font-bold">
+                        H3
+                    </button>
+                    <span class="border-r border-gray-300 h-6 my-auto mx-2"></span>
+                    <button type="button" data-command="undo" class="editor-btn p-2 hover:bg-gray-200 rounded">
+                        <i class="fas fa-undo"></i>
+                    </button>
+                    <button type="button" data-command="redo" class="editor-btn p-2 hover:bg-gray-200 rounded">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- WYSIWYG Content Area -->
+            <div class="mb-6">
+                <div id="editor" contenteditable="true" 
+                    class="w-full min-h-[400px] p-4 border border-gray-300 rounded-b-lg focus:outline-none focus:ring-2 focus:ring-black"></div>
+                <textarea id="editor-content" name="content" class="hidden"></textarea>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex flex-wrap gap-4 justify-end">
+                <button type="button" class="px-6 py-2 border border-gray-300 rounded-full hover:bg-gray-100">
+                    Save as Draft
+                </button>
+                <button type="submit" class="px-6 py-2 bg-black text-white rounded-full hover:bg-gray-800">
+                    Publish Post
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-[#f5f5f5] py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col md:flex-row justify-between">
+            <span class="text-gray-700 mb-4 md:mb-0">© 2025 <a href="#" class="hover:underline">QuickBlog™</a>. All Rights Reserved.
+            </span>
+            <nav class="flex flex-wrap justify-center space-x-4">
+                <a href="#" class="text-gray-700 hover:text-gray-900">Help</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Status</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">About</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Careers</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Press</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Blog</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Privacy</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Terms</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Text to speech</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Teams</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');    
+        });
+
+        // Simple WYSIWYG editor functionality
+        const buttons = document.querySelectorAll('.editor-btn');
+        const editor = document.getElementById('editor');
+        const hiddenInput = document.getElementById('editor-content');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                const command = this.dataset.command;
+                
+                if (command === 'createLink') {
+                    const url = prompt('Enter the link URL:');
+                    if (url) document.execCommand(command, false, url);
+                } else if (command === 'h1' || command === 'h2' || command === 'h3') {
+                    document.execCommand('formatBlock', false, command);
+                } else {
+                    document.execCommand(command, false, null);
+                }
+                
+                // Update hidden textarea with content
+                hiddenInput.value = editor.innerHTML;
+            });
+        });
+
+        // Update hidden textarea on form submission
+        document.querySelector('form').addEventListener('submit', function() {
+            hiddenInput.value = editor.innerHTML;
+        });
+        
+        // Display uploaded image
+        document.getElementById('featured-image-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const parent = document.querySelector('label[for="featured-image-upload"]');
+                    parent.innerHTML = `<img src="${e.target.result}" alt="Featured image" class="h-full w-full object-cover rounded-lg">`;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>

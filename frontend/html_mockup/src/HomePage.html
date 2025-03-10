@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Responsive Template</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-serif bg-[#f5f5f5] text-gray-900">
+    <!-- Navigation -->
+    <nav class="bg-[#f5f5f5] py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="text-2xl font-bold">Medium</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#" class="text-gray-700 hover:text-gray-900 py-2">Our story</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900 py-2">Membership</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900 py-2">Write</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900 py-2">Sign in</a>
+                <a href="#" class="bg-black text-white px-4 py-2 rounded-full">Get started</a>
+            </div>
+            <div class="md:hidden"> 
+                <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="md:hidden hidden" id="mobile-menu">
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Our story</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Membership</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Write</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Sign in</a>
+            <a href="#" class="block px-4 py-2 bg-black text-white rounded-full text-center">Get started</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="bg-[#f5f5f5] py-2 mt-2 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center min-h-[70vh]">
+        <div class="max-w-2xl mx-auto text-center lg:text-left px-16">
+            <h1 class="text-7xl font-bold leading-tight">Human stories & ideas</h1>
+            <p class="mt-4 text-lg">A place to read, write, and deepen your understanding</p>
+            <div class="mt-8">
+                <a href="#" class="bg-black text-white px-6 py-3 rounded-full">Start reading</a>
+            </div>
+        </div>
+    
+        <div class="flex justify-center lg:justify-end px-6 my-auto">
+            <img src="./component/hero_image.webp" alt="Story Image" class="w-full max-w-md rounded-lg">
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-[#f5f5f5] py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex justify-between">
+            <span class="text-gray-700">© 2025 <a href="https://flowbite.com/" class="hover:underline">QuickBlog™</a>. All Rights Reserved.
+            </span>
+            <nav class="flex flex-wrap justify-center space-x-4">
+                <a href="#" class="text-gray-700 hover:text-gray-900">Help</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Status</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">About</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Careers</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Press</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Blog</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Privacy</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Terms</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Text to speech</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Teams</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');    
+        });
+    </script>
+</body>
+</html>

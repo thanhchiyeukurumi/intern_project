@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Society - Medium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="font-serif bg-[#f5f5f5] text-gray-900">
+    <!-- Navigation -->
+    <nav class="bg-[#f5f5f5] py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="text-2xl font-bold">Medium</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#" class="text-gray-700 hover:text-gray-900 py-2">Our story</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900 py-2">Membership</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900 py-2">Write</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900 py-2">Sign in</a>
+                <a href="#" class="bg-black text-white px-4 py-2 rounded-full">Get started</a>
+            </div>
+            <div class="md:hidden"> 
+                <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="md:hidden hidden" id="mobile-menu">
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Our story</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Membership</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Write</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Sign in</a>
+            <a href="#" class="block px-4 py-2 bg-black text-white rounded-full text-center">Get started</a>
+        </div>
+    </nav>
+
+    <!-- Tag Header -->
+    <div class="bg-[#f5f5f5] py-12 px-4 sm:px-6 lg:px-8 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-center justify-between">
+                <div>
+                    <h1 class="text-5xl font-bold mb-4">Society</h1>
+                    <p class="text-xl text-gray-700 mb-4 md:mb-0 max-w-2xl">Exploring the systems, structures, and issues that shape our everyday interactions and collective human experience.</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <button class="px-6 py-2 border border-gray-800 rounded-full hover:bg-gray-100 transition-colors font-medium">Follow</button>
+                </div>
+            </div>
+            
+            <!-- Tag Stats -->
+            <div class="mt-8 flex flex-wrap gap-6 text-gray-600">
+                <div class="flex items-center">
+                    <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <span>4.2M followers</span>
+                </div>
+                <div class="flex items-center">
+                    <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                    </svg>
+                    <span>12.8K stories</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Featured Article -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8">Featured</h2>
+            <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="md:flex">
+                    <div class="md:w-2/3 p-8">
+                        <div class="flex items-center mb-4">
+                            <img src="https://via.placeholder.com/40" alt="Author" class="w-10 h-10 rounded-full">
+                            <span class="ml-3 font-medium">Emma Johnson</span>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 leading-tight">The Invisible Threads That Connect Modern Society</h3>
+                        <p class="text-gray-600 mb-6 line-clamp-3">In an increasingly digital world, we're paradoxically more connected and more isolated than ever before. This piece examines the subtle ways our society has transformed and what it means for our collective future.</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span>Jun 12 · 8 min read</span>
+                                <span class="mx-2">·</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full">Society</span>
+                            </div>
+                            <div class="flex items-center">
+                                <button class="text-gray-500 hover:text-gray-900">
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:w-1/3">
+                        <img src="https://via.placeholder.com/600x400" alt="Featured Article" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trending Articles -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8">Trending in Society</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Article 1 -->
+                <div class="flex flex-col">
+                    <div class="flex items-center mb-4">
+                        <img src="https://via.placeholder.com/36" alt="Author" class="w-9 h-9 rounded-full">
+                        <span class="ml-3 font-medium">Michael Chen</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 leading-tight">The Great Urban Migration: How Cities Are Changing</h3>
+                    <p class="text-gray-600 mb-4">Millions are moving to cities worldwide, transforming urban landscapes and creating new social dynamics.</p>
+                    <div class="flex items-center text-sm text-gray-500 mt-auto">
+                        <span>May 28 · 6 min read</span>
+                        <span class="mx-2">·</span>
+                        <span class="px-3 py-1 bg-gray-100 rounded-full">Urban Life</span>
+                    </div>
+                </div>
+                
+                <!-- Article 2 -->
+                <div class="flex flex-col">
+                    <div class="flex items-center mb-4">
+                        <img src="https://via.placeholder.com/36" alt="Author" class="w-9 h-9 rounded-full">
+                        <span class="ml-3 font-medium">Sophia Williams</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 leading-tight">Digital Divide: Who's Being Left Behind?</h3>
+                    <p class="text-gray-600 mb-4">As technology advances, the gap widens between those with digital access and those without.</p>
+                    <div class="flex items-center text-sm text-gray-500 mt-auto">
+                        <span>Jun 2 · 7 min read</span>
+                        <span class="mx-2">·</span>
+                        <span class="px-3 py-1 bg-gray-100 rounded-full">Technology</span>
+                    </div>
+                </div>
+                
+                <!-- Article 3 -->
+                <div class="flex flex-col">
+                    <div class="flex items-center mb-4">
+                        <img src="https://via.placeholder.com/36" alt="Author" class="w-9 h-9 rounded-full">
+                        <span class="ml-3 font-medium">James Wilson</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 leading-tight">The Economics of Happiness: Beyond GDP</h3>
+                    <p class="text-gray-600 mb-4">Countries are starting to measure well-being alongside traditional economic metrics. What can we learn?</p>
+                    <div class="flex items-center text-sm text-gray-500 mt-auto">
+                        <span>Jun 8 · 9 min read</span>
+                        <span class="mx-2">·</span>
+                        <span class="px-3 py-1 bg-gray-100 rounded-full">Economics</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Latest Articles -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8">Latest in Society</h2>
+            <div class="space-y-8">
+                <!-- Latest Article 1 -->
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="md:w-3/4">
+                        <div class="flex items-center mb-3">
+                            <img src="https://via.placeholder.com/32" alt="Author" class="w-8 h-8 rounded-full">
+                            <span class="ml-2 font-medium">David Martinez</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">The Revival of Community Spaces in Post-Pandemic World</h3>
+                        <p class="text-gray-600 mb-3 line-clamp-2">Public gathering spaces are being reimagined as we navigate new social norms and expectations.</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span>Jun 14 · 5 min read</span>
+                            <span class="mx-2">·</span>
+                            <span class="px-3 py-1 bg-gray-100 rounded-full">Urban Planning</span>
+                        </div>
+                    </div>
+                    <div class="md:w-1/4">
+                        <img src="https://via.placeholder.com/300x200" alt="Article Image" class="w-full h-40 object-cover rounded">
+                    </div>
+                </div>
+
+                <!-- Latest Article 2 -->
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="md:w-3/4">
+                        <div class="flex items-center mb-3">
+                            <img src="https://via.placeholder.com/32" alt="Author" class="w-8 h-8 rounded-full">
+                            <span class="ml-2 font-medium">Priya Sharma</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Modern Tribalism: How Group Identity Shapes Our Worldview</h3>
+                        <p class="text-gray-600 mb-3 line-clamp-2">From sports teams to political parties, our social affiliations profoundly influence how we see the world around us.</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span>Jun 13 · 11 min read</span>
+                            <span class="mx-2">·</span>
+                            <span class="px-3 py-1 bg-gray-100 rounded-full">Psychology</span>
+                        </div>
+                    </div>
+                    <div class="md:w-1/4">
+                        <img src="https://via.placeholder.com/300x200" alt="Article Image" class="w-full h-40 object-cover rounded">
+                    </div>
+                </div>
+
+                <!-- Latest Article 3 -->
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="md:w-3/4">
+                        <div class="flex items-center mb-3">
+                            <img src="https://via.placeholder.com/32" alt="Author" class="w-8 h-8 rounded-full">
+                            <span class="ml-2 font-medium">Robert Kim</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">The Changing Face of Education: Learning Beyond Classrooms</h3>
+                        <p class="text-gray-600 mb-3 line-clamp-2">Traditional educational models are being challenged by new approaches that emphasize experiential learning and practical skills.</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span>Jun 10 · 8 min read</span>
+                            <span class="mx-2">·</span>
+                            <span class="px-3 py-1 bg-gray-100 rounded-full">Education</span>
+                        </div>
+                    </div>
+                    <div class="md:w-1/4">
+                        <img src="https://via.placeholder.com/300x200" alt="Article Image" class="w-full h-40 object-cover rounded">
+                    </div>
+                </div>
+
+                <!-- Latest Article 4 -->
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="md:w-3/4">
+                        <div class="flex items-center mb-3">
+                            <img src="https://via.placeholder.com/32" alt="Author" class="w-8 h-8 rounded-full">
+                            <span class="ml-2 font-medium">Sarah Johnson</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Intergenerational Living: Old Solutions for Modern Problems</h3>
+                        <p class="text-gray-600 mb-3 line-clamp-2">As housing costs rise and social isolation increases, multigenerational households are making a comeback with surprising benefits.</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span>Jun 9 · 6 min read</span>
+                            <span class="mx-2">·</span>
+                            <span class="px-3 py-1 bg-gray-100 rounded-full">Housing</span>
+                        </div>
+                    </div>
+                    <div class="md:w-1/4">
+                        <img src="https://via.placeholder.com/300x200" alt="Article Image" class="w-full h-40 object-cover rounded">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Load More Button -->
+            <div class="mt-10 text-center">
+                <button class="px-6 py-2 border border-gray-300 rounded-full hover:bg-gray-100 transition-colors">
+                    Show more
+                </button>
+            </div>
+        </div>
+
+        <!-- Writers to Follow -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8">Writers to follow</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Writer 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex flex-col items-center text-center">
+                        <img src="https://via.placeholder.com/80" alt="Writer" class="w-20 h-20 rounded-full mb-4">
+                        <h3 class="font-bold text-lg mb-1">Elena Rodriguez</h3>
+                        <p class="text-gray-600 mb-4 text-sm">Social anthropologist and author exploring community dynamics in digital age</p>
+                        <button class="px-5 py-1.5 border border-gray-300 rounded-full hover:bg-gray-100 transition-colors text-sm">Follow</button>
+                    </div>
+                </div>
+                
+                <!-- Writer 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex flex-col items-center text-center">
+                        <img src="https://via.placeholder.com/80" alt="Writer" class="w-20 h-20 rounded-full mb-4">
+                        <h3 class="font-bold text-lg mb-1">Marcus Thompson</h3>
+                        <p class="text-gray-600 mb-4 text-sm">Urban sociologist and policy advisor studying inequality in metropolitan areas</p>
+                        <button class="px-5 py-1.5 border border-gray-300 rounded-full hover:bg-gray-100 transition-colors text-sm">Follow</button>
+                    </div>
+                </div>
+                
+                <!-- Writer 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex flex-col items-center text-center">
+                        <img src="https://via.placeholder.com/80" alt="Writer" class="w-20 h-20 rounded-full mb-4">
+                        <h3 class="font-bold text-lg mb-1">Naomi Chen</h3>
+                        <p class="text-gray-600 mb-4 text-sm">Economics researcher focused on social impact of emerging technologies</p>
+                        <button class="px-5 py-1.5 border border-gray-300 rounded-full hover:bg-gray-100 transition-colors text-sm">Follow</button>
+                    </div>
+                </div>
+                
+                <!-- Writer 4 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex flex-col items-center text-center">
+                        <img src="https://via.placeholder.com/80" alt="Writer" class="w-20 h-20 rounded-full mb-4">
+                        <h3 class="font-bold text-lg mb-1">Daniel Osei</h3>
+                        <p class="text-gray-600 mb-4 text-sm">Political scientist and commentator on global democratic movements</p>
+                        <button class="px-5 py-1.5 border border-gray-300 rounded-full hover:bg-gray-100 transition-colors text-sm">Follow</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Topics -->
+        <div>
+            <h2 class="text-2xl font-bold mb-6">Related Topics</h2>
+            <div class="flex flex-wrap gap-3">
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50">Politics</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50">Culture</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50">Economics</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50">Psychology</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50">History</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50">Urban Studies</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50">Philosophy</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50">Anthropology</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-[#f5f5f5] py-8 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col md:flex-row justify-between">
+            <span class="text-gray-700 mb-4 md:mb-0">© 2025 <a href="https://flowbite.com/" class="hover:underline">QuickBlog™</a>. All Rights Reserved.
+            </span>
+            <nav class="flex flex-wrap justify-center space-x-4">
+                <a href="#" class="text-gray-700 hover:text-gray-900">Help</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Status</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">About</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Careers</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Press</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Blog</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Privacy</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Terms</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Text to speech</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Teams</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');    
+        });
+    </script>
+</body>
+</html>
