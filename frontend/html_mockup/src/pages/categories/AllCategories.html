@@ -38,17 +38,22 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h2 class="text-2xl font-bold mb-8">Popular Topics</h2>
         
-        <!-- Topic Pills -->
-        <div class="flex flex-wrap gap-3 mb-12">
-            <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50">Programming</a>
-            <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50">Data Science</a>
-            <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50">Technology</a>
-            <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50">Self Improvement</a>
-            <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50">Writing</a>
-            <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50">Relationships</a>
-            <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50">Machine Learning</a>
-            <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50">Productivity</a>
-            <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50">Politics</a>
+        <!-- Topic Pills with Horizontal Scroll -->
+        <div class="relative mb-12">
+            <div class="flex overflow-x-auto scrollbar-hide gap-3 pb-2 max-w-full">
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0">Programming</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0">Data Science</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0">Technology</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0">Self Improvement</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0">Writing</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0">Relationships</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0">Machine Learning</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0">Productivity</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0">Politics</a>
+            </div>
+            <!-- Gradient fades on sides to indicate more content -->
+            <div class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#f5f5f5] to-transparent pointer-events-none"></div>
+            <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#f5f5f5] to-transparent pointer-events-none"></div>
         </div>
 
         <!-- Featured Topics -->

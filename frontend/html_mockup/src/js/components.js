@@ -9,13 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch((error) => console.error("Error loading component:", error));
     }
   
-    // loadComponent("#navbar", "../components/NavBar.html");
-    // loadComponent('#navbar-guest','../components/NavBar-guest.html');
-    // loadComponent("#navbar-user", "../components/NavBar-user.html");
-    // loadComponent("#navbar-owner", "../components/NavBar-owner.html");
-
-    // loadComponent("#footer", "../components/Footer.html");
-    loadComponent("#navbar", "/frontend/html_mockup/src/components/NavBar.html");
+  loadComponent("#navbar", "/frontend/html_mockup/src/components/NavBar.html");
   loadComponent('#navbar-guest', "/frontend/html_mockup/src/components/NavBar-guest.html");
   loadComponent("#navbar-user", "/frontend/html_mockup/src/components/NavBar-user.html");
   loadComponent("#navbar-owner", "/frontend/html_mockup/src/components/NavBar-user.html");
