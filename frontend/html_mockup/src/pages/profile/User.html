@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoang Chi Thanh - Medium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="/frontend/html_mockup/src/js/components.js" defer></script>
+    <link href="/frontend/html_mockup/src/js/components.js" rel="stylesheet">
+<body class="font-serif bg-[#f5f5f5] text-gray-900">
+    <!-- Navigation -->
+    <div id="navbar-user"></div>
+
+    <!-- User Profile Header -->
+    <div class="bg-[#f5f5f5] py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex flex-col items-center md:flex-row md:items-start">
+                <div class="md:mr-8 mb-6 md:mb-0">
+                    <img src="https://via.placeholder.com/150" alt="Profile Picture" class="w-36 h-36 rounded-full">
+                </div>
+                <div class="text-center md:text-left">
+                    <h1 class="text-4xl font-bold mb-2">Hoang Chi Thanh</h1>
+                    <p class="text-xl text-gray-700 mb-6">Writer, developer, and technology enthusiast</p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-3 mb-6">
+                        <div class="flex items-center text-gray-700">
+                            <i class="fas fa-user-friends mr-2"></i>
+                            <span>284 Followers</span>
+                        </div>
+                        <div class="flex items-center text-gray-700">
+                            <i class="fas fa-users mr-2"></i>
+                            <span>127 Following</span>
+                        </div>
+                        <div class="flex items-center text-gray-700">
+                            <i class="fas fa-newspaper mr-2"></i>
+                            <span>42 Stories</span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-700 mb-6 max-w-2xl">
+                        I write about technology, programming, and personal development. 
+                        Software engineer by day, writer by night. Passionate about sharing 
+                        knowledge and learning from others.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-3">
+                        <a href="#" class="px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800">Edit Profile</a>
+                        <a href="#" class="px-4 py-2 bg-white border border-gray-300 rounded-full hover:bg-gray-50">Share Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Content Navigation -->
+    <div class="border-b border-gray-200">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex overflow-x-auto">
+                <a href="#" class="px-4 py-4 text-black border-b-2 border-black font-medium mr-8 whitespace-nowrap">Comments</a>
+                <a href="#" class="px-4 py-4 text-gray-500 hover:text-black mr-8 whitespace-nowrap">Stories</a>
+                <a href="#" class="px-4 py-4 text-gray-500 hover:text-black mr-8 whitespace-nowrap">Lists</a>
+                <a href="#" class="px-4 py-4 text-gray-500 hover:text-black whitespace-nowrap">About</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h2 class="text-2xl font-bold mb-8">Your Comments</h2>
+        
+        <!-- Comment Card 1 -->
+        <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow mb-8 p-6">
+            <div class="flex items-start mb-4">
+                <div class="flex-shrink-0 mr-4">
+                    <img src="https://via.placeholder.com/50" alt="Article Image" class="w-14 h-14 object-cover rounded">
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-1">
+                        <a href="#" class="hover:underline">The Future of Web Development: What to Expect in 2025</a>
+                    </h3>
+                    <p class="text-gray-500 text-sm">By James Wilson · May 15, 2025</p>
+                </div>
+            </div>
+            
+            <div class="ml-0 sm:ml-18">
+                <p class="text-gray-800 mb-4">
+                    This article resonates deeply with me. The predictions about WebAssembly are spot on. 
+                    I've been using it in my recent projects and the performance gains are substantial. 
+                    Great insights about the future of web development!
+                </p>
+                <div class="flex items-center text-gray-500 text-sm">
+                    <span>Apr 22, 2025</span>
+                    <span class="mx-2">·</span>
+                    <button class="hover:text-black">Edit</button>
+                    <span class="mx-2">·</span>
+                    <button class="hover:text-black">Delete</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Comment Card 2 -->
+        <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow mb-8 p-6">
+            <div class="flex items-start mb-4">
+                <div class="flex-shrink-0 mr-4">
+                    <img src="https://via.placeholder.com/50" alt="Article Image" class="w-14 h-14 object-cover rounded">
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-1">
+                        <a href="#" class="hover:underline">Machine Learning in Healthcare: Real-World Applications</a>
+                    </h3>
+                    <p class="text-gray-500 text-sm">By Sarah Chen · April 8, 2025</p>
+                </div>
+            </div>
+            
+            <div class="ml-0 sm:ml-18">
+                <p class="text-gray-800 mb-4">
+                    I work in healthcare IT and can confirm these trends are becoming mainstream. 
+                    We've implemented similar ML models for early disease detection. The accuracy rates 
+                    mentioned here match our experience. Would love to see more about implementation challenges.
+                </p>
+                <div class="flex items-center text-gray-500 text-sm">
+                    <span>Apr 10, 2025</span>
+                    <span class="mx-2">·</span>
+                    <button class="hover:text-black">Edit</button>
+                    <span class="mx-2">·</span>
+                    <button class="hover:text-black">Delete</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Comment Card 3 -->
+        <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow mb-8 p-6">
+            <div class="flex items-start mb-4">
+                <div class="flex-shrink-0 mr-4">
+                    <img src="https://via.placeholder.com/50" alt="Article Image" class="w-14 h-14 object-cover rounded">
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-1">
+                        <a href="#" class="hover:underline">Productivity Hacks for Remote Workers</a>
+                    </h3>
+                    <p class="text-gray-500 text-sm">By Michael Thompson · March 22, 2025</p>
+                </div>
+            </div>
+            
+            <div class="ml-0 sm:ml-18">
+                <p class="text-gray-800 mb-4">
+                    The Pomodoro technique changed my remote working experience completely. I'd add that 
+                    setting up a dedicated workspace is critical too. After implementing these tips, 
+                    my productivity increased by about 30%. Great article!
+                </p>
+                <div class="flex items-center text-gray-500 text-sm">
+                    <span>Mar 24, 2025</span>
+                    <span class="mx-2">·</span>
+                    <button class="hover:text-black">Edit</button>
+                    <span class="mx-2">·</span>
+                    <button class="hover:text-black">Delete</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Comment Card 4 -->
+        <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow mb-8 p-6">
+            <div class="flex items-start mb-4">
+                <div class="flex-shrink-0 mr-4">
+                    <img src="https://via.placeholder.com/50" alt="Article Image" class="w-14 h-14 object-cover rounded">
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-1">
+                        <a href="#" class="hover:underline">The Psychology of User Experience Design</a>
+                    </h3>
+                    <p class="text-gray-500 text-sm">By Emma Davis · March 5, 2025</p>
+                </div>
+            </div>
+            
+            <div class="ml-0 sm:ml-18">
+                <p class="text-gray-800 mb-4">
+                    Fascinating read on how psychology influences UX design. The section on color theory 
+                    was particularly useful for a project I'm working on. Would love to see a follow-up 
+                    on how cultural differences affect user experience perceptions.
+                </p>
+                <div class="flex items-center text-gray-500 text-sm">
+                    <span>Mar 6, 2025</span>
+                    <span class="mx-2">·</span>
+                    <button class="hover:text-black">Edit</button>
+                    <span class="mx-2">·</span>
+                    <button class="hover:text-black">Delete</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Load More Button -->
+        <div class="mt-8 text-center">
+            <button class="px-8 py-3 bg-white border border-gray-300 rounded-full hover:bg-gray-50 text-gray-800">
+                Load More Comments
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer"></div>
+</body>
+</html>

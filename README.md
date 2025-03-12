@@ -1,1 +1,1 @@
-## Link của database dbdiagram trong /backend/database/dbdiagram/link.txt
+## charooooooooooooooooo
