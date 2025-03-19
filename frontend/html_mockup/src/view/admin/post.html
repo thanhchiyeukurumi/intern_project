@@ -44,7 +44,7 @@
                         </li>
                         <li class="mb-1">
                             <a href="categories.html" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
-                                <i class="fas fa-users mr-3"></i>
+                                <i class="fas fa-folder mr-3"></i>
                                 <span>Categories</span>
                             </a>
                         </li>
@@ -73,7 +73,7 @@
                         <button class="text-gray-500 focus:outline-none md:hidden mr-3" id="mobile-menu-button">
                             <i class="fas fa-bars"></i>
                         </button>
-                        <h1 class="text-xl font-semibold">User Management</h1>
+                        <h1 class="text-xl font-semibold">Post Management</h1>
                     </div>
                     <div class="flex items-center space-x-4">
                         <div class="relative">
@@ -89,12 +89,12 @@
             <!-- Main Content -->
             <main class="flex-1 overflow-y-auto p-6">
                 <div class="container mx-auto">
-                    <!-- Users Management Tools -->
+                    <!-- Post Management Tools -->
                     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
                         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                             <div class="mb-4 md:mb-0">
-                                <h2 class="text-xl font-semibold">All Post</h2>
-                                <p class="text-sm text-gray-500">Manage users, add, edit or delete</p>
+                                <h2 class="text-xl font-semibold">All Posts</h2>
+                                <p class="text-sm text-gray-500">Manage posts, publish, edit or delete</p>
                             </div>
                             <div class="flex flex-col sm:flex-row gap-3">
                                 <div class="relative">
@@ -103,32 +103,44 @@
                                         <i class="fas fa-search"></i>
                                     </button>
                                 </div>
-                                <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    <i class="fas fa-filter mr-2"></i> Filter
-                                </button>
+                                <a href="new-post.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    <i class="fas fa-plus mr-2"></i> New Post
+                                </a>
                             </div>
                         </div>
                         
                         <!-- Filters -->
                         <div class="flex flex-wrap items-center gap-3 mb-6">
                             <div class="flex items-center">
-                                <span class="text-sm text-gray-500 mr-2">Category:</span>
+                                <span class="text-sm text-gray-500 mr-2">Status:</span>
                                 <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                    <option value="all">All Category</option>
-                                    <option value="admin">Technology</option>
+                                    <option value="all">All Posts</option>
+                                    <option value="published">Published</option>
+                                    <option value="draft">Draft</option>
+                                    <option value="archived">Archived</option>
                                 </select>
                             </div>
                             <div class="flex items-center">
-                                <span class="text-sm text-gray-500 mr-2">Comments Status:</span>
+                                <span class="text-sm text-gray-500 mr-2">Category:</span>
                                 <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                    <option value="all">Comments Status</option>
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
+                                    <option value="all">All Categories</option>
+                                    <option value="1">Web Development</option>
+                                    <option value="2">Design</option>
+                                    <option value="3">Programming</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-sm text-gray-500 mr-2">Date:</span>
+                                <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="all">All Time</option>
+                                    <option value="today">Today</option>
+                                    <option value="week">This Week</option>
+                                    <option value="month">This Month</option>
                                 </select>
                             </div>
                         </div>
                         
-                        <!-- Users Table -->
+                        <!-- Posts Table -->
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
@@ -139,98 +151,94 @@
                                             </div>
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comment</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Author</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categories</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                                         <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <!-- User 1 -->
+                                    <!-- Post 1 -->
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <input type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
                                             </div>
                                         </td>
+                                        <td class="px-6 py-4">
+                                            <div class="text-sm font-medium text-gray-900">Getting Started with Tailwind CSS</div>
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                <div class="text-sm font-medium text-gray-900">Some title</div>
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img class="h-10 w-10 rounded-full object-cover" src="https://randomuser.me/api/portraits/women/42.jpg" alt="">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Jane Cooper</div>
+                                                </div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">Jane Cooper</div>
-                                            <div class="text-sm text-gray-900">jane.cooper@example.com</div>
+                                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">Web Development</span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">34 comment</div>
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Published</span>
                                         </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 15, 2023</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                             <button class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-edit"></i></button>
+                                            <button class="text-green-600 hover:text-green-900"><i class="fas fa-eye"></i></button>
                                             <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
                                     
-                                    <!-- User 2 -->
+                                    <!-- Post 2 -->
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <input type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
                                             </div>
                                         </td>
+                                        <td class="px-6 py-4">
+                                            <div class="text-sm font-medium text-gray-900">The Future of Web Development</div>
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                <div class="text-sm font-medium text-gray-900">Some title</div>
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img class="h-10 w-10 rounded-full object-cover" src="https://randomuser.me/api/portraits/men/32.jpg" alt="">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Michael Smith</div>
+                                                </div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">Jane Cooper</div>
-                                            <div class="text-sm text-gray-900">jane.cooper@example.com</div>
+                                            <span class="px-2 py-1 bg-purple-100 text-purple-800 text-sm rounded-full">Design</span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">Admin</div>
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Draft</span>
                                         </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 13, 2023</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                             <button class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-edit"></i></button>
-                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
-                                        </td>
-                                    </tr>
-                                    
-                                    <!-- User 3 -->
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <input type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div class="text-sm font-medium text-gray-900">Some title</div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">Jane Cooper</div>
-                                            <div class="text-sm text-gray-900">jane.cooper@example.com</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">Admin</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                            <button class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-edit"></i></button>
+                                            <button class="text-green-600 hover:text-green-900"><i class="fas fa-eye"></i></button>
                                             <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <!-- Bulk Actions -->
                         <div class="flex flex-wrap items-center gap-3 mt-4 border-t pt-4">
                             <div class="flex items-center">
                                 <span class="text-sm text-gray-500 mr-2">Bulk Actions:</span>
                                 <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                     <option value="">Select Action</option>
-                                    <option value="activate">Block Comments</option>
-                                    <option value="activate">Active Comments</option>
+                                    <option value="publish">Publish</option>
+                                    <option value="draft">Move to Draft</option>
+                                    <option value="archive">Archive</option>
                                     <option value="delete">Delete</option>
                                 </select>
                                 <button class="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-lg text-sm">Apply</button>
@@ -242,7 +250,7 @@
                             <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                                 <div>
                                     <p class="text-sm text-gray-700">
-                                        Showing <span class="font-medium">1</span> to <span class="font-medium">3</span> of <span class="font-medium">3</span> users
+                                        Showing <span class="font-medium">1</span> to <span class="font-medium">5</span> of <span class="font-medium">35</span> posts
                                     </p>
                                 </div>
                                 <div>
@@ -269,13 +277,5 @@
             </main>
         </div>
     </div>
-
-    <script>
-        // Mobile menu toggle
-        document.querySelector('button#mobile-menu-button').addEventListener('click', function() {
-            const sidebar = document.querySelector('aside');
-            sidebar.classList.toggle('hidden');
-        });
-    </script>
 </body>
 </html>
