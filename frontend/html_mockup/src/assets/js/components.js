@@ -18,8 +18,8 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch((error) => console.error("Error loading component:", error));
   }
 
-
-  const basePath = "https://thanhchiyeukurumi.github.io/intern_project/html_mockup/src/components/";
+ 
+  const basePath = " https://thanhchiyeukurumi.github.io/intern_project/frontend/html_mockup/src/components/";
   
   loadComponent("#navbar", basePath + "NavBar.html");
   loadComponent('#navbar-guest', basePath + "NavBar-guest.html");
