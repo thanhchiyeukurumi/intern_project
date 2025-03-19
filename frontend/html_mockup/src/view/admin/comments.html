@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="./js/admin-config.js" defer></script>
 </head>
+
 <body class="bg-gray-100 font-sans">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
@@ -43,7 +45,8 @@
                             </a>
                         </li>
                         <li class="mb-1">
-                            <a href="categories.html" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
+                            <a href="categories.html"
+                                class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
                                 <i class="fas fa-users mr-3"></i>
                                 <span>Categories</span>
                             </a>
@@ -73,12 +76,13 @@
                         <button class="text-gray-500 focus:outline-none md:hidden mr-3" id="mobile-menu-button">
                             <i class="fas fa-bars"></i>
                         </button>
-                        <h1 class="text-xl font-semibold">Categories Management</h1>
+                        <h1 class="text-xl font-semibold">Comment Management</h1>
                     </div>
                     <div class="flex items-center space-x-4">
                         <div class="relative">
                             <button class="flex items-center focus:outline-none">
-                                <img class="h-8 w-8 rounded-full object-cover" src="https://randomuser.me/api/portraits/men/75.jpg" alt="User Profile">
+                                <img class="h-8 w-8 rounded-full object-cover"
+                                    src="https://randomuser.me/api/portraits/men/75.jpg" alt="User Profile">
                                 <span class="ml-2 text-gray-700">John Doe</span>
                             </button>
                         </div>
@@ -98,32 +102,35 @@
                             </div>
                             <div class="flex flex-col sm:flex-row gap-3">
                                 <div class="relative">
-                                    <input type="text" placeholder="Search comments..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                                    <input type="text" placeholder="Search comments..."
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
                                     <button class="absolute right-3 top-2.5 text-gray-400">
                                         <i class="fas fa-search"></i>
                                     </button>
                                 </div>
-                                <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                <button
+                                    class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                     <i class="fas fa-filter mr-2"></i> Filter
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- Filters -->
                         <div class="flex flex-wrap items-center gap-3 mb-6">
-                            <div class="flex items-center">
-                                <span class="text-sm text-gray-500 mr-2">Status:</span>
-                                <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                    <option value="all">All Comments</option>
-                                    <option value="approved">Approved</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="spam">Spam</option>
-                                    <option value="rejected">Rejected</option>
-                                </select>
-                            </div>
+                            <!-- <div class="flex items-center">
+                                    <span class="text-sm text-gray-500 mr-2">Status:</span>
+                                    <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                        <option value="all">All Comments</option>
+                                        <option value="approved">Approved</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="spam">Spam</option>
+                                        <option value="rejected">Rejected</option>
+                                    </select>
+                                </div> -->
                             <div class="flex items-center">
                                 <span class="text-sm text-gray-500 mr-2">Post:</span>
-                                <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <select
+                                    class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                     <option value="all">All Posts</option>
                                     <option value="1">Getting Started with Tailwind CSS</option>
                                     <option value="2">The Future of Web Development</option>
@@ -132,7 +139,8 @@
                             </div>
                             <div class="flex items-center">
                                 <span class="text-sm text-gray-500 mr-2">Date:</span>
-                                <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <select
+                                    class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                     <option value="all">All Time</option>
                                     <option value="today">Today</option>
                                     <option value="week">This Week</option>
@@ -140,23 +148,34 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                         <!-- Comments Table -->
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             <div class="flex items-center">
-                                                <input type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
+                                                <input type="checkbox"
+                                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
                                             </div>
                                         </th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Author</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comment</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">In Response To</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Author</th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Comment</th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            In Response To</th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Date</th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
@@ -164,13 +183,15 @@
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                <input type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
+                                                <input type="checkbox"
+                                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full object-cover" src="https://randomuser.me/api/portraits/women/42.jpg" alt="">
+                                                    <img class="h-10 w-10 rounded-full object-cover"
+                                                        src="https://randomuser.me/api/portraits/women/42.jpg" alt="">
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">Jane Cooper</div>
@@ -179,34 +200,41 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <div class="text-sm text-gray-900 max-w-xs truncate">This article was incredibly helpful! I've been struggling with Tailwind CSS for a while now, and your explanation made it so much clearer.</div>
+                                            <div class="text-sm text-gray-900 max-w-xs truncate">This article was
+                                                incredibly helpful! I've been struggling with Tailwind CSS for a while
+                                                now, and your explanation made it so much clearer.</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">Getting Started with Tailwind CSS</div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Approved</span>
-                                        </td>
+
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 15, 2023</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                            <button class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-edit"></i></button>
-                                            <button class="text-green-600 hover:text-green-900"><i class="fas fa-check"></i></button>
-                                            <button class="text-yellow-600 hover:text-yellow-900"><i class="fas fa-times"></i></button>
-                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                            <button class="text-indigo-600 hover:text-indigo-900"><i
+                                                    class="fas fa-edit"></i></button>
+                                            <button class="text-green-600 hover:text-green-900"><i
+                                                    class="fas fa-check"></i></button>
+                                            <button class="text-yellow-600 hover:text-yellow-900"><i
+                                                    class="fas fa-times"></i></button>
+                                            <button class="text-red-600 hover:text-red-900"><i
+                                                    class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
-                                    
+
                                     <!-- Comment 2 -->
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                <input type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
+                                                <input type="checkbox"
+                                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full object-cover" src="https://randomuser.me/api/portraits/men/32.jpg" alt="">
+                                                    <img class="h-10 w-10 rounded-full object-cover"
+                                                        src="https://randomuser.me/api/portraits/men/32.jpg" alt="">
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">Michael Smith</div>
@@ -215,34 +243,41 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <div class="text-sm text-gray-900 max-w-xs truncate">I'm not sure I agree with your perspective on the future of web development. Have you considered the impact of AI tools on front-end development jobs?</div>
+                                            <div class="text-sm text-gray-900 max-w-xs truncate">I'm not sure I agree
+                                                with your perspective on the future of web development. Have you
+                                                considered the impact of AI tools on front-end development jobs?</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">The Future of Web Development</div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
-                                        </td>
+
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 13, 2023</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                            <button class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-edit"></i></button>
-                                            <button class="text-green-600 hover:text-green-900"><i class="fas fa-check"></i></button>
-                                            <button class="text-yellow-600 hover:text-yellow-900"><i class="fas fa-times"></i></button>
-                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                            <button class="text-indigo-600 hover:text-indigo-900"><i
+                                                    class="fas fa-edit"></i></button>
+                                            <button class="text-green-600 hover:text-green-900"><i
+                                                    class="fas fa-check"></i></button>
+                                            <button class="text-yellow-600 hover:text-yellow-900"><i
+                                                    class="fas fa-times"></i></button>
+                                            <button class="text-red-600 hover:text-red-900"><i
+                                                    class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
-                                    
+
                                     <!-- Comment 3 -->
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                <input type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
+                                                <input type="checkbox"
+                                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full object-cover" src="https://randomuser.me/api/portraits/women/65.jpg" alt="">
+                                                    <img class="h-10 w-10 rounded-full object-cover"
+                                                        src="https://randomuser.me/api/portraits/women/65.jpg" alt="">
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">Emma Wilson</div>
@@ -251,34 +286,40 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <div class="text-sm text-gray-900 max-w-xs truncate">Check out my website at www.totally-not-spam.com for amazing deals on software!</div>
+                                            <div class="text-sm text-gray-900 max-w-xs truncate">Check out my website at
+                                                www.totally-not-spam.com for amazing deals on software!</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">CSS Grid Layout Tutorial</div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Spam</span>
-                                        </td>
+
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 12, 2023</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                            <button class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-edit"></i></button>
-                                            <button class="text-green-600 hover:text-green-900"><i class="fas fa-check"></i></button>
-                                            <button class="text-yellow-600 hover:text-yellow-900"><i class="fas fa-times"></i></button>
-                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                            <button class="text-indigo-600 hover:text-indigo-900"><i
+                                                    class="fas fa-edit"></i></button>
+                                            <button class="text-green-600 hover:text-green-900"><i
+                                                    class="fas fa-check"></i></button>
+                                            <button class="text-yellow-600 hover:text-yellow-900"><i
+                                                    class="fas fa-times"></i></button>
+                                            <button class="text-red-600 hover:text-red-900"><i
+                                                    class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
-                                    
+
                                     <!-- Comment 4 -->
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                <input type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
+                                                <input type="checkbox"
+                                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full object-cover" src="https://randomuser.me/api/portraits/men/55.jpg" alt="">
+                                                    <img class="h-10 w-10 rounded-full object-cover"
+                                                        src="https://randomuser.me/api/portraits/men/55.jpg" alt="">
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">David Johnson</div>
@@ -287,34 +328,41 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <div class="text-sm text-gray-900 max-w-xs truncate">Great tutorial! I especially liked the part about grid-template-areas. One question though: how would you handle nested grids for complex layouts?</div>
+                                            <div class="text-sm text-gray-900 max-w-xs truncate">Great tutorial! I
+                                                especially liked the part about grid-template-areas. One question
+                                                though: how would you handle nested grids for complex layouts?</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">CSS Grid Layout Tutorial</div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Approved</span>
-                                        </td>
+
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 10, 2023</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                            <button class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-edit"></i></button>
-                                            <button class="text-green-600 hover:text-green-900"><i class="fas fa-check"></i></button>
-                                            <button class="text-yellow-600 hover:text-yellow-900"><i class="fas fa-times"></i></button>
-                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                            <button class="text-indigo-600 hover:text-indigo-900"><i
+                                                    class="fas fa-edit"></i></button>
+                                            <button class="text-green-600 hover:text-green-900"><i
+                                                    class="fas fa-check"></i></button>
+                                            <button class="text-yellow-600 hover:text-yellow-900"><i
+                                                    class="fas fa-times"></i></button>
+                                            <button class="text-red-600 hover:text-red-900"><i
+                                                    class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
-                                    
+
                                     <!-- Comment 5 -->
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                <input type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
+                                                <input type="checkbox"
+                                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full object-cover" src="https://randomuser.me/api/portraits/women/22.jpg" alt="">
+                                                    <img class="h-10 w-10 rounded-full object-cover"
+                                                        src="https://randomuser.me/api/portraits/women/22.jpg" alt="">
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">Sarah Miller</div>
@@ -323,61 +371,77 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <div class="text-sm text-gray-900 max-w-xs truncate">I found some of these JavaScript best practices outdated. Have you considered updating this article with more modern approaches like using async/await instead of promises?</div>
+                                            <div class="text-sm text-gray-900 max-w-xs truncate">I found some of these
+                                                JavaScript best practices outdated. Have you considered updating this
+                                                article with more modern approaches like using async/await instead of
+                                                promises?</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">JavaScript Best Practices</div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">Rejected</span>
-                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 8, 2023</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                            <button class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-edit"></i></button>
-                                            <button class="text-green-600 hover:text-green-900"><i class="fas fa-check"></i></button>
-                                            <button class="text-yellow-600 hover:text-yellow-900"><i class="fas fa-times"></i></button>
-                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                            <button class="text-indigo-600 hover:text-indigo-900"><i
+                                                    class="fas fa-edit"></i></button>
+                                            <button class="text-green-600 hover:text-green-900"><i
+                                                    class="fas fa-check"></i></button>
+                                            <button class="text-yellow-600 hover:text-yellow-900"><i
+                                                    class="fas fa-times"></i></button>
+                                            <button class="text-red-600 hover:text-red-900"><i
+                                                    class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <!-- Bulk Actions -->
                         <div class="flex flex-wrap items-center gap-3 mt-4 border-t pt-4">
                             <div class="flex items-center">
                                 <span class="text-sm text-gray-500 mr-2">Bulk Actions:</span>
-                                <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <select
+                                    class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                     <option value="">Select Action</option>
                                     <option value="approve">Approve</option>
                                     <option value="reject">Reject</option>
                                     <option value="mark-spam">Mark as Spam</option>
                                     <option value="delete">Delete</option>
                                 </select>
-                                <button class="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-lg text-sm">Apply</button>
+                                <button
+                                    class="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-lg text-sm">Apply</button>
                             </div>
                         </div>
-                        
+
                         <!-- Pagination -->
                         <div class="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6 mt-4">
                             <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                                 <div>
                                     <p class="text-sm text-gray-700">
-                                        Showing <span class="font-medium">1</span> to <span class="font-medium">5</span> of <span class="font-medium">35</span> comments
+                                        Showing <span class="font-medium">1</span> to <span class="font-medium">5</span>
+                                        of <span class="font-medium">35</span> comments
                                     </p>
                                 </div>
                                 <div>
-                                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                                        aria-label="Pagination">
+                                        <a href="#"
+                                            class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                                             <span class="sr-only">Previous</span>
                                             <i class="fas fa-chevron-left"></i>
                                         </a>
-                                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-indigo-50 text-sm font-medium text-indigo-600 hover:bg-indigo-100">1</a>
-                                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">2</a>
-                                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">3</a>
-                                        <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>
-                                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">7</a>
-                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                        <a href="#"
+                                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-indigo-50 text-sm font-medium text-indigo-600 hover:bg-indigo-100">1</a>
+                                        <a href="#"
+                                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">2</a>
+                                        <a href="#"
+                                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">3</a>
+                                        <span
+                                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>
+                                        <a href="#"
+                                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">7</a>
+                                        <a href="#"
+                                            class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                                             <span class="sr-only">Next</span>
                                             <i class="fas fa-chevron-right"></i>
                                         </a>
@@ -391,4 +455,5 @@
         </div>
     </div>
 </body>
+
 </html>
