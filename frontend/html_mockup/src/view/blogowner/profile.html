@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Management - Hoang Thanh</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-gray-100 text-gray-900">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <h1 class="text-2xl font-bold">QuickBlog</h1>
+
+                <!-- User Profile Dropdown -->
+                <div class="relative">
+                    <button id="userDropdownButton" class="flex items-center gap-2" aria-expanded="false">
+                        <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256"
+                            alt="Profile" class="w-8 h-8 rounded-full">
+                        <span class="font-medium">thanhthikalyce</span>
+                        <i class="fas fa-chevron-down text-gray-500 text-xs transition-transform"></i>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div id="userDropdown"
+                        class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100">
+                        <a href="#" class="px-4 py-2.5 text-sm hover:bg-gray-50 block">Edit Profile</a>
+                        <a href="#" class="px-4 py-2.5 text-sm hover:bg-gray-50 block">Settings</a>
+                        <hr class="my-1">
+                        <a href="#" class="px-4 py-2.5 text-sm hover:bg-gray-50 block text-red-600">Log out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+         <!-- Sidebar -->
+         <aside
+         class="right-sidebar bg-white border-r border-gray-200 min-h-screen transition-all duration-300 hidden lg:block">
+         <div class="px-4 py-6">
+             <nav class="space-y-2">
+                 <a href="./dashboard.html"
+                     class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg">
+                     <i class="fas fa-chart-line w-5"></i>
+                     <span class="nav-text">Dashboard</span>
+                 </a>
+                 <a href="./post.html"
+                     class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg">
+                     <i class="fas fa-file-lines w-5"></i>
+                     <span class="nav-text">Posts</span>
+                 </a>
+                 <a href="./media.html"
+                     class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg">
+                     <i class="fas fa-photo-film w-5"></i>
+                     <span class="nav-text">Media</span>
+                 </a>
+                 <a href="./comments.html"
+                     class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg">
+                     <i class="fas fa-comments w-5"></i>
+                     <span class="nav-text">Comments</span>
+                 </a>
+                 <a href="./profile.html"
+                     class="flex items-center gap-3 px-4 py-2.5 bg-blue-50 text-blue-700 rounded-lg">
+                     <i class="fas fa-user w-5"></i>
+                     <span class="nav-text">Profile</span>
+                 </a>
+                 <a href="./settings.html"
+                     class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg">
+                     <i class="fas fa-gear w-5"></i>
+                     <span class="nav-text">Settings</span>
+                 </a>
+             </nav>
+
+             <div class="mt-6 space-y-3">
+                 <button
+                     class="w-full px-4 py-2.5 bg-gray-900 hover:bg-gray-800 text-white rounded-lg flex items-center gap-2">
+                     <i class="fas fa-plus w-5"></i>
+                     <a href="./newpost.html" class="sidebar-button-text">New Post</a>
+                 </button>
+             </div>
+         </div>
+     </aside>
+
+        <!-- Profile Main Content -->
+        <main class="flex-1 p-6">
+            <!-- <h2 class="flex justify-between items-center text-2xl font-bold mb-6">Comments</h2> -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+                    <h2 class="text-2xl font-bold mb-8">Profile</h2>
+                    
+                    <!-- Avatar Section -->
+                    <div class="flex items-center gap-6 mb-8">
+                        <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256"
+                            alt="Profile" class="w-20 h-20 rounded-full">
+                        <div>
+                            <button class="px-4 py-2 text-sm font-medium bg-gray-100 hover:bg-gray-200 rounded-lg">
+                                Change Avatar
+                            </button>
+                            <p class="text-gray-500 text-sm mt-2">Recommended size: 256x256 pixels</p>
+                        </div>
+                    </div>
+
+                    <!-- Profile Details -->
+                    <div class="space-y-6">
+                        <!-- Username (Non-editable) -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Username</label>
+                            <div class="border border-gray-200 rounded-lg px-4 py-3 bg-gray-50">
+                                thanhthikalyce
+                            </div>
+                            <p class="text-gray-500 text-sm mt-2">Username cannot be changed</p>
+                        </div>
+
+                        <!-- Name (Editable) -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Name</label>
+                            <div class="relative">
+                                <div contenteditable="true" 
+                                    class="editable-field border border-gray-200 rounded-lg px-4 py-3 hover:border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+                                    data-original-value="Hoang Thanh">
+                                    Hoang Thanh
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description (Editable) -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">About Me</label>
+                            <div class="relative">
+                                <div contenteditable="true" 
+                                    class="editable-field border border-gray-200 rounded-lg px-4 py-3 hover:border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition min-h-[100px]"
+                                    data-original-value="Front-end developer and technical writer">
+                                    Front-end developer and technical writer
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Save Button (Initially hidden) -->
+                        <div class="pt-4">
+                            <button id="saveButton" class="hidden px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Profile Editing Functionality
+        const editableFields = document.querySelectorAll('.editable-field');
+        const saveButton = document.getElementById('saveButton');
+
+        editableFields.forEach(field => {
+            field.addEventListener('input', () => {
+                const originalValue = field.dataset.originalValue;
+                if (field.textContent.trim() !== originalValue) {
+                    saveButton.classList.remove('hidden');
+                } else {
+                    saveButton.classList.add('hidden');
+                }
+            });
+        });
+
+        // Save button handler
+        saveButton.addEventListener('click', () => {
+            editableFields.forEach(field => {
+                field.dataset.originalValue = field.textContent.trim();
+            });
+            saveButton.classList.add('hidden');
+            // Add actual save logic here
+        });
+
+        // Include the existing dropdown script from post.html
+        // ...
+    </script>
+</body>
+</html>
