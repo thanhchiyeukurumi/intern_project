@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Post Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="./js/admin-config.js" defer></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="bg-indigo-800 text-white w-64 flex-shrink-0 hidden md:block">
+            <div class="p-4">
+                <div class="flex items-center justify-center mb-8">
+                    <span class="text-2xl font-bold">AdminPanel</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li class="mb-1">
+                            <a href="dashboard.html" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
+                                <i class="fas fa-tachometer-alt mr-3"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="post.html" class="flex items-center py-2 px-4 bg-indigo-700 rounded-lg">
+                                <i class="fas fa-file-alt mr-3"></i>
+                                <span>Posts</span>
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="users.html" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
+                                <i class="fas fa-users mr-3"></i>
+                                <span>Users</span>
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="comments.html" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
+                                <i class="fas fa-comment mr-3"></i>
+                                <span>Comments</span>
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="categories.html" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
+                                <i class="fas fa-folder mr-3"></i>
+                                <span>Categories</span>
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="settings.html" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
+                                <i class="fas fa-cog mr-3"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="absolute bottom-0 w-64 p-4">
+                <a href="#" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
+                    <i class="fas fa-sign-out-alt mr-3"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Header -->
+            <header class="bg-white shadow-sm py-4 px-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <button class="text-gray-500 focus:outline-none md:hidden mr-3" id="mobile-menu-button">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <h1 class="text-xl font-semibold">Post Management</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <button class="flex items-center focus:outline-none">
+                                <img class="h-8 w-8 rounded-full object-cover" src="https://randomuser.me/api/portraits/men/75.jpg" alt="User Profile">
+                                <span class="ml-2 text-gray-700">John Doe</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <div class="container mx-auto">
+                    <!-- Post Management Tools -->
+                    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                            <div class="mb-4 md:mb-0">
+                                <h2 class="text-xl font-semibold">All Posts</h2>
+                                <p class="text-sm text-gray-500">Manage posts, publish, edit or delete</p>
+                            </div>
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <div class="relative">
+                                    <input type="text" placeholder="Search posts..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                                    <button class="absolute right-3 top-2.5 text-gray-400">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                                <a href="new-post.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    <i class="fas fa-plus mr-2"></i> New Post
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Filters -->
+                        <div class="flex flex-wrap items-center gap-3 mb-6">
+                            <div class="flex items-center">
+                                <span class="text-sm text-gray-500 mr-2">Category:</span>
+                                <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="all">All Categories</option>
+                                    <option value="1">Web Development</option>
+                                    <option value="2">Design</option>
+                                    <option value="3">Programming</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-sm text-gray-500 mr-2">Date:</span>
+                                <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="all">All Time</option>
+                                    <option value="today">Today</option>
+                                    <option value="week">This Week</option>
+                                    <option value="month">This Month</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Posts Table -->
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <div class="flex items-center">
+                                                <input type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Author</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categories</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <!-- Post 1 -->
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <input type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="text-sm font-medium text-gray-900">Getting Started with Tailwind CSS</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img class="h-10 w-10 rounded-full object-cover" src="https://randomuser.me/api/portraits/women/42.jpg" alt="">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Jane Cooper</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">Web Development</span>
+                                        </td>
+
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 15, 2023</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                            <button class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-edit"></i></button>
+                                            <button class="text-green-600 hover:text-green-900"><i class="fas fa-eye"></i></button>
+                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Post 2 -->
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <input type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 rounded">
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="text-sm font-medium text-gray-900">The Future of Web Development</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img class="h-10 w-10 rounded-full object-cover" src="https://randomuser.me/api/portraits/men/32.jpg" alt="">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Michael Smith</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 bg-purple-100 text-purple-800 text-sm rounded-full">Design</span>
+                                        </td>
+                                       
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 13, 2023</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                            <button class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-edit"></i></button>
+                                            <button class="text-green-600 hover:text-green-900"><i class="fas fa-eye"></i></button>
+                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Bulk Actions -->
+                        <div class="flex flex-wrap items-center gap-3 mt-4 border-t pt-4">
+                            <div class="flex items-center">
+                                <span class="text-sm text-gray-500 mr-2">Bulk Actions:</span>
+                                <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="">Select Action</option>
+                                    <option value="publish">Publish</option>
+                                    <option value="draft">Move to Draft</option>
+                                    <option value="archive">Archive</option>
+                                    <option value="delete">Delete</option>
+                                </select>
+                                <button class="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-lg text-sm">Apply</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div class="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6 mt-4">
+                            <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-700">
+                                        Showing <span class="font-medium">1</span> to <span class="font-medium">5</span> of <span class="font-medium">35</span> posts
+                                    </p>
+                                </div>
+                                <div>
+                                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                            <span class="sr-only">Previous</span>
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-indigo-50 text-sm font-medium text-indigo-600 hover:bg-indigo-100">1</a>
+                                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">2</a>
+                                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">3</a>
+                                        <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>
+                                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">7</a>
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                            <span class="sr-only">Next</span>
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
