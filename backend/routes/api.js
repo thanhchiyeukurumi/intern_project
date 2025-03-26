@@ -2,26 +2,40 @@
 
 require("express-router-group");
 const express = require("express");
-const middlewares = require("kernels/middlewares");
-const { validate } = require("kernels/validations");
-const exampleController = require("modules/examples/controllers/exampleController");
-const authRoutes = require("modules/auth/routes");
+const middlewares = require("../kernels/middlewares");
+const { validate } = require("../kernels/validations");
+const exampleController = require("../modules/examples/controllers/exampleController");
+const authController = require("../modules/auth/controllers/authController");
+const { registerValidation, loginValidation } = require("../modules/auth/validations/authValidation");
+const { auth } = require("../kernels/middlewares");
 const passport = require("../configs/passport");
 const router = express.Router({ mergeParams: true });
 // const passport = require("passport");
 // Khởi tạo passport
 router.use(passport.initialize());
 
-// Thêm Auth routes
-router.use('/auth', authRoutes);
+// Authentication Routes
+router.group("/auth", (router) => {
+  // Đăng ký tài khoản mới
+  router.post('/register', validate(registerValidation), authController.register);
 
-// ===== EXAMPLE Request, make this commented =====
-// router.group("/posts",middlewares([authenticated, role("owner")]),(router) => {
-//   router.post("/create",validate([createPostRequest]),postsController.create);
-//   router.put("/update/:postId",validate([updatePostRequest]),postsController.update);
-//   router.delete("/delete/:postId", postsController.destroy);
-// }
-// );
+  // Đăng nhập
+  router.post('/login', validate(loginValidation), authController.login);
+
+  // Lấy thông tin người dùng hiện tại
+  router.get('/me', auth.authenticateJWT, authController.getCurrentUser);
+
+  // Xác thực token
+  router.get('/verify-token', auth.authenticateJWT, authController.verifyToken);
+
+  // Routes cho Google OAuth
+  router.get('/google', auth.authenticateGoogle);
+  router.get('/google/callback', auth.googleCallback, authController.googleCallback);
+
+  // Routes cho GitHub OAuth
+  router.get('/github', auth.authenticateGithub);
+  router.get('/github/callback', auth.githubCallback, authController.githubCallback);
+});
 
 router.group("/example", validate([]), (router) => {
   router.get('/', exampleController.exampleRequest)
