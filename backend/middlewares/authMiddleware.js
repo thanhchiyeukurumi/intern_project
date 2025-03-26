@@ -5,5 +5,5 @@
  * để duy trì khả năng tương thích ngược.
  */
 
-// Tái export từ kernels/middlewares/auth
-module.exports = require('kernels/middlewares').auth; 
+// Tái export trực tiếp từ authMiddlewares
+module.exports = require('../kernels/middlewares/authMiddlewares'); 

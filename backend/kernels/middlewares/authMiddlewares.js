@@ -1,6 +1,6 @@
 const passport = require('passport');
-const jwtService = require('kernels/jwt');
-const response = require('utils/responseUtils');
+const jwtUtils = require('../../utils/jwtUtils');
+const response = require('../../utils/responseUtils');
 
 /**
  * Middleware xác thực JWT token
@@ -60,7 +60,7 @@ const githubCallback = passport.authenticate('github', {
  * @returns {String} - JWT token
  */
 const generateToken = (user) => {
-  return jwtService.generate({
+  return jwtUtils.generate({
     id: user.id,
     email: user.email,
     role: user.role?.name || 'user'

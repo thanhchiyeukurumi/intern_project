@@ -1,6 +1,6 @@
-const hash = require('kernels/hash');
-const db = require('models');
-const { auth } = require('kernels/middlewares');
+const hash = require('../../../kernels/hash');
+const db = require('../../../models');
+const jwtUtils = require('../../../utils/jwtUtils');
 
 class AuthService {
   /**
@@ -65,8 +65,12 @@ class AuthService {
     const userObj = user.toJSON();
     delete userObj.password;
     
-    // Tạo token JWT sử dụng auth.generateToken
-    const token = auth.generateToken(userObj);
+    // Tạo token JWT sử dụng jwtUtils
+    const token = jwtUtils.generate({
+      id: userObj.id,
+      email: userObj.email,
+      role: userObj.role?.name || 'user'
+    });
     
     return {
       user: userObj,
@@ -109,7 +113,11 @@ class AuthService {
     delete userObj.password;
     
     // Tạo token JWT
-    const token = auth.generateToken(userObj);
+    const token = jwtUtils.generate({
+      id: userObj.id,
+      email: userObj.email,
+      role: userObj.role?.name || 'user'
+    });
     
     return {
       user: userObj,
@@ -127,7 +135,11 @@ class AuthService {
     const userObj = oauthUser;
     
     // Tạo token JWT
-    const token = auth.generateToken(userObj);
+    const token = jwtUtils.generate({
+      id: userObj.id,
+      email: userObj.email,
+      role: userObj.role?.name || 'user'
+    });
     
     return {
       user: userObj,

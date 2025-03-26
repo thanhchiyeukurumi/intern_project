@@ -1,5 +1,14 @@
+/**
+ * @deprecated File này đã lỗi thời và sẽ bị xóa trong các phiên bản sau.
+ * Vui lòng sử dụng utils/jwtUtils.js thay thế.
+ * 
+ * Lý do:
+ * - utils/jwtUtils.js cung cấp nhiều tính năng hơn và được phân loại theo mục đích sử dụng
+ * - Dễ dàng mở rộng và bảo trì hơn
+ */
+
 const jwt = require('jsonwebtoken');
-const jwtConfig = require('configs/jwt');
+const jwtConfig = require('../../configs/jwt');
 
 const jwtService = {
   /**

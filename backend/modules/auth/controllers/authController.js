@@ -1,7 +1,7 @@
 const { validationResult } = require('express-validator');
 const authService = require('../services/authService');
-const jwtService = require('kernels/jwt');
-const { ok, error, unauthorized, invalidated, created, customError } = require('utils/responseUtils');
+const jwtUtils = require('../../../utils/jwtUtils');
+const { ok, error, unauthorized, invalidated, created, customError } = require('../../../utils/responseUtils');
 
 class AuthController {
   /**
