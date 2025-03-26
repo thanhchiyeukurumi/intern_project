@@ -10,12 +10,9 @@ module.exports = {
     // Tạo dữ liệu cho bảng roles
     const rolesData = isDevelopment
       ? [
-          { id: 1, name: 'admin' },
-          { id: 2, name: 'editor' },
-          { id: 3, name: 'user' },
-          { id: 4, name: 'guest' },
-          { id: 5, name: 'moderator' },
-          { id: 6, name: 'blogger' }
+        { id: 1, name: 'admin' },
+        { id: 2, name: 'user' },
+        { id: 3, name: 'blogger' }
         ]
       : [
           { id: 1, name: 'admin' },
