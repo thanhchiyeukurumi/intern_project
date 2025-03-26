@@ -8,6 +8,15 @@ module.exports = {
     });
   },
 
+  created: (res, data, message = "Created successfully") => {
+    return res.status(201).send({
+      success: true,
+      data,
+      status: 201,
+      message
+    });
+  },
+
   notFound: (res) => {
     return res.status(404).send({
       success: false,
@@ -24,11 +33,27 @@ module.exports = {
     });
   },
 
+  customError: (res, statusCode, message) => {
+    return res.status(statusCode).send({
+      success: false,
+      status: statusCode,
+      message: message || "Some error occurred",
+    });
+  },
+
   unauthorized: (res, message) => {
     return res.status(401).send({
       success: false,
       status: 401,
       message: message || 'Unauthorized',
+    });
+  },
+
+  forbidden: (res, message) => {
+    return res.status(403).send({
+      success: false,
+      status: 403,
+      message: message || 'You do not have permission to perform this action.',
     });
   },
 

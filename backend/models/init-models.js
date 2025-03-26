@@ -1,12 +1,12 @@
 var DataTypes = require("sequelize").DataTypes;
-var _categories = require("./categories");
-var _comments = require("./comments");
-var _languages = require("./languages");
-var _post_categories = require("./post_categories");
-var _posts = require("./posts");
-var _roles = require("./roles");
+var _categories = require("./category");
+var _comments = require("./comment");
+var _languages = require("./language");
+var _post_categories = require("./post_category");
+var _posts = require("./post");
+var _roles = require("./role");
 var _sequelizemeta = require("./sequelizemeta");
-var _users = require("./users");
+var _users = require("./user");
 
 function initModels(sequelize) {
   var categories = _categories(sequelize, DataTypes);
