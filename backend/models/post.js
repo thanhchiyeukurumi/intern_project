@@ -1,4 +1,6 @@
 const Sequelize = require('sequelize');
+const slugify = require('slugify');
+
 module.exports = function(sequelize, DataTypes) {
   const Post = sequelize.define('Post', {
     id: {
@@ -35,7 +37,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     slug: {
       type: DataTypes.STRING(120),
-      allowNull: false,
+      allowNull: true,
       unique: "slug"
     },
     views: {
@@ -113,8 +115,86 @@ module.exports = function(sequelize, DataTypes) {
           { name: "views" },
         ]
       },
-    ]
+    ],
+    hooks: {
+      /**
+       * Hook tự động tạo slug từ title trước khi validate
+       */
+      beforeValidate: async (post) => {
+        if (!post.slug && post.title) {
+          post.slug = await createUniqueSlug(post, sequelize);
+        }
+      },
+      
+      /**
+       * Hook tự động cập nhật slug khi title thay đổi
+       */
+      beforeUpdate: async (post) => {
+        if (post.changed('title') && !post.changed('slug')) {
+          post.slug = await createUniqueSlug(post, sequelize);
+        }
+      }
+    }
   });
+
+  /**
+   * Hàm tạo slug duy nhất từ title
+   * @param {Object} post - Đối tượng post
+   * @param {Object} sequelize - Instance sequelize
+   * @returns {string} - Slug duy nhất
+   */
+  async function createUniqueSlug(post, sequelize) {
+    // Tạo slug cơ bản từ title
+    let baseSlug = slugify(post.title, {
+      lower: true,       // Chuyển thành chữ thường
+      strict: true,      // Loại bỏ các ký tự không phù hợp
+      locale: 'vi',      // Hỗ trợ ngôn ngữ tiếng Việt
+      trim: true         // Xóa khoảng trắng ở đầu và cuối
+    });
+    
+    // Đảm bảo độ dài slug không vượt quá 120 ký tự (giới hạn của cột)
+    if (baseSlug.length > 120) {
+      baseSlug = baseSlug.substring(0, 120);
+    }
+    
+    // Kiểm tra xem slug đã tồn tại chưa và đảm bảo tính duy nhất
+    let slug = baseSlug;
+    let counter = 0;
+    let slugExists = true;
+    
+    while (slugExists) {
+      // Nếu counter > 0, thêm số vào cuối slug
+      if (counter > 0) {
+        // Cắt ngắn baseSlug để đảm bảo slug + counter không vượt quá 120 ký tự
+        const counterStr = `-${counter}`;
+        const maxBaseLength = 120 - counterStr.length;
+        
+        if (baseSlug.length > maxBaseLength) {
+          baseSlug = baseSlug.substring(0, maxBaseLength);
+        }
+        
+        slug = `${baseSlug}${counterStr}`;
+      }
+      
+      // Kiểm tra xem slug đã tồn tại trong database chưa
+      const where = { slug: slug };
+      
+      // Nếu là update, loại trừ post hiện tại
+      if (post.id) {
+        where.id = { [Sequelize.Op.ne]: post.id };
+      }
+      
+      const existingPost = await sequelize.models.Post.findOne({ where });
+      
+      if (!existingPost) {
+        slugExists = false;
+      } else {
+        counter += 1;
+      }
+    }
+    
+    return slug;
+  }
 
   Post.associate = (models) => {
     Post.belongsTo(models.User, { foreignKey: "user_id" });
