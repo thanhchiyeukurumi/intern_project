@@ -43,6 +43,7 @@ module.exports = {
           // Tạo thêm bài viết ngẫu nhiên
           ...Array(8).fill().map((_, index) => {
             // Đảm bảo user_id là hợp lệ (từ 1 đến 10)
+            // Không đảm bảo users có role là blogger
             const userId = Math.min(Math.ceil(Math.random() * 10), 10);
             const langId = Math.random() > 0.5 ? 1 : 2;
             const title = faker.lorem.sentence(5);
@@ -83,7 +84,7 @@ module.exports = {
           },
           {
             id: 2,
-            user_id: 2, // testuser
+            user_id: 2, // testuser -> chỉ để test
             abstract: 'Another Test Post',
             title: 'Another Test Post Title',
             content: 'This is another test post content...',

@@ -24,12 +24,6 @@ module.exports = {
           // Danh mục con của Giải trí
           { id: 9, name: 'Âm nhạc', parent_id: 3 },
           { id: 10, name: 'Phim ảnh', parent_id: 3 },
-          // // Thêm một số danh mục ngẫu nhiên
-          // ...Array(5).fill().map((_, index) => ({
-          //   id: 11 + index,
-          //   name: faker.word.noun() + ' ' + faker.word.adjective(),
-          //   parent_id: Math.ceil(Math.random() * 3) // Con của 1 trong 3 danh mục chính
-          // }))
         ]
       : [
           // Dữ liệu tối thiểu cho môi trường test

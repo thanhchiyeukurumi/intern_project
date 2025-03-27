@@ -54,7 +54,9 @@ module.exports = function(sequelize, DataTypes) {
   });
 
   PostCategory.associate = (models) => {
-    // This is a junction table, so typically no additional associations needed here
+    // Bảng trung gian nên có mối quan hệ với cả Post và Category
+    PostCategory.belongsTo(models.Post, { foreignKey: "post_id", as: "post" });
+    PostCategory.belongsTo(models.Category, { foreignKey: "category_id", as: "category" });
   };
   
   return PostCategory;
