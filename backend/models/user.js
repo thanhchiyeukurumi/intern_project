@@ -40,7 +40,9 @@ module.exports = function(sequelize, DataTypes) {
       references: {
         model: 'roles',
         key: 'id'
-      }
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'RESTRICT'
     },
     createdAt: {
       type: DataTypes.DATE,

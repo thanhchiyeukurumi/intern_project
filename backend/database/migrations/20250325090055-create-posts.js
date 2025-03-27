@@ -14,7 +14,9 @@ module.exports = {
         references: {
           model: 'users',
           key: 'id'
-        }
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       abstract: {
         type: Sequelize.STRING(100),
@@ -48,14 +50,18 @@ module.exports = {
         references: {
           model: 'languages',
           key: 'id'
-        }
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       original_post_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'posts',
           key: 'id'
-        }
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE' 
       },
       created_at: {
         type: Sequelize.DATE,

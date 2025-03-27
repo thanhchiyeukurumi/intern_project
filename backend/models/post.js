@@ -13,7 +13,9 @@ module.exports = function(sequelize, DataTypes) {
       references: {
         model: 'users',
         key: 'id'
-      }
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
     },
     abstract: {
       type: DataTypes.STRING(100),
@@ -47,7 +49,9 @@ module.exports = function(sequelize, DataTypes) {
       references: {
         model: 'languages',
         key: 'id'
-      }
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
     },
     original_post_id: {
       type: DataTypes.INTEGER,
@@ -55,7 +59,9 @@ module.exports = function(sequelize, DataTypes) {
       references: {
         model: 'posts',
         key: 'id'
-      }
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
     }
   }, {
     sequelize,

@@ -13,7 +13,9 @@ module.exports = function (sequelize, DataTypes) {
       references: {
         model: 'users',
         key: 'id'
-      }
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
     },
     post_id: {
       type: DataTypes.INTEGER,
@@ -21,7 +23,9 @@ module.exports = function (sequelize, DataTypes) {
       references: {
         model: 'posts',
         key: 'id'
-      }
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
     },
     content: {
       type: DataTypes.TEXT,

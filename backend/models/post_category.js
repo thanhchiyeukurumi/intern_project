@@ -7,7 +7,9 @@ module.exports = function(sequelize, DataTypes) {
       references: {
         model: 'posts',
         key: 'id'
-      }
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
     },
     category_id: {
       type: DataTypes.INTEGER,
@@ -15,7 +17,9 @@ module.exports = function(sequelize, DataTypes) {
       references: {
         model: 'categories',
         key: 'id'
-      }
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
     }
   }, {
     sequelize,

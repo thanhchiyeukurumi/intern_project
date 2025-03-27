@@ -18,7 +18,9 @@ module.exports = function (sequelize, DataTypes) {
       references: {
         model: 'categories',
         key: 'id'
-      }
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL'
     }
   }, {
     sequelize,
