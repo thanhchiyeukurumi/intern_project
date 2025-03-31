@@ -3,4 +3,5 @@ node_modules
 scripts/
 .repomixignore
 repomix-output.xml
+repomix-output.txt
 guide/
