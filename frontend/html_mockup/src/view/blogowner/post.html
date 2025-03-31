@@ -7,6 +7,17 @@
     <title>Post Management - Hoang Thanh</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .translation-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .translation-container.expanded {
+            max-height: 500px; /* Đủ cao để hiển thị nội dung */
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100 text-gray-900">
@@ -114,97 +125,235 @@
                 </div>
 
                 <div class="divide-y divide-gray-200">
-                    <!-- Post Item 1 -->
-                    <div class="px-6 py-4 flex items-center justify-between">
-                        <div>
-                            <h4 class="font-medium">10 Tips for Better Blog Writing</h4>
-                            <p class="text-sm text-gray-500 mt-1">Created on May 15, 2023</p>
-                            <span class="text-gray-500 text-sm flex items-center gap-1 mt-2 sm:hidden">
-                                <i class="fas fa-eye"></i> 1,245
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-8">
-                            <span class="text-gray-500 flex items-center gap-1 hidden sm:block">
-                                <i class="fas fa-eye"></i> 1,245
-                            </span>
-                            <div class="relative">
-                                <button class="action-btn hover:bg-gray-100 p-2 rounded-full" data-dropdown="dropdown1">
-                                    <i class="fas fa-ellipsis-vertical"></i>
+                    <!-- Post Item 1 - Có bài viết phụ -->
+                    <div class="post-item">
+                        <div class="px-6 py-4 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <!-- Thêm nút expand -->
+                                <button class="expand-btn text-gray-400 hover:text-blue-600 p-1" data-post-id="post1">
+                                    <i class="fas fa-chevron-right transition-transform"></i>
                                 </button>
-                                <div id="dropdown1"
-                                    class="action-dropdown hidden absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100">
-                                    <a href="./changepost.html" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
-                                            class="fas fa-pencil w-4 mr-2"></i> Edit</a>
-                                    <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
-                                            class="fas fa-eye w-4 mr-2"></i> View</a>
-                                    <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
-                                            class="fas fa-link w-4 mr-2"></i> Copy Link</a>
-                                    <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block text-red-600"><i
-                                            class="fas fa-trash w-4 mr-2"></i> Delete</a>
+                                <div>
+                                    <div class="flex items-center">
+                                        <h4 class="font-medium">10 Tips for Better Blog Writing</h4>
+                                        <span class="ml-2 px-1.5 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">English</span>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mt-1">Created on May 15, 2023</p>
+                                    <span class="text-gray-500 text-sm flex items-center gap-1 mt-2 sm:hidden">
+                                        <i class="fas fa-eye"></i> 1,245
+                                    </span>
                                 </div>
+                            </div>
+                            <div class="flex items-center gap-8">
+                                <span class="text-gray-500 flex items-center gap-1 hidden sm:block">
+                                    <i class="fas fa-eye"></i> 1,245
+                                </span>
+                                <div class="relative">
+                                    <button class="action-btn hover:bg-gray-100 p-2 rounded-full" data-dropdown="dropdown1">
+                                        <i class="fas fa-ellipsis-vertical"></i>
+                                    </button>
+                                    <div id="dropdown1"
+                                        class="action-dropdown hidden absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100">
+                                        <a href="./changepost.html" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
+                                                class="fas fa-pencil w-4 mr-2"></i> Edit</a>
+                                        <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
+                                                class="fas fa-eye w-4 mr-2"></i> View</a>
+                                        <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
+                                                class="fas fa-link w-4 mr-2"></i> Copy Link</a>
+                                        <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block text-red-600"><i
+                                                class="fas fa-trash w-4 mr-2"></i> Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Phần bài viết phụ (ẩn ban đầu) -->
+                        <div class="translation-container bg-gray-50" id="translation-post1">
+                            <div class="pl-12 pr-6 py-3 border-t border-gray-100">
+                                <!-- Tiêu đề phần bài viết phụ -->
+                                <div class="text-xs text-gray-500 uppercase tracking-wider mb-3">Translations</div>
+                                
+                                <!-- Danh sách bài viết phụ -->
+                                <div class="space-y-3">
+                                    <!-- Bài viết phụ 1 -->
+                                    <div class="bg-white rounded-lg p-3 shadow-sm flex justify-between items-center">
+                                        <div>
+                                            <div class="flex items-center">
+                                                <h5 class="font-medium text-sm">10 Mẹo để Viết Blog Tốt hơn</h5>
+                                                <span class="ml-2 px-1.5 py-0.5 bg-yellow-100 text-yellow-800 text-xs rounded-full">Vietnamese</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 mt-1">
+                                                <span class="px-1.5 py-0.5 bg-green-100 text-green-800 text-xs rounded">Published</span>
+                                                <span class="text-xs text-gray-500">Updated: May 20, 2023</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <button class="text-gray-400 hover:text-blue-600 p-1" title="Edit">
+                                                <i class="fas fa-pencil"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-blue-600 p-1" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-red-600 p-1" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Bài viết phụ 2 -->
+                                    <div class="bg-white rounded-lg p-3 shadow-sm flex justify-between items-center">
+                                        <div>
+                                            <div class="flex items-center">
+                                                <h5 class="font-medium text-sm">10 conseils pour mieux rédiger des blogs</h5>
+                                                <span class="ml-2 px-1.5 py-0.5 bg-yellow-100 text-yellow-800 text-xs rounded-full">French</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 mt-1">
+                                                <span class="px-1.5 py-0.5 bg-orange-100 text-orange-800 text-xs rounded">Draft</span>
+                                                <span class="text-xs text-gray-500">Updated: May 18, 2023</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <button class="text-gray-400 hover:text-blue-600 p-1" title="Edit">
+                                                <i class="fas fa-pencil"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-blue-600 p-1" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-red-600 p-1" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Nút thêm bản dịch mới -->
+                                <button class="mt-3 flex items-center gap-1 text-blue-600 text-sm py-1 px-2 rounded hover:bg-blue-50">
+                                    <i class="fas fa-plus text-xs"></i> Add Translation
+                                </button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Post Item 2 -->
-                    <div class="px-6 py-4 flex items-center justify-between">
-                        <div>
-                            <h4 class="font-medium">How I Built My First Web App</h4>
-                            <p class="text-sm text-gray-500 mt-1">Created on April 27, 2023</p>
-                            <span class="text-gray-500 text-sm flex items-center gap-1 mt-2 sm:hidden">
-                                <i class="fas fa-eye"></i> 1,245
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-8">
-                            <span class="text-gray-500 flex items-center gap-1 hidden sm:block">
-                                <i class="fas fa-eye"></i> 987
-                            </span>
-                            <div class="relative">
-                                <button class="action-btn hover:bg-gray-100 p-2 rounded-full" data-dropdown="dropdown2">
-                                    <i class="fas fa-ellipsis-vertical"></i>
+                    <!-- Post Item 2 - Có bài viết phụ -->
+                    <div class="post-item">
+                        <div class="px-6 py-4 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <!-- Thêm nút expand -->
+                                <button class="expand-btn text-gray-400 hover:text-blue-600 p-1" data-post-id="post2">
+                                    <i class="fas fa-chevron-right transition-transform"></i>
                                 </button>
-                                <div id="dropdown2"
-                                    class="action-dropdown hidden absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100">
-                                    <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
-                                            class="fas fa-pencil w-4 mr-2"></i> Edit</a>
-                                    <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
-                                            class="fas fa-eye w-4 mr-2"></i> View</a>
-                                    <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
-                                            class="fas fa-link w-4 mr-2"></i> Copy Link</a>
-                                    <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block text-red-600"><i
-                                            class="fas fa-trash w-4 mr-2"></i> Delete</a>
+                                <div>
+                                    <div class="flex items-center">
+                                        <h4 class="font-medium">How I Built My First Web App</h4>
+                                        <span class="ml-2 px-1.5 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">English</span>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mt-1">Created on April 27, 2023</p>
+                                    <span class="text-gray-500 text-sm flex items-center gap-1 mt-2 sm:hidden">
+                                        <i class="fas fa-eye"></i> 987
+                                    </span>
                                 </div>
+                            </div>
+                            <div class="flex items-center gap-8">
+                                <span class="text-gray-500 flex items-center gap-1 hidden sm:block">
+                                    <i class="fas fa-eye"></i> 987
+                                </span>
+                                <div class="relative">
+                                    <button class="action-btn hover:bg-gray-100 p-2 rounded-full" data-dropdown="dropdown2">
+                                        <i class="fas fa-ellipsis-vertical"></i>
+                                    </button>
+                                    <div id="dropdown2"
+                                        class="action-dropdown hidden absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100">
+                                        <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
+                                                class="fas fa-pencil w-4 mr-2"></i> Edit</a>
+                                        <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
+                                                class="fas fa-eye w-4 mr-2"></i> View</a>
+                                        <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
+                                                class="fas fa-link w-4 mr-2"></i> Copy Link</a>
+                                        <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block text-red-600"><i
+                                                class="fas fa-trash w-4 mr-2"></i> Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Phần bài viết phụ (ẩn ban đầu) -->
+                        <div class="translation-container bg-gray-50" id="translation-post2">
+                            <div class="pl-12 pr-6 py-3 border-t border-gray-100">
+                                <!-- Tiêu đề phần bài viết phụ -->
+                                <div class="text-xs text-gray-500 uppercase tracking-wider mb-3">Translations</div>
+                                
+                                <!-- Danh sách bài viết phụ -->
+                                <div class="space-y-3">
+                                    <!-- Bài viết phụ 1 -->
+                                    <div class="bg-white rounded-lg p-3 shadow-sm flex justify-between items-center">
+                                        <div>
+                                            <div class="flex items-center">
+                                                <h5 class="font-medium text-sm">Cách tôi đã xây dựng ứng dụng web đầu tiên</h5>
+                                                <span class="ml-2 px-1.5 py-0.5 bg-yellow-100 text-yellow-800 text-xs rounded-full">Vietnamese</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 mt-1">
+                                                <span class="px-1.5 py-0.5 bg-green-100 text-green-800 text-xs rounded">Published</span>
+                                                <span class="text-xs text-gray-500">Updated: May 1, 2023</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <button class="text-gray-400 hover:text-blue-600 p-1" title="Edit">
+                                                <i class="fas fa-pencil"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-blue-600 p-1" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-red-600 p-1" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Nút thêm bản dịch mới -->
+                                <button class="mt-3 flex items-center gap-1 text-blue-600 text-sm py-1 px-2 rounded hover:bg-blue-50">
+                                    <i class="fas fa-plus text-xs"></i> Add Translation
+                                </button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Post Item 3 -->
-                    <div class="px-6 py-4 flex items-center justify-between">
-                        <div>
-                            <h4 class="font-medium">My Journey as a Developer</h4>
-                            <p class="text-sm text-gray-500 mt-1">Created on March 10, 2023</p>
-                            <span class="text-gray-500 text-sm flex items-center gap-1 mt-2 sm:hidden">
-                                <i class="fas fa-eye"></i> 1,245
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-8">
-                            <span class="text-gray-500 flex items-center gap-1 hidden sm:block">
-                                <i class="fas fa-eye"></i> 3,102
-                            </span>
-                            <div class="relative">
-                                <button class="action-btn hover:bg-gray-100 p-2 rounded-full" data-dropdown="dropdown3">
-                                    <i class="fas fa-ellipsis-vertical"></i>
-                                </button>
-                                <div id="dropdown3"
-                                    class="action-dropdown hidden absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100">
-                                    <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
-                                            class="fas fa-pencil w-4 mr-2"></i> Edit</a>
-                                    <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
-                                            class="fas fa-eye w-4 mr-2"></i> View</a>
-                                    <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
-                                            class="fas fa-link w-4 mr-2"></i> Copy Link</a>
-                                    <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block text-red-600"><i
-                                            class="fas fa-trash w-4 mr-2"></i> Delete</a>
+                    <!-- Post Item 3 - Không có bài viết phụ -->
+                    <div class="post-item">
+                        <div class="px-6 py-4 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <!-- Không có nút expand -->
+                                <div class="w-[28px]"></div> <!-- Để giữ layout thống nhất -->
+                                <div>
+                                    <div class="flex items-center">
+                                        <h4 class="font-medium">My Journey as a Developer</h4>
+                                        <span class="ml-2 px-1.5 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">English</span>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mt-1">Created on March 10, 2023</p>
+                                    <span class="text-gray-500 text-sm flex items-center gap-1 mt-2 sm:hidden">
+                                        <i class="fas fa-eye"></i> 3,102
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-8">
+                                <span class="text-gray-500 flex items-center gap-1 hidden sm:block">
+                                    <i class="fas fa-eye"></i> 3,102
+                                </span>
+                                <div class="relative">
+                                    <button class="action-btn hover:bg-gray-100 p-2 rounded-full" data-dropdown="dropdown3">
+                                        <i class="fas fa-ellipsis-vertical"></i>
+                                    </button>
+                                    <div id="dropdown3"
+                                        class="action-dropdown hidden absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100">
+                                        <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
+                                                class="fas fa-pencil w-4 mr-2"></i> Edit</a>
+                                        <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
+                                                class="fas fa-eye w-4 mr-2"></i> View</a>
+                                        <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block"><i
+                                                class="fas fa-link w-4 mr-2"></i> Copy Link</a>
+                                        <a href="#" class="px-4 py-2 text-sm hover:bg-gray-50 block text-red-600"><i
+                                                class="fas fa-trash w-4 mr-2"></i> Delete</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -287,6 +436,29 @@
                     dropdown.classList.add('hidden');
                 });
             }
+        });
+
+        // Xử lý sự kiện cho các nút expand
+        document.querySelectorAll('.expand-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Lấy ID của bài viết
+                const postId = button.getAttribute('data-post-id');
+                // Tìm phần bài viết phụ tương ứng
+                const translationContainer = document.getElementById(`translation-${postId}`);
+                
+                // Toggle class expanded để hiện/ẩn bài viết phụ
+                translationContainer.classList.toggle('expanded');
+                
+                // Xoay biểu tượng mũi tên
+                const icon = button.querySelector('i');
+                if (translationContainer.classList.contains('expanded')) {
+                    icon.classList.remove('fa-chevron-right');
+                    icon.classList.add('fa-chevron-down');
+                } else {
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-right');
+                }
+            });
         });
     </script>
 </body>
