@@ -11,7 +11,9 @@ const hash = require('kernels/hash');
 
 // JWT strategy
 const jwtOptions = {
+  // Lấy token từ header Authorization  
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  // Sử dụng secret key để giải mã token
   secretOrKey: jwtConfig.secret
 };
 

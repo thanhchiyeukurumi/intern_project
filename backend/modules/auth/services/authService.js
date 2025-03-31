@@ -65,16 +65,23 @@ class AuthService {
     const userObj = user.toJSON();
     delete userObj.password;
     
-    // Tạo token JWT sử dụng jwtUtils
+    // Tạo access token JWT
     const token = jwtUtils.generate({
       id: userObj.id,
       email: userObj.email,
       role: userObj.role?.name || 'user'
     });
     
+    // Tạo refresh token
+    const refreshToken = jwtUtils.signRefreshToken(
+      userObj.id,
+      userObj.role?.name || 'user'
+    );
+    
     return {
       user: userObj,
-      token
+      token,
+      refreshToken
     };
   }
 
@@ -112,16 +119,23 @@ class AuthService {
     const userObj = user.toJSON();
     delete userObj.password;
     
-    // Tạo token JWT
+    // Tạo access token
     const token = jwtUtils.generate({
       id: userObj.id,
       email: userObj.email,
       role: userObj.role?.name || 'user'
     });
     
+    // Tạo refresh token
+    const refreshToken = jwtUtils.signRefreshToken(
+      userObj.id,
+      userObj.role?.name || 'user'
+    );
+    
     return {
       user: userObj,
-      token
+      token,
+      refreshToken
     };
   }
 
@@ -134,16 +148,23 @@ class AuthService {
     // Loại bỏ password từ response
     const userObj = oauthUser;
     
-    // Tạo token JWT
+    // Tạo access token
     const token = jwtUtils.generate({
       id: userObj.id,
       email: userObj.email,
       role: userObj.role?.name || 'user'
     });
     
+    // Tạo refresh token
+    const refreshToken = jwtUtils.signRefreshToken(
+      userObj.id,
+      userObj.role?.name || 'user'
+    );
+    
     return {
       user: userObj,
-      token
+      token,
+      refreshToken
     };
   }
 

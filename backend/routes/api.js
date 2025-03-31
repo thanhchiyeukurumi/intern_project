@@ -2,17 +2,20 @@
 
 require("express-router-group");
 const express = require("express");
-const middlewares = require("../kernels/middlewares");
+const cookieParser = require("cookie-parser");
+const { middlewares, auth } = require("../kernels/middlewares");
 const { validate } = require("../kernels/validations");
 const exampleController = require("../modules/examples/controllers/exampleController");
 const authController = require("../modules/auth/controllers/authController");
 const { registerValidation, loginValidation } = require("../modules/auth/validations/authValidation");
-const { auth } = require("../kernels/middlewares");
 const passport = require("../configs/passport");
 const router = express.Router({ mergeParams: true });
 // const passport = require("passport");
 // Khởi tạo passport
 router.use(passport.initialize());
+
+// Sử dụng cookie-parser để đọc cookie
+router.use(cookieParser());
 
 // Authentication Routes
 router.group("/auth", (router) => {
@@ -21,6 +24,12 @@ router.group("/auth", (router) => {
 
   // Đăng nhập
   router.post('/login', validate(loginValidation), authController.login);
+
+  // Làm mới access token
+  router.post('/refresh-token', authController.refreshToken);
+
+  // Đăng xuất
+  router.post('/logout', authController.logout);
 
   // Lấy thông tin người dùng hiện tại
   router.get('/me', auth.authenticateJWT, authController.getCurrentUser);

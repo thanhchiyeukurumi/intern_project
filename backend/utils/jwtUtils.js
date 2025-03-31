@@ -46,12 +46,13 @@ module.exports = {
   signRefreshToken: (userId, userRole) => {
     const refresh_token = jwt.sign(
       {
-        userId: userId,
+        id: userId, // Sử dụng 'id' để phù hợp với payload trong generate
         role: userRole,
+        type: 'refresh'
       },
       config.jwt.secret,
       {
-        expiresIn: "1y",
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRY || "30d", // 30 ngày mặc định
       }
     );
 

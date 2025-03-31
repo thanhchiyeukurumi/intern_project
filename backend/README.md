@@ -115,27 +115,27 @@ Hệ thống sử dụng Role-Based Access Control (RBAC) với 4 vai trò:
 
 ### Xác thực người dùng
 ```javascript
-const { authenticateJWT } = require('middlewares/authMiddleware');
+const { auth } = require('kernels/middlewares');
 
 // Áp dụng middleware xác thực
-router.get('/protected-route', authenticateJWT, controller.method);
+router.get('/protected-route', auth.authenticateJWT, controller.method);
 ```
 
 ### Kiểm tra vai trò
 ```javascript
-const { hasRole, isAdmin, isBlogger, isAuthenticated } = require('middlewares/roleMiddleware');
+const { auth, role } = require('kernels/middlewares');
 
 // Kiểm tra vai trò admin
-router.get('/admin/dashboard', authenticateJWT, isAdmin, controller.dashboard);
+router.get('/admin/dashboard', auth.authenticateJWT, role.isAdmin, controller.dashboard);
 
 // Kiểm tra nhiều vai trò
-router.get('/content/manage', authenticateJWT, hasRole(['admin', 'blogger']), controller.manageContent);
+router.get('/content/manage', auth.authenticateJWT, role.hasRole(['admin', 'blogger']), controller.manageContent);
 
 // Kiểm tra blogger
-router.post('/posts', authenticateJWT, isBlogger, controller.createPost);
+router.post('/posts', auth.authenticateJWT, role.isBlogger, controller.createPost);
 
 // Kiểm tra đã đăng nhập
-router.get('/profile', authenticateJWT, isAuthenticated, controller.getProfile);
+router.get('/profile', auth.authenticateJWT, role.isAuthenticated, controller.getProfile);
 ```
 
 ## Response Format

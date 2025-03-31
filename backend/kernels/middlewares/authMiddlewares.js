@@ -54,24 +54,11 @@ const githubCallback = passport.authenticate('github', {
   failureRedirect: '/auth/login'
 });
 
-/**
- * Tạo JWT token
- * @param {Object} user - Thông tin người dùng
- * @returns {String} - JWT token
- */
-const generateToken = (user) => {
-  return jwtUtils.generate({
-    id: user.id,
-    email: user.email,
-    role: user.role?.name || 'user'
-  });
-};
-
 module.exports = {
   authenticateJWT,
+  
   authenticateGoogle,
   authenticateGithub,
   googleCallback,
-  githubCallback,
-  generateToken
+  githubCallback
 }; 

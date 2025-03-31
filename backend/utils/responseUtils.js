@@ -8,20 +8,20 @@ module.exports = {
     });
   },
 
-  created: (res, data, message = "Created successfully") => {
+  created: (res, data) => {
     return res.status(201).send({
       success: true,
       data,
       status: 201,
-      message
+      message: "Created successfully"
     });
   },
 
-  notFound: (res) => {
+  notFound: (res, message) => {
     return res.status(404).send({
       success: false,
       status: 404,
-      message: "Cannot find resouces",
+      message: message || "Cannot find resouces",
     });
   },
 
