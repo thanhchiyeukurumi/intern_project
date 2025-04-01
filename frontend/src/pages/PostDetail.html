@@ -9,6 +9,7 @@
 
     <script src="https://thanhchiyeukurumi.github.io/intern_project/frontend/html_mockup/src/assets/js/components.js" defer></script>
     <link href="https://thanhchiyeukurumi.github.io/intern_project/frontend/html_mockup/src/assets/js/components.js" rel="stylesheet">
+    <script src="../assets/js/pages/postDetailComment.js" defer></script>
 </head>
 <body class="font-serif bg-[#f5f5f5] text-gray-900 page-container">
     <!-- Navigation -->
@@ -166,26 +167,5 @@
 
     <!-- Footer -->
     <div id="footer"></div>
-
-    <script>
-
-        // Dropdown functionality
-        document.getElementById('dropdownComment1Button').addEventListener('click', function(e) {
-            e.stopPropagation();
-            const dropdown = document.getElementById('dropdownComment1');
-            dropdown.classList.toggle('hidden');
-            
-            // Position the dropdown below the button
-            const buttonRect = this.getBoundingClientRect();
-            dropdown.style.position = 'absolute';
-            dropdown.style.top = (buttonRect.bottom + window.scrollY) + 'px';
-            dropdown.style.right = (window.innerWidth - buttonRect.right) + 'px';
-        });
-        
-        // Close dropdown when clicking elsewhere
-        document.addEventListener('click', function() {
-            document.getElementById('dropdownComment1').classList.add('hidden');
-        });
-    </script>
 </body>
 </html>
