@@ -10,34 +10,34 @@
 
     <script src="https://thanhchiyeukurumi.github.io/intern_project/frontend/html_mockup/src/assets/js/components.js" defer></script>
     <link href="https://thanhchiyeukurumi.github.io/intern_project/frontend/html_mockup/src/assets/js/components.js" rel="stylesheet">
-<body class="font-serif bg-[#f5f5f5] text-gray-900">
+<body class="font-serif bg-[#f5f5f5] text-gray-900 page-container">
     <!-- Navigation -->
     <div id="navbar-guest"></div>
 
     <!-- User Profile Header -->
-    <div class="bg-[#f5f5f5] py-12 px-4 sm:px-6 lg:px-8">
+    <div class="bg-[#f5f5f5] py-12 px-4 sm:px-6 lg:px-8 user-profile-header">
         <div class="max-w-5xl mx-auto">
-            <div class="flex flex-col items-center md:flex-row md:items-start">
-                <div class="md:mr-8 mb-6 md:mb-0 flex justify-center flex-col items-center">
-                    <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Profile Picture" class="w-36 h-36 rounded-full">
+            <div class="flex flex-col items-center md:flex-row md:items-start user-profile-content">
+                <div class="md:mr-8 mb-6 md:mb-0 flex justify-center flex-col items-center user-avatar-container">
+                    <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Profile Picture" class="w-36 h-36 rounded-full user-avatar">
                 </div>
-                <div class="text-center md:text-left">
-                    <h1 class="text-4xl font-bold mb-2">Hoang Chi Thanh</h1>
-                    <p class="text-xl text-gray-700 mb-6">What the hell is going on?????????</p>
+                <div class="text-center md:text-left user-info">
+                    <h1 class="text-4xl font-bold mb-2 user-name">Hoang Chi Thanh</h1>
+                    <p class="text-xl text-gray-700 mb-6 user-tagline">What the hell is going on?????????</p>
                     
-                    <div class="flex flex-col sm:flex-row gap-3 mb-6">
-                        <div class="flex items-center text-gray-700">
-                            <span>42 Comment</span>
+                    <div class="flex flex-col sm:flex-row gap-3 mb-6 user-stats">
+                        <div class="flex items-center text-gray-700 user-stat-item">
+                            <span class="stat-value">42 Comment</span>
                         </div>
                     </div>
                     
-                    <p class="text-gray-700 mb-6 max-w-2xl flex">
+                    <p class="text-gray-700 mb-6 max-w-2xl flex user-bio">
                         Lmao it to hard
                     </p>
                     
-                    <div class="flex flex-wrap gap-3">
-                        <a href="#" class="px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800">Edit Profile</a>
-                        <a href="#" class="px-4 py-2 bg-white border border-gray-300 rounded-full hover:bg-gray-50">Share Profile</a>
+                    <div class="flex flex-wrap gap-3 user-actions">
+                        <a href="#" class="px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 btn-primary">Edit Profile</a>
+                        <a href="#" class="px-4 py-2 bg-white border border-gray-300 rounded-full hover:bg-gray-50 btn-secondary">Share Profile</a>
                     </div>
                 </div>
             </div>
@@ -45,81 +45,81 @@
     </div>
 
     <!-- User Content Navigation -->
-    <div class="border-b border-gray-200">
+    <div class="border-b border-gray-200 user-nav">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav class="flex overflow-x-auto">
-                <a href="#" class="px-4 py-4 text-black border-b-2 border-black font-medium mr-8 whitespace-nowrap">Comments</a>
+            <nav class="flex overflow-x-auto user-nav-tabs">
+                <a href="#" class="px-4 py-4 text-black border-b-2 border-black font-medium mr-8 whitespace-nowrap user-nav-tab active">Comments</a>
             </nav>
         </div>
     </div>
 
     <!-- Comments Section -->
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 class="text-2xl font-bold mb-8">Your Comments</h2>
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 user-comments-section">
+        <h2 class="text-2xl font-bold mb-8 section-title">Your Comments</h2>
         
         <!-- Comment Card 1 -->
-        <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow mb-8 p-6">
-            <div class="flex items-start mb-4">
-                <div class="flex-shrink-0 mr-4">
-                    <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Article Image" class="w-14 h-14 object-cover rounded">
+        <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow mb-8 p-6 comment-card">
+            <div class="flex items-start mb-4 comment-post-info">
+                <div class="flex-shrink-0 mr-4 post-image-container">
+                    <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Article Image" class="w-14 h-14 object-cover rounded post-image">
                 </div>
-                <div>
-                    <h3 class="font-bold text-lg mb-1">
-                        <a href="#" class="hover:underline">The Future of Web Development: What to Expect in 2025</a>
+                <div class="post-details">
+                    <h3 class="font-bold text-lg mb-1 post-title">
+                        <a href="#" class="hover:underline post-link">The Future of Web Development: What to Expect in 2025</a>
                     </h3>
-                    <p class="text-gray-500 text-sm">By James Wilson · May 15, 2025</p>
+                    <p class="text-gray-500 text-sm post-meta">By James Wilson · May 15, 2025</p>
                 </div>
             </div>
             
-            <div class="ml-0 sm:ml-18">
-                <p class="text-gray-800 mb-4">
+            <div class="ml-0 sm:ml-18 comment-content">
+                <p class="text-gray-800 mb-4 comment-text">
                     This article resonates deeply with me. The predictions about WebAssembly are spot on. 
                     I've been using it in my recent projects and the performance gains are substantial. 
                     Great insights about the future of web development!
                 </p>
-                <div class="flex items-center text-gray-500 text-sm">
-                    <span>Apr 22, 2025</span>
-                    <span class="mx-2">·</span>
-                    <button class="hover:text-black">Edit</button>
-                    <span class="mx-2">·</span>
-                    <button class="hover:text-black">Delete</button>
+                <div class="flex items-center text-gray-500 text-sm comment-actions">
+                    <span class="comment-date">Apr 22, 2025</span>
+                    <span class="mx-2 separator">·</span>
+                    <button class="hover:text-black comment-edit-btn">Edit</button>
+                    <span class="mx-2 separator">·</span>
+                    <button class="hover:text-black comment-delete-btn">Delete</button>
                 </div>
             </div>
         </div>
         
         <!-- Comment Card 2 -->
-        <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow mb-8 p-6">
-            <div class="flex items-start mb-4">
-                <div class="flex-shrink-0 mr-4">
-                    <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Article Image" class="w-14 h-14 object-cover rounded">
+        <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow mb-8 p-6 comment-card">
+            <div class="flex items-start mb-4 comment-post-info">
+                <div class="flex-shrink-0 mr-4 post-image-container">
+                    <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Article Image" class="w-14 h-14 object-cover rounded post-image">
                 </div>
-                <div>
-                    <h3 class="font-bold text-lg mb-1">
-                        <a href="#" class="hover:underline">Machine Learning in Healthcare: Real-World Applications</a>
+                <div class="post-details">
+                    <h3 class="font-bold text-lg mb-1 post-title">
+                        <a href="#" class="hover:underline post-link">Machine Learning in Healthcare: Real-World Applications</a>
                     </h3>
-                    <p class="text-gray-500 text-sm">By Sarah Chen · April 8, 2025</p>
+                    <p class="text-gray-500 text-sm post-meta">By Sarah Chen · April 8, 2025</p>
                 </div>
             </div>
             
-            <div class="ml-0 sm:ml-18">
-                <p class="text-gray-800 mb-4">
+            <div class="ml-0 sm:ml-18 comment-content">
+                <p class="text-gray-800 mb-4 comment-text">
                     I work in healthcare IT and can confirm these trends are becoming mainstream. 
                     We've implemented similar ML models for early disease detection. The accuracy rates 
                     mentioned here match our experience. Would love to see more about implementation challenges.
                 </p>
-                <div class="flex items-center text-gray-500 text-sm">
-                    <span>Apr 10, 2025</span>
-                    <span class="mx-2">·</span>
-                    <button class="hover:text-black">Edit</button>
-                    <span class="mx-2">·</span>
-                    <button class="hover:text-black">Delete</button>
+                <div class="flex items-center text-gray-500 text-sm comment-actions">
+                    <span class="comment-date">Apr 10, 2025</span>
+                    <span class="mx-2 separator">·</span>
+                    <button class="hover:text-black comment-edit-btn">Edit</button>
+                    <span class="mx-2 separator">·</span>
+                    <button class="hover:text-black comment-delete-btn">Delete</button>
                 </div>
             </div>
         </div>
         
         <!-- Load More Button -->
-        <div class="mt-8 text-center">
-            <button class="px-8 py-3 bg-white border border-gray-300 rounded-full hover:bg-gray-50 text-gray-800">
+        <div class="mt-8 text-center load-more-container">
+            <button class="px-8 py-3 bg-white border border-gray-300 rounded-full hover:bg-gray-50 text-gray-800 btn-load-more">
                 Load More Comments
             </button>
         </div>

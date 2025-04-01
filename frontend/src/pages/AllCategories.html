@@ -15,23 +15,23 @@
         rel="stylesheet">
 </head>
 
-<body class="font-serif bg-[#f5f5f5] text-gray-900">
+<body class="font-serif bg-[#f5f5f5] text-gray-900 page-container">
     <!-- Navigation -->
     <div id="navbar-guest"></div>
 
     <!-- Topics Header -->
-    <div class="bg-[#f5f5f5] py-12 px-4 sm:px-6 lg:px-8">
+    <div class="bg-[#f5f5f5] py-12 px-4 sm:px-6 lg:px-8 categories-header">
         <div class="max-w-7xl mx-auto">
-            <h1 class="text-5xl font-bold mb-6 text-center md:text-left">Explore Topics</h1>
-            <p class="text-xl text-gray-700 mb-8 text-center md:text-left">Find stories and perspectives on the topics
+            <h1 class="text-5xl font-bold mb-6 text-center md:text-left page-title">Explore Topics</h1>
+            <p class="text-xl text-gray-700 mb-8 text-center md:text-left page-description">Find stories and perspectives on the topics
                 that matter to you.</p>
 
             <!-- Topics Search -->
-            <div class="mb-12 max-w-2xl">
-                <div class="relative">
+            <div class="mb-12 max-w-2xl search-container">
+                <div class="relative search-wrapper">
                     <input type="text" placeholder="Search topics..."
-                        class="w-full px-5 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-black">
-                    <button class="absolute right-3 top-3 text-gray-600">
+                        class="w-full px-5 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-black search-input">
+                    <button class="absolute right-3 top-3 text-gray-600 search-button">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -44,57 +44,57 @@
     </div>
 
     <!-- Topic Categories -->
-    <div class="py-12 px-4 sm:px-6 lg:px-8">
+    <div class="py-12 px-4 sm:px-6 lg:px-8 categories-content">
         <div class="max-w-7xl mx-auto">
-            <h2 class="text-2xl font-bold mb-8">Popular Topics</h2>
+            <h2 class="text-2xl font-bold mb-8 section-title">Popular Topics</h2>
 
             <!-- Topic Pills with Horizontal Scroll -->
-            <div class="relative mb-12">
-                <div class="flex overflow-x-auto scrollbar-hide gap-3 pb-2 max-w-full">
+            <div class="relative mb-12 topics-scroll-container">
+                <div class="flex overflow-x-auto scrollbar-hide gap-3 pb-2 max-w-full topics-scroll-wrapper">
                     <a href="#"
-                        class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0">Programming</a>
-                    <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0">Data
+                        class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0 topic-pill">Programming</a>
+                    <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0 topic-pill">Data
                         Science</a>
                     <a href="#"
-                        class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0">Technology</a>
-                    <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0">Self
+                        class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0 topic-pill">Technology</a>
+                    <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0 topic-pill">Self
                         Improvement</a>
                     <a href="#"
-                        class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0">Writing</a>
+                        class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 flex-shrink-0 topic-pill">Writing</a>
                 </div>
                 <!-- Gradient fades on sides to indicate more content -->
                 <div
-                    class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#f5f5f5] to-transparent pointer-events-none">
+                    class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#f5f5f5] to-transparent pointer-events-none scroll-fade-left">
                 </div>
                 <div
-                    class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#f5f5f5] to-transparent pointer-events-none">
+                    class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#f5f5f5] to-transparent pointer-events-none scroll-fade-right">
                 </div>
             </div>
 
             <!-- Featured Topics -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 topics-grid">
                 <!-- Topic Card 1 -->
-                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow topic-card">
+                    <div class="p-6 card-content">
+                        <div class="flex items-center mb-4 card-header">
                             <div
-                                class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                                class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600 topic-icon">
                                 <i class="fas fa-code"></i>
                             </div>
-                            <h3 class="text-xl font-bold ml-3">Programming</h3>
+                            <h3 class="text-xl font-bold ml-3 topic-title">Programming</h3>
                         </div>
-                        <p class="text-gray-600 mb-4">Everything about coding, software development, and programming
+                        <p class="text-gray-600 mb-4 topic-description">Everything about coding, software development, and programming
                             languages.</p>
-                        <a href="#" class="text-green-600 font-medium hover:underline">Explore Programming →</a>
+                        <a href="#" class="text-green-600 font-medium hover:underline topic-link">Explore Programming →</a>
 
-                        <div class="mt-6 border-t pt-6">
-                            <h4 class="font-medium mb-3">Popular articles</h4>
-                            <ul class="space-y-3">
-                                <li><a href="#" class="text-gray-700 hover:text-black">10 Python Tips for Advanced
+                        <div class="mt-6 border-t pt-6 topic-articles">
+                            <h4 class="font-medium mb-3 articles-title">Popular articles</h4>
+                            <ul class="space-y-3 articles-list">
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">10 Python Tips for Advanced
                                         Developers</a></li>
-                                <li><a href="#" class="text-gray-700 hover:text-black">Building Scalable Web
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">Building Scalable Web
                                         Applications</a></li>
-                                <li><a href="#" class="text-gray-700 hover:text-black">Modern JavaScript
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">Modern JavaScript
                                         Fundamentals</a></li>
                             </ul>
                         </div>
@@ -102,27 +102,27 @@
                 </div>
 
                 <!-- Topic Card 2 -->
-                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow topic-card">
+                    <div class="p-6 card-content">
+                        <div class="flex items-center mb-4 card-header">
                             <div
-                                class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                                class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 topic-icon">
                                 <i class="fas fa-chart-line"></i>
                             </div>
-                            <h3 class="text-xl font-bold ml-3">Data Science</h3>
+                            <h3 class="text-xl font-bold ml-3 topic-title">Data Science</h3>
                         </div>
-                        <p class="text-gray-600 mb-4">Analytics, big data, machine learning, and artificial
+                        <p class="text-gray-600 mb-4 topic-description">Analytics, big data, machine learning, and artificial
                             intelligence.</p>
-                        <a href="#" class="text-blue-600 font-medium hover:underline">Explore Data Science →</a>
+                        <a href="#" class="text-blue-600 font-medium hover:underline topic-link">Explore Data Science →</a>
 
-                        <div class="mt-6 border-t pt-6">
-                            <h4 class="font-medium mb-3">Popular articles</h4>
-                            <ul class="space-y-3">
-                                <li><a href="#" class="text-gray-700 hover:text-black">Introduction to Neural
+                        <div class="mt-6 border-t pt-6 topic-articles">
+                            <h4 class="font-medium mb-3 articles-title">Popular articles</h4>
+                            <ul class="space-y-3 articles-list">
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">Introduction to Neural
                                         Networks</a></li>
-                                <li><a href="#" class="text-gray-700 hover:text-black">Data Visualization Best
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">Data Visualization Best
                                         Practices</a></li>
-                                <li><a href="#" class="text-gray-700 hover:text-black">Ethical Considerations in AI</a>
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">Ethical Considerations in AI</a>
                                 </li>
                             </ul>
                         </div>
@@ -130,25 +130,25 @@
                 </div>
 
                 <!-- Topic Card 3 -->
-                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow topic-card">
+                    <div class="p-6 card-content">
+                        <div class="flex items-center mb-4 card-header">
                             <div
-                                class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600">
+                                class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 topic-icon">
                                 <i class="fas fa-brain"></i>
                             </div>
-                            <h3 class="text-xl font-bold ml-3">Psychology</h3>
+                            <h3 class="text-xl font-bold ml-3 topic-title">Psychology</h3>
                         </div>
-                        <p class="text-gray-600 mb-4">Mental health, behavioral science, and human relationships.</p>
-                        <a href="#" class="text-purple-600 font-medium hover:underline">Explore Psychology →</a>
+                        <p class="text-gray-600 mb-4 topic-description">Mental health, behavioral science, and human relationships.</p>
+                        <a href="#" class="text-purple-600 font-medium hover:underline topic-link">Explore Psychology →</a>
 
-                        <div class="mt-6 border-t pt-6">
-                            <h4 class="font-medium mb-3">Popular articles</h4>
-                            <ul class="space-y-3">
-                                <li><a href="#" class="text-gray-700 hover:text-black">Understanding Cognitive
+                        <div class="mt-6 border-t pt-6 topic-articles">
+                            <h4 class="font-medium mb-3 articles-title">Popular articles</h4>
+                            <ul class="space-y-3 articles-list">
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">Understanding Cognitive
                                         Biases</a></li>
-                                <li><a href="#" class="text-gray-700 hover:text-black">The Science of Happiness</a></li>
-                                <li><a href="#" class="text-gray-700 hover:text-black">Managing Stress in Modern
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">The Science of Happiness</a></li>
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">Managing Stress in Modern
                                         Life</a></li>
                             </ul>
                         </div>
@@ -156,50 +156,50 @@
                 </div>
 
                 <!-- Topic Card 4 -->
-                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow topic-card">
+                    <div class="p-6 card-content">
+                        <div class="flex items-center mb-4 card-header">
                             <div
-                                class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
+                                class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600 topic-icon">
                                 <i class="fas fa-lightbulb"></i>
                             </div>
-                            <h3 class="text-xl font-bold ml-3">Creativity</h3>
+                            <h3 class="text-xl font-bold ml-3 topic-title">Creativity</h3>
                         </div>
-                        <p class="text-gray-600 mb-4">Art, design, writing, and creative process insights.</p>
-                        <a href="#" class="text-yellow-600 font-medium hover:underline">Explore Creativity →</a>
+                        <p class="text-gray-600 mb-4 topic-description">Art, design, writing, and creative process insights.</p>
+                        <a href="#" class="text-yellow-600 font-medium hover:underline topic-link">Explore Creativity →</a>
 
-                        <div class="mt-6 border-t pt-6">
-                            <h4 class="font-medium mb-3">Popular articles</h4>
-                            <ul class="space-y-3">
-                                <li><a href="#" class="text-gray-700 hover:text-black">Overcoming Creative Blocks</a>
+                        <div class="mt-6 border-t pt-6 topic-articles">
+                            <h4 class="font-medium mb-3 articles-title">Popular articles</h4>
+                            <ul class="space-y-3 articles-list">
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">Overcoming Creative Blocks</a>
                                 </li>
-                                <li><a href="#" class="text-gray-700 hover:text-black">Designing for Accessibility</a>
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">Designing for Accessibility</a>
                                 </li>
-                                <li><a href="#" class="text-gray-700 hover:text-black">The Art of Storytelling</a></li>
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">The Art of Storytelling</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <!-- Topic Card 5 -->
-                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow topic-card">
+                    <div class="p-6 card-content">
+                        <div class="flex items-center mb-4 card-header">
                             <div
-                                class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600">
+                                class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 topic-icon">
                                 <i class="fas fa-heartbeat"></i>
                             </div>
-                            <h3 class="text-xl font-bold ml-3">Health</h3>
+                            <h3 class="text-xl font-bold ml-3 topic-title">Health</h3>
                         </div>
-                        <p class="text-gray-600 mb-4">Wellness, nutrition, fitness, and medical knowledge.</p>
-                        <a href="#" class="text-red-600 font-medium hover:underline">Explore Health →</a>
+                        <p class="text-gray-600 mb-4 topic-description">Wellness, nutrition, fitness, and medical knowledge.</p>
+                        <a href="#" class="text-red-600 font-medium hover:underline topic-link">Explore Health →</a>
 
-                        <div class="mt-6 border-t pt-6">
-                            <h4 class="font-medium mb-3">Popular articles</h4>
-                            <ul class="space-y-3">
-                                <li><a href="#" class="text-gray-700 hover:text-black">The Science of Sleep</a></li>
-                                <li><a href="#" class="text-gray-700 hover:text-black">Nutrition Myths Debunked</a></li>
-                                <li><a href="#" class="text-gray-700 hover:text-black">Exercise for Mental Health</a>
+                        <div class="mt-6 border-t pt-6 topic-articles">
+                            <h4 class="font-medium mb-3 articles-title">Popular articles</h4>
+                            <ul class="space-y-3 articles-list">
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">The Science of Sleep</a></li>
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">Nutrition Myths Debunked</a></li>
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">Exercise for Mental Health</a>
                                 </li>
                             </ul>
                         </div>
@@ -207,25 +207,25 @@
                 </div>
 
                 <!-- Topic Card 6 -->
-                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
+                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow topic-card">
+                    <div class="p-6 card-content">
+                        <div class="flex items-center mb-4 card-header">
                             <div
-                                class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600">
+                                class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 topic-icon">
                                 <i class="fas fa-landmark"></i>
                             </div>
-                            <h3 class="text-xl font-bold ml-3">Politics</h3>
+                            <h3 class="text-xl font-bold ml-3 topic-title">Politics</h3>
                         </div>
-                        <p class="text-gray-600 mb-4">Current events, policy discussions, and political analysis.</p>
-                        <a href="#" class="text-indigo-600 font-medium hover:underline">Explore Politics →</a>
+                        <p class="text-gray-600 mb-4 topic-description">Current events, policy discussions, and political analysis.</p>
+                        <a href="#" class="text-indigo-600 font-medium hover:underline topic-link">Explore Politics →</a>
 
-                        <div class="mt-6 border-t pt-6">
-                            <h4 class="font-medium mb-3">Popular articles</h4>
-                            <ul class="space-y-3">
-                                <li><a href="#" class="text-gray-700 hover:text-black">Understanding Electoral
+                        <div class="mt-6 border-t pt-6 topic-articles">
+                            <h4 class="font-medium mb-3 articles-title">Popular articles</h4>
+                            <ul class="space-y-3 articles-list">
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">Understanding Electoral
                                         Systems</a></li>
-                                <li><a href="#" class="text-gray-700 hover:text-black">Global Political Trends</a></li>
-                                <li><a href="#" class="text-gray-700 hover:text-black">Media Literacy in Political
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">Global Political Trends</a></li>
+                                <li><a href="#" class="text-gray-700 hover:text-black article-link">Media Literacy in Political
                                         News</a></li>
                             </ul>
                         </div>
@@ -234,8 +234,8 @@
             </div>
 
             <!-- More Topics Button -->
-            <div class="mt-12 text-center">
-                <button class="px-8 py-3 bg-black text-white rounded-full hover:bg-gray-800 transition-colors">
+            <div class="mt-12 text-center more-topics-container">
+                <button class="px-8 py-3 bg-black text-white rounded-full hover:bg-gray-800 transition-colors btn-primary">
                     Explore More Topics
                 </button>
             </div>
@@ -243,46 +243,46 @@
     </div>
 
     <!-- Recommended Publications Section -->
-    <div class="bg-white py-16 mt-12">
+    <div class="bg-white py-16 mt-12 publications-section">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold mb-10">Recommended Write</h2>
+            <h2 class="text-3xl font-bold mb-10 section-title">Recommended Write</h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 publications-grid">
                 <!-- Publication 1 -->
-                <div class="flex flex-col">
+                <div class="flex flex-col publication-card">
                     <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256"
-                        alt="Publication" class="w-full h-40 object-cover rounded-lg mb-4">
-                    <h3 class="font-bold text-lg mb-2">The Startup</h3>
-                    <p class="text-gray-600 mb-4">Medium's largest active publication, followed by +738K people.</p>
-                    <a href="#" class="mt-auto text-black font-medium hover:underline">Follow</a>
+                        alt="Publication" class="w-full h-40 object-cover rounded-lg mb-4 publication-image">
+                    <h3 class="font-bold text-lg mb-2 publication-title">The Startup</h3>
+                    <p class="text-gray-600 mb-4 publication-description">Medium's largest active publication, followed by +738K people.</p>
+                    <a href="#" class="mt-auto text-black font-medium hover:underline publication-link">Follow</a>
                 </div>
 
                 <!-- Publication 2 -->
-                <div class="flex flex-col">
+                <div class="flex flex-col publication-card">
                     <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256"
-                        alt="Publication" class="w-full h-40 object-cover rounded-lg mb-4">
-                    <h3 class="font-bold text-lg mb-2">Better Programming</h3>
-                    <p class="text-gray-600 mb-4">Advice for programmers and developers looking to level up their
+                        alt="Publication" class="w-full h-40 object-cover rounded-lg mb-4 publication-image">
+                    <h3 class="font-bold text-lg mb-2 publication-title">Better Programming</h3>
+                    <p class="text-gray-600 mb-4 publication-description">Advice for programmers and developers looking to level up their
                         skills.</p>
-                    <a href="#" class="mt-auto text-black font-medium hover:underline">Follow</a>
+                    <a href="#" class="mt-auto text-black font-medium hover:underline publication-link">Follow</a>
                 </div>
 
                 <!-- Publication 3 -->
-                <div class="flex flex-col">
+                <div class="flex flex-col publication-card">
                     <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256"
-                        alt="Publication" class="w-full h-40 object-cover rounded-lg mb-4">
-                    <h3 class="font-bold text-lg mb-2">Towards Data Science</h3>
-                    <p class="text-gray-600 mb-4">Share concepts, ideas, and codes related to data science.</p>
-                    <a href="#" class="mt-auto text-black font-medium hover:underline">Follow</a>
+                        alt="Publication" class="w-full h-40 object-cover rounded-lg mb-4 publication-image">
+                    <h3 class="font-bold text-lg mb-2 publication-title">Towards Data Science</h3>
+                    <p class="text-gray-600 mb-4 publication-description">Share concepts, ideas, and codes related to data science.</p>
+                    <a href="#" class="mt-auto text-black font-medium hover:underline publication-link">Follow</a>
                 </div>
 
                 <!-- Publication 4 -->
-                <div class="flex flex-col">
+                <div class="flex flex-col publication-card">
                     <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256"
-                        alt="Publication" class="w-full h-40 object-cover rounded-lg mb-4">
-                    <h3 class="font-bold text-lg mb-2">The Writing Cooperative</h3>
-                    <p class="text-gray-600 mb-4">Helping each other write better through community and feedback.</p>
-                    <a href="#" class="mt-auto text-black font-medium hover:underline">Follow</a>
+                        alt="Publication" class="w-full h-40 object-cover rounded-lg mb-4 publication-image">
+                    <h3 class="font-bold text-lg mb-2 publication-title">The Writing Cooperative</h3>
+                    <p class="text-gray-600 mb-4 publication-description">Helping each other write better through community and feedback.</p>
+                    <a href="#" class="mt-auto text-black font-medium hover:underline publication-link">Follow</a>
                 </div>
             </div>
         </div>
