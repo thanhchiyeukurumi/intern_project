@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "postcss ./src/styles/index.css -o ./dist/styles.css",
+    "watch": "npx postcss styles.css -o dist/styles.css --watch",
     "preview": "vite preview",
-    "build:css": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
+    "build:css": "npx @tailwindcss/cli -i ./src/styles/index.css -o ./src/dist/styles.css --watch"
   },
   "keywords": [
     "blog",
@@ -17,16 +18,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.6.2",
-    "postcss-cli": "^11.0.1"
-  },
-  "devDependencies": {
-    "@tailwindcss/aspect-ratio": "^0.4.2",
-    "@tailwindcss/forms": "^0.5.7",
-    "@tailwindcss/typography": "^0.5.10",
-    "autoprefixer": "^10.4.21",
-    "postcss": "^8.4.32",
-    "tailwindcss": "^3.3.6",
-    "vite": "^6.2.3"
+    "@tailwindcss/cli": "^4.0.17",
+    "@tailwindcss/postcss": "^4.0.17",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.0.17"
   }
 }
