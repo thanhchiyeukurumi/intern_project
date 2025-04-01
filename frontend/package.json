@@ -8,7 +8,7 @@
     "build": "postcss ./src/styles/index.css -o ./dist/styles.css",
     "watch": "npx postcss styles.css -o dist/styles.css --watch",
     "preview": "vite preview",
-    "build:css": "npx @tailwindcss/cli -i ./src/styles/index.css -o ./src/dist/styles.css --watch"
+    "build:css": "npx @tailwindcss/cli -i ./src/styles/index.css -o ./src/dist/tailwind.css --watch"
   },
   "keywords": [
     "blog",
