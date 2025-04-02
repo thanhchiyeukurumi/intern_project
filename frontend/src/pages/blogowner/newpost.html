@@ -7,9 +7,10 @@
     <title>Create New Post - QuickBlog</title>
     <link rel="stylesheet" href="../../dist/tailwind.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.min.js"></script>
+    <script src="../../assets/js/components/componentsConfig.js" defer></script>
+    <script src="../../assets/js/pages/blogger.js" defer></script>
     <style>
  
     </style>
@@ -116,7 +117,7 @@
                             </div>
 
                             <!-- Category & Description -->
-                            <div class="grid gap-6 md:grid-cols-2">
+                            <div class="grid gap-6 md:grid-cols-2 mt-2">
                                 <div>
                                     <label class="block text-sm font-medium mb-2">Chuyên mục</label>
                                     <select id="post-category" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
@@ -138,7 +139,7 @@
 
                             <!-- Featured Image -->
                             <div>
-                                <label class="block text-sm font-medium mb-2">Ảnh đại diện bài viết</label>
+                                <label class="block text-sm font-medium mb-2 mt-2">Ảnh đại diện bài viết</label>
                                 <div class="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center" id="featured-image-container">
                                     <div id="upload-placeholder" class="cursor-pointer hover:bg-gray-50 rounded-lg py-8">
                                         <div class="mb-4 text-gray-400">
@@ -162,16 +163,12 @@
 
                             <!-- Editor -->
                             <div>
-                                <label class="block text-sm font-medium mb-2">Nội dung</label>
+                                <label class="block text-sm font-medium mb-2 mt-2">Nội dung</label>
                                 <div class="editor-wrapper">
-                                    <div class="bg-gray-50 border-b border-gray-200 px-4 py-2 flex items-center text-sm">
-                                        <div class="flex items-center mr-4">
-                                            <span class="mr-2">Chèn:</span>
+                                    <div class="bg-gray-50 border-b border-gray-200 px-2 py-2 flex items-center text-sm">
+                                        <div class="flex items-center mr-2">
                                             <button type="button" class="text-gray-600 hover:text-blue-600 px-2 py-1" id="insert-image">
                                                 <i class="fas fa-image"></i> Ảnh
-                                            </button>
-                                            <button type="button" class="text-gray-600 hover:text-blue-600 px-2 py-1" id="insert-image-caption">
-                                                <i class="fas fa-image"></i> Ảnh kèm chú thích
                                             </button>
                                             <button type="button" class="text-gray-600 hover:text-blue-600 px-2 py-1" id="insert-video">
                                                 <i class="fas fa-video"></i> Video
@@ -180,12 +177,6 @@
                                                 <i class="fas fa-code"></i> Embed
                                             </button>
                                         </div>
-                                        <div class="ml-auto">
-                                            <select class="bg-white border border-gray-200 rounded px-2 py-1 text-sm">
-                                                <option>Tiếng Việt</option>
-                                                <option>English</option>
-                                            </select>
-                                        </div>
                                     </div>
                                     <div id="editor" class="post-detail-style"></div>
                                     <input type="hidden" id="editor-content" name="content">
@@ -193,73 +184,10 @@
                             </div>
 
                             <!-- Media Library Quick Access -->
-                            <div>
-                                <div class="flex justify-between items-center mb-3">
-                                    <label class="block text-sm font-medium">Thư viện media</label>
-                                    <button type="button" class="text-sm text-blue-600 hover:text-blue-800">
-                                        Xem tất cả <i class="fas fa-arrow-right ml-1"></i>
-                                    </button>
-                                </div>
-                                <div class="media-section">
-                                    <img src="https://picsum.photos/id/1018/200/200" alt="Media" class="media-item">
-                                    <img src="https://picsum.photos/id/1015/200/200" alt="Media" class="media-item">
-                                    <img src="https://picsum.photos/id/1019/200/200" alt="Media" class="media-item">
-                                    <img src="https://picsum.photos/id/1016/200/200" alt="Media" class="media-item">
-                                    <div class="w-[100px] h-[100px] rounded-md border border-dashed border-gray-300 flex items-center justify-center cursor-pointer bg-gray-50 hover:bg-gray-100">
-                                        <i class="fas fa-plus text-gray-400"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Tags -->
-                            <div>
-                                <label class="block text-sm font-medium mb-2">Tags</label>
-                                <div class="flex flex-wrap gap-2 p-3 border border-gray-200 rounded-lg">
-                                    <div class="flex items-center bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                                        blog
-                                        <button type="button" class="ml-1 text-blue-600 hover:text-blue-800">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
-                                    <div class="flex items-center bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                                        tutorial
-                                        <button type="button" class="ml-1 text-blue-600 hover:text-blue-800">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
-                                    <input type="text" placeholder="Thêm tag mới..." class="flex-grow outline-none px-2 py-1 text-sm">
-                                </div>
-                            </div>
-
-                            <!-- SEO Settings Accordion -->
-                            <div class="border border-gray-200 rounded-lg overflow-hidden">
-                                <button type="button" id="seo-toggle" class="w-full px-4 py-3 bg-gray-50 text-left font-medium flex justify-between items-center">
-                                    <span>Cài đặt SEO</span>
-                                    <i class="fas fa-chevron-down transition-transform"></i>
-                                </button>
-                                <div id="seo-content" class="hidden p-4 space-y-4 border-t border-gray-200">
-                                    <div>
-                                        <label class="block text-sm font-medium mb-2">Meta Title</label>
-                                        <input type="text" class="w-full px-4 py-2 border border-gray-200 rounded-lg">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-2">Meta Description</label>
-                                        <textarea rows="3" class="w-full px-4 py-2 border border-gray-200 rounded-lg"></textarea>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-2">Slug</label>
-                                        <input type="text" class="w-full px-4 py-2 border border-gray-200 rounded-lg">
-                                    </div>
-                                </div>
-                            </div>
-
                             <!-- Actions -->
                             <div class="pt-4 flex justify-end gap-3">
-                                <button type="button" class="px-6 py-2 border border-gray-200 rounded-lg hover:bg-gray-50">
-                                    Lưu nháp
-                                </button>
                                 <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
-                                    Xuất bản
+                                    Publish
                                 </button>
                             </div>
                         </div>
@@ -269,21 +197,6 @@
                 <!-- Phần xem trước -->
                 <div id="preview-container" class="preview-container hidden">
                     <article class="preview-article">
-                        <header class="mb-4 lg:mb-6">
-                            <h1 id="preview-title" class="preview-title">Tiêu đề bài viết</h1>
-                            <div class="preview-meta">
-                                <span id="preview-category" class="preview-category">Chuyên mục</span>
-                                <span>Đăng ngày <time datetime="2023-06-05">5/6/2023</time></span>
-                            </div>
-                            <div id="preview-image" class="mb-6">
-                                <img id="preview-featured-img" src="https://picsum.photos/id/1018/800/400" alt="Featured image" class="w-full h-auto rounded-lg">
-                                <p class="text-sm text-gray-600 mt-1">Ảnh minh họa</p>
-                            </div>
-                        </header>
-                        
-                        <div id="preview-content" class="prose">
-                            <!-- Nội dung sẽ được điền bởi JavaScript -->
-                        </div>
                     </article>
                 </div>
             </div>
