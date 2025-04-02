@@ -7,11 +7,14 @@
     <title>Account Settings - Hoang Thanh</title>
     <link rel="stylesheet" href="../../dist/tailwind.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../../assets/js/components/componentsConfig.js" defer></script>
     <script src="../../assets/js/pages/blogger.js" defer></script>
 </head>
 
 <body class="bg-gray-100 text-gray-900">
     <!-- Header -->
+
+    
     <header class="bg-white shadow-sm">
         <div class="max-w mx-3 px-2 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
@@ -171,24 +174,5 @@
             </div>
         </main>
     </div>
-
-    <script>
-        const themeRadios = document.querySelectorAll('input[name="theme"]');
-        themeRadios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                if (radio.value === 'dark') {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
-            });
-        });
-
-        // Language Selection
-        const languageSelect = document.querySelector('select');
-        languageSelect.addEventListener('change', () => {
-            // Add language change logic here
-        });
-    </script>
 </body>
 </html>       

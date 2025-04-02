@@ -45,6 +45,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Xử lý các nút xóa bài viết
     initDeletePostButtons();
+    
+    // Xử lý các trường có thể chỉnh sửa trong trang profile
+    initEditableFields();
+    
+    // Xử lý chức năng chọn theme và ngôn ngữ trong trang settings
+    initThemeAndLanguageSettings();
 });
 
 // Khởi tạo các nút dropdown trong bảng
@@ -229,6 +235,70 @@ function updateCommentCount() {
         if (pagingText) {
             pagingText.textContent = `Showing 1-${remainingComments} of ${remainingComments} comments`;
         }
+    }
+}
+
+// Khởi tạo các trường có thể chỉnh sửa trong trang profile
+function initEditableFields() {
+    const editableFields = document.querySelectorAll('.editable-field');
+    const saveButton = document.getElementById('saveButton');
+    
+    if (editableFields.length > 0 && saveButton) {
+        // Gắn sự kiện input cho các trường có thể chỉnh sửa
+        editableFields.forEach(field => {
+            field.addEventListener('input', () => {
+                const originalValue = field.dataset.originalValue;
+                if (field.textContent.trim() !== originalValue) {
+                    saveButton.classList.remove('hidden');
+                } else {
+                    // Kiểm tra nếu tất cả các trường đều có giá trị ban đầu
+                    const anyFieldChanged = Array.from(editableFields).some(field => 
+                        field.textContent.trim() !== field.dataset.originalValue
+                    );
+                    
+                    if (!anyFieldChanged) {
+                        saveButton.classList.add('hidden');
+                    }
+                }
+            });
+        });
+
+        // Gắn sự kiện click cho nút Save
+        saveButton.addEventListener('click', () => {
+            editableFields.forEach(field => {
+                field.dataset.originalValue = field.textContent.trim();
+            });
+            saveButton.classList.add('hidden');
+            // Thông báo lưu thành công
+            alert('Thông tin đã được lưu thành công!');
+        });
+    }
+}
+
+// Khởi tạo chức năng chọn theme và ngôn ngữ trong trang settings
+function initThemeAndLanguageSettings() {
+    // Xử lý theme selection
+    const themeRadios = document.querySelectorAll('input[name="theme"]');
+    if (themeRadios.length > 0) {
+        themeRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (radio.value === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            });
+        });
+    }
+
+    // Xử lý language selection
+    const languageSelect = document.querySelector('select');
+    if (languageSelect) {
+        languageSelect.addEventListener('change', () => {
+            // Thông báo đã chọn ngôn ngữ
+            const selectedLanguage = languageSelect.options[languageSelect.selectedIndex].text;
+            console.log(`Ngôn ngữ đã chọn: ${selectedLanguage}`);
+        });
     }
 }
 
