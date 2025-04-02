@@ -342,6 +342,9 @@
   .mx-2 {
     margin-inline: calc(var(--spacing) * 2);
   }
+  .mx-3 {
+    margin-inline: calc(var(--spacing) * 3);
+  }
   .mx-auto {
     margin-inline: auto;
   }
@@ -2203,6 +2206,7 @@
   --card-shadow-hover: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 @layer base;
+@layer components;
 @layer theme, base, components, utilities;
 @layer theme;
 @layer base {

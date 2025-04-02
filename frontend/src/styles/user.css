@@ -14,5 +14,12 @@
 }
 
 @layer base {
-
+  /* .hero-section {
+    background-color: var(--text-primary);
+  } */
+}
+@layer components {
+  /* .hero-section {
+    background-color: var(--text-primary);
+  } */
 }

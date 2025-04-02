@@ -1,4 +1,7 @@
 @import "tailwindcss";
+/* @plugin "daisyui"; */
+
+
 @import "./base.css";
 @import "./admin.css";
 @import "./user.css";
