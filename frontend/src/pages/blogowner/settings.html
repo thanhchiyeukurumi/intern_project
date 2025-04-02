@@ -7,15 +7,20 @@
     <title>Account Settings - Hoang Thanh</title>
     <link rel="stylesheet" href="../../dist/tailwind.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../../assets/js/components/componentsConfig.js" defer></script>
+    <script src="../../assets/js/pages/blogger.js" defer></script>
 </head>
 
 <body class="bg-gray-100 text-gray-900">
     <!-- Header -->
+
+    
     <header class="bg-white shadow-sm">
-        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+        <div class="max-w mx-3 px-2 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
-                <h1 class="text-2xl font-bold">QuickBlog</h1>
-                <!-- User Profile Dropdown (Same as profile.html) -->
+                <h1 class="text-2xl font-bold">QuickBlog - Blogger</h1>
+    
+                <!-- User Profile Dropdown -->
                 <div class="relative">
                     <button id="userDropdownButton" class="flex items-center gap-2" aria-expanded="false">
                         <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256"
@@ -23,6 +28,8 @@
                         <span class="font-medium">thanhthikalyce</span>
                         <i class="fas fa-chevron-down text-gray-500 text-xs transition-transform"></i>
                     </button>
+    
+                    <!-- Dropdown Menu -->
                     <div id="userDropdown"
                         class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100">
                         <a href="#" class="px-4 py-2.5 text-sm hover:bg-gray-50 block">Edit Profile</a>
@@ -72,14 +79,6 @@
                     <span class="nav-text">Settings</span>
                 </a>
             </nav>
-
-            <div class="mt-6 space-y-3">
-                <button
-                    class="w-full px-4 py-2.5 bg-gray-900 hover:bg-gray-800 text-white rounded-lg flex items-center gap-2">
-                    <i class="fas fa-plus w-5"></i>
-                    <a href="./newpost.html" class="sidebar-button-text">New Post</a>
-                </button>
-            </div>
         </div>
     </aside>
 
@@ -167,28 +166,5 @@
             </div>
         </main>
     </div>
-
-    <script>
-        // Include existing dropdown script from profile.html
-        // ...
-
-        // Theme Selection
-        const themeRadios = document.querySelectorAll('input[name="theme"]');
-        themeRadios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                if (radio.value === 'dark') {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
-            });
-        });
-
-        // Language Selection
-        const languageSelect = document.querySelector('select');
-        languageSelect.addEventListener('change', () => {
-            // Add language change logic here
-        });
-    </script>
 </body>
 </html>       

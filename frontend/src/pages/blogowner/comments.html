@@ -7,15 +7,17 @@
     <title>Comment Management - Hoang Thanh</title>
     <link rel="stylesheet" href="../../dist/tailwind.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../../assets/js/components/componentsConfig.js" defer></script>
+    <script src="../../assets/js/pages/blogger.js" defer></script>
 </head>
 
 <body class="bg-gray-100 text-gray-900">
     <!-- Header -->
     <header class="bg-white shadow-sm">
-        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+        <div class="max-w mx-3 px-2 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
-                <h1 class="text-2xl font-bold">QuickBlog</h1>
-
+                <h1 class="text-2xl font-bold">QuickBlog - Blogger</h1>
+    
                 <!-- User Profile Dropdown -->
                 <div class="relative">
                     <button id="userDropdownButton" class="flex items-center gap-2" aria-expanded="false">
@@ -24,7 +26,7 @@
                         <span class="font-medium">thanhthikalyce</span>
                         <i class="fas fa-chevron-down text-gray-500 text-xs transition-transform"></i>
                     </button>
-
+    
                     <!-- Dropdown Menu -->
                     <div id="userDropdown"
                         class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100">
@@ -75,14 +77,6 @@
                         <span class="nav-text">Settings</span>
                     </a>
                 </nav>
-
-                <div class="mt-6 space-y-3">
-                    <button
-                        class="w-full px-4 py-2.5 bg-gray-900 hover:bg-gray-800 text-white rounded-lg flex items-center gap-2">
-                        <i class="fas fa-plus w-5"></i>
-                        <a href="./newpost.html" class="sidebar-button-text">New Post</a>
-                    </button>
-                </div>
             </div>
         </aside>
 
@@ -90,18 +84,7 @@
         <main class="flex-1 p-6">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold">Comments</h2>
-                <div class="flex gap-3">
-                    <div class="hidden lg:block relative">
-                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                        <input type="text" placeholder="Search comments..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                    </div>
-                    <select class="border border-gray-300 rounded-lg px-4 py-2 bg-white">
-                        <option>All Comments</option>
-                        <option>Approved</option>
-                        <option>Pending</option>
-                        <option>Spam</option>
-                    </select>
-                </div>
+
             </div>
 
             <!-- Comments Table -->
@@ -109,7 +92,6 @@
                 <div class="px-6 py-4 border-b border-gray-200">
                     <div class="flex items-center justify-between">
                         <h3 class="font-medium">All Comments (5)</h3>
-                        <button class="text-blue-600 hover:text-blue-800 text-sm">Bulk Delete</button>
                     </div>
                 </div>
 
@@ -153,10 +135,10 @@
                                     <div class="flex flex-wrap items-center gap-2">
                                         <span class="font-medium">Jane Doe</span>
                                         <span class="text-sm text-gray-500">on</span>
-                                        <span class="text-blue-600 hover:underline text-sm">How I Built My First Web App</span>
+                                        <span class="text-blue-600 hover:underline text-sm">The Future of Web Development</span>
                                     </div>
-                                    <p class="text-sm text-gray-800 mt-1">Thanks for sharing your experience! What framework would you recommend for beginners?</p>
-                                    <p class="text-sm text-gray-500 mt-1">April 30, 2023 at 10:20 AM</p>
+                                    <p class="text-sm text-gray-800 mt-1">I think serverless architectures will continue to gain popularity.</p>
+                                    <p class="text-sm text-gray-500 mt-1">May 15, 2023 at 1:30 PM</p>
                                 </div>
                             </div>
                         </div>
@@ -283,66 +265,6 @@
             </div>
         </main>
     </div>
-
-    <script>
-        // Dropdown Toggle for User Profile
-        const dropdownButton = document.getElementById('userDropdownButton');
-        const dropdown = document.getElementById('userDropdown');
-
-        dropdownButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isExpanded = dropdownButton.getAttribute('aria-expanded') === 'true';
-            dropdown.classList.toggle('hidden', isExpanded);
-            dropdownButton.setAttribute('aria-expanded', !isExpanded);
-        });
-
-        // Close dropdown on outside click
-        document.addEventListener('click', (e) => {
-            if (!dropdown.contains(e.target) && e.target !== dropdownButton) {
-                dropdown.classList.add('hidden');
-                dropdownButton.setAttribute('aria-expanded', 'false');
-            }
-
-            // Close all action dropdowns
-            document.querySelectorAll('.action-dropdown').forEach(dropdown => {
-                if (!e.target.closest('.action-btn') ||
-                    e.target.closest('.action-btn').dataset.dropdown !== dropdown.id) {
-                    dropdown.classList.add('hidden');
-                }
-            });
-        });
-
-        // Action button dropdowns
-        document.querySelectorAll('.action-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const targetDropdown = document.getElementById(button.dataset.dropdown);
-
-                // Close all other dropdowns
-                document.querySelectorAll('.action-dropdown').forEach(dropdown => {
-                    if (dropdown.id !== button.dataset.dropdown) {
-                        dropdown.classList.add('hidden');
-                    }
-                });
-
-                // Toggle current dropdown
-                targetDropdown.classList.toggle('hidden');
-            });
-        });
-
-        // Close on Esc key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                dropdown.classList.add('hidden');
-                dropdownButton.setAttribute('aria-expanded', 'false');
-
-                // Close all action dropdowns
-                document.querySelectorAll('.action-dropdown').forEach(dropdown => {
-                    dropdown.classList.add('hidden');
-                });
-            }
-        });
-    </script>
 </body>
 
 </html>
