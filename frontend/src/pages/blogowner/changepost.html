@@ -4,11 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create New Post - QuickBlog</title>
+    <title>Edit Post - QuickBlog</title>
     <link rel="stylesheet" href="../../dist/tailwind.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.min.js"></script>
+    <script src="../../assets/js/components/componentsConfig.js" defer></script>
+    <script src="../../assets/js/pages/blogger.js" defer></script>
 </head>
 
 <body class="bg-gray-100 text-gray-900">
@@ -82,7 +84,7 @@
                 <button
                     class="w-full px-4 py-2.5 bg-blue-200 text-blue-700 rounded-lg flex items-center gap-2">
                     <i class="fas fa-pen w-5"></i>
-                    <a href="#" class="sidebar-button-text">Change Post</a>
+                    <a href="./newpost.html" class="sidebar-button-text">Create Post</a>
                 </button>
             </div>
         </div>
@@ -91,70 +93,121 @@
         <!-- Main Content -->
         <main class="flex-1 p-6">
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-                    <h2 class="text-2xl font-bold mb-6">Create New Post</h2>
-                    
-                    <form class="space-y-6">
-                        <!-- Post Title -->
-                        <div>
-                            <label class="block text-sm font-medium mb-2">Title</label>
-                            <input type="text" placeholder="Enter post title" 
-                                   class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                        </div>
+                <div class="border-b border-gray-200">
+                    <div class="flex">
+                        <button id="tab-edit" class="px-6 py-4 tab-active">Chỉnh sửa bài viết</button>
+                        <button id="tab-preview" class="px-6 py-4">Xem trước</button>
+                    </div>
+                </div>
 
-                        <!-- Category & Tags -->
-                        <div class="grid gap-6 md:grid-cols-2">
+                <!-- Phần soạn thảo -->
+                <div id="editor-container" class="p-8">
+                    <h2 class="text-2xl font-bold mb-6 text-center">Chỉnh sửa bài viết</h2>
+                    
+                    <form class="space-y-6" id="post-form">
+                        <div class="content-container">
+                            <!-- Post Title -->
                             <div>
-                                <label class="block text-sm font-medium mb-2">Category</label>
-                                <select class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                                    <option>Select category</option>
-                                    <option>Technology</option>
-                                    <option>Programming</option>
-                                    <option>Design</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-2">Tags</label>
-                                <input type="text" placeholder="comma separated tags" 
+                                <label class="block text-sm font-medium mb-2">Tiêu đề</label>
+                                <input type="text" id="post-title" placeholder="Nhập tiêu đề bài viết" 
+                                       value="10 Tips for Better Blog Writing"
                                        class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
                             </div>
-                        </div>
 
-                        <!-- Featured Image -->
-                        <div>
-                            <label class="block text-sm font-medium mb-2">Featured Image</label>
-                            <div class="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
-                                <div class="cursor-pointer hover:bg-gray-50 rounded-lg py-12">
-                                    <div class="mb-4 text-gray-400">
-                                        <i class="fas fa-cloud-upload-alt text-3xl"></i>
-                                    </div>
-                                    <p class="text-sm text-gray-600">
-                                        <span class="font-semibold text-blue-600">Click to upload</span> 
-                                        or drag and drop
-                                    </p>
-                                    <p class="text-xs text-gray-500 mt-1">PNG, JPG up to 2MB</p>
-                                    <input type="file" class="hidden" accept="image/*">
+                            <!-- Category & Description -->
+                            <div class="grid gap-6 md:grid-cols-2 mt-2">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Chuyên mục</label>
+                                    <select id="post-category" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                                        <option value="">Chọn chuyên mục</option>
+                                        <option value="Công nghệ" selected>Công nghệ</option>
+                                        <option value="Lập trình">Lập trình</option>
+                                        <option value="Thiết kế">Thiết kế</option>
+                                        <option value="Kinh doanh">Kinh doanh</option>
+                                        <option value="Thể thao">Thể thao</option>
+                                        <option value="Du lịch">Du lịch</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Mô tả ngắn</label>
+                                    <input type="text" id="post-description" placeholder="Nhập mô tả ngắn về bài viết"  
+                                           value="Những mẹo hay giúp viết blog hiệu quả hơn"
+                                           class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Editor -->
-                        <div>
-                            <label class="block text-sm font-medium mb-2">Content</label>
-                            <div id="editor" class="border border-gray-200 rounded-lg min-h-[400px]"></div>
-                            <input type="hidden" id="editor-content" name="content">
-                        </div>
+                            <!-- Featured Image -->
+                            <div>
+                                <label class="block text-sm font-medium mb-2 mt-2">Ảnh đại diện bài viết</label>
+                                <div class="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center" id="featured-image-container">
+                                    <div id="upload-placeholder" class="hidden cursor-pointer hover:bg-gray-50 rounded-lg py-8">
+                                        <div class="mb-4 text-gray-400">
+                                            <i class="fas fa-cloud-upload-alt text-3xl"></i>
+                                        </div>
+                                        <p class="text-sm text-gray-600">
+                                            <span class="font-semibold text-blue-600">Click để tải lên</span> 
+                                            hoặc kéo và thả
+                                        </p>
+                                        <p class="text-xs text-gray-500 mt-1">PNG, JPG tối đa 2MB</p>
+                                    </div>
+                                    <div id="preview-featured-image" class="block">
+                                        <img id="featured-image-preview" src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="mx-auto max-h-64 rounded-lg" alt="Ảnh đại diện">
+                                        <button type="button" id="remove-featured-image" class="mt-3 text-red-600 text-sm hover:text-red-800">
+                                            <i class="fas fa-trash"></i> Xóa ảnh
+                                        </button>
+                                    </div>
+                                    <input type="file" id="featured-image-upload" class="hidden" accept="image/*">
+                                </div>
+                            </div>
 
-                        <!-- Actions -->
-                        <div class="pt-4 flex justify-end gap-3">
-                            <button type="button" class="px-6 py-2 border border-gray-200 rounded-lg hover:bg-gray-50">
-                                Save Draft
-                            </button>
-                            <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
-                                Publish Post
-                            </button>
+                            <!-- Editor -->
+                            <div>
+                                <label class="block text-sm font-medium mb-2 mt-2">Nội dung</label>
+                                <div class="editor-wrapper">
+                                    <div class="bg-gray-50 border-b border-gray-200 px-2 py-2 flex items-center text-sm">
+                                        <div class="flex items-center mr-2">
+                                            <button type="button" class="text-gray-600 hover:text-blue-600 px-2 py-1" id="insert-image">
+                                                <i class="fas fa-image"></i> Ảnh
+                                            </button>
+                                            <button type="button" class="text-gray-600 hover:text-blue-600 px-2 py-1" id="insert-video">
+                                                <i class="fas fa-video"></i> Video
+                                            </button>
+                                            <button type="button" class="text-gray-600 hover:text-blue-600 px-2 py-1" id="insert-embed">
+                                                <i class="fas fa-code"></i> Embed
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="editor" class="post-detail-style"></div>
+                                    <input type="hidden" id="editor-content" name="content">
+                                </div>
+                            </div>
+
+                            <!-- Media Library Quick Access -->
+                            <!-- Actions -->
+                            <div class="pt-4 flex justify-end gap-3">
+                                <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                                    Cập nhật
+                                </button>
+                            </div>
                         </div>
                     </form>
+                </div>
+
+                <!-- Phần xem trước -->
+                <div id="preview-container" class="preview-container hidden">
+                    <article class="preview-article">
+                        <h1 id="preview-title" class="preview-title">10 Tips for Better Blog Writing</h1>
+                        <div class="preview-meta">
+                            <span id="preview-category" class="preview-category">Công nghệ</span>
+                            <span>Cập nhật: 15/05/2023</span>
+                        </div>
+                        <div id="preview-image" class="mb-6">
+                            <img id="preview-featured-img" src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Featured image" class="w-full rounded-lg">
+                        </div>
+                        <div id="preview-content" class="preview-content">
+                            <p>Nội dung bài viết sẽ hiển thị ở đây.</p>
+                        </div>
+                    </article>
                 </div>
             </div>
         </main>
@@ -164,35 +217,251 @@
         // Initialize Quill Editor
         const quill = new Quill('#editor', {
             theme: 'snow',
-            placeholder: 'Write your post content here...',
+            placeholder: 'Viết nội dung bài viết của bạn tại đây...',
             modules: {
                 toolbar: [
-                    ['bold', 'italic', 'underline'],
                     [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'color': [] }, { 'background': [] }],
                     [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'align': [] }],
+                    ['blockquote', 'code-block'],
                     ['link', 'image'],
                     ['clean']
                 ]
             }
         });
 
-        // Handle image upload
-        document.querySelector('input[type="file"]').addEventListener('change', function(e) {
+        // Set initial content
+        quill.root.innerHTML = `
+            <h1>10 Tips for Better Blog Writing</h1>
+            <p>Writing engaging blog content can be challenging, but with these tips, you can improve your skills and attract more readers.</p>
+            <h2>1. Know Your Audience</h2>
+            <p>Understanding who you're writing for is crucial. Consider their interests, needs, and pain points.</p>
+            <h2>2. Create Compelling Headlines</h2>
+            <p>Your headline is the first thing readers see. Make it interesting enough to grab their attention.</p>
+            <h2>3. Use Visuals</h2>
+            <p>Break up your text with relevant images, infographics, or videos to make your content more engaging.</p>
+            <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Person writing blog">
+            <h2>4. Write Clear, Concise Sentences</h2>
+            <p>Avoid jargon and overly complex sentences. Your content should be easy to read and understand.</p>
+            <h2>5. Format for Readability</h2>
+            <p>Use short paragraphs, bullet points, subheadings, and other formatting techniques to make your content scannable.</p>
+        `;
+
+        // Tối ưu hiển thị font (giảm giật khi load font)
+        document.fonts.ready.then(() => {
+            document.body.classList.add('fonts-loaded');
+        });
+
+        // Đảm bảo nội dung Quill có chiều rộng giống với trang chi tiết
+        const adjustQuillFormatting = () => {
+            // Tìm tất cả các ảnh và căn chỉnh
+            const images = quill.root.querySelectorAll('img');
+            images.forEach(img => {
+                img.style.display = 'block';
+                img.style.maxWidth = '100%';
+                img.style.width = '100%';
+                img.style.height = 'auto';
+                img.style.margin = '20px auto';
+                img.style.borderRadius = '8px';
+            });
+        };
+
+        // Chạy sau khi editor được tải
+        setTimeout(adjustQuillFormatting, 500);
+
+        // Xử lý chọn tab
+        const tabEdit = document.getElementById('tab-edit');
+        const tabPreview = document.getElementById('tab-preview');
+        const editorContainer = document.getElementById('editor-container');
+        const previewContainer = document.getElementById('preview-container');
+
+        tabEdit.addEventListener('click', function() {
+            tabEdit.classList.add('tab-active');
+            tabPreview.classList.remove('tab-active');
+            editorContainer.classList.remove('hidden');
+            previewContainer.classList.add('hidden');
+        });
+
+        tabPreview.addEventListener('click', function() {
+            tabPreview.classList.add('tab-active');
+            tabEdit.classList.remove('tab-active');
+            editorContainer.classList.add('hidden');
+            previewContainer.classList.remove('hidden');
+            
+            // Cập nhật nội dung xem trước
+            updatePreview();
+        });
+
+        // Cập nhật xem trước
+        function updatePreview() {
+            const title = document.getElementById('post-title').value || 'Tiêu đề bài viết';
+            const category = document.getElementById('post-category').value || 'Chuyên mục';
+            let content = quill.root.innerHTML;
+            
+            // Đảm bảo ảnh được căn giữa khi hiển thị xem trước
+            content = fixImageAlignment(content);
+            
+            document.getElementById('preview-title').textContent = title;
+            document.getElementById('preview-category').textContent = category;
+            document.getElementById('preview-content').innerHTML = content;
+            
+            // Hiển thị ảnh đại diện nếu có
+            const previewImg = document.getElementById('featured-image-preview');
+            if (previewImg && !previewImg.classList.contains('hidden') && previewImg.src) {
+                document.getElementById('preview-featured-img').src = previewImg.src;
+                document.getElementById('preview-image').classList.remove('hidden');
+            } else {
+                document.getElementById('preview-image').classList.add('hidden');
+            }
+        }
+
+        // Hàm xử lý căn giữa ảnh trong nội dung khi xem trước
+        function fixImageAlignment(content) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = content;
+            
+            // Tìm tất cả các thẻ img và đặt chúng vào container có căn giữa
+            const images = tempDiv.querySelectorAll('img');
+            images.forEach(img => {
+                // Đảm bảo ảnh có kích thước đầy đủ chiều rộng
+                img.style.width = '100%';
+                
+                // Kiểm tra nếu ảnh không nằm trong wrapper thì bọc lại
+                if (!img.parentElement.classList.contains('image-wrapper')) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'image-wrapper';
+                    img.parentNode.insertBefore(wrapper, img);
+                    wrapper.appendChild(img);
+                    
+                    // Thêm caption nếu chưa có
+                    const caption = document.createElement('p');
+                    caption.className = 'caption';
+                    caption.textContent = 'Ảnh minh họa';
+                    wrapper.appendChild(caption);
+                }
+            });
+            
+            return tempDiv.innerHTML;
+        }
+
+        // Xử lý tải lên ảnh đại diện
+        const featuredImageUpload = document.getElementById('featured-image-upload');
+        const uploadPlaceholder = document.getElementById('upload-placeholder');
+        const previewFeaturedImage = document.getElementById('preview-featured-image');
+        const featuredImagePreview = document.getElementById('featured-image-preview');
+        const removeFeaturedImage = document.getElementById('remove-featured-image');
+        const featuredImageContainer = document.getElementById('featured-image-container');
+        
+        featuredImageContainer.addEventListener('click', function() {
+            featuredImageUpload.click();
+        });
+        
+        featuredImageUpload.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.classList.add('max-w-full', 'h-auto', 'rounded-lg');
-                    quill.root.querySelector('.ql-editor').appendChild(img);
+                    featuredImagePreview.src = e.target.result;
+                    uploadPlaceholder.classList.add('hidden');
+                    previewFeaturedImage.classList.remove('hidden');
                 }
                 reader.readAsDataURL(file);
             }
         });
+        
+        removeFeaturedImage.addEventListener('click', function(e) {
+            e.stopPropagation();
+            featuredImageUpload.value = '';
+            uploadPlaceholder.classList.remove('hidden');
+            previewFeaturedImage.classList.add('hidden');
+        });
 
-        // Include existing dropdown script from profile.html
-        // ...
+        // Xử lý tải ảnh vào editor
+        document.getElementById('insert-image').addEventListener('click', function() {
+            const input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            input.setAttribute('accept', 'image/*');
+            input.click();
+            
+            input.onchange = () => {
+                const file = input.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const range = quill.getSelection(true);
+                        quill.insertEmbed(range.index, 'image', e.target.result);
+                        
+                        // Đảm bảo ảnh có kích thước đúng
+                        setTimeout(() => {
+                            const img = quill.root.querySelector(`img[src="${e.target.result}"]`);
+                            if (img) {
+                                img.style.display = 'block';
+                                img.style.maxWidth = '100%';
+                                img.style.width = '100%';
+                                img.style.height = 'auto';
+                                img.style.margin = '20px auto';
+                                img.style.borderRadius = '8px';
+                            }
+                        }, 10);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+        });
+
+        // Xử lý sự kiện paste để đảm bảo ảnh được căn giữa
+        quill.clipboard.addMatcher('img', function(node, delta) {
+            // Đảm bảo ảnh có style đúng
+            node.setAttribute('style', 'display: block; max-width: 100%; width: 100%; height: auto; margin: 20px auto; border-radius: 8px;');
+            
+            return delta;
+        });
+        
+        // Xử lý paste từ bất kỳ nguồn nào
+        quill.root.addEventListener('paste', function(e) {
+            // Chờ một chút để Quill xử lý paste
+            setTimeout(function() {
+                // Tìm tất cả các ảnh và căn chỉnh
+                const images = quill.root.querySelectorAll('img');
+                images.forEach(img => {
+                    img.style.display = 'block';
+                    img.style.maxWidth = '100%';
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+                    img.style.margin = '20px auto';
+                    img.style.borderRadius = '8px';
+                });
+            }, 100);
+        });
+
+        // Handle form submission
+        document.getElementById('post-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('editor-content').value = quill.root.innerHTML;
+            // Tại đây bạn sẽ thêm logic để gửi dữ liệu bài viết lên server
+            alert('Bài viết đã được cập nhật!');
+        });
+
+        // Dropdown Toggle for User Profile
+        const dropdownButton = document.getElementById('userDropdownButton');
+        const dropdown = document.getElementById('userDropdown');
+
+        dropdownButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isExpanded = dropdownButton.getAttribute('aria-expanded') === 'true';
+            dropdown.classList.toggle('hidden', isExpanded);
+            dropdownButton.setAttribute('aria-expanded', !isExpanded);
+        });
+
+        // Close dropdown on outside click
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target) && e.target !== dropdownButton) {
+                dropdown.classList.add('hidden');
+                dropdownButton.setAttribute('aria-expanded', 'false');
+            }
+        });
     </script>
 </body>
 </html>
