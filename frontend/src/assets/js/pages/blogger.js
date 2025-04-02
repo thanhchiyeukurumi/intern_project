@@ -39,9 +39,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Xử lý các nút xóa comment
     initDeleteCommentButtons();
+    
+    // Xử lý các nút expand cho bài viết có bản dịch
+    initExpandButtons();
+    
+    // Xử lý các nút xóa bài viết
+    initDeletePostButtons();
 });
 
-// Khởi tạo các nút dropdown trong bảng comments
+// Khởi tạo các nút dropdown trong bảng
 function initActionDropdowns() {
     const actionButtons = document.querySelectorAll('.action-btn');
     
@@ -74,6 +80,107 @@ function initActionDropdowns() {
     }
 }
 
+// Khởi tạo các nút expand/collapse cho bài viết có bản dịch
+function initExpandButtons() {
+    const expandButtons = document.querySelectorAll('.expand-btn');
+    
+    if (expandButtons.length > 0) {
+        expandButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Lấy ID của bài viết
+                const postId = button.getAttribute('data-post-id');
+                // Tìm phần bài viết phụ tương ứng
+                const translationContainer = document.getElementById(`translation-${postId}`);
+                
+                if (translationContainer) {
+                    // Toggle class expanded để hiện/ẩn bài viết phụ
+                    translationContainer.classList.toggle('expanded');
+                    
+                    // Xoay biểu tượng mũi tên
+                    const icon = button.querySelector('i');
+                    if (translationContainer.classList.contains('expanded')) {
+                        icon.classList.remove('fa-chevron-right');
+                        icon.classList.add('fa-chevron-down');
+                    } else {
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-right');
+                    }
+                }
+            });
+        });
+    }
+}
+
+// Khởi tạo các nút xóa bài viết (từ dropdown menu và từ nút xóa trực tiếp ở các bản dịch)
+function initDeletePostButtons() {
+    // Xử lý nút xóa từ dropdown menu (xóa bài viết gốc)
+    const deletePostButtons = document.querySelectorAll('.action-dropdown a[class*="text-red-600"]');
+    
+    if (deletePostButtons.length > 0) {
+        deletePostButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Xác nhận trước khi xóa
+                if (confirm('Bạn có chắc chắn muốn xóa bài viết này không? Tất cả bản dịch cũng sẽ bị xóa.')) {
+                    // Tìm phần tử bài viết cần xóa (div cha với class post-item)
+                    const postItem = this.closest('.post-item');
+                    
+                    if (postItem) {
+                        // Xóa bài viết khỏi DOM
+                        postItem.remove();
+                        
+                        // Cập nhật số lượng bài viết
+                        updatePostCount();
+                    }
+                }
+            });
+        });
+    }
+    
+    // Xử lý nút xóa cho các bản dịch (chỉ xóa bản dịch đó)
+    const deleteTranslationButtons = document.querySelectorAll('.translation-container .fa-trash');
+    
+    if (deleteTranslationButtons.length > 0) {
+        deleteTranslationButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Xác nhận trước khi xóa
+                if (confirm('Bạn có chắc chắn muốn xóa bản dịch này không?')) {
+                    // Tìm phần tử bản dịch cần xóa (div cha với class bg-white)
+                    const translationItem = this.closest('.bg-white.rounded-lg');
+                    
+                    if (translationItem) {
+                        // Xóa bản dịch khỏi DOM
+                        translationItem.remove();
+                    }
+                }
+            });
+        });
+    }
+}
+
+// Cập nhật số lượng bài viết được hiển thị
+function updatePostCount() {
+    const postCountElement = document.querySelector('.px-6.py-4.border-b h3');
+    const postsContainer = document.querySelector('.divide-y.divide-gray-200');
+    
+    if (postCountElement && postsContainer) {
+        // Đếm số lượng bài viết còn lại
+        const remainingPosts = postsContainer.querySelectorAll('.post-item').length;
+        
+        // Cập nhật text hiển thị
+        postCountElement.textContent = `All Posts (${remainingPosts})`;
+        
+        // Cập nhật phần paging bên dưới
+        const pagingText = document.querySelector('.px-6.py-4.border-t .text-sm.text-gray-500');
+        if (pagingText) {
+            pagingText.textContent = `Showing 1-${remainingPosts} of ${remainingPosts} posts`;
+        }
+    }
+}
+
 // Khởi tạo chức năng xóa comment
 function initDeleteCommentButtons() {
     // Tìm tất cả các nút xóa trong các dropdown
@@ -82,19 +189,22 @@ function initDeleteCommentButtons() {
     if (deleteButtons.length > 0) {
         deleteButtons.forEach(button => {
             button.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Xác nhận trước khi xóa
-                if (confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
-                    // Tìm phần tử comment cần xóa (div cha chứa cả comment và nút dropdown)
-                    const commentItem = this.closest('.px-6.py-4.flex');
+                // Chỉ xử lý nút xóa (có icon fa-trash)
+                if (this.querySelector('.fa-trash')) {
+                    e.preventDefault();
                     
-                    if (commentItem) {
-                        // Xóa comment khỏi DOM
-                        commentItem.remove();
+                    // Xác nhận trước khi xóa
+                    if (confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
+                        // Tìm phần tử comment cần xóa (div cha chứa cả comment và nút dropdown)
+                        const commentItem = this.closest('.px-6.py-4.flex');
                         
-                        // Cập nhật số lượng comment
-                        updateCommentCount();
+                        if (commentItem) {
+                            // Xóa comment khỏi DOM
+                            commentItem.remove();
+                            
+                            // Cập nhật số lượng comment
+                            updateCommentCount();
+                        }
                     }
                 }
             });

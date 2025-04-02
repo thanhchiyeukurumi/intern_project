@@ -14,7 +14,6 @@
     <div class="max-w mx-3 px-2 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center py-4">
             <h1 class="text-2xl font-bold">QuickBlog - Blogger</h1>
-
             <!-- User Profile Dropdown -->
             <div class="relative">
                 <button id="userDropdownButton" class="flex items-center gap-2" aria-expanded="false">
@@ -250,34 +249,5 @@
             </div>
         </main>
     </div>
-    
-    <script>
-        // Dropdown Toggle for User Profile
-        const dropdownButton = document.getElementById('userDropdownButton');
-        const dropdown = document.getElementById('userDropdown');
-
-        dropdownButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isExpanded = dropdownButton.getAttribute('aria-expanded') === 'true';
-            dropdown.classList.toggle('hidden', isExpanded);
-            dropdownButton.setAttribute('aria-expanded', !isExpanded);
-        });
-
-        // Close dropdown on outside click
-        document.addEventListener('click', (e) => {
-            if (!dropdown.contains(e.target) && e.target !== dropdownButton) {
-                dropdown.classList.add('hidden');
-                dropdownButton.setAttribute('aria-expanded', 'false');
-            }
-        });
-
-        // Close on Esc key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                dropdown.classList.add('hidden');
-                dropdownButton.setAttribute('aria-expanded', 'false');
-            }
-        });
-    </script>
 </body>
 </html>
