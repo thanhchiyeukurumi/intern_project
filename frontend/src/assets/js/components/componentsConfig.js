@@ -26,4 +26,12 @@ document.addEventListener("DOMContentLoaded", function () {
     loadComponent("#navbar-user", basePath + "NavBar-user.html");
     loadComponent("#navbar-owner", basePath + "NavBar-user.html"); 
     loadComponent("#footer", basePath + "Footer.html");
-  });
+
+    loadComponent("#navbar-bloggerPage", basePath + "NavBar-bloggerPage.html");
+
+    // // Import component cho navbar blogger
+    // const navbarBloggerScript = document.createElement('script');
+    // navbarBloggerScript.src = '../../assets/js/components/navbarBlogger.js';
+    // navbarBloggerScript.defer = true;
+    // document.head.appendChild(navbarBloggerScript);
+});

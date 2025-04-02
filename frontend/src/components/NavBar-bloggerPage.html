@@ -1,0 +1,56 @@
+<header class="bg-white shadow-sm">
+    <div class="max-w mx-3 px-2 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center py-4">
+            <h1 class="text-2xl font-bold">QuickBlog - Dashboard</h1>
+
+            <!-- User Profile Dropdown -->
+            <div class="relative">
+                <button id="userDropdownButton" class="flex items-center gap-2" aria-expanded="false">
+                    <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256"
+                        alt="Profile" class="w-8 h-8 rounded-full">
+                    <span class="font-medium">thanhthikalyce</span>
+                    <i class="fas fa-chevron-down text-gray-500 text-xs transition-transform"></i>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div id="userDropdown"
+                    class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100">
+                    <a href="#" class="px-4 py-2.5 text-sm hover:bg-gray-50 block">Edit Profile</a>
+                    <a href="#" class="px-4 py-2.5 text-sm hover:bg-gray-50 block">Settings</a>
+                    <hr class="my-1">
+                    <a href="#" class="px-4 py-2.5 text-sm hover:bg-gray-50 block text-red-600">Log out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<script>
+    // Dropdown Toggle
+    const dropdownButton = document.getElementById('userDropdownButton');
+    const dropdown = document.getElementById('userDropdown');
+
+    dropdownButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isExpanded = dropdownButton.getAttribute('aria-expanded') === 'true';
+        dropdown.classList.toggle('hidden', isExpanded);
+        dropdownButton.setAttribute('aria-expanded', !isExpanded);
+    });
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target)) {
+            dropdown.classList.add('hidden');
+            dropdownButton.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    // Close on Esc key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            dropdown.classList.add('hidden');
+            dropdownButton.setAttribute('aria-expanded', 'false');
+        }
+    });
+</script>
