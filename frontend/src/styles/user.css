@@ -3,6 +3,7 @@
 :root {
   --bg-test: #f5f525;
   --bg-primary: #f5f5f5;
+  --bg-dark-primary: black;
   --text-primary: #0f172a;
   --text-secondary: #64748b;
   --accent-color: #000000;
@@ -22,4 +23,10 @@
   /* .hero-section {
     background-color: var(--text-primary);
   } */
+}
+
+
+.hero-section {
+  /* @apply bg-[var(--bg-dark-primary)];
+  @apply  py-8 md:py-2 mt-4 md:mt-2 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center min-h-[70vh]; */
 }
