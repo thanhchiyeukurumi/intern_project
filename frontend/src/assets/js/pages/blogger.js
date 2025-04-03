@@ -51,6 +51,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Xử lý chức năng chọn theme và ngôn ngữ trong trang settings
     initThemeAndLanguageSettings();
+    
+    // Xử lý form bình luận trong trang chi tiết bài viết
+    initCommentForm();
 });
 
 // Khởi tạo các nút dropdown trong bảng
@@ -235,6 +238,147 @@ function updateCommentCount() {
         if (pagingText) {
             pagingText.textContent = `Showing 1-${remainingComments} of ${remainingComments} comments`;
         }
+    }
+}
+
+// Khởi tạo chức năng thêm bình luận mới
+function initCommentForm() {
+    const commentForm = document.querySelector('.post-comment-form');
+    const commentTextarea = document.getElementById('comment');
+    
+    if (commentForm && commentTextarea) {
+        commentForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const commentText = commentTextarea.value.trim();
+            
+            if (commentText) {
+                // Tạo bình luận mới
+                const newComment = createNewComment(commentText);
+                
+                // Thêm bình luận vào danh sách
+                const commentSection = document.querySelector('.post-comment-container');
+                
+                // Nếu đã có bình luận, thêm vào sau bình luận đầu tiên
+                const firstComment = document.querySelector('.post-comment-article');
+                if (firstComment) {
+                    firstComment.insertAdjacentHTML('afterend', newComment);
+                } else {
+                    // Nếu chưa có bình luận nào, thêm vào cuối form
+                    commentForm.insertAdjacentHTML('afterend', newComment);
+                }
+                
+                // Xóa nội dung textarea
+                commentTextarea.value = '';
+                
+                // Cập nhật số lượng bình luận trong tiêu đề
+                updateCommentCountInTitle();
+                
+                // Khởi tạo dropdown cho bình luận mới
+                initCommentDropdowns();
+            }
+        });
+    }
+}
+
+// Tạo HTML cho bình luận mới
+function createNewComment(commentText) {
+    // Lấy ngày hiện tại
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    
+    // Tạo ID ngẫu nhiên cho dropdown
+    const dropdownId = 'dropdown-' + Math.floor(Math.random() * 1000000);
+    
+    return `
+    <article class="post-comment-article p-6 mb-6 text-base bg-white rounded-lg comment-item">
+        <footer class="comment-footer flex justify-between items-center mb-2">
+            <div class="comment-author flex items-center">
+                <p class="inline-flex items-center mr-3 font-semibold text-sm text-gray-900 commenter-name">
+                    <img class="commenter-image mr-2 w-6 h-6 rounded-full"
+                        src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256"
+                        alt="User Avatar">
+                    thanhthikalyce
+                </p>
+                <p class="comment-date text-sm text-gray-600">
+                    <time pubdate datetime="${now.toISOString()}" title="${formattedDate}">${formattedDate}</time>
+                </p>
+            </div>
+            <button id="dropdownButton${dropdownId}" data-dropdown-toggle="${dropdownId}"
+                class="comment-dropdown-button inline-flex items-center p-2 text-sm font-medium text-center text-gray-500 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50"
+                type="button">
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+                    <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/>
+                </svg>
+                <span class="sr-only">Comment settings</span>
+            </button>
+            <!-- Dropdown menu -->
+            <div id="${dropdownId}"
+                class="comment-dropdown hidden z-10 w-36 bg-white rounded divide-y divide-gray-100 shadow">
+                <ul class="dropdown-menu py-1 text-sm text-gray-700 rounded-lg"
+                    aria-labelledby="dropdownButton${dropdownId}">
+                    <li class="dropdown-item">
+                        <a href="#"
+                            class="dropdown-link block py-2 px-4 hover:bg-gray-100">Edit</a>
+                    </li>
+                    <li class="dropdown-item">
+                        <a href="#"
+                            class="dropdown-link block py-2 px-4 hover:bg-gray-100">Remove</a>
+                    </li>
+                </ul>
+            </div>
+        </footer>
+        <p class="comment-text">${commentText}</p>
+    </article>
+    `;
+}
+
+// Khởi tạo dropdown cho bình luận
+function initCommentDropdowns() {
+    const dropdownButtons = document.querySelectorAll('[data-dropdown-toggle]');
+    
+    dropdownButtons.forEach(button => {
+        if (!button.hasAttribute('data-initialized')) {
+            const targetId = button.getAttribute('data-dropdown-toggle');
+            const dropdown = document.getElementById(targetId);
+            
+            if (dropdown) {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    // Đóng tất cả các dropdown khác
+                    document.querySelectorAll('.comment-dropdown').forEach(otherDropdown => {
+                        if (otherDropdown.id !== targetId) {
+                            otherDropdown.classList.add('hidden');
+                        }
+                    });
+                    
+                    // Toggle dropdown hiện tại
+                    dropdown.classList.toggle('hidden');
+                });
+                
+                // Đánh dấu đã khởi tạo
+                button.setAttribute('data-initialized', 'true');
+            }
+        }
+    });
+    
+    // Đóng tất cả các dropdown khi click bên ngoài
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('[data-dropdown-toggle]')) {
+            document.querySelectorAll('.comment-dropdown').forEach(dropdown => {
+                dropdown.classList.add('hidden');
+            });
+        }
+    });
+}
+
+// Cập nhật số lượng bình luận trong tiêu đề
+function updateCommentCountInTitle() {
+    const titleElement = document.querySelector('.post-comment-title');
+    if (titleElement) {
+        const commentCount = document.querySelectorAll('.post-comment-article').length;
+        titleElement.textContent = `Discussion (${commentCount})`;
     }
 }
 
