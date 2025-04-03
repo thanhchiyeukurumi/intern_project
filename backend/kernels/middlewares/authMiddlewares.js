@@ -31,12 +31,12 @@ const authenticateGoogle = passport.authenticate('google', {
   scope: ['profile', 'email']
 });
 
-/**
- * Middleware OAuth với GitHub
- */
-const authenticateGithub = passport.authenticate('github', {
-  scope: ['user:email']
-});
+// /**
+//  * Middleware OAuth với GitHub
+//  */
+// const authenticateGithub = passport.authenticate('github', {
+//   scope: ['user:email']
+// });
 
 /**
  * Middleware callback cho Google OAuth
@@ -46,19 +46,19 @@ const googleCallback = passport.authenticate('google', {
   failureRedirect: '/auth/login'
 });
 
-/**
- * Middleware callback cho GitHub OAuth
- */
-const githubCallback = passport.authenticate('github', {
-  session: false,
-  failureRedirect: '/auth/login'
-});
+// /**
+//  * Middleware callback cho GitHub OAuth
+//  */
+// const githubCallback = passport.authenticate('github', {
+//   session: false,
+//   failureRedirect: '/auth/login'
+// });
 
 module.exports = {
   authenticateJWT,
   
   authenticateGoogle,
-  authenticateGithub,
+  // authenticateGithub,
   googleCallback,
-  githubCallback
+  // githubCallback
 }; 

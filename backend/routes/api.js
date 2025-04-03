@@ -21,29 +21,23 @@ router.use(cookieParser());
 router.group("/auth", (router) => {
   // Đăng ký tài khoản mới
   router.post('/register', validate(registerValidation), authController.register);
-
   // Đăng nhập
   router.post('/login', validate(loginValidation), authController.login);
-
   // Làm mới access token
   router.post('/refresh-token', authController.refreshToken);
-
   // Đăng xuất
   router.post('/logout', authController.logout);
-
   // Lấy thông tin người dùng hiện tại
   router.get('/me', auth.authenticateJWT, authController.getCurrentUser);
-
   // Xác thực token
   router.get('/verify-token', auth.authenticateJWT, authController.verifyToken);
-
   // Routes cho Google OAuth
   router.get('/google', auth.authenticateGoogle);
   router.get('/google/callback', auth.googleCallback, authController.googleCallback);
 
-  // Routes cho GitHub OAuth
-  router.get('/github', auth.authenticateGithub);
-  router.get('/github/callback', auth.githubCallback, authController.githubCallback);
+  // // Routes cho GitHub OAuth
+  // router.get('/github', auth.authenticateGithub);
+  // router.get('/github/callback', auth.githubCallback, authController.githubCallback);
 });
 
 router.group("/example", validate([]), (router) => {
