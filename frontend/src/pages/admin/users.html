@@ -97,9 +97,7 @@
                                         <i class="fas fa-search"></i>
                                     </button>
                                 </div>
-                                <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    <i class="fas fa-filter mr-2"></i> Filter
-                                </button>   
+                                    
                             </div>
                         </div>
                         
@@ -115,12 +113,6 @@
                                 </select>
                             </div>
                             <div class="flex items-center">
-                                <!-- <span class="text-sm text-gray-500 mr-2">Status:</span> -->
-                                <!-- <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                    <option value="all">All Statuses</option>
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                </select> -->
                             </div>
                         </div>
                         
@@ -291,78 +283,4 @@
         </div>
     </div>
 </body>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-    // Toggle Sidebar on Mobile
-    const mobileMenuButton = document.getElementById("mobile-menu-button");
-    const sidebar = document.querySelector("aside");
-    
-    if (mobileMenuButton) {
-        mobileMenuButton.addEventListener("click", function () {
-            sidebar.classList.toggle("hidden");
-        });
-    }
-    
-    // Select All Checkbox Functionality
-    const selectAllCheckbox = document.querySelector("thead input[type='checkbox']");
-    const userCheckboxes = document.querySelectorAll("tbody input[type='checkbox']");
-    
-    if (selectAllCheckbox) {
-        selectAllCheckbox.addEventListener("change", function () {
-            userCheckboxes.forEach(checkbox => {
-                checkbox.checked = selectAllCheckbox.checked;
-            });
-        });
-    }
-    
-    // Delete Confirmation
-    const deleteButtons = document.querySelectorAll(".text-red-600");
-    
-    deleteButtons.forEach(button => {
-        button.addEventListener("click", function (event) {
-            event.preventDefault();
-            if (!confirm("Are you sure you want to delete this user?")) {
-                return;
-            }
-            // Implement actual delete functionality here
-            console.log("User deleted");
-        });
-    });
-    
-    // Bulk Actions
-    const bulkActionSelect = document.querySelector("select");
-    const bulkApplyButton = document.querySelector("button.bg-gray-200");
-    
-    if (bulkApplyButton) {
-        bulkApplyButton.addEventListener("click", function () {
-            const selectedAction = bulkActionSelect.value;
-            const selectedUsers = [...userCheckboxes].filter(checkbox => checkbox.checked);
-            
-            if (selectedUsers.length === 0) {
-                alert("Please select at least one user.");
-                return;
-            }
-            
-            if (selectedAction === "delete") {
-                if (!confirm("Are you sure you want to delete selected users?")) {
-                    return;
-                }
-            }
-            
-            console.log(`Applying action '${selectedAction}' to ${selectedUsers.length} users.`);
-            // Implement action functionality here
-        });
-    }
-
-    // Delete User
-    document.addEventListener("click", function (e) {
-        if (e.target.closest(".text-red-600")) { // Updated class selector
-            if (confirm("Are you sure you want to delete this user?")) {
-                e.target.closest("tr").remove();
-            }
-        }
-    });
-});
-
-</script>
 </html>
