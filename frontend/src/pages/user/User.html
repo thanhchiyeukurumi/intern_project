@@ -23,20 +23,24 @@
                 </div>
                 <div class="text-center md:text-left user-info">
                     <h1 class="text-4xl font-bold mb-2 user-name">Hoang Chi Thanh</h1>
-                    <p class="text-xl text-gray-700 mb-6 user-tagline">What the hell is going on?????????</p>
+                    <div id="display-tagline">
+                        <p class="text-xl text-gray-700 mb-6 user-tagline">What the hell is going on?????????</p>
+                    </div>
+                    <div id="edit-tagline" class="hidden mb-6">
+                        <input type="text" id="tagline-input" class="w-full border border-gray-300 rounded-lg p-2 text-xl" value="What the hell is going on?????????">
+                        <div class="mt-2 flex gap-2">
+                            <button id="save-profile-2" class="px-4 py-2 bg-blue-300 hover:bg-blue-400 text-white rounded-full">Lưu thay đổi</button>
+                            <button id="cancel-edit" class="px-4 py-2 bg-gray-500 text-white rounded-full hover:bg-gray-600">Hủy bỏ</button>
+                        </div>
+                    </div>
                     
                     <div class="flex flex-col sm:flex-row gap-3 mb-6 user-stats">
                         <div class="flex items-center text-gray-700 user-stat-item">
                             <span class="stat-value">42 Comment</span>
                         </div>
                     </div>
-                    
-                    <p class="text-gray-700 mb-6 max-w-2xl flex user-bio">
-                        Lmao it to hard
-                    </p>
-                    
                     <div class="flex flex-wrap gap-3 user-actions">
-                        <a href="#" class="px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 btn-primary">Edit Profile</a>
+                        <button id="edit-profile-btn" class="px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 btn-primary">Edit Profile</button>
                         <a href="#" class="px-4 py-2 bg-white border border-gray-300 rounded-full hover:bg-gray-50 btn-secondary">Share Profile</a>
                     </div>
                 </div>
@@ -127,5 +131,56 @@
 
     <!-- Footer -->
     <div id="footer"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const editProfileBtn = document.getElementById('edit-profile-btn');
+            const displayTagline = document.getElementById('display-tagline');
+            const editTagline = document.getElementById('edit-tagline');
+            const taglineInput = document.getElementById('tagline-input');
+            const saveProfileBtn = document.getElementById('save-profile-2');
+            const cancelEditBtn = document.getElementById('cancel-edit');
+            const userTagline = document.querySelector('.user-tagline');
+
+            // Lưu tagline ban đầu
+            let originalTagline = userTagline.textContent;
+
+            // Hiển thị form chỉnh sửa khi nhấn Edit Profile
+            editProfileBtn.addEventListener('click', function() {
+                displayTagline.classList.add('hidden');
+                editTagline.classList.remove('hidden');
+                taglineInput.focus();
+            });
+
+            // Lưu thay đổi khi nhấn Save
+            saveProfileBtn.addEventListener('click', function() {
+                const newTagline = taglineInput.value.trim();
+                
+                if (newTagline) {
+                    userTagline.textContent = newTagline;
+                    originalTagline = newTagline;
+                    
+                    // Hiển thị thông báo thành công
+                    alert('Đã lưu thay đổi thành công!');
+                    
+                    // Ẩn form chỉnh sửa và hiển thị lại tagline
+                    displayTagline.classList.remove('hidden');
+                    editTagline.classList.add('hidden');
+                } else {
+                    alert('Vui lòng nhập nội dung cho tagline!');
+                }
+            });
+
+            // Hủy bỏ chỉnh sửa
+            cancelEditBtn.addEventListener('click', function() {
+                // Khôi phục giá trị ban đầu
+                taglineInput.value = originalTagline;
+                
+                // Ẩn form chỉnh sửa và hiển thị lại tagline
+                displayTagline.classList.remove('hidden');
+                editTagline.classList.add('hidden');
+            });
+        });
+    </script>
 </body>
 </html>
