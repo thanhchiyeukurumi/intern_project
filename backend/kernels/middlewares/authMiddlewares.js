@@ -30,7 +30,7 @@ const authenticateJWT = (req, res, next) => {
 const authenticateGoogle = passport.authenticate('google', {
   scope: ['profile', 'email']
 });
-
+  
 // /**
 //  * Middleware OAuth với GitHub
 //  */

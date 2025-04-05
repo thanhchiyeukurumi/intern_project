@@ -17,11 +17,7 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
-      },
-      abstract: {
-        type: Sequelize.STRING(100),
-        allowNull: false
-      },
+      },  
       title: {
         type: Sequelize.STRING(100),
         allowNull: false
