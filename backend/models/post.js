@@ -19,10 +19,6 @@ module.exports = function(sequelize, DataTypes) {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
     },
-    abstract: {
-      type: DataTypes.STRING(100),
-      allowNull: false
-    },
     title: {
       type: DataTypes.STRING(100),
       allowNull: false

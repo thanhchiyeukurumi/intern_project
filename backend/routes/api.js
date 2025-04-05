@@ -34,10 +34,6 @@ router.group("/auth", (router) => {
   // Routes cho Google OAuth
   router.get('/google', auth.authenticateGoogle);
   router.get('/google/callback', auth.googleCallback, authController.googleCallback);
-
-  // // Routes cho GitHub OAuth
-  // router.get('/github', auth.authenticateGithub);
-  // router.get('/github/callback', auth.githubCallback, authController.githubCallback);
 });
 
 router.group("/example", validate([]), (router) => {

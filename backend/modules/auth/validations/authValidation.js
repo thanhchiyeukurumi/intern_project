@@ -1,56 +1,61 @@
-const { body } = require('express-validator');
+const { BodyWithLocale } = require('kernels/rules');
 
 /**
  * Validation rules cho đăng ký tài khoản
  */
 const registerValidation = [
-  body('username')
-    .trim()
-    .notEmpty().withMessage('Tên đăng nhập không được để trống')
-    .isLength({ min: 3, max: 50 }).withMessage('Tên đăng nhập phải từ 3-50 ký tự')
-    .matches(/^[a-zA-Z0-9_]+$/).withMessage('Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới'),
+  new BodyWithLocale('username')
+    .notEmpty()
+    .isLength({ min: 3, max: 50 })
+    .withMessage('Tên đăng nhập phải từ 3-50 ký tự')
+    .matches(/^[a-zA-Z0-9_]+$/)
+    .withMessage('Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới')
+    .get(),
   
-  body('fullname')
-    .trim()
-    .notEmpty().withMessage('Họ tên không được để trống')
-    .isLength({ min: 2, max: 100 }).withMessage('Họ tên phải từ 2-100 ký tự'),
+  new BodyWithLocale('fullname')
+    .notEmpty()
+    .isLength({ min: 2, max: 100 })
+    .withMessage('Họ tên phải từ 2-100 ký tự')
+    .get(),
   
-  body('email')
-    .trim()
-    .notEmpty().withMessage('Email không được để trống')
-    .isEmail().withMessage('Email không hợp lệ')
-    .normalizeEmail(),
+  new BodyWithLocale('email')
+    .notEmpty()
+    .isEmail()
+    .withMessage('Email không hợp lệ')
+    .get(),
   
-  body('password')
-    .notEmpty().withMessage('Mật khẩu không được để trống')
-    .isLength({ min: 6 }).withMessage('Mật khẩu phải có ít nhất 6 ký tự')
-    .matches(/\d/).withMessage('Mật khẩu phải chứa ít nhất 1 số'),
+  new BodyWithLocale('password')
+    .notEmpty()
+    .isLength({ min: 6 })
+    .withMessage('Mật khẩu phải có ít nhất 6 ký tự')
+    .matches(/\d/)
+    .withMessage('Mật khẩu phải chứa ít nhất 1 số')
+    .get(),
   
-  body('confirmPassword')
-    .notEmpty().withMessage('Xác nhận mật khẩu không được để trống')
-    .custom((value, { req }) => {
-      if (value !== req.body.password) {
-        throw new Error('Xác nhận mật khẩu không khớp');
-      }
-      return true;
-    }),
+  new BodyWithLocale('confirmPassword')
+    .notEmpty()
+    .confirmed('password')
+    .withMessage('Xác nhận mật khẩu không khớp')
+    .get(),
   
-  body('description')
-    .default('')
+  new BodyWithLocale('description')
+    .isString()
+    .get()
 ];
 
 /**
  * Validation rules cho đăng nhập
  */
 const loginValidation = [
-  body('email')
-    .trim()
-    .notEmpty().withMessage('Email không được để trống')
-    .isEmail().withMessage('Email không hợp lệ')
-    .normalizeEmail(),
+  new BodyWithLocale('email')
+    .notEmpty()
+    .isEmail()
+    .withMessage('Email không hợp lệ')
+    .get(),
   
-  body('password')
-    .notEmpty().withMessage('Mật khẩu không được để trống')
+  new BodyWithLocale('password')
+    .notEmpty()
+    .get()
 ];
 
 module.exports = {
