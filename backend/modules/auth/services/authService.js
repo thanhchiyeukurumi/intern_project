@@ -66,11 +66,10 @@ class AuthService {
     delete userObj.password;
     
     // Tạo access token JWT
-    const token = jwtUtils.generate({
-      id: userObj.id,
-      email: userObj.email,
-      role: userObj.role?.name || 'user'
-    });
+    const token = jwtUtils.sign(
+      userObj.id,
+      userObj.role?.name || 'user'
+    );
     
     // Tạo refresh token
     const refreshToken = jwtUtils.signRefreshToken(
@@ -120,11 +119,10 @@ class AuthService {
     delete userObj.password;
     
     // Tạo access token
-    const token = jwtUtils.generate({
-      id: userObj.id,
-      email: userObj.email,
-      role: userObj.role?.name || 'user'
-    });
+    const token = jwtUtils.sign(
+      userObj.id,
+      userObj.role?.name || 'user'
+    );
     
     // Tạo refresh token
     const refreshToken = jwtUtils.signRefreshToken(
@@ -149,11 +147,10 @@ class AuthService {
     const userObj = oauthUser;
     
     // Tạo access token
-    const token = jwtUtils.generate({
-      id: userObj.id,
-      email: userObj.email,
-      role: userObj.role?.name || 'user'
-    });
+    const token = jwtUtils.sign(
+      userObj.id,
+      userObj.role?.name || 'user'
+    );
     
     // Tạo refresh token
     const refreshToken = jwtUtils.signRefreshToken(

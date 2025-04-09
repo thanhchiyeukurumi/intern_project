@@ -30,7 +30,7 @@ module.exports = {
       },
       config.jwt.secret,
       {
-        expiresIn: config.jwt.expiration,
+        ...config.jwt.accessToken,
       }
     );
 
@@ -46,13 +46,13 @@ module.exports = {
   signRefreshToken: (userId, userRole) => {
     const refresh_token = jwt.sign(
       {
-        id: userId, // Sử dụng 'id' để phù hợp với payload trong generate
+        userId: userId, 
         role: userRole,
         type: 'refresh'
       },
       config.jwt.secret,
       {
-        expiresIn: process.env.REFRESH_TOKEN_EXPIRY || "30d", // 30 ngày mặc định
+        ...config.jwt.refreshToken,
       }
     );
 
@@ -106,68 +106,3 @@ module.exports = {
     return jwt.sign(payload, config.jwt.secret, tokenOptions);
   }
 };
-
-
-
-// /**
-//    * [GENERAL - STYLE GIỐNG SIGN] Tạo JWT token cho các mục đích cụ thể.
-//    * Thay vì nhận payload object, hàm này nhận các tham số riêng lẻ.
-//    *
-//    * @param {String} subjectId - ID của đối tượng liên quan (vd: userId cho password reset).
-//    * @param {String} purpose - Mục đích của token (QUAN TRỌNG, vd: 'password_reset', 'email_verify').
-//    * @param {String} expiresIn - Thời gian hết hạn cho token này (vd: '1h', '15m').
-//    * @param {Object} [additionalData={}] - Dữ liệu bổ sung muốn đưa vào payload.
-//    * @returns {String} - JWT token
-//    */
-// generateLikeSign: (subjectId, purpose, expiresIn, additionalData = {}) => {
-//   if (!purpose || !expiresIn) {
-//       // Nên có kiểm tra chặt chẽ hơn hoặc throw Error
-//       console.error("Purpose and expiresIn are required for generateLikeSign");
-//       return null;
-//   }
-
-//   const payload = {
-//     sub: subjectId, // Sử dụng 'sub' (subject) cho ID chung chung
-//     pur: purpose,   // Thêm trường 'purpose' để phân biệt loại token
-//     ...additionalData // Thêm dữ liệu phụ nếu có
-//   };
-
-//   const tokenOptions = {
-//     expiresIn: expiresIn // Sử dụng thời hạn được truyền vào
-//     // Có thể thêm các options khác nếu cần, ví dụ algorithm từ config.jwt.options
-//     // algorithm: config.jwt.options.algorithm || 'HS256'
-//   };
-
-//   // Sử dụng secret mặc định
-//   return jwt.sign(payload, config.jwt.secret, tokenOptions);
-// },
-
-// /**
-//    * [AUTHENTICATION - STYLE GIỐNG GENERATE] Tạo access token dùng payload và options.
-//    * Hàm này vẫn dành riêng cho việc tạo access token, nhưng linh hoạt hơn về payload.
-//    *
-//    * @param {Object} payload - Dữ liệu cần mã hóa vào access token (Nên chứa userId, role).
-//    * @param {Object} [options={}] - Tùy chọn thêm, ghi đè lên mặc định (vd: ghi đè expiresIn).
-//    * @returns {String} - Access token
-//    */
-// signLikeGenerate: (payload, options = {}) => {
-//   // Kiểm tra payload tối thiểu (tùy chọn, nhưng nên có)
-//   if (!payload || (!payload.userId && !payload.sub && !payload.id)) {
-//       console.warn("Access token payload should ideally contain a user identifier (userId, sub, id)");
-//   }
-
-//   // Thiết lập options mặc định cho ACCESS TOKEN
-//   const defaultAccessTokenOptions = {
-//     ...config.jwt.options,    // Lấy các options cơ bản (vd: algorithm)
-//     expiresIn: config.jwt.ttl // Đặt expiresIn mặc định là TTL của access token
-//   };
-
-//   // Gộp options mặc định với options người dùng truyền vào
-//   const tokenOptions = {
-//     ...defaultAccessTokenOptions,
-//     ...options // Options truyền vào sẽ ghi đè mặc định (vd: nếu muốn access token lâu hơn)
-//   };
-
-//   // Sử dụng secret mặc định
-//   return jwt.sign(payload, config.jwt.secret, tokenOptions);
-// },
