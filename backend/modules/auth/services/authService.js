@@ -48,8 +48,6 @@ class AuthService {
       fullname: userData.fullname,
       email: userData.email.toLowerCase(),
       password: hashedPassword,
-      description: userData.description || '',
-      avatar: userData.avatar || null,
       role_id: userRole.id
     });
     

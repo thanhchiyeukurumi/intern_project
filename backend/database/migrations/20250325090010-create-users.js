@@ -15,8 +15,7 @@ module.exports = {
       },
       fullname: {
         type: Sequelize.STRING(100),
-        allowNull: false,
-        unique: true
+        allowNull: false
       },
       password: {
         type: Sequelize.STRING(255),
@@ -32,8 +31,7 @@ module.exports = {
         defaultValue: null
       },
       description: {
-        type: Sequelize.TEXT('long'),
-        allowNull: false
+        type: Sequelize.TEXT('long')
       },
       role_id: {
         type: Sequelize.INTEGER,

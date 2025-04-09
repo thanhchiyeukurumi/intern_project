@@ -12,7 +12,6 @@ const passport = require("../configs/passport");
 const router = express.Router({ mergeParams: true });
 // Khởi tạo passport
 router.use(passport.initialize());
-
 // Sử dụng cookie-parser để đọc cookie
 router.use(cookieParser());
 
