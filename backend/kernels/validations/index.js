@@ -33,7 +33,6 @@
 
 // module.exports = { validate };
 
-
 const { validationResult } = require("express-validator");
 const response = require("utils/responseUtils");
 

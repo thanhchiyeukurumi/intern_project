@@ -2,7 +2,6 @@ const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const GithubStrategy = require('passport-github2').Strategy;
 const db = require('models');
 const jwtConfig = require('configs/jwt');
 const hash = require('kernels/hash');

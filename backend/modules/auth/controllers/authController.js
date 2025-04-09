@@ -171,35 +171,7 @@ class AuthController {
       return error(res, err.message || 'Đã xảy ra lỗi khi đăng nhập với Google.');
     }
   }
-
-  /**
-   * Xử lý callback từ GitHub OAuth
-   * @route GET /api/auth/github/callback
-   */
-  async githubCallback(req, res) {
-    try {
-      if (!req.user) {
-        return unauthorized(res, 'Đăng nhập GitHub thất bại.');
-      }
-
-      // Xử lý người dùng OAuth
-      const { user, token, refreshToken } = await authService.handleOAuthUser(req.user);
-
-      // Tạo query params từ tokens để gửi về frontend
-      const queryParams = new URLSearchParams({
-        token,
-        refreshToken
-      }).toString();
-
-      // Chuyển hướng đến frontend với token
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-      return res.redirect(`${frontendUrl}/auth/oauth?${queryParams}`);
-    } catch (err) {
-      const statusCode = err.statusCode || 500;
-      return error(res, err.message || 'Đã xảy ra lỗi khi đăng nhập với GitHub.');
-    }
-  }
-
+  
   /**
    * Lấy thông tin người dùng hiện tại
    * @route GET /api/auth/me

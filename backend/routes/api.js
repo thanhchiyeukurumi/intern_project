@@ -10,7 +10,6 @@ const authController = require("../modules/auth/controllers/authController");
 const { registerValidation, loginValidation } = require("../modules/auth/validations/authValidation");
 const passport = require("../configs/passport");
 const router = express.Router({ mergeParams: true });
-// const passport = require("passport");
 // Khởi tạo passport
 router.use(passport.initialize());
 
