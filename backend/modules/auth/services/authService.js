@@ -62,6 +62,7 @@ class AuthService {
     // Loại bỏ password từ response
     const userObj = user.toJSON();
     delete userObj.password;
+    delete userObj.role_id;
     
     // Tạo access token JWT
     const token = jwtUtils.sign(
@@ -115,6 +116,7 @@ class AuthService {
     // Loại bỏ password từ response
     const userObj = user.toJSON();
     delete userObj.password;
+    delete userObj.role_id;
     
     // Tạo access token
     const token = jwtUtils.sign(
