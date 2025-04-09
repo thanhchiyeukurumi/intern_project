@@ -62,14 +62,13 @@ class AuthService {
     // Loại bỏ password từ response
     const userObj = user.toJSON();
     delete userObj.password;
-    delete userObj.role_id;
     
     // Tạo access token JWT
     const token = jwtUtils.sign(
       userObj.id,
       userObj.role?.name || 'user'
     );
-    
+
     // Tạo refresh token
     const refreshToken = jwtUtils.signRefreshToken(
       userObj.id,
@@ -116,9 +115,8 @@ class AuthService {
     // Loại bỏ password từ response
     const userObj = user.toJSON();
     delete userObj.password;
-    delete userObj.role_id;
     
-    // Tạo access token
+   // Tạo access token JWT
     const token = jwtUtils.sign(
       userObj.id,
       userObj.role?.name || 'user'

@@ -15,6 +15,7 @@ const jwt = require("jsonwebtoken");
  *    - verify: Xác thực tính hợp lệ của token
  *    - decode: Giải mã token mà không kiểm tra tính hợp lệ
  */
+
 module.exports = {
   /**
    * [AUTHENTICATION] Tạo access token cho việc xác thực người dùng
@@ -30,10 +31,10 @@ module.exports = {
       },
       config.jwt.secret,
       {
-        ...config.jwt.accessToken,
+        expiresIn: config.jwt.expiration,
+        algorithm: config.jwt.algorithm,
       }
     );
-
     return access_token;
   },
   
@@ -46,13 +47,14 @@ module.exports = {
   signRefreshToken: (userId, userRole) => {
     const refresh_token = jwt.sign(
       {
-        userId: userId, 
+        userId: userId,   
         role: userRole,
         type: 'refresh'
       },
       config.jwt.secret,
       {
-        ...config.jwt.refreshToken,
+        expiresIn: config.jwt.expirationRefresh,
+        algorithm: config.jwt.algorithm,
       }
     );
 

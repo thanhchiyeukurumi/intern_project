@@ -30,7 +30,6 @@ const authenticateJWT = (req, res, next) => {
 const authenticateGoogle = passport.authenticate('google', {
   scope: ['profile', 'email']
 });
-  
 
 /**
  * Middleware callback cho Google OAuth
@@ -39,7 +38,6 @@ const googleCallback = passport.authenticate('google', {
   session: false,
   failureRedirect: '/auth/login'
 });
-
 
 module.exports = {
   authenticateJWT,
