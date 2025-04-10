@@ -22,44 +22,33 @@ const hasRole = (allowedRoles) => {
   };
 };
 
-// /**
-//  * Middleware kiểm tra vai trò admin
-//  */
-// const isAdmin = (req, res, next) => {
-//   // Kiểm tra đã xác thực user chưa
-//   if (!req.user) {
-//     return response.unauthorized(res, 'Vui lòng đăng nhập để tiếp tục.');
-//   }
+/**
+ * Middleware kiểm tra quyền sở hữu của người dùng
+ * @param {string} paramName  - Tên tham số chứa ID của người dùng, trong lúc gọi middleware thì không cần truyền tham số này
+ * @returns {Function} - Middleware function
+ */
+const isOwner = (paramName = 'id') => {
+  return (req, res, next) => {
+    try {
+      const currentUserId = req.user?.id; // Lấy ID của người dùng đã xác thực qua JWT token
+      const targetUserId = req.params?.[paramName] || req.body?.[paramName]; // Lấy ID của người dùng cần thực hiện hành động từ params hoặc body
 
-//   // Kiểm tra user có vai trò admin không
-//   if (req.user.role && req.user.role.name === 'admin') {
-//     return next();
-//   }
+      if (!currentUserId || !targetUserId) {
+        return response.error(res, 'Không đủ thông tin xác thực', 400);
+      }
 
-//   // Trả về lỗi nếu không phải admin
-//   return response.forbidden(res, 'Chỉ quản trị viên mới có quyền truy cập tính năng này.');
-// };
+      if (parseInt(currentUserId) !== parseInt(targetUserId)) {
+        return response.forbidden(res, 'Bạn không có quyền thực hiện hành động này');
+      }
 
-// /**
-//  * Middleware kiểm tra vai trò blogger hoặc admin
-//  */
-// const isBlogger = (req, res, next) => {
-//   // Kiểm tra đã xác thực user chưa
-//   if (!req.user) {
-//     return response.unauthorized(res, 'Vui lòng đăng nhập để tiếp tục.');
-//   }
-
-//   // Kiểm tra user có vai trò blogger hoặc admin không
-//   if (req.user.role && (req.user.role.name === 'blogger' || req.user.role.name === 'admin')) {
-//     return next();
-//   }
-
-//   // Trả về lỗi nếu không phải blogger/admin
-//   return response.forbidden(res, 'Chỉ blogger hoặc quản trị viên mới có quyền truy cập tính năng này.');
-// };
+      next();
+    } catch (err) {
+      return response.error(res, 'Lỗi xác thực quyền sở hữu', 500);
+    }
+  };
+};
 
 module.exports = {
-  hasRole
-  // isAdmin,
-  // isBlogger
+  hasRole,
+  isOwner
 }; 

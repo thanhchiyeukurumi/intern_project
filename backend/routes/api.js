@@ -13,7 +13,15 @@ const languageController = require("../modules/language/controllers/languageCont
 const { createLanguageValidation, updateLanguageValidation } = require("../modules/language/validations/languageValidation");
 const categoryController = require("../modules/category/controllers/categoryController");
 const { createCategoryValidation, updateCategoryValidation } = require("../modules/category/validations/categoryValidation");
+const userController = require("../modules/user/controllers/userController");
+const { createUserValidation, updateUserValidation } = require("../modules/user/validations/userValidation");
 const router = express.Router({ mergeParams: true });
+
+/**
+ * @description: Routes cho người dùng, có phân biệt mai sau admin sẽ làm những gì
+ */
+
+
 // Khởi tạo passport
 router.use(passport.initialize());
 // Sử dụng cookie-parser để đọc cookie
@@ -64,6 +72,20 @@ router.group("/categories", (router) => {
   router.put("/:id", auth.authenticateJWT, role.hasRole(["admin"]), validate(updateCategoryValidation), categoryController.updateCategory);
   // Xóa danh mục
   router.delete("/:id", auth.authenticateJWT, role.hasRole(["admin"]), categoryController.deleteCategory);
+});
+
+// User Profile Routes
+router.group("/user", (router) => {
+  // Lấy thông tin người dùng
+  /**
+   * @description: fix sau
+   */
+  router.get("/:id", userController.getUserById);
+  router.get("/", userController.getAllUsers);
+  // Cập nhật thông tin người dùng
+  router.put("/:id", auth.authenticateJWT, role.isOwner(), userController.updateUser);
+  // Xóa người dùng
+  router.delete("/:id", auth.authenticateJWT, userController.deleteUser);
 });
 
 router.group("/example", validate([]), (router) => {
