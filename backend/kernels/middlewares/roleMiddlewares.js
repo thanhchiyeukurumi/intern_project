@@ -58,22 +58,8 @@ const isBlogger = (req, res, next) => {
   return response.forbidden(res, 'Chỉ blogger hoặc quản trị viên mới có quyền truy cập tính năng này.');
 };
 
-/**
- * Middleware kiểm tra người dùng đã đăng nhập
- */
-const isAuthenticated = (req, res, next) => {
-  // Kiểm tra đã xác thực user chưa
-  if (!req.user) {
-    return response.unauthorized(res, 'Vui lòng đăng nhập để tiếp tục.');
-  }
-
-  // Cho phép tiếp tục nếu đã đăng nhập
-  return next();
-};
-
 module.exports = {
   hasRole,
   isAdmin,
-  isBlogger,
-  isAuthenticated
+  isBlogger
 }; 
