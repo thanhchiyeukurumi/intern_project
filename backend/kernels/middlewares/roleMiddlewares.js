@@ -22,44 +22,44 @@ const hasRole = (allowedRoles) => {
   };
 };
 
-/**
- * Middleware kiểm tra vai trò admin
- */
-const isAdmin = (req, res, next) => {
-  // Kiểm tra đã xác thực user chưa
-  if (!req.user) {
-    return response.unauthorized(res, 'Vui lòng đăng nhập để tiếp tục.');
-  }
+// /**
+//  * Middleware kiểm tra vai trò admin
+//  */
+// const isAdmin = (req, res, next) => {
+//   // Kiểm tra đã xác thực user chưa
+//   if (!req.user) {
+//     return response.unauthorized(res, 'Vui lòng đăng nhập để tiếp tục.');
+//   }
 
-  // Kiểm tra user có vai trò admin không
-  if (req.user.role && req.user.role.name === 'admin') {
-    return next();
-  }
+//   // Kiểm tra user có vai trò admin không
+//   if (req.user.role && req.user.role.name === 'admin') {
+//     return next();
+//   }
 
-  // Trả về lỗi nếu không phải admin
-  return response.forbidden(res, 'Chỉ quản trị viên mới có quyền truy cập tính năng này.');
-};
+//   // Trả về lỗi nếu không phải admin
+//   return response.forbidden(res, 'Chỉ quản trị viên mới có quyền truy cập tính năng này.');
+// };
 
-/**
- * Middleware kiểm tra vai trò blogger hoặc admin
- */
-const isBlogger = (req, res, next) => {
-  // Kiểm tra đã xác thực user chưa
-  if (!req.user) {
-    return response.unauthorized(res, 'Vui lòng đăng nhập để tiếp tục.');
-  }
+// /**
+//  * Middleware kiểm tra vai trò blogger hoặc admin
+//  */
+// const isBlogger = (req, res, next) => {
+//   // Kiểm tra đã xác thực user chưa
+//   if (!req.user) {
+//     return response.unauthorized(res, 'Vui lòng đăng nhập để tiếp tục.');
+//   }
 
-  // Kiểm tra user có vai trò blogger hoặc admin không
-  if (req.user.role && (req.user.role.name === 'blogger' || req.user.role.name === 'admin')) {
-    return next();
-  }
+//   // Kiểm tra user có vai trò blogger hoặc admin không
+//   if (req.user.role && (req.user.role.name === 'blogger' || req.user.role.name === 'admin')) {
+//     return next();
+//   }
 
-  // Trả về lỗi nếu không phải blogger/admin
-  return response.forbidden(res, 'Chỉ blogger hoặc quản trị viên mới có quyền truy cập tính năng này.');
-};
+//   // Trả về lỗi nếu không phải blogger/admin
+//   return response.forbidden(res, 'Chỉ blogger hoặc quản trị viên mới có quyền truy cập tính năng này.');
+// };
 
 module.exports = {
-  hasRole,
-  isAdmin,
-  isBlogger
+  hasRole
+  // isAdmin,
+  // isBlogger
 }; 

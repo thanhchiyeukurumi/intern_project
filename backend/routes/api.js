@@ -11,6 +11,8 @@ const { registerValidation, loginValidation } = require("../modules/auth/validat
 const passport = require("../configs/passport");
 const languageController = require("../modules/language/controllers/languageController");
 const { createLanguageValidation, updateLanguageValidation } = require("../modules/language/validations/languageValidation");
+const categoryController = require("../modules/category/controllers/categoryController");
+const { createCategoryValidation, updateCategoryValidation } = require("../modules/category/validations/categoryValidation");
 const router = express.Router({ mergeParams: true });
 // Khởi tạo passport
 router.use(passport.initialize());
@@ -49,6 +51,20 @@ router.group("/languages", (router) => {
   // Xóa ngôn ngữ
   router.delete("/:id", auth.authenticateJWT, role.hasRole(["admin"]), languageController.deleteLanguage);
 }); 
+
+// Category Routes
+router.group("/categories", (router) => {
+  // Lấy tất cả danh mục
+  router.get("/", categoryController.getAllCategories);
+  // Lấy danh mục theo id
+  router.get("/:id", categoryController.getCategoryById);
+  // Thêm danh mục mới
+  router.post("/", auth.authenticateJWT, role.hasRole(["admin"]), validate(createCategoryValidation), categoryController.createCategory);
+  // Cập nhật danh mục
+  router.put("/:id", auth.authenticateJWT, role.hasRole(["admin"]), validate(updateCategoryValidation), categoryController.updateCategory);
+  // Xóa danh mục
+  router.delete("/:id", auth.authenticateJWT, role.hasRole(["admin"]), categoryController.deleteCategory);
+});
 
 router.group("/example", validate([]), (router) => {
   router.get('/', exampleController.exampleRequest)
