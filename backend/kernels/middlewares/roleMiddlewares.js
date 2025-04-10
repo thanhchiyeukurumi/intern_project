@@ -48,7 +48,37 @@ const isOwner = (paramName = 'id') => {
   };
 };
 
+/**
+ * Middleware kiểm tra quyền sở hữu của người dùng
+ * @param {string} paramName  - Tên tham số chứa ID của người dùng, trong lúc gọi middleware thì không cần truyền tham số này
+ * @returns {Function} - Middleware function
+ */
+const isAdminOrOwner = (paramName = 'id') => {
+  return (req, res, next) => {
+    try {
+      const currentUserId = req.user?.id; // Lấy ID của người dùng đã xác thực qua JWT token
+      const targetUserId = req.params?.[paramName] || req.body?.[paramName]; // Lấy ID của người dùng cần thực hiện hành động từ params hoặc body
+      const currentUserRole = req.user?.role?.name;
+      if (currentUserRole == "admin") {
+        return next();
+      }
+      if (!currentUserId || !targetUserId) {
+        return response.error(res, 'Không đủ thông tin xác thực', 400);
+      }
+
+      if (parseInt(currentUserId) !== parseInt(targetUserId)) {
+        return response.forbidden(res, 'Bạn không có quyền thực hiện hành động này');
+      }
+
+      next();
+    } catch (err) {
+      return response.error(res, 'Lỗi xác thực quyền sở hữu', 500);
+    }
+  };
+};
+
 module.exports = {
   hasRole,
-  isOwner
+  isOwner,
+  isAdminOrOwner
 }; 

@@ -15,6 +15,7 @@ const categoryController = require("../modules/category/controllers/categoryCont
 const { createCategoryValidation, updateCategoryValidation } = require("../modules/category/validations/categoryValidation");
 const userController = require("../modules/user/controllers/userController");
 const { createUserValidation, updateUserValidation } = require("../modules/user/validations/userValidation");
+const { isOwner } = require("kernels/middlewares/roleMiddlewares");
 const router = express.Router({ mergeParams: true });
 
 /**
@@ -83,9 +84,9 @@ router.group("/user", (router) => {
   router.get("/:id", userController.getUserById);
   router.get("/", userController.getAllUsers);
   // Cập nhật thông tin người dùng
-  router.put("/:id", auth.authenticateJWT, role.isOwner(), userController.updateUser);
+  router.put("/:id", auth.authenticateJWT, role.isAdminOrOwner(), userController.updateUser);
   // Xóa người dùng
-  router.delete("/:id", auth.authenticateJWT, userController.deleteUser);
+  router.delete("/:id", auth.authenticateJWT, role.isAdminOrOwner(), userController.deleteUser);
 });
 
 router.group("/example", validate([]), (router) => {
