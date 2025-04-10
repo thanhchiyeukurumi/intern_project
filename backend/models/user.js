@@ -32,7 +32,7 @@ module.exports = function(sequelize, DataTypes) {
     description: {
       type: DataTypes.TEXT,
       allowNull: true,
-      defaultValue: ''
+      defaultValue: null
     },
     role_id: {
       type: DataTypes.INTEGER,

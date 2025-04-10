@@ -31,7 +31,8 @@ module.exports = {
         defaultValue: null
       },
       description: {
-        type: Sequelize.TEXT('long')
+        type: Sequelize.TEXT('long'),
+        defaultValue: null
       },
       role_id: {
         type: Sequelize.INTEGER,
