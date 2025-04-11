@@ -7,8 +7,17 @@ class UserController {
      */
     async getAllUsers(req, res) {
         try {
-            const users = await userService.getAllUsers();
-            return ok(res, users);
+            const options = {
+                page: req.query.page || 1,
+                limit: req.query.limit || 10,
+                search: req.query.search,
+                orderBy: req.query.orderBy || 'createdAt',
+                order: req.query.order || 'DESC',
+                includeRelations: req.query.includeRelations || false
+              };
+
+            const result = await userService.getAllUsers(options);
+            return ok(res, result);
         } catch (err) {
             return error(res, err.message);
         }

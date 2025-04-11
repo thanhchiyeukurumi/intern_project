@@ -22,10 +22,8 @@ class PostService {
       const languageId = parseInt(options.languageId, 10) || null;
       const userId = parseInt(options.userId, 10) || null;
       const includeRelations = options.includeRelations || false;
-      const {
-        orderBy = 'createdAt',
-        order = 'DESC'
-      } = options;
+      const orderBy = options.orderBy || 'createdAt';
+      const order = options.order || 'DESC';
       
       // Tinh toan offset: so luong bai viet can bo qua
       const offset = (page - 1) * limit;

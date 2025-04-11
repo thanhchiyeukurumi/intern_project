@@ -5,14 +5,44 @@ class UserService {
     /**
      * Lấy danh sách tất cả người dùng
      */
-    async getAllUsers() {
+    async getAllUsers(options = {}) {
         try {
-            const users = await User.findAll({
-                attributes: {
-                    exclude: ['password']
+            const page = parseInt(options.page, 10) || 1;
+            const limit = parseInt(options.limit, 10) || 10;
+            const search = options.search || null;
+            const orderBy = options.orderBy || 'createdAt';
+            const order = options.order || 'DESC';
+            const includeRelations = options.includeRelations || false;
+            
+            const offset = (page - 1) * limit;
+            const where = {};
+
+            if (search) {
+                where[Op.or] = [
+                    { username: { [Op.like]: `%${search}%` } },
+                    { email: { [Op.like]: `%${search}%` } }
+                ]; 
+            }
+
+            const queryOptions = {
+                where,
+                order: [[orderBy, order]],
+                offset,
+                limit,
+                attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
+            };
+
+            const { count, rows } = await User.findAndCountAll(queryOptions);   
+
+            return {
+                data: rows,
+                pagination: {
+                    total: count,
+                    page: parseInt(page),
+                    limit: parseInt(limit),
+                    totalPages: Math.ceil(count / limit)
                 }
-            });
-            return users;
+            };  
         } catch (err) {
             throw err;
         }
