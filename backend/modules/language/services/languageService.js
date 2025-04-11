@@ -11,7 +11,9 @@ class LanguageService {
       const languages = await Language.findAll({
         order: [['id', 'ASC']]
       });
-      return languages;
+      return {
+        data: languages
+      };
     } catch (error) {
       throw error;
     }

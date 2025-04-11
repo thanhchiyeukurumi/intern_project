@@ -1,8 +1,3 @@
-/**
- * @description: Ai viết cái service này đỉnh vcl how??????
- */
-
-
 const db = require('models');
 const { Post, Category, User, PostCategory, Language, Comment, Sequelize } = db;
 const { Op } = Sequelize;

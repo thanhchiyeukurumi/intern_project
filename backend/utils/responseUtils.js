@@ -1,11 +1,26 @@
 module.exports = {
-  ok: (res, data) => {
-    return res.status(200).send({
+  // Có sự thay đổi nhỏ so với bản gốc
+  ok: (res, data = {}) => {
+    const { pagination, ...rest } = data;
+    // return res.status(200).send({
+    //   success: true,
+    //   data: rest.data ?? rest,
+    //   pagination: pagination ?? null,
+    //   status: 200,
+    //   message: "ok"
+    // });
+    const response = {
       success: true,
-      data,
-      status: 200,
-      message: "ok"
-    });
+      data: rest.data ?? rest,
+      // status: 200,
+      // message: "ok"
+    };
+    if (pagination) {
+      response.pagination = pagination;
+    }
+    response.status = 200;
+    response.message = "ok"; // Làm cái này để nhìn cho nó đẹp hơn =)))
+    return res.status(200).send(response);
   },
 
   created: (res, data) => {
