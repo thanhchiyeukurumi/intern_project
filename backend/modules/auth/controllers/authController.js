@@ -2,7 +2,10 @@ const { validationResult } = require('express-validator');
 const authService = require('../services/authService');
 const jwtUtils = require('../../../utils/jwtUtils');
 const { ok, error, unauthorized, invalidated, created, customError } = require('../../../utils/responseUtils');
-
+/**
+ * @description: Controller cho auth
+ * Chua co chuc nang quen mat khau va gioi han so lan dang nhap sai
+ */
 class AuthController {
   /**
    * Đăng ký tài khoản mới
