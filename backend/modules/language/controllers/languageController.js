@@ -3,7 +3,10 @@ const { ok, created, notFound, error, customError } = require('../../../utils/re
 
 class LanguageController {
   /**
-   * Lấy danh sách ngôn ngữ
+   * GET /languages
+   * -----------------------------
+   * @desc    Lấy danh sách ngôn ngữ
+   * @access  User, Blogger, Admin
    */
   async getAllLanguages(req, res) {
     try {
@@ -15,7 +18,10 @@ class LanguageController {
   }
 
   /**
-   * Lấy thông tin một ngôn ngữ
+   * GET /languages/:id
+   * -----------------------------
+   * @desc    Lấy thông tin một ngôn ngữ
+   * @access  User, Blogger, Admin
    */
   async getLanguageById(req, res) {
     try {
@@ -31,7 +37,10 @@ class LanguageController {
   }
 
   /**
-   * Tạo ngôn ngữ mới
+   * POST /languages
+   * -----------------------------
+   * @desc    Tạo ngôn ngữ mới
+   * @access  Admin
    */
   async createLanguage(req, res) {
     try {
@@ -46,7 +55,10 @@ class LanguageController {
   }
 
   /**
-   * Cập nhật ngôn ngữ
+   * PUT /languages/:id
+   * -----------------------------
+   * @desc    Cập nhật ngôn ngữ
+   * @access  Admin
    */
   async updateLanguage(req, res) {
     try {
@@ -65,7 +77,10 @@ class LanguageController {
   }
 
   /**
-   * Xóa ngôn ngữ
+  * DELETE /languages/:id
+   * -----------------------------
+   * @desc    Xóa ngôn ngữ
+   * @access  Admin
    */
   async deleteLanguage(req, res) {
     try {

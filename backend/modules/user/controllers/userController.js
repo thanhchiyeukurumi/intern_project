@@ -3,7 +3,15 @@ const { ok, created, error } = require('../../../utils/responseUtils');
 
 class UserController { 
     /**
-     * Lấy danh sách tất cả người dùng
+     * GET /users
+     * -----------------------------
+     * @desc    Lấy danh sách tất cả người dùng
+     * @access  Admin
+     * @query   {number} page           - Trang hiện tại
+     * @query   {number} limit          - Số người dùng trên mỗi trang
+     * @query   {string} search         - Từ khóa tìm kiếm
+     * @query   {string} orderBy        - Trường sắp xếp
+     * @query   {string} order          - Hướng sắp xếp
      */
     async getAllUsers(req, res) {
         try {
@@ -24,7 +32,10 @@ class UserController {
     }   
 
     /**
-     * Lấy thông tin người dùng theo id
+     * GET /users/:id
+     * -----------------------------
+     * @desc    Lấy thông tin người dùng theo id
+     * @access  Admin
      */
     async getUserById(req, res) {
         try {   
@@ -36,8 +47,10 @@ class UserController {
     }   
 
     /**
-     * Tạo người dùng mới
-     * @deprecated: Không sử dụng (Admin không tạo người dùng)
+     * POST /users
+     * -----------------------------
+     * @desc    Tạo người dùng mới
+     * @access  Admin
      */
     async createUser(req, res) {
         try {   
@@ -49,7 +62,10 @@ class UserController {
     }   
 
     /**
-     * Cập nhật thông tin người dùng
+     * PUT /users/:id
+     * -----------------------------
+     * @desc    Cập nhật thông tin người dùng
+     * @access  Owner
      */
     async updateUser(req, res) {
         try {   
@@ -61,7 +77,10 @@ class UserController {
     }      
 
     /**
-     * Xóa người dùng
+     * DELETE /users/:id
+     * -----------------------------
+     * @desc    Xóa người dùng
+     * @access  Admin
      */
     async deleteUser(req, res) {
         try {   

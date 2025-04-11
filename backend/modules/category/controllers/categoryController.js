@@ -7,6 +7,11 @@ class CategoryController {
      * -----------------------------
      * @desc    Lấy danh sách danh mục (có phân trang, tìm kiếm, sắp xếp)
      * @access  Public
+     * @query   {number} page           - Trang hiện tại
+     * @query   {number} limit          - Số danh mục trên mỗi trang
+     * @query   {string} search         - Từ khóa tìm kiếm
+     * @query   {string} orderBy        - Trường sắp xếp
+     * @query   {string} order          - Hướng sắp xếp
      */
     async getAllCategories(req, res) {
         try {

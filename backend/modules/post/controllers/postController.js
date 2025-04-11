@@ -3,7 +3,17 @@ const { ok, created, notFound, error, customError } = require('../../../utils/re
 
 class PostController {
   /**
-   * Lấy danh sách bài viết
+   * GET /posts
+   * -----------------------------
+   * @desc    Lấy danh sách bài viết
+   * @access  Public
+   * @query   {number} page           - Trang hiện tại
+   * @query   {number} limit          - Số bài viết trên mỗi trang
+   * @query   {string} search         - Từ khóa tìm kiếm
+   * @query   {number} category       - ID danh mục
+   * @query   {number} language       - ID ngôn ngữ
+   * @query   {string} orderBy        - Trường sắp xếp
+   * @query   {string} order          - Hướng sắp xếp
    */
   async getAllPosts(req, res) {
     try {
@@ -26,7 +36,10 @@ class PostController {
   }
 
   /**
-   * Lấy bài viết theo ID hoặc slug
+   * GET /posts/:id
+   * -----------------------------
+   * @desc    Lấy bài viết theo ID hoặc slug
+   * @access  Public
    */
   async getPostByIdOrSlug(req, res) {
     try {
@@ -44,7 +57,10 @@ class PostController {
   }
 
   /**
-   * Tạo bài viết mới
+   * POST /posts
+   * -----------------------------
+   * @desc    Tạo bài viết mới
+   * @access  User
    */
   async createPost(req, res) {
     try {
@@ -57,7 +73,10 @@ class PostController {
   }
 
   /**
-   * Cập nhật bài viết
+   * PUT /posts/:id
+   * -----------------------------
+   * @desc    Cập nhật bài viết
+   * @access  Owner
    */
   async updatePost(req, res) {
     try {
@@ -75,7 +94,10 @@ class PostController {
   }
 
   /**
-   * Xóa bài viết
+   * DELETE /posts/:id
+   * -----------------------------
+   * @desc    Xóa bài viết
+   * @access  Owner
    */
   async deletePost(req, res) {
     try {
@@ -93,7 +115,10 @@ class PostController {
   }
 
   /**
-   * Lấy danh sách bài viết theo danh mục
+   * GET /posts/category/:categoryId
+   * -----------------------------
+   * @desc    Lấy danh sách bài viết theo danh mục
+   * @access  Public
    */
   async getPostsByCategory(req, res) {
     try {
@@ -113,7 +138,10 @@ class PostController {
   }
 
   /**
-   * Lấy danh sách bài viết của người dùng
+   * GET /posts/user/:userId
+   * -----------------------------
+   * @desc    Lấy danh sách bài viết của người dùng
+   * @access  Public
    */
   async getPostsByUser(req, res) {
     try {
@@ -143,7 +171,10 @@ class PostController {
   }
 
   /**
-   * Tìm kiếm bài viết
+  * GET /posts/search
+   * -----------------------------
+   * @desc    Tìm kiếm bài viết
+   * @access  Public
    */
   async searchPosts(req, res) {
     try {

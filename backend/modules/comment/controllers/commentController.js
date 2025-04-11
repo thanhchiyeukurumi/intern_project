@@ -3,7 +3,14 @@ const { ok, created, notFound, error, customError } = require('../../../utils/re
 
 class CommentController {
   /**
-   * Lấy danh sách bình luận của một bài viết
+   * GET /posts/:postId/comments
+   * -----------------------------
+   * @desc    Lấy danh sách bình luận của một bài viết
+   * @access  Public
+   * @query   {number} page           - Trang hiện tại
+   * @query   {number} limit          - Số bình luận trên mỗi trang
+   * @query   {string} orderBy        - Trường sắp xếp
+   * @query   {string} order          - Hướng sắp xếp
    */
   async getCommentsByPostId(req, res) {
     try {
@@ -23,7 +30,10 @@ class CommentController {
   }
 
   /**
-   * Lấy thông tin chi tiết bình luận
+   * GET /comments/:id
+   * -----------------------------  
+   * @desc    Lấy thông tin chi tiết bình luận
+   * @access  Public?
    */
   async getCommentById(req, res) {
     try {
@@ -39,7 +49,10 @@ class CommentController {
   }
 
   /**
-   * Tạo bình luận mới
+   * POST /posts/:postId/comments
+   * -----------------------------
+   * @desc    Tạo bình luận mới
+   * @access  User
    */
   async createComment(req, res) {
     try {
@@ -53,7 +66,10 @@ class CommentController {
   }
 
   /**
-   * Cập nhật bình luận
+   * PUT /comments/:id
+   * -----------------------------
+   * @desc    Cập nhật bình luận
+   * @access  Owner
    */
   async updateComment(req, res) {
     try {
@@ -71,7 +87,10 @@ class CommentController {
   }
 
   /**
-   * Xóa bình luận
+   * DELETE /comments/:id
+   * -----------------------------
+   * @desc    Xóa bình luận
+   * @access  Owner, Admin
    */
   async deleteComment(req, res) {
     try {
@@ -92,8 +111,11 @@ class CommentController {
     }
   }
 
-  /**
-   * Lấy danh sách bình luận của người dùng
+  /** 
+   * GET /users/:userId/comments
+   * -----------------------------
+   * @desc    Lấy danh sách bình luận của người dùng
+   * @access  Admin
    */
   async getCommentsByUserId(req, res) {
     try {

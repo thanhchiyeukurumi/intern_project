@@ -2,14 +2,13 @@ const { validationResult } = require('express-validator');
 const authService = require('../services/authService');
 const jwtUtils = require('../../../utils/jwtUtils');
 const { ok, error, unauthorized, invalidated, created, customError } = require('../../../utils/responseUtils');
-/**
- * @description: Controller cho auth
- * Chua co chuc nang quen mat khau va gioi han so lan dang nhap sai
- */
+
 class AuthController {
   /**
-   * Đăng ký tài khoản mới
-   * @route POST /api/auth/register
+   * POST /auth/register
+   * -----------------------------
+   * @desc    Đăng ký tài khoản mới
+   * @access  Public
    */
   async register(req, res) {
     try {
@@ -42,8 +41,10 @@ class AuthController {
   }
 
   /**
-   * Đăng nhập
-   * @route POST /api/auth/login
+   * POST /auth/login
+   * -----------------------------
+   * @desc    Đăng nhập
+   * @access  Public
    */
   async login(req, res) {
     try {
@@ -78,8 +79,10 @@ class AuthController {
   }
 
   /**
-   * Làm mới token
-   * @route POST /api/auth/refresh-token
+   * POST /auth/refresh-token
+   * -----------------------------
+   * @desc    Làm mới token
+   * @access  Public
    */
   async refreshToken(req, res) {
     try {
@@ -133,8 +136,10 @@ class AuthController {
   }
 
   /**
-   * Đăng xuất
-   * @route POST /api/auth/logout
+   * POST /auth/logout
+   * -----------------------------
+   * @desc    Đăng xuất
+   * @access  Public
    */
   async logout(req, res) {
     try {
@@ -148,8 +153,10 @@ class AuthController {
   }
 
   /**
-   * Xử lý callback từ Google OAuth
-   * @route GET /api/auth/google/callback
+   * POST /auth/google/callback
+   * -----------------------------
+   * @desc    Xử lý callback từ Google OAuth
+   * @access  Public
    */
   async googleCallback(req, res) {
     try {
@@ -176,8 +183,10 @@ class AuthController {
   }
   
   /**
-   * Lấy thông tin người dùng hiện tại
-   * @route GET /api/auth/me
+   * GET /auth/me
+   * -----------------------------
+   * @desc    Lấy thông tin người dùng hiện tại
+   * @access  Private
    */
   async getCurrentUser(req, res) {
     try {
@@ -191,8 +200,10 @@ class AuthController {
   }
 
   /**
-   * Xác thực token
-   * @route GET /api/auth/verify-token
+   * GET /auth/verify-token
+   * -----------------------------
+   * @desc    Xác thực token
+   * @access  Private
    */
   async verifyToken(req, res) {
     try {
