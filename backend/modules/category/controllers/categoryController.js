@@ -3,19 +3,32 @@ const { ok, created, error } = require('../../../utils/responseUtils');
 
 class CategoryController {
     /**
-     * Lấy danh sách danh mục
+     * GET /categories
+     * -----------------------------
+     * @desc    Lấy danh sách danh mục (có phân trang, tìm kiếm, sắp xếp)
+     * @access  Public
      */
     async getAllCategories(req, res) {
         try {
-            const categories = await categoryService.getAllCategories();
-            return ok(res, categories);
+            const options = {
+                page: req.query.page || 1,
+                limit: req.query.limit || 3,
+                search: req.query.search,
+                orderBy: req.query.orderBy || 'id',
+                order: req.query.order || 'ASC',
+            };
+            const result = await categoryService.getAllCategories(options);
+            return ok(res, result);
         } catch (err) {
             return error(res, err.message);
         }
     }
 
     /**
-     * Lấy danh sách danh mục theo id
+     * GET /categories/:id
+     * -----------------------------
+     * @desc    Lấy chi tiết danh mục theo ID
+     * @access  Public
      */
     async getCategoryById(req, res) {
         try {
@@ -27,7 +40,10 @@ class CategoryController {
     }
     
     /**
-     * Tạo danh mục mới
+     * POST /categories
+     * -----------------------------
+     * @desc    Tạo danh mục mới
+     * @access  Admin
      */
     async createCategory(req, res) {
         try {
@@ -39,7 +55,10 @@ class CategoryController {
     }
 
     /**
-     * Cập nhật danh mục
+     * PUT /categories/:id
+     * -----------------------------
+     * @desc    Cập nhật danh mục theo ID
+     * @access  Admin
      */
     async updateCategory(req, res) {
         try {
@@ -51,7 +70,10 @@ class CategoryController {
     }
 
     /**
-     * Xóa danh mục
+     * DELETE /categories/:id
+     * -----------------------------
+     * @desc    Xóa danh mục theo ID
+     * @access  Admin
      */
     async deleteCategory(req, res) {
         try {

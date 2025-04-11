@@ -1,23 +1,62 @@
 const db = require('models');
-const {Category, PostCategory} = db;
+const { Category, PostCategory } = db;
+const { Op } = require('sequelize');
 
 class CategoryService {
     /**
-     * Lấy danh sách danh mục
+     * Get All Categories
+     * -----------------------------
+     * @desc    Lấy danh sách danh mục có phân trang, tìm kiếm (theo tên), sắp xếp
+     * @param   {Object} options - { page, limit, search, orderBy, order }
+     * @returns {Object} { data: [...], pagination: { total, page, limit } }
      */
-    async getAllCategories() {
+    async getAllCategories(options = {}) {
         try {
-            const categories = await Category.findAll({
-                order: [['id', 'ASC']]
-            });
-            return categories;
+            const page = parseInt(options.page, 10) || 1;
+            const limit = parseInt(options.limit, 10) || 3;
+            const search = options.search || null;
+            const orderBy = options.orderBy || 'id';
+            const order = options.order || 'ASC';
+
+            const offset = (page - 1) * limit;
+            const where = {};
+
+            // Tìm kiếm theo tên danh mục (LIKE, không phân biệt hoa thường) (collation: utf8mb4_0900_ai_ci)
+            if (search) {
+                where[Op.or] = [
+                    { name: { [Op.like]: `%${search}%` } }
+                ];
+            }
+
+            const queryOptions = {
+                where,
+                order: [[orderBy, order]],
+                limit,
+                offset,
+                distinct: true
+            };
+
+            const { count, rows } = await Category.findAndCountAll(queryOptions);
+
+            return {
+                data: rows,
+                pagination: {
+                    total: count,
+                    page,
+                    limit
+                }
+            };
         } catch (error) {
             throw error;
         }
-    }   
+    }
 
     /**
-     * Lấy danh sách danh mục theo id
+     * Get Category By ID
+     * -----------------------------
+     * @desc    Lấy chi tiết danh mục theo ID
+     * @param   {Number} id
+     * @returns {Object} category
      */
     async getCategoryById(id) {
         try {
@@ -26,13 +65,17 @@ class CategoryService {
                 throw new Error('Không tìm thấy danh mục');
             }
             return category;
-        } catch (error) {   
+        } catch (error) {
             throw error;
         }
     }
 
     /**
-     * Tạo danh mục mới 
+     * Create New Category
+     * -----------------------------
+     * @desc    Tạo danh mục mới
+     * @param   {Object} data
+     * @returns {Object} category
      */
     async createCategory(data) {
         try {
@@ -44,9 +87,14 @@ class CategoryService {
     }
 
     /**
-     * Cập nhật danh mục
+     * Update Category By ID
+     * -----------------------------
+     * @desc    Cập nhật danh mục theo ID
+     * @param   {Number} id 
+     * @param   {Object} data
+     * @returns {Object} updated category
      */
-    async updateCategory(id, data) {    
+    async updateCategory(id, data) {
         try {
             const category = await Category.findByPk(id);
             if (!category) {
@@ -58,10 +106,13 @@ class CategoryService {
         } catch (error) {
             throw error;
         }
-    }   
+    }
 
     /**
-     * Xóa danh mục
+     * Delete Category By ID
+     * -----------------------------
+     * @desc    Xóa danh mục theo ID
+     * @param   {Number} id
      */
     async deleteCategory(id) {
         try {
@@ -69,15 +120,14 @@ class CategoryService {
             if (!category) {
                 throw new Error('Không tìm thấy danh mục');
             }
-            
+
+            // TODO: Kiểm tra xem danh mục có đang được dùng trong PostCategory không trước khi xóa
+
+            await category.destroy();
         } catch (error) {
             throw error;
         }
-    }           
+    }
 }
 
 module.exports = new CategoryService();
-
-/**
- * TODO: Kiểm tra category trong cái PostCategory 
- */
