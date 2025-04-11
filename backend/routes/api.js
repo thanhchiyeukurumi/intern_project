@@ -15,6 +15,10 @@ const categoryController = require("../modules/category/controllers/categoryCont
 const { createCategoryValidation, updateCategoryValidation } = require("../modules/category/validations/categoryValidation");
 const userController = require("../modules/user/controllers/userController");
 const { createUserValidation, updateUserValidation } = require("../modules/user/validations/userValidation");
+const postController = require("../modules/post/controllers/postController");
+const { createPostValidation, updatePostValidation } = require("../modules/post/validations/postValidation");
+const commentController = require("../modules/comment/controllers/commentController");
+const { createCommentValidation, updateCommentValidation } = require("../modules/comment/validations/commentValidation");
 const { isOwner } = require("kernels/middlewares/roleMiddlewares");
 const router = express.Router({ mergeParams: true });
 
@@ -87,6 +91,43 @@ router.group("/user", (router) => {
   router.put("/:id", auth.authenticateJWT, role.isAdminOrOwner(), userController.updateUser);
   // Xóa người dùng
   router.delete("/:id", auth.authenticateJWT, role.isAdminOrOwner(), userController.deleteUser);
+});
+
+// Post Routes
+router.group("/posts", (router) => {
+  // Public routes - không cần xác thực
+  router.get("/", postController.getAllPosts);
+  router.get("/search", postController.searchPosts);
+  router.get("/category/:categoryId", postController.getPostsByCategory);
+  router.get("/:id", postController.getPostByIdOrSlug);
+  
+  // Protected routes - cần xác thực
+  router.post("/", auth.authenticateJWT, validate(createPostValidation), postController.createPost);
+  router.put("/:id", auth.authenticateJWT, role.isAdminOrPostOwner(), validate(updatePostValidation), postController.updatePost);
+  router.delete("/:id", auth.authenticateJWT, role.isAdminOrPostOwner(), postController.deletePost);
+  
+  // User posts
+  router.get("/user/:userId", postController.getPostsByUser);
+  router.get("/me", auth.authenticateJWT, postController.getPostsByUser);
+
+  // Comment routes
+  router.get("/:postId/comments", commentController.getCommentsByPostId);
+  router.post("/:postId/comments", auth.authenticateJWT, validate(createCommentValidation), commentController.createComment);
+});
+
+// Comment Routes
+
+router.group("/comments", (router) => {
+  // Public routes - không cần xác thực
+  router.get("/:id", commentController.getCommentById);
+  
+  // Protected routes - cần xác thực
+  router.put("/:id", auth.authenticateJWT, role.isAdminOrCommentOwner(), validate(updateCommentValidation), commentController.updateComment);
+  router.delete("/:id", auth.authenticateJWT, role.isAdminOrCommentOwner(), commentController.deleteComment);
+  
+  // User comments
+  router.get("/user/:userId", commentController.getCommentsByUserId);
+  router.get("/me", auth.authenticateJWT, commentController.getCommentsByUserId);
 });
 
 router.group("/example", validate([]), (router) => {

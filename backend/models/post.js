@@ -60,7 +60,15 @@ module.exports = function(sequelize, DataTypes) {
       },
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
-    }
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      field: 'created_at',
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      field: 'updated_at',
+    },
   }, {
     sequelize,
     tableName: 'posts',
