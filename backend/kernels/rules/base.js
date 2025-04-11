@@ -72,10 +72,32 @@ class WithLocale
         return this
     }
 
+    //Bo sung them
+    existsIn(sequelizeModel, field) {
+        this.withLocale = this.withLocale.custom(async (value) => {
+            if (value === null || value === undefined) {
+                return true; // Cho phép null/undefined
+            }
+            
+            const recordExist = await sequelizeModel.findOne({
+                where: {
+                    [field]: value
+                }
+            });
+
+            if (!recordExist) {
+                throw new Error(stringUtils.capitalize(this.field) + " does not exist");
+            }
+            return true;
+        }).bail();
+        return this;
+    }
+
     get() {
         return this.withLocale
     }
 
+    
 }
 
 module.exports = WithLocale

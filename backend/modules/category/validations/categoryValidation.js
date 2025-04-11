@@ -1,4 +1,29 @@
 const { body } = require('express-validator');
+const { Category } = require('models');
+const { BodyWithLocale } = require('kernels/rules');
+
+// const createCategoryValidation = [
+//     new BodyWithLocale('name')
+//         .notEmpty()
+//         .isString()
+//         .isLength({ min: 2, max: 50 })
+//         .get(),
+    
+//     new BodyWithLocale('parent_id')
+//         .existsIn(Category, 'id')
+//         .get(),
+// ];
+
+// const updateCategoryValidation = [
+//     new BodyWithLocale('name')
+//         .isString()
+//         .isLength({ min: 2, max: 50 })
+//         .get(),
+    
+//     new BodyWithLocale('parent_id')
+//         .existsIn(Category, 'id')
+//         .get()
+// ];
 
 const createCategoryValidation = [
     body('name')

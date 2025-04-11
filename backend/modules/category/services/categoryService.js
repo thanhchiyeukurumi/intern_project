@@ -79,7 +79,10 @@ class CategoryService {
      */
     async createCategory(data) {
         try {
-            const category = await Category.create(data);
+            const category = await Category.create({
+                name: data.name,
+                parent_id: data.parent_id || null
+            });
             return category;
         } catch (error) {
             throw error;
