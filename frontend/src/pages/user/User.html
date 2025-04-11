@@ -1,0 +1,186 @@
+<!-- res -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoang Thanh - Medium</title>
+    <link rel="stylesheet" href="../../dist/tailwind.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="../../assets/js/components/componentsConfig.js" defer></script>
+
+<body class="font-serif bg-[#f5f5f5] text-gray-900 page-container">
+    <!-- Navigation -->
+    <div id="navbar-guest"></div>
+
+    <!-- User Profile Header -->
+    <div class="bg-[#f5f5f5] py-12 px-4 sm:px-6 lg:px-8 user-profile-header">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex flex-col items-center md:flex-row md:items-start user-profile-content">
+                <div class="md:mr-8 mb-6 md:mb-0 flex justify-center flex-col items-center user-avatar-container">
+                    <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Profile Picture" class="w-36 h-36 rounded-full user-avatar">
+                </div>
+                <div class="text-center md:text-left user-info">
+                    <h1 class="text-4xl font-bold mb-2 user-name">Hoang Chi Thanh</h1>
+                    <div id="display-tagline">
+                        <p class="text-xl text-gray-700 mb-6 user-tagline">What the hell is going on?????????</p>
+                    </div>
+                    <div id="edit-tagline" class="hidden mb-6">
+                        <input type="text" id="tagline-input" class="w-full border border-gray-300 rounded-lg p-2 text-xl" value="What the hell is going on?????????">
+                        <div class="mt-2 flex gap-2">
+                            <button id="save-profile-2" class="px-4 py-2 bg-blue-300 hover:bg-blue-400 text-white rounded-full">Lưu thay đổi</button>
+                            <button id="cancel-edit" class="px-4 py-2 bg-gray-500 text-white rounded-full hover:bg-gray-600">Hủy bỏ</button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-3 mb-6 user-stats">
+                        <div class="flex items-center text-gray-700 user-stat-item">
+                            <span class="stat-value">42 Comment</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-3 user-actions">
+                        <button id="edit-profile-btn" class="px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 btn-primary">Edit Profile</button>
+                        <a href="#" class="px-4 py-2 bg-white border border-gray-300 rounded-full hover:bg-gray-50 btn-secondary">Share Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Content Navigation -->
+    <div class="border-b border-gray-200 user-nav">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex overflow-x-auto user-nav-tabs">
+                <a href="#" class="px-4 py-4 text-black border-b-2 border-black font-medium mr-8 whitespace-nowrap user-nav-tab active">Comments</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 user-comments-section">
+        <h2 class="text-2xl font-bold mb-8 section-title">Your Comments</h2>
+        
+        <!-- Comment Card 1 -->
+        <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow mb-8 p-6 comment-card">
+            <div class="flex items-start mb-4 comment-post-info">
+                <div class="flex-shrink-0 mr-4 post-image-container">
+                    <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Article Image" class="w-14 h-14 object-cover rounded post-image">
+                </div>
+                <div class="post-details">
+                    <h3 class="font-bold text-lg mb-1 post-title">
+                        <a href="#" class="hover:underline post-link">The Future of Web Development: What to Expect in 2025</a>
+                    </h3>
+                    <p class="text-gray-500 text-sm post-meta">By James Wilson · May 15, 2025</p>
+                </div>
+            </div>
+            
+            <div class="ml-0 sm:ml-18 comment-content">
+                <p class="text-gray-800 mb-4 comment-text">
+                    This article resonates deeply with me. The predictions about WebAssembly are spot on. 
+                    I've been using it in my recent projects and the performance gains are substantial. 
+                    Great insights about the future of web development!
+                </p>
+                <div class="flex items-center text-gray-500 text-sm comment-actions">
+                    <span class="comment-date">Apr 22, 2025</span>
+                    <span class="mx-2 separator">·</span>
+                    <button class="hover:text-black comment-edit-btn">Edit</button>
+                    <span class="mx-2 separator">·</span>
+                    <button class="hover:text-black comment-delete-btn">Delete</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Comment Card 2 -->
+        <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow mb-8 p-6 comment-card">
+            <div class="flex items-start mb-4 comment-post-info">
+                <div class="flex-shrink-0 mr-4 post-image-container">
+                    <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Article Image" class="w-14 h-14 object-cover rounded post-image">
+                </div>
+                <div class="post-details">
+                    <h3 class="font-bold text-lg mb-1 post-title">
+                        <a href="#" class="hover:underline post-link">Machine Learning in Healthcare: Real-World Applications</a>
+                    </h3>
+                    <p class="text-gray-500 text-sm post-meta">By Sarah Chen · April 8, 2025</p>
+                </div>
+            </div>
+            
+            <div class="ml-0 sm:ml-18 comment-content">
+                <p class="text-gray-800 mb-4 comment-text">
+                    I work in healthcare IT and can confirm these trends are becoming mainstream. 
+                    We've implemented similar ML models for early disease detection. The accuracy rates 
+                    mentioned here match our experience. Would love to see more about implementation challenges.
+                </p>
+                <div class="flex items-center text-gray-500 text-sm comment-actions">
+                    <span class="comment-date">Apr 10, 2025</span>
+                    <span class="mx-2 separator">·</span>
+                    <button class="hover:text-black comment-edit-btn">Edit</button>
+                    <span class="mx-2 separator">·</span>
+                    <button class="hover:text-black comment-delete-btn">Delete</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Load More Button -->
+        <div class="mt-8 text-center load-more-container">
+            <button class="px-8 py-3 bg-white border border-gray-300 rounded-full hover:bg-gray-50 text-gray-800 btn-load-more">
+                Load More Comments
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const editProfileBtn = document.getElementById('edit-profile-btn');
+            const displayTagline = document.getElementById('display-tagline');
+            const editTagline = document.getElementById('edit-tagline');
+            const taglineInput = document.getElementById('tagline-input');
+            const saveProfileBtn = document.getElementById('save-profile-2');
+            const cancelEditBtn = document.getElementById('cancel-edit');
+            const userTagline = document.querySelector('.user-tagline');
+
+            // Lưu tagline ban đầu
+            let originalTagline = userTagline.textContent;
+
+            // Hiển thị form chỉnh sửa khi nhấn Edit Profile
+            editProfileBtn.addEventListener('click', function() {
+                displayTagline.classList.add('hidden');
+                editTagline.classList.remove('hidden');
+                taglineInput.focus();
+            });
+
+            // Lưu thay đổi khi nhấn Save
+            saveProfileBtn.addEventListener('click', function() {
+                const newTagline = taglineInput.value.trim();
+                
+                if (newTagline) {
+                    userTagline.textContent = newTagline;
+                    originalTagline = newTagline;
+                    
+                    // Hiển thị thông báo thành công
+                    alert('Đã lưu thay đổi thành công!');
+                    
+                    // Ẩn form chỉnh sửa và hiển thị lại tagline
+                    displayTagline.classList.remove('hidden');
+                    editTagline.classList.add('hidden');
+                } else {
+                    alert('Vui lòng nhập nội dung cho tagline!');
+                }
+            });
+
+            // Hủy bỏ chỉnh sửa
+            cancelEditBtn.addEventListener('click', function() {
+                // Khôi phục giá trị ban đầu
+                taglineInput.value = originalTagline;
+                
+                // Ẩn form chỉnh sửa và hiển thị lại tagline
+                displayTagline.classList.remove('hidden');
+                editTagline.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>

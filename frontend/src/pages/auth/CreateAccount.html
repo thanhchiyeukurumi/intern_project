@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - Medium</title>
+    <link rel="stylesheet" href="../../dist/tailwind.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../../assets/js/components/componentsConfig.js" defer></script>
+</head>
+<body class="font-serif bg-[#f5f5f5] text-gray-900">
+    <!-- Navigation -->
+    <div id="navbar-guest"></div>
+
+    <!-- Create Account Header -->
+    <div class="bg-[#f5f5f5] py-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl font-bold mb-4">Join Medium</h1>
+            <p class="text-xl text-gray-700">Create an account to start sharing your ideas.</p>
+        </div>
+    </div>
+
+    <!-- Create Account Form -->
+    <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <form class="bg-white rounded-lg shadow-sm p-6">
+            <!-- Full Name -->
+            <div class="mb-6">
+                <label for="full-name" class="block text-gray-700 font-medium mb-2">Full Name</label>
+                <input type="text" id="full-name" name="full-name" placeholder="Enter your full name" required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black">
+            </div>
+
+            <!-- Email -->
+            <div class="mb-6">
+                <label for="email" class="block text-gray-700 font-medium mb-2">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email address" required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black">
+            </div>
+
+            <!-- Password -->
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700 font-medium mb-2">Password</label>
+                <div class="relative">
+                    <input type="password" id="password" name="password" placeholder="Create a password" required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black">
+                    <button type="button" id="toggle-password" class="absolute right-3 top-3 text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Password must be at least 8 characters long and include a number and symbol</p>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-6">
+                <label for="confirm-password" class="block text-gray-700 font-medium mb-2">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black">
+            </div>
+
+            <!-- Terms and Conditions -->
+            <div class="mb-6">
+                <div class="flex items-start">
+                    <div class="flex items-center h-5">
+                        <input id="terms" type="checkbox" required
+                            class="w-4 h-4 border border-gray-300 rounded focus:ring-2 focus:ring-black">
+                    </div>
+                    <div class="ml-3 text-sm">
+                        <label for="terms" class="text-gray-700">
+                            I agree to Medium's <a href="#" class="text-black underline">Terms of Service</a> and <a href="#" class="text-black underline">Privacy Policy</a>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="mb-6">
+                <div class="flex items-start">
+                    <div class="flex items-center h-5">
+                        <input id="newsletter" type="checkbox"
+                            class="w-4 h-4 border border-gray-300 rounded focus:ring-2 focus:ring-black">
+                    </div>
+                    <div class="ml-3 text-sm">
+                        <label for="newsletter" class="text-gray-700">
+                            Send me emails with Medium updates, stories from authors I follow, and more
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Account Button -->
+            <div class="mb-6">
+                <button type="submit" class="w-full bg-black text-white py-3 rounded-full hover:bg-gray-800">
+                    Create Account
+                </button>
+            </div>
+
+            <!-- Sign In Link -->
+            <div class="text-center">
+                <p class="text-gray-700">
+                    Already have an account? <a href="./LoginAccount.html" class="text-black font-medium">Sign in</a>
+                </p>
+            </div>
+        </form>
+
+        <!-- Social Sign Up -->
+        <div class="mt-6">
+            <div class="relative">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-[#f5f5f5] text-gray-500">Or sign up with</span>
+                </div>
+            </div>
+            <div class="mt-6 grid grid-cols-3 gap-3">
+                <a href="#" class="col-span-3 col-start-1 flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    <i class="fab fa-google"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Hidden trigger for password reset -->
+    <div class="hidden-feature" id="hidden-feature"></div>
+
+    <!-- Footer -->
+    <div id="footer"></div>
+
+    <script>
+        // Toggle password visibility
+        document.getElementById('toggle-password').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        // Password confirmation validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+            }
+        });
+
+    </script>
+</body>
+</html>

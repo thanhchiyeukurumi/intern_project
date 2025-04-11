@@ -1,0 +1,286 @@
+<!-- res  -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Society - Medium</title>
+    <link rel="stylesheet" href="../dist/tailwind.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="../assets/js/components/componentsConfig.js" defer></script>
+</head>
+<body class="font-serif bg-[#f5f5f5] text-gray-900 page-container">
+    <!-- Navigation -->
+    <div id="navbar-guest"></div>
+
+    <!-- Tag Header -->
+    <div class="bg-[#f5f5f5] py-12 px-4 sm:px-6 lg:px-8 border-b border-gray-200 category-header">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-center justify-between category-header-content">
+                <div>
+                    <h1 class="text-5xl font-bold mb-4 category-title">Society</h1>
+                    <p class="text-xl text-gray-700 mb-4 md:mb-0 max-w-2xl category-description">Exploring the systems, structures, and issues that shape our everyday interactions and collective human experience.</p>
+                </div>
+            </div>
+            
+            <!-- Tag Stats -->
+            <div class="mt-8 flex flex-wrap gap-6 text-gray-600 category-stats">
+                <div class="flex items-center stat-item">
+                    <svg class="h-5 w-5 mr-2 stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                    </svg>
+                    <span class="stat-text">12.8K stories</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="py-12 px-4 sm:px-6 lg:px-8 main-content">
+        <div class="max-w-7xl mx-auto">
+        <!-- Random Article -->
+        <div class="mb-16 random-post-section">
+            <h2 class="text-2xl font-bold mb-8 section-title">Random Post</h2>
+            <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow featured-post-card">
+                <div class="md:flex">
+                    <div class="md:w-2/3 p-8 post-content">
+                        <div class="flex items-center mb-4 author-info">
+                            <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Author" class="w-10 h-10 rounded-full author-avatar">
+                            <span class="ml-3 font-medium author-name">Emma Johnson</span>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 leading-tight post-title">The Invisible Threads That Connect Modern Society</h3>
+                        <p class="text-gray-600 mb-6 line-clamp-3 post-excerpt">In an increasingly digital world, we're paradoxically more connected and more isolated than ever before. This piece examines the subtle ways our society has transformed and what it means for our collective future.</p>
+                        <div class="flex justify-between items-center post-meta">
+                            <div class="flex items-center text-sm text-gray-500 post-details">
+                                <span class="post-date">Jun 12 · 8 min read</span>
+                                <span class="mx-2 separator">·</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full post-tag">Society</span>
+                            </div>
+                            <div class="flex items-center post-actions">
+                                <button class="text-gray-500 hover:text-gray-900 bookmark-button">
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:w-1/3 hidden md:block post-image-container">
+                        <img src="https://via.placeholder.com/600x400" alt="Featured Article" class="w-full h-full object-cover post-image">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trending Articles -->
+        <div class="mb-16 trending-section">
+            <h2 class="text-2xl font-bold mb-8 section-title">Trending in Society</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 trending-grid">
+                <!-- Article 1 -->
+                <div class="flex flex-col trending-post-card">
+                    <div class="flex items-center mb-4 author-info">
+                        <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Author" class="w-9 h-9 rounded-full author-avatar">
+                        <span class="ml-3 font-medium author-name">Michael Chen</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 leading-tight post-title">The Great Urban Migration: How Cities Are Changing</h3>
+                    <p class="text-gray-600 mb-4 post-excerpt">Millions are moving to cities worldwide, transforming urban landscapes and creating new social dynamics.</p>
+                    <div class="flex items-center text-sm text-gray-500 mt-auto post-meta">
+                        <span class="post-date">May 28 · 6 min read</span>
+                        <span class="mx-2 separator">·</span>
+                        <span class="px-3 py-1 bg-gray-100 rounded-full post-tag">Urban Life</span>
+                    </div>
+                </div>
+                
+                <!-- Article 2 -->
+                <div class="flex flex-col trending-post-card">
+                    <div class="flex items-center mb-4 author-info">
+                        <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Author" class="w-9 h-9 rounded-full author-avatar">
+                        <span class="ml-3 font-medium author-name">Sophia Williams</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 leading-tight post-title">Digital Divide: Who's Being Left Behind?</h3>
+                    <p class="text-gray-600 mb-4 post-excerpt">As technology advances, the gap widens between those with digital access and those without.</p>
+                    <div class="flex items-center text-sm text-gray-500 mt-auto post-meta">
+                        <span class="post-date">Jun 2 · 7 min read</span>
+                        <span class="mx-2 separator">·</span>
+                        <span class="px-3 py-1 bg-gray-100 rounded-full post-tag">Technology</span>
+                    </div>
+                </div>
+                
+                <!-- Article 3 -->
+                <div class="flex flex-col trending-post-card">
+                    <div class="flex items-center mb-4 author-info">
+                        <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Author" class="w-9 h-9 rounded-full author-avatar">
+                        <span class="ml-3 font-medium author-name">James Wilson</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 leading-tight post-title">The Economics of Happiness: Beyond GDP</h3>
+                    <p class="text-gray-600 mb-4 post-excerpt">Countries are starting to measure well-being alongside traditional economic metrics. What can we learn?</p>
+                    <div class="flex items-center text-sm text-gray-500 mt-auto post-meta">
+                        <span class="post-date">Jun 8 · 9 min read</span>
+                        <span class="mx-2 separator">·</span>
+                        <span class="px-3 py-1 bg-gray-100 rounded-full post-tag">Economics</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Latest Articles -->
+        <div class="mb-16 latest-section">
+            <h2 class="text-2xl font-bold mb-8 section-title">Latest in Society</h2>
+            <div class="space-y-8 latest-posts-list">
+                <!-- Latest Article 1 -->
+                <div class="flex flex-col md:flex-row gap-6 latest-post-item">
+                    <div class="md:w-3/4 post-content">
+                        <div class="flex items-center mb-3 author-info">
+                            <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Author" class="w-8 h-8 rounded-full author-avatar">
+                            <span class="ml-2 font-medium author-name">David Martinez</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 post-title">The Revival of Community Spaces in Post-Pandemic World</h3>
+                        <p class="text-gray-600 mb-3 line-clamp-2 post-excerpt">Public gathering spaces are being reimagined as we navigate new social norms and expectations.</p>
+                        <div class="flex items-center text-sm text-gray-500 post-meta">
+                            <span class="post-date">Jun 14 · 5 min read</span>
+                            <span class="mx-2 separator">·</span>
+                            <span class="px-3 py-1 bg-gray-100 rounded-full post-tag">Urban Planning</span>
+                        </div>
+                    </div>
+                    <div class="md:w-1/4 hidden md:block post-image-container">
+                        <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Article Image" class="w-full h-40 object-cover rounded post-image">
+                    </div>
+                </div>
+
+                <!-- Latest Article 2 -->
+                <div class="flex flex-col md:flex-row gap-6 latest-post-item">
+                    <div class="md:w-3/4 post-content">
+                        <div class="flex items-center mb-3 author-info">
+                            <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Author" class="w-8 h-8 rounded-full author-avatar">
+                            <span class="ml-2 font-medium author-name">Priya Sharma</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 post-title">Modern Tribalism: How Group Identity Shapes Our Worldview</h3>
+                        <p class="text-gray-600 mb-3 line-clamp-2 post-excerpt">From sports teams to political parties, our social affiliations profoundly influence how we see the world around us.</p>
+                        <div class="flex items-center text-sm text-gray-500 post-meta">
+                            <span class="post-date">Jun 13 · 11 min read</span>
+                            <span class="mx-2 separator">·</span>
+                            <span class="px-3 py-1 bg-gray-100 rounded-full post-tag">Psychology</span>
+                        </div>
+                    </div>
+                    <div class="md:w-1/4 hidden md:block post-image-container">
+                        <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Article Image" class="w-full h-40 object-cover rounded post-image">
+                    </div>
+                </div>
+
+                <!-- Latest Article 3 -->
+                <div class="flex flex-col md:flex-row gap-6 latest-post-item">
+                    <div class="md:w-3/4 post-content">
+                        <div class="flex items-center mb-3 author-info">
+                            <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Author" class="w-8 h-8 rounded-full author-avatar">
+                            <span class="ml-2 font-medium author-name">Robert Kim</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 post-title">The Changing Face of Education: Learning Beyond Classrooms</h3>
+                        <p class="text-gray-600 mb-3 line-clamp-2 post-excerpt">Traditional educational models are being challenged by new approaches that emphasize experiential learning and practical skills.</p>
+                        <div class="flex items-center text-sm text-gray-500 post-meta">
+                            <span class="post-date">Jun 10 · 8 min read</span>
+                            <span class="mx-2 separator">·</span>
+                            <span class="px-3 py-1 bg-gray-100 rounded-full post-tag">Education</span>
+                        </div>
+                    </div>
+                    <div class="md:w-1/4 hidden md:block post-image-container">
+                        <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Article Image" class="w-full h-40 object-cover rounded post-image">
+                    </div>
+                </div>
+
+                <!-- Latest Article 4 -->
+                <div class="flex flex-col md:flex-row gap-6 latest-post-item">
+                    <div class="md:w-3/4 post-content">
+                        <div class="flex items-center mb-3 author-info">
+                            <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Author" class="w-8 h-8 rounded-full author-avatar">
+                            <span class="ml-2 font-medium author-name">Sarah Johnson</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 post-title">Intergenerational Living: Old Solutions for Modern Problems</h3>
+                        <p class="text-gray-600 mb-3 line-clamp-2 post-excerpt">As housing costs rise and social isolation increases, multigenerational households are making a comeback with surprising benefits.</p>
+                        <div class="flex items-center text-sm text-gray-500 post-meta">
+                            <span class="post-date">Jun 9 · 6 min read</span>
+                            <span class="mx-2 separator">·</span>
+                            <span class="px-3 py-1 bg-gray-100 rounded-full post-tag">Housing</span>
+                        </div>
+                    </div>
+                    <div class="md:w-1/4 hidden md:block post-image-container">
+                        <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Article Image" class="w-full h-40 object-cover rounded post-image">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Load More Button -->
+            <div class="mt-10 text-center load-more-container">
+                <button class="px-6 py-2 border border-gray-300 rounded-full hover:bg-gray-100 transition-colors btn-secondary">
+                    Show more
+                </button>
+            </div>
+        </div>
+
+        <!-- some writter -->
+        <div class="mb-16 writers-section">
+            <h2 class="text-2xl font-bold mb-8 section-title">Writers write this topicView</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 writers-grid">
+                <!-- Writer 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow writer-card">
+                    <div class="flex flex-col items-center text-center writer-info">
+                        <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Writer" class="w-20 h-20 rounded-full mb-4 writer-avatar">
+                        <h3 class="font-bold text-lg mb-1 writer-name">Elena Rodriguez</h3>
+                        <p class="text-gray-600 mb-4 text-sm writer-bio">Social anthropologist and author exploring community dynamics in digital age</p>
+                        <button class="px-5 py-1.5 border border-gray-300 rounded-full hover:bg-gray-100 transition-colors text-sm btn-outline">View</button>
+                    </div>
+                </div>
+                
+                <!-- Writer 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow writer-card">
+                    <div class="flex flex-col items-center text-center writer-info">
+                        <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Writer" class="w-20 h-20 rounded-full mb-4 writer-avatar">
+                        <h3 class="font-bold text-lg mb-1 writer-name">Marcus Thompson</h3>
+                        <p class="text-gray-600 mb-4 text-sm writer-bio">Urban sociologist and policy advisor studying inequality in metropolitan areas</p>
+                        <button class="px-5 py-1.5 border border-gray-300 rounded-full hover:bg-gray-100 transition-colors text-sm btn-outline">View</button>
+                    </div>
+                </div>
+                
+                <!-- Writer 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow writer-card">
+                    <div class="flex flex-col items-center text-center writer-info">
+                        <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Writer" class="w-20 h-20 rounded-full mb-4 writer-avatar">
+                        <h3 class="font-bold text-lg mb-1 writer-name">Naomi Chen</h3>
+                        <p class="text-gray-600 mb-4 text-sm writer-bio">Economics researcher focused on social impact of emerging technologies</p>
+                        <button class="px-5 py-1.5 border border-gray-300 rounded-full hover:bg-gray-100 transition-colors text-sm btn-outline">View</button>
+                    </div>
+                </div>
+                
+                <!-- Writer 4 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow writer-card">
+                    <div class="flex flex-col items-center text-center writer-info">
+                        <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Writer" class="w-20 h-20 rounded-full mb-4 writer-avatar">
+                        <h3 class="font-bold text-lg mb-1 writer-name">Daniel Osei</h3>
+                        <p class="text-gray-600 mb-4 text-sm writer-bio">Political scientist and commentator on global democratic movements</p>
+                        <button class="px-5 py-1.5 border border-gray-300 rounded-full hover:bg-gray-100 transition-colors text-sm btn-outline">View</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Topics -->
+        <div class="related-topics-section">
+            <h2 class="text-2xl font-bold mb-6 section-title">Related Topics</h2>
+            <div class="flex flex-wrap gap-3 topics-list">
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 topic-pill">Politics</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 topic-pill">Culture</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 topic-pill">Economics</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 topic-pill">Psychology</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 topic-pill">History</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 topic-pill">Urban Studies</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 topic-pill">Philosophy</a>
+                <a href="#" class="px-4 py-2 bg-white rounded-full border hover:bg-gray-50 topic-pill">Anthropology</a>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer"></div>
+</body>
+</html>

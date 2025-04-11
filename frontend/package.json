@@ -1,18 +1,30 @@
 {
   "name": "frontend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Frontend for Blog Application",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "postcss ./src/styles/index.css -o ./dist/styles.css",
+    "watch": "npx postcss styles.css -o dist/styles.css --watch",
+    "preview": "vite preview",
+    "build:css": "npx @tailwindcss/cli -i ./src/styles/index.css -o ./src/dist/tailwind.css --watch"
   },
-  "keywords": [],
+  "keywords": [
+    "blog",
+    "tailwindcss",
+    "frontend"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@tailwindcss/cli": "^4.0.14",
-    "autoprefixer": "^10.4.21",
+    "@tailwindcss/cli": "^4.0.17",
+    "@tailwindcss/postcss": "^4.0.17",
+    "antd": "^5.24.6",
+    "chart.js": "^4.4.8",
+    "daisyui": "^5.0.11",
     "postcss": "^8.5.3",
-    "tailwindcss": "^4.0.14"
+    "repomix": "^0.3.1",
+    "tailwindcss": "^4.0.17"
   }
 }

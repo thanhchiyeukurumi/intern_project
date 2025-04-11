@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Overview</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="../../assets/js/pages/admin.js" defer></script>
+    <link rel="stylesheet" href="../../dist/tailwind.css">
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="bg-indigo-800 text-white w-64 flex-shrink-0 hidden md:block">
+            <div class="p-4">
+                <div class="flex items-center justify-center mb-8">
+                    <span class="text-2xl font-bold">AdminPanel</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li class="mb-1">
+                            <a href="dashboard.html" class="flex items-center py-2 px-4 bg-indigo-700 rounded-lg">
+                                <i class="fas fa-tachometer-alt mr-3 w-6"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="post.html" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
+                                <i class="fas fa-file-alt mr-3 w-6"></i>
+                                <span>Posts</span>
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="users.html" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
+                                <i class="fas fa-users mr-3 w-6"></i>
+                                <span>Users</span>
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="categories.html" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
+                                <i class="fas fa-folder mr-3 w-6"></i>
+                                <span>Categories</span>
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="settings.html" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
+                                <i class="fas fa-cog mr-3 w-6"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="absolute bottom-0 w-64 p-4">
+                <a href="#" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
+                    <i class="fas fa-sign-out-alt mr-3"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Header -->
+            <header class="bg-white shadow-sm py-4 px-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <button class="text-gray-500 focus:outline-none md:hidden mr-3" id="mobile-menu-button">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <h1 class="text-xl font-semibold">User Management</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <button class="flex items-center focus:outline-none">
+                                <img class="h-8 w-8 rounded-full object-cover" src="https://randomuser.me/api/portraits/men/75.jpg" alt="User Profile">
+                                <span class="ml-2 text-gray-700">John Doe</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <div class="container mx-auto">
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                        <div class="bg-white rounded-lg shadow-sm p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-indigo-100 text-indigo-600">
+                                    <i class="fas fa-file-alt text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-500 font-medium">Total Posts</p>
+                                    <p class="text-2xl font-semibold">124</p>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-green-500 text-sm font-medium">
+                                    <i class="fas fa-arrow-up"></i> 12% 
+                                </span>
+                                <span class="text-gray-500 text-sm">since last month</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow-sm p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-green-100 text-green-600">
+                                    <i class="fas fa-users text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-500 font-medium">Total Users</p>
+                                    <p class="text-2xl font-semibold">752</p>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-green-500 text-sm font-medium">
+                                    <i class="fas fa-arrow-up"></i> 5.3% 
+                                </span>
+                                <span class="text-gray-500 text-sm">since last month</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow-sm p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                                    <i class="fas fa-comment text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-500 font-medium">Comments</p>
+                                    <p class="text-2xl font-semibold">328</p>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-green-500 text-sm font-medium">
+                                    <i class="fas fa-arrow-up"></i> 8.1% 
+                                </span>
+                                <span class="text-gray-500 text-sm">since last month</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow-sm p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-red-100 text-red-600">
+                                    <i class="fas fa-eye text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-500 font-medium">Total Views</p>
+                                    <p class="text-2xl font-semibold">25.4K</p>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-green-500 text-sm font-medium">
+                                    <i class="fas fa-arrow-up"></i> 15.6% 
+                                </span>
+                                <span class="text-gray-500 text-sm">since last month</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <!-- Chart -->
+                        <div class=" bg-white rounded-lg shadow-sm p-6 mb-6">
+                            <h2 class="text-lg font-semibold mb-4">Total Post In Last Month</h2>
+                            <div class="h-80 w-45">     
+                                <div class="inset-0 flex items-center justify-center">
+                                    <img src="https://www.chartjs.org/docs/latest/assets/img/usage-1.be7a12cd.png" alt="Traffic Chart" class="max-w-[100px] max-h-[100px] object-contain">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

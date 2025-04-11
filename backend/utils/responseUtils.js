@@ -8,11 +8,20 @@ module.exports = {
     });
   },
 
-  notFound: (res) => {
+  created: (res, data) => {
+    return res.status(201).send({
+      success: true,
+      data,
+      status: 201,
+      message: "Created successfully"
+    });
+  },
+
+  notFound: (res, message) => {
     return res.status(404).send({
       success: false,
       status: 404,
-      message: "Cannot find resouces",
+      message: message || "Cannot find resouces",
     });
   },
 
@@ -24,11 +33,27 @@ module.exports = {
     });
   },
 
+  customError: (res, statusCode, message) => {
+    return res.status(statusCode).send({
+      success: false,
+      status: statusCode,
+      message: message || "Some error occurred",
+    });
+  },
+
   unauthorized: (res, message) => {
     return res.status(401).send({
       success: false,
       status: 401,
       message: message || 'Unauthorized',
+    });
+  },
+
+  forbidden: (res, message) => {
+    return res.status(403).send({
+      success: false,
+      status: 403,
+      message: message || 'You do not have permission to perform this action.',
     });
   },
 
