@@ -51,6 +51,51 @@ router.group("/auth", (router) => {
   router.get('/google/callback', auth.googleCallback, authController.googleCallback);
 });
 
+/**
+ * @description: Admin Routes
+ */
+router.group("/admin", (router) => {
+  // Lấy tất cả người dùng
+  router.get("/users", userController.getAllUsers);
+  // Lấy người dùng theo id
+  router.get("/users/:id", userController.getUserById);
+  // Xóa người dùng
+  router.delete("/users/:id", userController.deleteUser);
+  
+  
+  // Lấy tất cả bài viết
+  router.get("/posts", postController.getAllPosts);
+  // Xóa bài viết
+  router.delete("/posts/:id", postController.deletePost);
+  
+  // Lấy tất cả danh mục
+  router.get("/categories", categoryController.getAllCategories);
+  // Thêm danh mục
+  router.post("/categories", categoryController.createCategory);
+  // Cập nhật danh mục
+  router.put("/categories/:id", categoryController.updateCategory);
+  // Xóa danh mục
+  router.delete("/categories/:id", categoryController.deleteCategory);
+  
+  // Lấy tất cả ngôn ngữ
+  router.get("/languages", languageController.getAllLanguages);
+  // Thêm ngôn ngữ
+  router.post("/languages", languageController.createLanguage);
+  // Cập nhật ngôn ngữ
+  router.put("/languages/:id", languageController.updateLanguage);
+  // Xóa ngôn ngữ
+  router.delete("/languages/:id", languageController.deleteLanguage);
+})
+
+
+
+
+
+
+
+
+
+
 // Language Routes
 router.group("/languages", (router) => {
   // Lấy tất cả ngôn ngữ
@@ -82,9 +127,6 @@ router.group("/categories", (router) => {
 // User Profile Routes
 router.group("/user", (router) => {
   // Lấy thông tin người dùng
-  /**
-   * @description: fix sau
-   */
   router.get("/:id", userController.getUserById);
   router.get("/", userController.getAllUsers);
   // Cập nhật thông tin người dùng
