@@ -33,11 +33,11 @@ class CategoryService {
                 order: [[orderBy, order]],
                 limit,
                 offset,
-                distinct: true
+                distinct: true,
+                attributes: { exclude: ['createdAt', 'updatedAt'] }
             };
 
             const { count, rows } = await Category.findAndCountAll(queryOptions);
-
             return {
                 data: rows,
                 pagination: {
