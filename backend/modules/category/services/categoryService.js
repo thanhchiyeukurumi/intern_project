@@ -67,11 +67,15 @@ class CategoryService {
      */
     async getCategoryById(id) {
         try {
-            const category = await Category.findByPk(id);
+            const category = await Category.findByPk(id, {
+                attributes: { exclude: ['createdAt', 'updatedAt'] }
+            });
             if (!category) {
                 throw new Error('Không tìm thấy danh mục');
             }
-            return category;
+            return {
+                data: category
+            };
         } catch (err) {
             throw err;
         }
@@ -86,8 +90,8 @@ class CategoryService {
      * @desc    Tạo danh mục mới, kiểm tra trùng lặp theo name và parent_id
      * @param   {Object} data - Dữ liệu danh mục { name: string, parent_id?: number | null }
      * @returns {Object} category - Danh mục vừa tạo
- * @throws  {Error} Nếu danh mục đã tồn tại hoặc có lỗi khác
- */
+     * @throws  {Error} Nếu danh mục đã tồn tại hoặc có lỗi khác
+     */
 async createCategory(data) {
     // Bắt đầu một transaction để đảm bảo tính toàn vẹn dữ liệu
     const transaction = await db.sequelize.transaction();
@@ -125,7 +129,9 @@ async createCategory(data) {
         await transaction.commit();
 
         // Trả về danh mục vừa tạo
-        return category;
+        return {
+            data: category
+        }
 
     } catch (err) {
         // Nếu có bất kỳ lỗi nào xảy ra (kể cả lỗi trùng lặp đã throw ở trên), rollback transaction
@@ -157,7 +163,9 @@ async createCategory(data) {
             }
 
             await category.update(data);
-            return category;
+            return {
+                data: category
+            }
         } catch (err) {
             throw err;
         }

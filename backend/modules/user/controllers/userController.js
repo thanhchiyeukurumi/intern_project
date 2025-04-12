@@ -2,9 +2,11 @@ const userService = require("../services/userService");
 const { ok, created, error } = require('../../../utils/responseUtils');
 
 class UserController { 
+    // ============================================
+    // LẤY DANH SÁCH NGƯỜI DÙNG - getAllUsers
+    // ============================================
     /**
      * GET /users
-     * -----------------------------
      * @desc    Lấy danh sách tất cả người dùng
      * @access  Admin
      * @query   {number} page           - Trang hiện tại
@@ -31,9 +33,11 @@ class UserController {
         }
     }   
 
+    // ============================================
+    // LẤY THÔNG TIN NGƯỜI DÙNG THEO ID - getUserById
+    // ============================================
     /**
      * GET /users/:id
-     * -----------------------------
      * @desc    Lấy thông tin người dùng theo id
      * @access  Admin
      */
@@ -46,9 +50,11 @@ class UserController {
         }
     }   
 
+    // ============================================
+    // TẠO NGƯỜI DÙNG MỚI - createUser
+    // ============================================
     /**
      * POST /users
-     * -----------------------------
      * @desc    Tạo người dùng mới
      * @access  Admin
      */
@@ -61,9 +67,11 @@ class UserController {
         }
     }   
 
+    // ============================================
+    // CẬP NHẬT THÔNG TIN NGƯỜI DÙNG - updateUser
+    // ============================================
     /**
      * PUT /users/:id
-     * -----------------------------
      * @desc    Cập nhật thông tin người dùng
      * @access  Owner
      */
@@ -76,9 +84,11 @@ class UserController {
         }
     }      
 
+    // ============================================
+    // XÓA NGƯỜI DÙNG - deleteUser
+    // ============================================
     /**
      * DELETE /users/:id
-     * -----------------------------
      * @desc    Xóa người dùng
      * @access  Admin
      */

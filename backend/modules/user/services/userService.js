@@ -2,8 +2,13 @@ const db = require('models');
 const {User} = db;
 
 class UserService {
+    // ============================================
+    // LẤY DANH SÁCH NGƯỜI DÙNG - getAllUsers
+    // ============================================
     /**
-     * Lấy danh sách tất cả người dùng
+     * @desc: Lấy danh sách tất cả người dùng (có phân trang, tìm kiếm, sắp xếp)
+     * @param {Object} options - { page, limit, search, orderBy, order }
+     * @returns {Object} { data: [...], pagination: { total, page, limit } }
      */
     async getAllUsers(options = {}) {
         try {
@@ -19,8 +24,7 @@ class UserService {
 
             if (search) {
                 where[Op.or] = [
-                    { username: { [Op.like]: `%${search}%` } },
-                    { email: { [Op.like]: `%${search}%` } }
+                    { username: { [Op.like]: `%${search}%` } }
                 ]; 
             }
 
@@ -48,8 +52,13 @@ class UserService {
         }
     }   
 
+    // ============================================
+    // LẤY THÔNG TIN NGƯỜI DÙNG THEO ID - getUserById
+    // ============================================
     /**
-     * Lấy thông tin người dùng theo id
+     * @desc: Lấy thông tin người dùng theo id
+     * @param {number} id - id của người dùng
+     * @returns {Object} { data: user }
      */
     async getUserById(id) { 
         try {
@@ -58,27 +67,44 @@ class UserService {
                     exclude: ['password']
                 }
             });
-            return user;
+            if (!user) {
+                throw new Error('Người dùng không tồn tại');
+            }
+            return {
+                data: user
+            } 
         } catch (err) {
             throw err;
         }
     }
 
+    // ============================================
+    // TẠO NGƯỜI DÙNG MỚI - createUser
+    // ============================================
     /**
-     * Tạo người dùng mới
      * @deprecated: Không sử dụng (Admin không tạo người dùng)
+     * @param {Object} data - Dữ liệu người dùng
+     * @returns {Object} { data: user }
      */
     async createUser(data) {    
         try {
             const user = await User.create(data);
-            return user;
+            return {
+                data: user
+            }
         } catch (err) {
             throw err;
         }
     }
 
+    // ============================================
+    // CẬP NHẬT THÔNG TIN NGƯỜI DÙNG - updateUser
+    // ============================================
     /**
-     * Cập nhật thông tin người dùng
+     * @deprecated: Không sử dụng (Admin không cập nhật người dùng)
+     * @param {number} id - id của người dùng
+     * @param {Object} data - Dữ liệu người dùng
+     * @returns {Object} { data: user }
      */
     async updateUser(id, data) {
         try {
@@ -91,14 +117,20 @@ class UserService {
                 throw new Error('Người dùng không tồn tại');
             }
             await user.update(data);
-            return user;
+            return {
+                data: user
+            }
         } catch (err) {
             throw err;
         }
     }
 
+    // ============================================
+    // XÓA NGƯỜI DÙNG - deleteUser
+    // ============================================
     /**
-     * Xóa người dùng
+     * @param {number} id - id của người dùng
+     * @returns {Object} { data: user }
      */ 
     async deleteUser(id) {
         try {
@@ -107,7 +139,6 @@ class UserService {
                 throw new Error('Người dùng không tồn tại');    
             }
             await user.destroy();
-            return user;
         } catch (err) {
             throw err;
         }

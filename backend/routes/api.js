@@ -112,6 +112,7 @@ router.group("/categories", (router) => {
 router.group("/user", (router) => {
   router.get("/:id", userController.getUserById);
   router.get("/", userController.getAllUsers);
+  router.post("/", validate(createUserValidation), userController.createUser);
   router.put("/:id", auth.authenticateJWT, role.isAdminOrOwner(), userController.updateUser);
   router.delete("/:id", auth.authenticateJWT, role.isAdminOrOwner(), userController.deleteUser);
 });

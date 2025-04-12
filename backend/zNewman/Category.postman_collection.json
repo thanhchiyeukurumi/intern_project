@@ -1,0 +1,583 @@
+{
+	"info": {
+		"_postman_id": "4276b239-7a39-45c6-b8dd-aed513584274",
+		"name": "Category API Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37747897"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Tạo timestamp để theo dõi thời gian thực thi",
+					"pm.environment.set('testStartTime', new Date().toISOString());",
+					"",
+					"// Log thông tin session test",
+					"console.log('====================================');",
+					"console.log('🚀 Bắt đầu chạy test API Category');",
+					"console.log('⏰ Thời gian: ' + new Date().toLocaleString());",
+					"console.log('====================================');"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Được gọi sau mỗi request",
+					"const startTime = new Date(pm.environment.get('testStartTime'));",
+					"const endTime = new Date();",
+					"const durationMs = endTime - startTime;",
+					"",
+					"// Tính thời gian chạy tổng thể nếu đây là request cuối cùng",
+					"if (pm.info.requestName === 'delete cate') {",
+					"    console.log('====================================');",
+					"    console.log('✅ Hoàn thành test API Category');",
+					"    console.log('⏰ Thời gian: ' + new Date().toLocaleString());",
+					"    console.log('⌛ Tổng thời gian: ' + (durationMs / 1000).toFixed(2) + ' giây');",
+					"    console.log('====================================');",
+					"",
+					"    // Xóa biến thời gian bắt đầu",
+					"    setTimeout(function() {",
+					"        pm.environment.unset('testStartTime');",
+					"    }, 1000);",
+					"}"
+				]
+			}
+		}
+	],
+	"item": [
+		{
+			"name": "CRUD category Copy",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Tạo bảng hiển thị thông tin cơ bản của response",
+									"console.log('=== KẾT QUẢ ĐĂNG NHẬP ===');",
+									"console.log('Status: ' + pm.response.code + ' ' + pm.response.status);",
+									"console.log('Response time: ' + pm.response.responseTime + 'ms');",
+									"",
+									"// Kiểm tra xem có đăng nhập thành công không",
+									"pm.test(\"✅ Đăng nhập thành công\", function () {",
+									"    pm.expect(response.success).to.eql(true);",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									"",
+									"// Tìm và lưu token từ các vị trí có thể",
+									"let token = null;",
+									"",
+									"if (response.token) {",
+									"    // Trường hợp token nằm ở cấp 1",
+									"    token = response.token;",
+									"    pm.environment.set(\"token\", token);",
+									"    console.log('✅ Token được lưu từ response.token');",
+									"} else if (response.data && response.data.token) {",
+									"    // Trường hợp token nằm trong res.data.token",
+									"    token = response.data.token;",
+									"    pm.environment.set(\"token\", token);",
+									"    console.log('✅ Token được lưu từ response.data.token');",
+									"} else if (response.data && response.data.user && response.data.refreshToken) {",
+									"    // Trường hợp token trong cấu trúc phức tạp hơn",
+									"    token = response.data.token;",
+									"    pm.environment.set(\"token\", token);",
+									"    pm.environment.set(\"refreshToken\", response.data.refreshToken);",
+									"    ",
+									"    if (response.data.user && response.data.user.id) {",
+									"        pm.environment.set(\"userId\", response.data.user.id);",
+									"    }",
+									"    console.log('✅ Token được lưu từ cấu trúc user/refresh');",
+									"}",
+									"",
+									"// Hiển thị token đã lưu",
+									"const savedToken = pm.environment.get(\"token\");",
+									"",
+									"pm.test(\"✅ Token đã được lưu\", function () {",
+									"    pm.expect(savedToken).to.exist;",
+									"});",
+									"",
+									"// Hiển thị một phần của token để dễ nhận biết",
+									"if (savedToken) {",
+									"    const shortToken = savedToken.substring(0, 15) + '...';",
+									"    console.log('Token (đã lưu): ' + shortToken);",
+									"    ",
+									"    // Kiểm tra cấu trúc của token (thường là JWT)",
+									"    const tokenParts = savedToken.split('.');",
+									"    if (tokenParts.length === 3) {",
+									"        console.log('✅ Token có định dạng JWT hợp lệ');",
+									"    }",
+									"}",
+									"",
+									"console.log('========================');"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@example.com\",\r\n    \"password\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/categories?page=8",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "8"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Tạo bảng hiển thị thông tin cơ bản của response",
+									"console.log('=== KẾT QUẢ TẠO DANH MỤC ===');",
+									"console.log('Status: ' + pm.response.code + ' ' + pm.response.status);",
+									"console.log('Response time: ' + pm.response.responseTime + 'ms');",
+									"",
+									"// Kiểm tra xem tạo danh mục có thành công không",
+									"pm.test(\"✅ Tạo danh mục thành công\", function () {",
+									"    pm.expect(response.success).to.eql(true);",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									"",
+									"// Hiển thị cấu trúc của response để dễ debug",
+									"console.log('Cấu trúc response:');",
+									"console.log(JSON.stringify(response, null, 2).substring(0, 300) + '...');",
+									"",
+									"// Tìm và lưu category ID từ các vị trí có thể",
+									"let categoryId;",
+									"",
+									"if (response.data && response.data.data && response.data.data.id) {",
+									"    // Trường hợp ID nằm trong response.data.data.id",
+									"    categoryId = response.data.data.id;",
+									"    console.log('✅ ID được lấy từ response.data.data.id');",
+									"} else if (response.data && response.data.id) {",
+									"    // Trường hợp ID nằm trong response.data.id",
+									"    categoryId = response.data.id;",
+									"    console.log('✅ ID được lấy từ response.data.id');",
+									"} else if (response.data) {",
+									"    // Trường hợp response.data là số hoặc chuỗi chứa ID",
+									"    categoryId = response.data;",
+									"    console.log('✅ ID được lấy từ response.data');",
+									"}",
+									"",
+									"// Lưu ID vào biến môi trường",
+									"if (categoryId) {",
+									"    pm.environment.set(\"category_id\", categoryId);",
+									"    console.log('✅ Category ID đã lưu: ' + categoryId);",
+									"    ",
+									"    // Kiểm tra xem ID có phải là số hợp lệ không",
+									"    pm.test(\"✅ Category ID là số hợp lệ\", function() {",
+									"        pm.expect(Number.isFinite(Number(categoryId))).to.be.true;",
+									"    });",
+									"} else {",
+									"    console.error('❌ Không thể tìm thấy category_id trong response');",
+									"}",
+									"",
+									"// Thêm kiểm tra cho dữ liệu danh mục",
+									"if (response.data && response.data.data) {",
+									"    const category = response.data.data;",
+									"    console.log('Thông tin danh mục:');",
+									"    console.log('- ID: ' + category.id);",
+									"    console.log('- Tên: ' + category.name);",
+									"    console.log('- Slug: ' + category.slug);",
+									"}",
+									"",
+									"console.log('========================');"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"test_category\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/categories",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get the category just created",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Tạo bảng hiển thị thông tin cơ bản của response",
+									"console.log('=== THÔNG TIN CHI TIẾT DANH MỤC ===');",
+									"console.log('Status: ' + pm.response.code + ' ' + pm.response.status);",
+									"console.log('Response time: ' + pm.response.responseTime + 'ms');",
+									"",
+									"// Kiểm tra xem lấy danh mục có thành công không",
+									"pm.test(\"✅ Lấy thông tin danh mục thành công\", function () {",
+									"    pm.expect(response.success).to.eql(true);",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"// Kiểm tra ID của danh mục có đúng với ID đã lưu trong environment",
+									"const storedCategoryId = pm.environment.get(\"category_id\");",
+									"let categoryData;",
+									"",
+									"if (response.data && response.data.data) {",
+									"    categoryData = response.data.data;",
+									"} else if (response.data) {",
+									"    categoryData = response.data;",
+									"}",
+									"",
+									"if (categoryData) {",
+									"    pm.test(\"✅ ID danh mục khớp với giá trị đã lưu\", function() {",
+									"        pm.expect(categoryData.id.toString()).to.equal(storedCategoryId.toString());",
+									"    });",
+									"    ",
+									"    // Hiển thị thông tin chi tiết của danh mục",
+									"    console.log('Chi tiết danh mục:');",
+									"    console.log('- ID: ' + categoryData.id);",
+									"    console.log('- Tên: ' + categoryData.name);",
+									"    console.log('- Slug: ' + categoryData.slug);",
+									"    ",
+									"    if (categoryData.parent_id) {",
+									"        console.log('- Danh mục cha: ' + categoryData.parent_id);",
+									"    } else {",
+									"        console.log('- Danh mục gốc (không có danh mục cha)');",
+									"    }",
+									"    ",
+									"    // Tạo liên kết giúp người dùng dễ dàng mở danh mục trên trình duyệt",
+									"    console.log('- URL: localhost:3000/categories/' + categoryData.id);",
+									"} else {",
+									"    console.error('❌ Không tìm thấy dữ liệu danh mục trong response');",
+									"}",
+									"",
+									"console.log('========================');"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/categories/{{category_id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"{{category_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Tạo bảng hiển thị thông tin cơ bản của response",
+									"console.log('=== KẾT QUẢ CẬP NHẬT DANH MỤC ===');",
+									"console.log('Status: ' + pm.response.code + ' ' + pm.response.status);",
+									"console.log('Response time: ' + pm.response.responseTime + 'ms');",
+									"",
+									"// Lấy dữ liệu từ request để so sánh với response",
+									"const requestBody = JSON.parse(pm.request.body.raw);",
+									"console.log('Dữ liệu cập nhật:');",
+									"console.log(JSON.stringify(requestBody, null, 2));",
+									"",
+									"// Kiểm tra xem cập nhật danh mục có thành công không",
+									"pm.test(\"✅ Cập nhật danh mục thành công\", function () {",
+									"    pm.expect(response.success).to.eql(true);",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"// Lấy dữ liệu danh mục đã cập nhật",
+									"let updatedCategory;",
+									"if (response.data && response.data.data) {",
+									"    updatedCategory = response.data.data;",
+									"} else if (response.data) {",
+									"    updatedCategory = response.data;",
+									"}",
+									"",
+									"if (updatedCategory) {",
+									"    // Kiểm tra tên danh mục đã được cập nhật chưa",
+									"    pm.test(\"✅ Tên danh mục đã được cập nhật\", function() {",
+									"        pm.expect(updatedCategory.name).to.equal(requestBody.name);",
+									"    });",
+									"    ",
+									"    // Kiểm tra parent_id nếu có",
+									"    if (requestBody.parent_id) {",
+									"        pm.test(\"✅ Parent ID đã được cập nhật\", function() {",
+									"            const reqParentId = Number(requestBody.parent_id);",
+									"            const resParentId = Number(updatedCategory.parent_id);",
+									"            pm.expect(resParentId).to.equal(reqParentId);",
+									"        });",
+									"    }",
+									"    ",
+									"    // Hiển thị thông tin chi tiết của danh mục đã cập nhật",
+									"    console.log('Danh mục sau khi cập nhật:');",
+									"    console.log('- ID: ' + updatedCategory.id);",
+									"    console.log('- Tên: ' + updatedCategory.name);",
+									"    console.log('- Slug: ' + updatedCategory.slug);",
+									"    ",
+									"    if (updatedCategory.parent_id) {",
+									"        console.log('- Danh mục cha: ' + updatedCategory.parent_id);",
+									"    } else {",
+									"        console.log('- Danh mục gốc (không có danh mục cha)');",
+									"    }",
+									"} else {",
+									"    console.error('❌ Không tìm thấy dữ liệu danh mục trong response');",
+									"}",
+									"",
+									"console.log('========================');"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"test_category new\",\r\n  \"parent_id\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/categories/{{category_id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"{{category_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get the category just updated",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/categories/{{category_id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"{{category_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Tạo bảng hiển thị thông tin cơ bản của response",
+									"console.log('=== KẾT QUẢ XÓA DANH MỤC ===');",
+									"console.log('Status: ' + pm.response.code + ' ' + pm.response.status);",
+									"console.log('Response time: ' + pm.response.responseTime + 'ms');",
+									"",
+									"// Lấy ID danh mục đã xóa từ URL",
+									"const url = pm.request.url.toString();",
+									"const deletedCategoryId = pm.environment.get(\"category_id\");",
+									"",
+									"console.log('Đã xóa danh mục với ID: ' + deletedCategoryId);",
+									"",
+									"// Kiểm tra xem xóa danh mục có thành công không",
+									"pm.test(\"✅ Xóa danh mục thành công\", function () {",
+									"    pm.expect(response.success).to.eql(true);",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"// Kiểm tra thông báo trả về",
+									"if (response.message) {",
+									"    console.log('Thông báo: ' + response.message);",
+									"    ",
+									"    pm.test(\"✅ Nhận được thông báo xóa thành công\", function() {",
+									"        pm.expect(response.message).to.include('ok');",
+									"    });",
+									"}",
+									"",
+									"// Gợi ý kiểm tra lại sự tồn tại của danh mục",
+									"console.log('Gợi ý: Gửi request GET đến /categories/' + deletedCategoryId + ' để kiểm tra danh mục đã bị xóa chưa');",
+									"",
+									"// Tạo nút chạy tự động request kiểm tra",
+									"console.log('========================');",
+									"",
+									"// Xóa biến environment khi đã hoàn thành",
+									"setTimeout(function() {",
+									"    pm.environment.unset(\"category_id\");",
+									"    console.log('✅ Đã xóa biến category_id khỏi environment');",
+									"}, 1000);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/categories/{{category_id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"{{category_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
