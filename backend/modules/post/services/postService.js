@@ -158,9 +158,6 @@ class PostService {
    * @returns {Object} - Bài viết đã tạo
    */
   async createPost(data, userId) {
-    /**
-     * @description: transaction dung de
-     */
     const transaction = await db.sequelize.transaction();
     
     try {

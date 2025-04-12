@@ -1,72 +1,57 @@
-const { body } = require('express-validator');
+/**
+ * Category Validation Rules
+ * -----------------------------
+ * @desc    Tập hợp các rule xác thực dữ liệu đầu vào cho API Tạo và Cập nhật danh mục
+ * @usage   Sử dụng trong middleware để kiểm tra dữ liệu từ request body
+ */
+
 const { Category } = require('models');
 const { BodyWithLocale } = require('kernels/rules');
 
-// const createCategoryValidation = [
-//     new BodyWithLocale('name')
-//         .notEmpty()
-//         .isString()
-//         .isLength({ min: 2, max: 50 })
-//         .get(),
-    
-//     new BodyWithLocale('parent_id')
-//         .existsIn(Category, 'id')
-//         .get(),
-// ];
-
-// const updateCategoryValidation = [
-//     new BodyWithLocale('name')
-//         .isString()
-//         .isLength({ min: 2, max: 50 })
-//         .get(),
-    
-//     new BodyWithLocale('parent_id')
-//         .existsIn(Category, 'id')
-//         .get()
-// ];
-
+// ============================================
+// TẠO DANH MỤC - createCategoryValidation
+// ============================================
+/**
+ * Rule cho việc tạo danh mục:
+ * - name: bắt buộc, chuỗi, độ dài từ 2 đến 50 ký tự
+ * - parent_id: tùy chọn, nếu có thì phải tồn tại trong bảng Category
+ */
 const createCategoryValidation = [
-    body('name')
-        .notEmpty().withMessage('Tên danh mục là bắt buộc')
-        .isLength({ min: 2, max: 50 }).withMessage('Tên danh mục phải từ 2-50 ký tự'),
+    new BodyWithLocale('name')
+        .notEmpty()                             // Không được bỏ trống
+        .isString()                             // Phải là chuỗi
+        .isLength({ min: 2, max: 50 })          // Từ 2 - 50 ký tự
+        .get(),
     
-    body('parent_id')
-        .optional()
-        .isInt().withMessage('parent_id phải là số nguyên')
-        .custom((value) => {
-            if (value !== null && value !== undefined) {
-                return Category.findByPk(value).then((category) => {
-                    if (!category) {
-                        return Promise.reject('Danh mục cha không tồn tại');
-                    }
-                });
-            }
-            return Promise.resolve();
-        })
-]
+    new BodyWithLocale('parent_id')
+        .optional()                             // Có thể không truyền
+        .existsIn(Category, 'id')               // Nếu có thì phải tồn tại trong bảng Category
+        .get(),
+];
 
+// ============================================
+// CẬP NHẬT DANH MỤC - updateCategoryValidation
+// ============================================
+/**
+ * Rule cho việc cập nhật danh mục:
+ * - name: bắt buộc, chuỗi, độ dài từ 2 đến 50 ký tự
+ * - parent_id: tùy chọn, nếu có thì phải tồn tại trong bảng Category
+ * (Giống với create, nhưng dùng riêng để dễ mở rộng về sau)
+ */
 const updateCategoryValidation = [
-    body('name')
-        .optional()
-        .isLength({ min: 2, max: 50 }).withMessage('Tên danh mục phải từ 2-50 ký tự'),
+    new BodyWithLocale('name')
+        .notEmpty()
+        .isString()
+        .isLength({ min: 2, max: 50 })
+        .get(),
     
-    body('parent_id')
+    new BodyWithLocale('parent_id')
         .optional()
-        .isInt().withMessage('parent_id phải là số nguyên')
-        .custom((value) => {
-            if (value !== null && value !== undefined) {
-                return Category.findByPk(value).then((category) => {
-                    if (!category) {
-                        return Promise.reject('Danh mục cha không tồn tại');
-                    }
-                });
-            }
-            return Promise.resolve();
-        })
-]
+        .existsIn(Category, 'id')
+        .get()
+];
 
 module.exports = {
     createCategoryValidation,
     updateCategoryValidation
-}
-
+};

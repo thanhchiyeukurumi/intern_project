@@ -3,6 +3,9 @@ const { Category, PostCategory } = db;
 const { Op } = require('sequelize');
 
 class CategoryService {
+    // ============================================
+    // LẤY DANH SÁCH DANH MỤC - getAllCategories    
+    // ============================================
     /**
      * Get All Categories
      * -----------------------------
@@ -43,14 +46,18 @@ class CategoryService {
                 pagination: {
                     total: count,
                     page,
-                    limit
+                    limit,
+                    totalPages: Math.ceil(count / limit)
                 }
             };
-        } catch (error) {
-            throw error;
+        } catch (err) {
+            throw err;
         }
     }
 
+    // ============================================
+    // LẤY DANH MỤC THEO ID - getCategoryById
+    // ============================================
     /**
      * Get Category By ID
      * -----------------------------
@@ -65,30 +72,75 @@ class CategoryService {
                 throw new Error('Không tìm thấy danh mục');
             }
             return category;
-        } catch (error) {
-            throw error;
+        } catch (err) {
+            throw err;
         }
     }
 
+    // ============================================
+    // TẠO DANH MỤC - createCategory
+    // ============================================
     /**
      * Create New Category
      * -----------------------------
-     * @desc    Tạo danh mục mới
-     * @param   {Object} data
-     * @returns {Object} category
-     */
-    async createCategory(data) {
-        try {
-            const category = await Category.create({
-                name: data.name,
-                parent_id: data.parent_id || null
-            });
-            return category;
-        } catch (error) {
+     * @desc    Tạo danh mục mới, kiểm tra trùng lặp theo name và parent_id
+     * @param   {Object} data - Dữ liệu danh mục { name: string, parent_id?: number | null }
+     * @returns {Object} category - Danh mục vừa tạo
+ * @throws  {Error} Nếu danh mục đã tồn tại hoặc có lỗi khác
+ */
+async createCategory(data) {
+    // Bắt đầu một transaction để đảm bảo tính toàn vẹn dữ liệu
+    const transaction = await db.sequelize.transaction();
+    try {
+        // Chuẩn hóa parent_id: nếu không cung cấp hoặc là giá trị falsy (trừ 0 nếu 0 là ID hợp lệ), coi là null
+        const parentId = data.parent_id || null;
+        const categoryName = data.name;
+
+        // --- BƯỚC KIỂM TRA TRÙNG LẶP ---
+        const existingCategory = await Category.findOne({
+            where: {
+                name: categoryName
+            },
+            transaction // Thực hiện kiểm tra trong cùng transaction để tránh race condition
+        });
+
+        // Nếu tìm thấy danh mục trùng lặp
+        if (existingCategory) {
+            // Hủy bỏ transaction vì không tạo mới
+            await transaction.rollback();
+            // Ném lỗi rõ ràng để thông báo cho người dùng/hệ thống
+            const error = new Error(`Danh mục "${categoryName}" đã tồn tại${parentId ? ' trong danh mục cha này' : ' ở cấp gốc'}.`);
+            error.statusCode = 409; // HTTP Status Code 409 Conflict thường dùng cho trường hợp này
             throw error;
+        }
+        // --- KẾT THÚC KIỂM TRA TRÙNG LẶP ---
+
+        // Nếu không trùng lặp, tiến hành tạo mới danh mục
+        const category = await Category.create({
+            name: categoryName,
+            parent_id: parentId // Sử dụng parentId đã chuẩn hóa
+        }, { transaction }); // Tạo trong transaction
+
+        // Nếu tạo thành công, commit transaction
+        await transaction.commit();
+
+        // Trả về danh mục vừa tạo
+        return category;
+
+    } catch (err) {
+        // Nếu có bất kỳ lỗi nào xảy ra (kể cả lỗi trùng lặp đã throw ở trên), rollback transaction
+        // Kiểm tra xem transaction có còn hoạt động không trước khi rollback
+        if (transaction && !transaction.finished) {
+            await transaction.rollback();
+        }
+        // Ném lại lỗi để lớp gọi xử lý
+        throw err;
         }
     }
 
+    // ============================================
+    // CẬP NHẬT DANH MỤC - updateCategory
+    // ============================================
     /**
      * Update Category By ID
      * -----------------------------
@@ -106,11 +158,14 @@ class CategoryService {
 
             await category.update(data);
             return category;
-        } catch (error) {
-            throw error;
+        } catch (err) {
+            throw err;
         }
     }
 
+    // ============================================
+    // XÓA DANH MỤC - deleteCategory
+    // ============================================
     /**
      * Delete Category By ID
      * -----------------------------
@@ -123,12 +178,9 @@ class CategoryService {
             if (!category) {
                 throw new Error('Không tìm thấy danh mục');
             }
-
-            // TODO: Kiểm tra xem danh mục có đang được dùng trong PostCategory không trước khi xóa
-
             await category.destroy();
-        } catch (error) {
-            throw error;
+        } catch (err) {
+            throw err;
         }
     }
 }

@@ -2,16 +2,18 @@ const categoryService = require("../services/categoryService");
 const { ok, created, error } = require('../../../utils/responseUtils');
 
 class CategoryController {
+    // ============================================
+    // LẤY DANH SÁCH DANH MỤC - getAllCategories
+    // ============================================
     /**
      * GET /categories
-     * -----------------------------
      * @desc    Lấy danh sách danh mục (có phân trang, tìm kiếm, sắp xếp)
      * @access  Public
-     * @query   {number} page           - Trang hiện tại
-     * @query   {number} limit          - Số danh mục trên mỗi trang
-     * @query   {string} search         - Từ khóa tìm kiếm
-     * @query   {string} orderBy        - Trường sắp xếp
-     * @query   {string} order          - Hướng sắp xếp
+     * @query   {number} page       - Trang hiện tại
+     * @query   {number} limit      - Số danh mục trên mỗi trang
+     * @query   {string} search     - Từ khóa tìm kiếm
+     * @query   {string} orderBy    - Trường sắp xếp (vd: name, id)
+     * @query   {string} order      - Hướng sắp xếp (ASC | DESC)
      */
     async getAllCategories(req, res) {
         try {
@@ -29,54 +31,62 @@ class CategoryController {
         }
     }
 
+    // ============================================
+    // LẤY DANH MỤC THEO ID - getCategoryById
+    // ============================================
     /**
      * GET /categories/:id
-     * -----------------------------
      * @desc    Lấy chi tiết danh mục theo ID
      * @access  Public
      */
     async getCategoryById(req, res) {
         try {
-            const category = await categoryService.getCategoryById(req.params.id);
-            return ok(res, category);
+            const result = await categoryService.getCategoryById(req.params.id);
+            return ok(res, result);
         } catch (err) {
             return error(res, err.message);
         }
     }
-    
+
+    // ============================================
+    // TẠO DANH MỤC - createCategory
+    // ============================================
     /**
      * POST /categories
-     * -----------------------------
      * @desc    Tạo danh mục mới
      * @access  Admin
      */
     async createCategory(req, res) {
         try {
-            const category = await categoryService.createCategory(req.body);
-            return created(res, category, 'Danh mục đã được tạo thành công');
+            const result = await categoryService.createCategory(req.body);
+            return created(res, result, 'Danh mục đã được tạo thành công');
         } catch (err) {
             return error(res, err.message);
         }
     }
 
+    // ============================================
+    // CẬP NHẬT DANH MỤC - updateCategory
+    // ============================================
     /**
      * PUT /categories/:id
-     * -----------------------------
      * @desc    Cập nhật danh mục theo ID
      * @access  Admin
      */
     async updateCategory(req, res) {
         try {
-            const category = await categoryService.updateCategory(req.params.id, req.body);
-            return ok(res, category, 'Danh mục đã được cập nhật thành công');
+            const result = await categoryService.updateCategory(req.params.id, req.body);
+            return ok(res, result, 'Danh mục đã được cập nhật thành công');
         } catch (err) {
             return error(res, err.message);
         }
     }
 
+    // ============================================
+    // XÓA DANH MỤC - deleteCategory
+    // ============================================
     /**
      * DELETE /categories/:id
-     * -----------------------------
      * @desc    Xóa danh mục theo ID
      * @access  Admin
      */

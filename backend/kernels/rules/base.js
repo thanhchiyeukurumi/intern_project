@@ -96,7 +96,11 @@ class WithLocale
     get() {
         return this.withLocale
     }
-
+    // bo sung them
+    optional() {
+        this.withLocale = this.withLocale.optional();
+        return this;
+    }
     
 }
 
