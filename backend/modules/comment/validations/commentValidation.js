@@ -1,28 +1,31 @@
-const { body } = require('express-validator');
-const db = require('models');
-const { Post } = db;
+/**
+ * Comment Validation Rules
+ * -----------------------------
+ * @desc    Tập hợp các rule xác thực dữ liệu đầu vào cho API Tạo và Cập nhật bình luận
+ * @usage   Sử dụng trong middleware để kiểm tra dữ liệu từ request body  
+ */
 
+const { BodyWithLocale } = require('kernels/rules');
+
+// ============================================
+// TẠO BÌNH LUẬN MỚI - createCommentValidation
+// ============================================
+/**
+ * Rule cho việc tạo bình luận:
+ * - content: bắt buộc, chuỗi, độ dài từ 1 đến 1000 ký tự
+ */
 const createCommentValidation = [
-  // body('post_id')
-  //   .notEmpty().withMessage('ID bài viết là bắt buộc')
-  //   .isInt().withMessage('ID bài viết phải là số nguyên')
-  //   .custom(async (postId) => {
-  //     const post = await Post.findByPk(postId);
-  //     if (!post) {
-  //       throw new Error('Bài viết không tồn tại');
-  //     }
-  //     return true;
-  //   }),
-  
-  body('content')
-    .notEmpty().withMessage('Nội dung bình luận là bắt buộc')
-    .isLength({ min: 1, max: 1000 }).withMessage('Nội dung bình luận phải từ 1-1000 ký tự')
+  new BodyWithLocale('content')
+    .notEmpty()
+    .isLength({ min: 1, max: 1000 })
+    .get(),
 ];
 
 const updateCommentValidation = [
-  body('content')
-    .notEmpty().withMessage('Nội dung bình luận là bắt buộc')
-    .isLength({ min: 1, max: 1000 }).withMessage('Nội dung bình luận phải từ 1-1000 ký tự')
+  new BodyWithLocale('content')
+    .notEmpty()
+    .isLength({ min: 1, max: 1000 })
+    .get(),
 ];
 
 module.exports = {

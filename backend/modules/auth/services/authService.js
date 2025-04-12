@@ -170,10 +170,6 @@ class AuthService {
    */
   async getCurrentUser(userId) {
     const user = await db.User.findByPk(userId, {
-      include: [{
-        model: db.Role,
-        as: 'role'
-      }],
       attributes: { exclude: ['password'] }
     });
     

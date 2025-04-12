@@ -28,7 +28,9 @@ class LanguageService {
       if (!language) {
         throw new Error('Không tìm thấy ngôn ngữ');
       }
-      return language;
+      return {
+        data: language
+      }
     } catch (error) {
       throw error;
     }

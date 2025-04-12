@@ -1,25 +1,16 @@
 module.exports = {
   // Có sự thay đổi nhỏ so với bản gốc
   ok: (res, data = {}) => {
-    const { pagination, ...rest } = data;
-    // return res.status(200).send({
-    //   success: true,
-    //   data: rest.data ?? rest,
-    //   pagination: pagination ?? null,
-    //   status: 200,
-    //   message: "ok"
-    // });
+    let { pagination, ...rest } = data;
     const response = {
       success: true,
-      data: rest.data ?? rest,
-      // status: 200,
-      // message: "ok"
+      data: data.data ?? data,
     };
     if (pagination) {
       response.pagination = pagination;
     }
     response.status = 200;
-    response.message = "ok"; // Làm cái này để nhìn cho nó đẹp hơn =)))
+    response.message = "ok"; 
     return res.status(200).send(response);
   },
 

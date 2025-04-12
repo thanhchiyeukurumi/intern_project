@@ -86,7 +86,7 @@ class LanguageController {
     try {
       const { id } = req.params;
       await languageService.deleteLanguage(id);
-      return ok(res, null, 'Xóa ngôn ngữ thành công');
+      return ok(res, 'Xóa ngôn ngữ thành công');
     } catch (err) {
       if (err.message === 'Không tìm thấy ngôn ngữ') {
         return notFound(res, err.message);

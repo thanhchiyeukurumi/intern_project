@@ -3,6 +3,9 @@ const { Comment, User, Post, Sequelize } = db;
 const { Op } = Sequelize;
 
 class CommentService {
+  // ============================================
+  // LẤY DANH SÁCH BÌNH LUẬN CỦA MỘT BÀI VIẾT - getCommentsByPostId
+  // ============================================
   /**
    * Lấy danh sách bình luận của một bài viết
    * @param {Number} postId - ID bài viết
@@ -47,6 +50,9 @@ class CommentService {
     }
   }
 
+  // ============================================
+  // LẤY THÔNG TIN CHI TIẾT BÌNH LUẬN - getCommentById
+  // ============================================
   /**
    * Lấy thông tin chi tiết bình luận
    * @param {Number} commentId - ID bình luận
@@ -77,6 +83,9 @@ class CommentService {
     }
   }
 
+  // ============================================
+  // TẠO BÌNH LUẬN MỚI - createComment
+  // ============================================
   /**
    * Tạo bình luận mới
    * @param {Object} data - Dữ liệu bình luận
@@ -106,6 +115,9 @@ class CommentService {
     }
   }
 
+  // ============================================
+  // CẬP NHẬT BÌNH LUẬN - updateComment
+  // ============================================
   /**
    * Cập nhật bình luận
    * @param {Number} commentId - ID của bình luận
@@ -139,6 +151,9 @@ class CommentService {
     }
   }
 
+  // ============================================
+  // XÓA BÌNH LUẬN - deleteComment
+  // ============================================
   /**
    * Xóa bình luận
    * @param {Number} commentId - ID của bình luận
@@ -173,6 +188,9 @@ class CommentService {
     }
   }
 
+  // ============================================
+  // LẤY DANH SÁCH BÌNH LUẬN CỦA NGƯỜI DÙNG - getCommentsByUserId
+  // ============================================
   /**
    * Lấy danh sách bình luận của người dùng
    * @param {Number} userId - ID của người dùng

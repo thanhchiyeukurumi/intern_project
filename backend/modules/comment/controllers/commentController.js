@@ -2,6 +2,9 @@ const commentService = require('../services/commentService');
 const { ok, created, notFound, error, customError } = require('../../../utils/responseUtils');
 
 class CommentController {
+  // ============================================
+  // LẤY DANH SÁCH BÌNH LUẬN CỦA MỘT BÀI VIẾT - getCommentsByPostId
+  // ============================================
   /**
    * GET /posts/:postId/comments
    * -----------------------------
@@ -29,6 +32,9 @@ class CommentController {
     }
   }
 
+  // ============================================
+  // LẤY THÔNG TIN CHI TIẾT BÌNH LUẬN - getCommentById
+  // ============================================
   /**
    * GET /comments/:id
    * -----------------------------  
@@ -48,6 +54,9 @@ class CommentController {
     }
   }
 
+  // ============================================
+  // TẠO BÌNH LUẬN MỚI - createComment
+  // ============================================
   /**
    * POST /posts/:postId/comments
    * -----------------------------
@@ -65,6 +74,9 @@ class CommentController {
     }
   }
 
+  // ============================================
+  // CẬP NHẬT BÌNH LUẬN - updateComment
+  // ============================================
   /**
    * PUT /comments/:id
    * -----------------------------
@@ -86,6 +98,9 @@ class CommentController {
     }
   }
 
+  // ============================================
+  // XÓA BÌNH LUẬN - deleteComment
+  // ============================================
   /**
    * DELETE /comments/:id
    * -----------------------------
@@ -111,6 +126,9 @@ class CommentController {
     }
   }
 
+  // ============================================
+  // LẤY DANH SÁCH BÌNH LUẬN CỦA NGƯỜI DÙNG - getCommentsByUserId
+  // ============================================
   /** 
    * GET /users/:userId/comments
    * -----------------------------
