@@ -1,33 +1,64 @@
-const { body } = require('express-validator');
+/**
+ * Language Validation Rules
+ * -----------------------------
+ * @desc    Tập hợp các rule xác thực dữ liệu đầu vào cho API Tạo và Cập nhật ngôn ngữ
+ * @usage   Sử dụng trong middleware để kiểm tra dữ liệu từ request body
+ */
 
+const { BodyWithLocale } = require('kernels/rules');
+
+// ============================================
+// TẠO NGÔN NGỮ - createLanguageValidation
+// ============================================
+/**
+ * Rule cho việc tạo ngôn ngữ:
+ * - locale: bắt buộc, chuỗi, độ dài từ 2 đến 5 ký tự, không hợp lệ (ví dụ: en, en-US)
+ * - name: bắt buộc, chuỗi, độ dài từ 2 đến 50 ký tự
+ * - is_active: tùy chọn, boolean
+ */ 
 const createLanguageValidation = [
-  body('locale')
-    .notEmpty().withMessage('Locale là bắt buộc')
-    .isLength({ min: 2, max: 5 }).withMessage('Locale phải từ 2-5 ký tự')
-    .matches(/^[a-z]{2}(-[A-Z]{2})?$/).withMessage('Locale không hợp lệ (ví dụ: en, en-US)'),
+  new BodyWithLocale('locale')
+    .notEmpty()
+    .isLength({ min: 2, max: 5 })
+    .matches(/^[a-z]{2}(-[A-Z]{2})?$/)
+    .get(),
   
-  body('name')
-    .notEmpty().withMessage('Tên ngôn ngữ là bắt buộc')
-    .isLength({ min: 2, max: 50 }).withMessage('Tên ngôn ngữ phải từ 2-50 ký tự'),
+  new BodyWithLocale('name')
+    .notEmpty()
+    .isLength({ min: 2, max: 50 })
+    .get(),
   
-  body('is_active')
+  new BodyWithLocale('is_active')
     .optional()
-    .isBoolean().withMessage('is_active phải là boolean')
+    .isBoolean()
+    .get(), 
 ];
 
+// ============================================
+// CẬP NHẬT NGÔN NGỮ - updateLanguageValidation
+// ============================================
+/**
+ * Rule cho việc cập nhật ngôn ngữ:
+ * - locale: tùy chọn, chuỗi, độ dài từ 2 đến 5 ký tự, không hợp lệ (ví dụ: en, en-US)
+ * - name: tùy chọn, chuỗi, độ dài từ 2 đến 50 ký tự
+ * - is_active: tùy chọn, boolean
+ */
 const updateLanguageValidation = [
-  body('locale')
+  new BodyWithLocale('locale')
     .optional()
-    .isLength({ min: 2, max: 5 }).withMessage('Locale phải từ 2-5 ký tự')
-    .matches(/^[a-z]{2}(-[A-Z]{2})?$/).withMessage('Locale không hợp lệ (ví dụ: en, en-US)'),
+    .isLength({ min: 2, max: 5 })
+    .matches(/^[a-z]{2}(-[A-Z]{2})?$/)
+    .get(),
   
-  body('name')
+  new BodyWithLocale('name')
     .optional()
-    .isLength({ min: 2, max: 50 }).withMessage('Tên ngôn ngữ phải từ 2-50 ký tự'),
+    .isLength({ min: 2, max: 50 })
+    .get(),
   
-  body('is_active')
+  new BodyWithLocale('is_active')
     .optional()
-    .isBoolean().withMessage('is_active phải là boolean')
+    .isBoolean()
+    .get(),
 ];
 
 module.exports = {

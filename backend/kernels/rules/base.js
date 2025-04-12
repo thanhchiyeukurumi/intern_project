@@ -72,6 +72,10 @@ class WithLocale
         return this
     }
 
+    get() {
+        return this.withLocale
+    }
+
     //Bo sung them
     existsIn(sequelizeModel, field) {
         this.withLocale = this.withLocale.custom(async (value) => {
@@ -93,15 +97,20 @@ class WithLocale
         return this;
     }
 
-    get() {
-        return this.withLocale
-    }
-    // bo sung them
     optional() {
         this.withLocale = this.withLocale.optional();
         return this;
     }
+
+    matches(pattern) {
+        this.withLocale = this.withLocale.matches(pattern).withMessage(stringUtils.capitalize(this.field)+" is not in correct format").bail()
+        return this;
+    }
     
+    isBoolean() {
+        this.withLocale = this.withLocale.isBoolean().withMessage(stringUtils.capitalize(this.field)+" must be boolean").bail()
+        return this;
+    }
 }
 
 module.exports = WithLocale
