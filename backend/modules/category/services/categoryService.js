@@ -36,7 +36,7 @@ class CategoryService {
                 order: [[orderBy, order]],
                 limit,
                 offset,
-                distinct: true,
+                distinct: true, // dung distinct để tránh trùng lặp khi dung include:[]
                 attributes: { exclude: ['createdAt', 'updatedAt'] }
             };
 

@@ -1,5 +1,6 @@
 const db = require('models');
 const {User} = db;
+const { Op } = require('sequelize');
 
 class UserService {
     // ============================================
@@ -37,13 +38,12 @@ class UserService {
             };
 
             const { count, rows } = await User.findAndCountAll(queryOptions);   
-
             return {
                 data: rows,
                 pagination: {
                     total: count,
-                    page: parseInt(page),
-                    limit: parseInt(limit),
+                    page,
+                    limit,
                     totalPages: Math.ceil(count / limit)
                 }
             };  
@@ -63,9 +63,7 @@ class UserService {
     async getUserById(id) { 
         try {
             const user = await User.findByPk(id, {
-                attributes: {
-                    exclude: ['password']
-                }
+                attributes: { exclude: ['password'] }
             });
             if (!user) {
                 throw new Error('Người dùng không tồn tại');
@@ -109,9 +107,7 @@ class UserService {
     async updateUser(id, data) {
         try {
             const user = await User.findByPk(id, {
-                attributes: {
-                    exclude: ['password']
-                }
+                attributes: { exclude: ['password'] }
             });
             if (!user) {
                 throw new Error('Người dùng không tồn tại');
