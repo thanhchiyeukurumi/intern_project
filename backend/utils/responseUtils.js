@@ -1,5 +1,11 @@
 module.exports = {
   // Có sự thay đổi nhỏ so với bản gốc
+  /**
+   * 
+   * @param {*} res 
+   * @param {*} return {data: data, pagination: pagination} {tham so tra ve tu service}
+   * @returns 
+   */
   ok: (res, data = {}) => {
     let { pagination, ...rest } = data;
     const response = {
@@ -13,7 +19,12 @@ module.exports = {
     response.message = "ok"; 
     return res.status(200).send(response);
   },
-
+  /**
+   * 
+   * @param {*} res 
+   * @param {*} return data  (tham so tra ve tu service)
+   * @returns 
+   */
   created: (res, data) => {
     return res.status(201).send({
       success: true,

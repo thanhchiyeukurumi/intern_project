@@ -86,10 +86,16 @@ class UserService {
      */
     async createUser(data) {    
         try {
-            const user = await User.create(data);
-            return {
-                data: user
+            const existingUser = await User.findOne({
+                where: {
+                    username: data.username
+                }
+            });
+            if (existingUser) {
+                throw new Error('Tên tài khoản đã tồn tại');
             }
+            const user = await User.create(data);
+            return user;
         } catch (err) {
             throw err;
         }
@@ -99,16 +105,13 @@ class UserService {
     // CẬP NHẬT THÔNG TIN NGƯỜI DÙNG - updateUser
     // ============================================
     /**
-     * @deprecated: Không sử dụng (Admin không cập nhật người dùng)
      * @param {number} id - id của người dùng
      * @param {Object} data - Dữ liệu người dùng
      * @returns {Object} { data: user }
      */
     async updateUser(id, data) {
         try {
-            const user = await User.findByPk(id, {
-                attributes: { exclude: ['password'] }
-            });
+            const user = await User.findByPk(id);
             if (!user) {
                 throw new Error('Người dùng không tồn tại');
             }
@@ -120,6 +123,7 @@ class UserService {
             throw err;
         }
     }
+    // TODO: Kiểm tra lúc cập nhật có bị trùng email và username khác trong db không
 
     // ============================================
     // XÓA NGƯỜI DÙNG - deleteUser

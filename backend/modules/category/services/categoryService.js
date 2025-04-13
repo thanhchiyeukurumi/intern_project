@@ -113,7 +113,7 @@ async createCategory(data) {
             // Hủy bỏ transaction vì không tạo mới
             await transaction.rollback();
             // Ném lỗi rõ ràng để thông báo cho người dùng/hệ thống
-            const error = new Error(`Danh mục "${categoryName}" đã tồn tại${parentId ? ' trong danh mục cha này' : ' ở cấp gốc'}.`);
+            const error = new Error('Danh mục đã tồn tại');
             error.statusCode = 409; // HTTP Status Code 409 Conflict thường dùng cho trường hợp này
             throw error;
         }
@@ -128,10 +128,8 @@ async createCategory(data) {
         // Nếu tạo thành công, commit transaction
         await transaction.commit();
 
-        // Trả về danh mục vừa tạo
-        return {
-            data: category
-        }
+        // Trả về danh mục vừa tạo -> doan nay tra ve data khac voi phuong thuc GET
+        return category;
 
     } catch (err) {
         // Nếu có bất kỳ lỗi nào xảy ra (kể cả lỗi trùng lặp đã throw ở trên), rollback transaction
