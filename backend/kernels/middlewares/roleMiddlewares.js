@@ -1,7 +1,10 @@
-const response = require('utils/responseUtils');
+const { forbidden, unauthorized, error } = require('utils/responseUtils');
 const db = require('models');
 const { Post, Comment } = db;
 
+// ============================================
+// XÁC THỰC QUYỀN CỦA NGƯỜI DÙNG - hasRole
+// ============================================
 /**
  * Middleware xác thực quyền của người dùng
  * @param {Array} allowedRoles - Danh sách các vai trò được phép truy cập
@@ -11,7 +14,7 @@ const hasRole = (allowedRoles) => {
   return (req, res, next) => {
     // Kiểm tra đã xác thực user chưa
     if (!req.user) {
-      return response.unauthorized(res, 'Vui lòng đăng nhập để tiếp tục.');
+      return unauthorized(res, 'Vui lòng đăng nhập để tiếp tục.');
     }
 
     // Kiểm tra role của user có trong allowedRoles không
@@ -20,10 +23,13 @@ const hasRole = (allowedRoles) => {
     }
 
     // Trả về lỗi nếu không có quyền
-    return response.forbidden(res, 'Bạn không có quyền truy cập tính năng này.');
+    return forbidden(res, 'Bạn không có quyền truy cập tính năng này.');
   };
 };
 
+// ============================================
+// KIỂM TRA QUYỀN SỞ HỮU CỦA NGƯỜI DÙNG - isOwner
+// ============================================
 /**
  * Middleware kiểm tra quyền sở hữu của người dùng
  * @param {string} paramName  - Tên tham số chứa ID của người dùng, trong lúc gọi middleware thì không cần truyền tham số này
@@ -36,20 +42,23 @@ const isOwner = (paramName = 'id') => {
       const targetUserId = req.params?.[paramName] || req.body?.[paramName]; // Lấy ID của người dùng cần thực hiện hành động từ params hoặc body
 
       if (!currentUserId || !targetUserId) {
-        return response.error(res, 'Không đủ thông tin xác thực', 400);
+        return error(res, 'Không đủ thông tin xác thực', 400);
       }
 
       if (parseInt(currentUserId) !== parseInt(targetUserId)) {
-        return response.forbidden(res, 'Bạn không có quyền thực hiện hành động này');
+        return forbidden(res, 'Bạn không có quyền thực hiện hành động này');
       }
 
       next();
     } catch (err) {
-      return response.error(res, 'Lỗi xác thực quyền sở hữu', 500);
+      return error(res, 'Lỗi xác thực quyền sở hữu', 500);
     }
   };
 };
 
+// ============================================
+// KIỂM TRA QUYỀN ADMIN HOẶC CHỦ SỞ HỮU - isAdminOrOwner
+// ============================================
 /**
  * Middleware kiểm tra quyền admin hoặc chủ sở hữu
  * @param {string} paramName  - Tên tham số chứa ID của người dùng, trong lúc gọi middleware thì không cần truyền tham số này
@@ -65,20 +74,23 @@ const isAdminOrOwner = (paramName = 'id') => {
         return next();
       }
       if (!currentUserId || !targetUserId) {
-        return response.error(res, 'Không đủ thông tin xác thực', 400);
+        return error(res, 'Không đủ thông tin xác thực', 400);
       }
 
       if (parseInt(currentUserId) !== parseInt(targetUserId)) {
-        return response.forbidden(res, 'Bạn không có quyền thực hiện hành động này');
+        return forbidden(res, 'Bạn không có quyền thực hiện hành động này');
       }
 
       next();
     } catch (err) {
-      return response.error(res, 'Lỗi xác thực quyền sở hữu', 500);
+      return error(res, 'Lỗi xác thực quyền sở hữu', 500);
     }
   };
 };
 
+// ============================================
+// KIỂM TRA QUYỀN CHỦ SỞ HỮU BÀI VIẾT - isPostOwner
+// ============================================
 /**
  * Middleware kiểm tra chủ sở hữu bài viết
  * @returns {Function} - Middleware function
@@ -90,7 +102,7 @@ const isPostOwner = () => {
       const userId = req.user?.id;
 
       if (!userId || !postId) {
-        return response.error(res, 'Không đủ thông tin xác thực', 400);
+        return error(res, 'Không đủ thông tin xác thực', 400);
       }
 
       // Kiểm tra bài viết có tồn tại và thuộc về người dùng hiện tại
@@ -99,23 +111,26 @@ const isPostOwner = () => {
       });
 
       if (!post) {
-        return response.notFound(res, 'Không tìm thấy bài viết');
+        return notFound(res, 'Không tìm thấy bài viết');
       }
 
       // Kiểm tra người dùng hiện tại có phải là chủ sở hữu của bài viết
       if (post.user_id !== parseInt(userId)) {
-        return response.forbidden(res, 'Bạn không phải chủ sở hữu của bài viết này');
+        return forbidden(res, 'Bạn không phải chủ sở hữu của bài viết này');
       }
 
       // Lưu thông tin bài viết vào request để sử dụng sau này nếu cần
       req.post = post;
       next();
     } catch (err) {
-      return response.error(res, 'Lỗi xác thực quyền sở hữu bài viết', 500);
+      return error(res, 'Lỗi xác thực quyền sở hữu bài viết', 500);
     }
   };
 };
 
+// ============================================
+// KIỂM TRA QUYỀN ADMIN HOẶC CHỦ SỞ HỮU BÀI VIẾT - isAdminOrPostOwner
+// ============================================
 /**
  * Middleware kiểm tra admin hoặc chủ sở hữu bài viết
  * @returns {Function} - Middleware function
@@ -133,7 +148,7 @@ const isAdminOrPostOwner = () => {
       }
 
       if (!userId || !postId) {
-        return response.error(res, 'Không đủ thông tin xác thực', 400);
+        return error(res, 'Không đủ thông tin xác thực', 400);
       }
 
       // Kiểm tra bài viết có tồn tại và thuộc về người dùng hiện tại
@@ -142,23 +157,26 @@ const isAdminOrPostOwner = () => {
       });
 
       if (!post) {
-        return response.notFound(res, 'Không tìm thấy bài viết');
+        return notFound(res, 'Không tìm thấy bài viết');
       }
 
       // Kiểm tra người dùng hiện tại có phải là chủ sở hữu của bài viết
       if (post.user_id !== parseInt(userId)) {
-        return response.forbidden(res, 'Bạn không có quyền thực hiện hành động này');
+        return forbidden(res, 'Bạn không có quyền thực hiện hành động này');
       }
 
       // Lưu thông tin bài viết vào request để sử dụng sau này nếu cần
       req.post = post;
       next();
     } catch (err) {
-      return response.error(res, 'Lỗi xác thực quyền sở hữu bài viết', 500);
+      return error(res, 'Lỗi xác thực quyền sở hữu bài viết', 500);
     }
   };
 };
 
+// ============================================
+// KIỂM TRA QUYỀN CHỦ SỞ HỮU BÌNH LUẬN - isCommentOwner
+// ============================================
 /**
  * Middleware kiểm tra chủ sở hữu bình luận
  * @returns {Function} - Middleware function
@@ -170,7 +188,7 @@ const isCommentOwner = () => {
       const userId = req.user?.id;
 
       if (!userId || !commentId) {
-        return response.error(res, 'Không đủ thông tin xác thực', 400);
+        return error(res, 'Không đủ thông tin xác thực', 400);
       }
 
       // Kiểm tra bình luận có tồn tại và thuộc về người dùng hiện tại
@@ -179,23 +197,26 @@ const isCommentOwner = () => {
       });
 
       if (!comment) {
-        return response.notFound(res, 'Không tìm thấy bình luận');
+        return notFound(res, 'Không tìm thấy bình luận');
       }
 
       // Kiểm tra người dùng hiện tại có phải là chủ sở hữu của bình luận
       if (comment.user_id !== parseInt(userId)) {
-        return response.forbidden(res, 'Bạn không phải chủ sở hữu của bình luận này');
+        return forbidden(res, 'Bạn không phải chủ sở hữu của bình luận này');
       }
 
       // Lưu thông tin bình luận vào request để sử dụng sau này nếu cần
       req.comment = comment;
       next();
     } catch (err) {
-      return response.error(res, 'Lỗi xác thực quyền sở hữu bình luận', 500);
+      return error(res, 'Lỗi xác thực quyền sở hữu bình luận', 500);
     }
   };
 };
 
+// ============================================
+// KIỂM TRA QUYỀN ADMIN HOẶC CHỦ SỞ HỮU BÌNH LUẬN - isAdminOrCommentOwner
+// ============================================
 /**
  * Middleware kiểm tra admin hoặc chủ sở hữu bình luận
  * @returns {Function} - Middleware function
@@ -213,7 +234,7 @@ const isAdminOrCommentOwner = () => {
       }
 
       if (!userId || !commentId) {
-        return response.error(res, 'Không đủ thông tin xác thực', 400);
+        return error(res, 'Không đủ thông tin xác thực', 400);
       }
 
       // Kiểm tra bình luận có tồn tại và thuộc về người dùng hiện tại
@@ -222,19 +243,19 @@ const isAdminOrCommentOwner = () => {
       });
 
       if (!comment) {
-        return response.notFound(res, 'Không tìm thấy bình luận');
+        return notFound(res, 'Không tìm thấy bình luận');
       }
 
       // Kiểm tra người dùng hiện tại có phải là chủ sở hữu của bình luận
       if (comment.user_id !== parseInt(userId)) {
-        return response.forbidden(res, 'Bạn không có quyền thực hiện hành động này');
+        return forbidden(res, 'Bạn không có quyền thực hiện hành động này');
       }
 
       // Lưu thông tin bình luận vào request để sử dụng sau này nếu cần
       req.comment = comment;
       next();
     } catch (err) {
-      return response.error(res, 'Lỗi xác thực quyền sở hữu bình luận', 500);
+      return error(res, 'Lỗi xác thực quyền sở hữu bình luận', 500);
     }
   };
 };

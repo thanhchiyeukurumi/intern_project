@@ -110,9 +110,9 @@ router.group("/categories", (router) => {
  * DELETE  /user/:id            - Xóa người dùng (admin only)
  */ 
 router.group("/user", (router) => {
-  router.get("/:id", userController.getUserById);
   router.get("/", userController.getAllUsers);
-  router.post("/", validate(createUserValidation), userController.createUser);
+  router.get("/:id", userController.getUserById);
+  router.post("/", auth.authenticateJWT, role.hasRole(["admin"]), validate(createUserValidation), userController.createUser);
   router.put("/:id", auth.authenticateJWT, role.isAdminOrOwner(), userController.updateUser);
   router.delete("/:id", auth.authenticateJWT, role.isAdminOrOwner(), userController.deleteUser);
 });

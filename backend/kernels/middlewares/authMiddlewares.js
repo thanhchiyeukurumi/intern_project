@@ -1,7 +1,9 @@
 const passport = require('passport');
 const jwtUtils = require('../../utils/jwtUtils');
 const response = require('../../utils/responseUtils');
-
+// ============================================
+// XÁC THỰC JWT TOKEN - authenticateJWT
+// ============================================
 /**
  * Middleware xác thực JWT token
  * @param {Object} req - Request object
@@ -24,6 +26,9 @@ const authenticateJWT = (req, res, next) => {
   })(req, res, next);
 };
 
+// ============================================
+// XÁC THỰC GOOGLE - authenticateGoogle
+// ============================================
 /**
  * Middleware OAuth với Google
  */
@@ -31,6 +36,9 @@ const authenticateGoogle = passport.authenticate('google', {
   scope: ['profile', 'email']
 });
 
+// ============================================
+// XÁC THỰC GOOGLE - googleCallback
+// ============================================
 /**
  * Middleware callback cho Google OAuth
  */
