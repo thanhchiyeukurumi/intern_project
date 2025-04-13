@@ -1,6 +1,5 @@
-const { validationResult } = require('express-validator');
 const uploadService = require('../services/uploadService');
-const { ok, error, invalidated, created } = require('../../../utils/responseUtils');
+const { ok, error, created } = require('../../../utils/responseUtils');
 
 class UploadController {
   /**
@@ -10,12 +9,6 @@ class UploadController {
    */
   async uploadSingleImage(req, res) {
     try {
-      // Kiểm tra lỗi validation
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return invalidated(res, errors.array());
-      }
-
       // Kiểm tra file đã được upload qua middleware Multer
       if (!req.file) {
         return error(res, 'Không tìm thấy file cần upload', 400);
@@ -41,12 +34,6 @@ class UploadController {
    */
   async uploadMultipleImages(req, res) {
     try {
-      // Kiểm tra lỗi validation
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return invalidated(res, errors.array());
-      }
-
       // Kiểm tra files đã được upload qua middleware Multer
       if (!req.files || req.files.length === 0) {
         return error(res, 'Không tìm thấy file cần upload', 400);

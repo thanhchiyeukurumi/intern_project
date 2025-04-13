@@ -22,7 +22,7 @@ const { createCommentValidation, updateCommentValidation } = require("../modules
 const { isOwner } = require("kernels/middlewares/roleMiddlewares");
 const uploadController = require("../modules/upload/controllers/uploadController");
 const uploadMiddleware = require("../modules/upload/middlewares/uploadMiddleware");
-const { uploadValidation, uploadEditorValidation } = require("../modules/upload/validations/uploadValidation");
+const { uploadSingleValidation, uploadMultipleValidation, uploadEditorPreValidation, uploadEditorPostValidation, deleteFileValidation } = require("../modules/upload/validations/uploadValidation");
 const router = express.Router({ mergeParams: true });
 
 // Khởi tạo passport
@@ -187,10 +187,11 @@ router.group("/comments", (router) => {
  * DELETE  /uploads/:publicId        - Xóa file đã upload
  */
 router.group("/uploads", (router) => {
-  router.post('/image', auth.authenticateJWT, uploadMiddleware.uploadSingleImage, validate(uploadValidation), uploadController.uploadSingleImage);
-  router.post('/images', auth.authenticateJWT, uploadMiddleware.uploadMultipleImages, validate(uploadValidation), uploadController.uploadMultipleImages);
-  router.post('/editor', auth.authenticateJWT, uploadMiddleware.uploadEditorImage, uploadController.uploadEditorImage);
-  router.delete('/:publicId', auth.authenticateJWT, uploadController.deleteUploadedFile);
+  router.post('/image', auth.authenticateJWT, validate(uploadSingleValidation), uploadMiddleware.uploadSingleImage, uploadController.uploadSingleImage);
+  router.post('/images', auth.authenticateJWT, validate(uploadMultipleValidation), uploadMiddleware.uploadMultipleImages, uploadController.uploadMultipleImages);
+  router.post('/editor', auth.authenticateJWT, validate(uploadEditorPreValidation), uploadMiddleware.uploadEditorImage, uploadController.uploadEditorImage);
+  router.post('/editor', auth.authenticateJWT, validate(uploadEditorPreValidation), uploadMiddleware.uploadEditorImage, uploadController.uploadEditorImage);
+  router.delete('/:publicId', auth.authenticateJWT, validate(deleteFileValidation), uploadController.deleteUploadedFile);
 });
 
 router.group("/example", validate([]), (router) => {

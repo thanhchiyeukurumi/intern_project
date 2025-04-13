@@ -1,15 +1,32 @@
 const { check } = require('express-validator');
 
-// Validation cho upload file
-const uploadValidation = [
+// Validation cho upload file đơn
+const uploadSingleValidation = [
   check('type')
     .optional()
     .isIn(['avatar', 'thumbnail', 'post', 'gallery', 'product'])
     .withMessage('Loại file không hợp lệ')
 ];
 
-// Validation cho upload file trong QuillJS
-const uploadEditorValidation = [
+// Validation cho upload nhiều file
+const uploadMultipleValidation = [
+  check('type')
+    .optional()
+    .isIn(['avatar', 'thumbnail', 'post', 'gallery', 'product'])
+    .withMessage('Loại file không hợp lệ')
+];
+
+// Validation trước khi upload file trong QuillJS
+const uploadEditorPreValidation = [
+  // Có thể thêm các validation cho tham số khác nếu cần
+  check('type')
+    .optional()
+    .isIn(['editor', 'post', 'content'])
+    .withMessage('Loại file không hợp lệ')
+];
+
+// Validation sau khi upload file trong QuillJS
+const uploadEditorPostValidation = [
   check('upload')
     .custom((value, { req }) => {
       if (!req.file) {
@@ -19,7 +36,17 @@ const uploadEditorValidation = [
     })
 ];
 
+// Validation cho việc xóa file
+const deleteFileValidation = [
+  check('publicId')
+    .notEmpty()
+    .withMessage('PublicId không được để trống')
+];
+
 module.exports = {
-  uploadValidation,
-  uploadEditorValidation
+  uploadSingleValidation,
+  uploadMultipleValidation,
+  uploadEditorPreValidation,
+  uploadEditorPostValidation,
+  deleteFileValidation
 }; 
