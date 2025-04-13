@@ -20,6 +20,9 @@ const { createPostValidation, updatePostValidation } = require("../modules/post/
 const commentController = require("../modules/comment/controllers/commentController");
 const { createCommentValidation, updateCommentValidation } = require("../modules/comment/validations/commentValidation");
 const { isOwner } = require("kernels/middlewares/roleMiddlewares");
+const uploadController = require("../modules/upload/controllers/uploadController");
+const uploadMiddleware = require("../modules/upload/middlewares/uploadMiddleware");
+const { uploadValidation, uploadEditorValidation } = require("../modules/upload/validations/uploadValidation");
 const router = express.Router({ mergeParams: true });
 
 // Khởi tạo passport
@@ -169,6 +172,25 @@ router.group("/comments", (router) => {
   router.delete("/:id", auth.authenticateJWT, role.isAdminOrCommentOwner(), commentController.deleteComment);
   router.get("/user/:userId", commentController.getCommentsByUserId);
   router.get("/me", auth.authenticateJWT, commentController.getCommentsByUserId);
+});
+
+/**
+ * Upload Routes
+ * -----------------------------
+ * @route   /uploads
+ * @access  Private (Authenticated users only)
+ * @desc    Quản lý upload file
+ *
+ * POST    /uploads/image            - Upload đơn ảnh
+ * POST    /uploads/images           - Upload nhiều ảnh
+ * POST    /uploads/editor           - Upload cho trình soạn thảo
+ * DELETE  /uploads/:publicId        - Xóa file đã upload
+ */
+router.group("/uploads", (router) => {
+  router.post('/image', auth.authenticateJWT, uploadMiddleware.uploadSingleImage, validate(uploadValidation), uploadController.uploadSingleImage);
+  router.post('/images', auth.authenticateJWT, uploadMiddleware.uploadMultipleImages, validate(uploadValidation), uploadController.uploadMultipleImages);
+  router.post('/editor', auth.authenticateJWT, uploadMiddleware.uploadEditorImage, uploadController.uploadEditorImage);
+  router.delete('/:publicId', auth.authenticateJWT, uploadController.deleteUploadedFile);
 });
 
 router.group("/example", validate([]), (router) => {
