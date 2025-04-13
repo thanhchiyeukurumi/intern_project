@@ -3,6 +3,9 @@ const db = require('../../../models');
 const jwtUtils = require('../../../utils/jwtUtils');
 
 class AuthService {
+  // ============================================
+  // ĐĂNG KÝ TÀI KHOẢN MỚI - register
+  // ============================================
   /**
    * Đăng ký tài khoản mới
    * @param {Object} userData - Thông tin đăng ký: username, fullname, email, password, ...
@@ -82,6 +85,9 @@ class AuthService {
     };
   }
 
+  // ============================================
+  // ĐĂNG NHẬP - login
+  // ============================================
   /**
    * Đăng nhập
    * @param {String} email - Email đăng nhập
@@ -135,6 +141,7 @@ class AuthService {
     };
   }
 
+  // ============================================
   /**
    * Xử lý người dùng OAuth
    * @param {Object} oauthUser - Thông tin user từ OAuth provider
@@ -163,6 +170,9 @@ class AuthService {
     };
   }
 
+  // ============================================
+  // LẤY THÔNG TIN NGƯỜI DÙNG HIỆN TẠI - getCurrentUser
+  // ============================================
   /**
    * Lấy thông tin người dùng hiện tại
    * @param {Number} userId - ID của người dùng

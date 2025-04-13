@@ -4,9 +4,11 @@ const jwtUtils = require('../../../utils/jwtUtils');
 const { ok, error, unauthorized, invalidated, created, customError } = require('../../../utils/responseUtils');
 
 class AuthController {
+  // ============================================
+  // ĐĂNG KÝ TÀI KHOẢN MỚI - register
+  // ============================================
   /**
    * POST /auth/register
-   * -----------------------------
    * @desc    Đăng ký tài khoản mới
    * @access  Public
    */
@@ -40,9 +42,11 @@ class AuthController {
     }
   }
 
-  /**
+  // ============================================
+  // ĐĂNG NHẬP - login
+  // ============================================
+  /** 
    * POST /auth/login
-   * -----------------------------
    * @desc    Đăng nhập
    * @access  Public
    */
@@ -78,9 +82,11 @@ class AuthController {
     }
   }
 
+  // ============================================
+  // LÀM MỚI TOKEN - refreshToken
+  // ============================================
   /**
    * POST /auth/refresh-token
-   * -----------------------------
    * @desc    Làm mới token
    * @access  Public
    */
@@ -135,9 +141,11 @@ class AuthController {
     }
   }
 
+  // ============================================
+  // ĐĂNG XUẤT - logout
+  // ============================================
   /**
    * POST /auth/logout
-   * -----------------------------
    * @desc    Đăng xuất
    * @access  Public
    */
@@ -152,9 +160,11 @@ class AuthController {
     }
   }
 
+  // ============================================
+  // XỬ LÝ CALLBACK TỪ GOOGLE - googleCallback
+  // ============================================
   /**
    * POST /auth/google/callback
-   * -----------------------------
    * @desc    Xử lý callback từ Google OAuth
    * @access  Public
    */
@@ -181,10 +191,12 @@ class AuthController {
       return error(res, err.message || 'Đã xảy ra lỗi khi đăng nhập với Google.');
     }
   }
-  
+
+  // ============================================
+  // LẤY THÔNG TIN NGƯỜI DÙNG HIỆN TẠI - getCurrentUser
+  // ============================================
   /**
    * GET /auth/me
-   * -----------------------------
    * @desc    Lấy thông tin người dùng hiện tại
    * @access  Private
    */
@@ -199,9 +211,11 @@ class AuthController {
     }
   }
 
+  // ============================================
+  // XÁC THỰC TOKEN - verifyToken
+  // ============================================
   /**
    * GET /auth/verify-token
-   * -----------------------------
    * @desc    Xác thực token
    * @access  Private
    */

@@ -7,7 +7,6 @@ class CommentController {
   // ============================================
   /**
    * GET /posts/:postId/comments
-   * -----------------------------
    * @desc    Lấy danh sách bình luận của một bài viết
    * @access  Public
    * @query   {number} page           - Trang hiện tại
@@ -37,7 +36,6 @@ class CommentController {
   // ============================================
   /**
    * GET /comments/:id
-   * -----------------------------  
    * @desc    Lấy thông tin chi tiết bình luận
    * @access  Public?
    */
@@ -59,7 +57,6 @@ class CommentController {
   // ============================================
   /**
    * POST /posts/:postId/comments
-   * -----------------------------
    * @desc    Tạo bình luận mới
    * @access  User
    */
@@ -79,7 +76,6 @@ class CommentController {
   // ============================================
   /**
    * PUT /comments/:id
-   * -----------------------------
    * @desc    Cập nhật bình luận
    * @access  Owner
    */
@@ -103,7 +99,6 @@ class CommentController {
   // ============================================
   /**
    * DELETE /comments/:id
-   * -----------------------------
    * @desc    Xóa bình luận
    * @access  Owner, Admin
    */
@@ -131,7 +126,6 @@ class CommentController {
   // ============================================
   /** 
    * GET /users/:userId/comments
-   * -----------------------------
    * @desc    Lấy danh sách bình luận của người dùng
    * @access  Admin
    */
