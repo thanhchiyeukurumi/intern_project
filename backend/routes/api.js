@@ -140,11 +140,11 @@ router.group("/posts", (router) => {
   router.get("/", postController.getAllPosts);
   router.get("/search", postController.searchPosts);
   router.get("/category/:categoryId", postController.getPostsByCategory);
+  router.get("/user/:userId", postController.getPostsByUser);
   router.get("/:id", postController.getPostByIdOrSlug);
   router.post("/", auth.authenticateJWT, validate(createPostValidation), postController.createPost);
   router.put("/:id", auth.authenticateJWT, role.isAdminOrPostOwner(), validate(updatePostValidation), postController.updatePost);
   router.delete("/:id", auth.authenticateJWT, role.isAdminOrPostOwner(), postController.deletePost);
-  router.get("/user/:userId", postController.getPostsByUser);
   router.get("/me", auth.authenticateJWT, postController.getPostsByUser);
   router.get("/:postId/comments", commentController.getCommentsByPostId);
   router.post("/:postId/comments", auth.authenticateJWT, validate(createCommentValidation), commentController.createComment);

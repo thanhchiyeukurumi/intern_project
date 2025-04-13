@@ -2,9 +2,11 @@ const postService = require('../services/postService');
 const { ok, created, notFound, error, customError } = require('../../../utils/responseUtils');
 
 class PostController {
+  // ============================================
+  // LẤY DANH SÁCH BÀI VIẾT - getAllPosts
+  // ============================================
   /**
    * GET /posts
-   * -----------------------------
    * @desc    Lấy danh sách bài viết
    * @access  Public
    * @query   {number} page           - Trang hiện tại
@@ -35,9 +37,11 @@ class PostController {
     }
   }
 
+  // ============================================
+  // LẤY BÀI VIẾT THEO ID HOẶC SLUG - getPostByIdOrSlug
+  // ============================================
   /**
    * GET /posts/:id
-   * -----------------------------
    * @desc    Lấy bài viết theo ID hoặc slug
    * @access  Public
    */
@@ -56,9 +60,11 @@ class PostController {
     }
   }
 
+  // ============================================
+  // TẠO BÀI VIẾT MỚI - createPost
+  // ============================================
   /**
    * POST /posts
-   * -----------------------------
    * @desc    Tạo bài viết mới
    * @access  User
    */
@@ -72,18 +78,17 @@ class PostController {
     }
   }
 
+  // ============================================
+  // CẬP NHẬT BÀI VIẾT - updatePost
+  // ============================================
   /**
    * PUT /posts/:id
-   * -----------------------------
    * @desc    Cập nhật bài viết
    * @access  Owner
    */
   async updatePost(req, res) {
     try {
-      const postId = req.params.id;
-      const userId = req.user.id;
-      
-      const post = await postService.updatePost(postId, req.body, userId);
+      const post = await postService.updatePost(req.params.id, req.body);
       return ok(res, post, 'Cập nhật bài viết thành công');
     } catch (err) {
       if (err.message.includes('Không tìm thấy bài viết')) {
@@ -93,19 +98,18 @@ class PostController {
     }
   }
 
+  // ============================================
+  // XÓA BÀI VIẾT - deletePost
+  // ============================================
   /**
    * DELETE /posts/:id
-   * -----------------------------
    * @desc    Xóa bài viết
-   * @access  Owner
+   * @access  Admin
    */
   async deletePost(req, res) {
     try {
-      const postId = req.params.id;
-      const userId = req.user.id;
-      
-      await postService.deletePost(postId, userId);
-      return ok(res, null, 'Xóa bài viết thành công');
+      await postService.deletePost(req.params.id);
+      return ok(res, 'Xóa bài viết thành công');
     } catch (err) {
       if (err.message.includes('Không tìm thấy bài viết')) {
         return notFound(res, err.message);
@@ -114,9 +118,11 @@ class PostController {
     }
   }
 
+  // ============================================
+  // LẤY DANH SÁCH BÀI VIẾT THEO DANH MỤC - getPostsByCategory
+  // ============================================
   /**
    * GET /posts/category/:categoryId
-   * -----------------------------
    * @desc    Lấy danh sách bài viết theo danh mục
    * @access  Public
    */
@@ -137,9 +143,11 @@ class PostController {
     }
   }
 
+  // ============================================
+  // LẤY DANH SÁCH BÀI VIẾT THEO NGƯỜI DÙNG - getPostsByUser
+  // ============================================
   /**
    * GET /posts/user/:userId
-   * -----------------------------
    * @desc    Lấy danh sách bài viết của người dùng
    * @access  Public
    */
@@ -170,9 +178,11 @@ class PostController {
     }
   }
 
+  // ============================================
+  // TÌM KIẾM BÀI VIẾT - searchPosts
+  // ============================================
   /**
-  * GET /posts/search
-   * -----------------------------
+   * GET /posts/search
    * @desc    Tìm kiếm bài viết
    * @access  Public
    */

@@ -3,6 +3,9 @@ const { Post, Category, User, PostCategory, Language, Comment, Sequelize } = db;
 const { Op } = Sequelize;
 
 class PostService {
+  // ============================================
+  // LẤY DANH SÁCH BÀI VIẾT - getAllPosts
+  // ============================================
   /**
    * Lấy danh sách bài viết với phân trang và lọc
    * @param {Object} options - Các tùy chọn để lọc và phân trang
@@ -96,6 +99,9 @@ class PostService {
     }
   }
 
+  // ============================================
+  // LẤY THÔNG TIN CHI TIẾT BÀI VIẾT - getPostByIdOrSlug
+  // ============================================
   /**
    * Lấy thông tin chi tiết bài viết
    * @param {Number|String} identifier - ID hoặc slug của bài viết
@@ -151,6 +157,9 @@ class PostService {
     }
   }
 
+  // ============================================
+  // TẠO BÀI VIẾT MỚI - createPost
+  // ============================================
   /**
    * Tạo bài viết mới
    * @param {Object} data - Dữ liệu bài viết
@@ -187,6 +196,9 @@ class PostService {
     }
   }
 
+  // ============================================
+  // CẬP NHẬT BÀI VIẾT - updatePost
+  // ============================================
   /**
    * Cập nhật bài viết
    * @param {Number} id - ID của bài viết
@@ -194,17 +206,17 @@ class PostService {
    * @param {Number} userId - ID của người dùng cập nhật bài viết
    * @returns {Object} - Bài viết đã cập nhật
    */
-  async updatePost(id, data, userId) {
+  async updatePost(id, data) {
     const transaction = await db.sequelize.transaction();
     
     try {
       // Kiểm tra bài viết tồn tại và thuộc về người dùng
       const post = await Post.findOne({
-        where: { id, user_id: userId }
+        where: { id }
       }, { transaction });
       
       if (!post) {
-        throw new Error('Không tìm thấy bài viết hoặc bạn không có quyền chỉnh sửa');
+        throw new Error('Không tìm thấy bài viết');
       }
       
       // Cập nhật thông tin bài viết
@@ -240,36 +252,40 @@ class PostService {
     }
   }
 
+  // ============================================
+  // XÓA BÀI VIẾT - deletePost
+  // ============================================
   /**
    * Xóa bài viết
    * @param {Number} id - ID của bài viết
-   * @param {Number} userId - ID của người dùng xóa bài viết
    * @returns {Boolean} - Kết quả xóa
    */
-  async deletePost(id, userId) {
+  async deletePost(id) {
     const transaction = await db.sequelize.transaction();
     
     try {
       // Kiểm tra bài viết tồn tại và thuộc về người dùng
       const post = await Post.findOne({
-        where: { id, user_id: userId }
+        where: { id }
       }, { transaction });
       
       if (!post) {
-        throw new Error('Không tìm thấy bài viết hoặc bạn không có quyền xóa');
+        throw new Error('Không tìm thấy bài viết');
       }
       
       // Xóa bài viết
       await post.destroy({ transaction });
       
       await transaction.commit();
-      return true;
     } catch (error) {
       await transaction.rollback();
       throw error;
     }
   }
 
+  // ============================================
+  // LẤY DANH SÁCH BÀI VIẾT THEO DANH MỤC - getPostsByCategory
+  // ============================================
   /**
    * Lấy bài viết theo danh mục
    * @param {Number} categoryId - ID của danh mục
@@ -285,6 +301,9 @@ class PostService {
     }
   }
 
+  // ============================================
+  // LẤY DANH SÁCH BÀI VIẾT THEO NGƯỜI DÙNG - getPostsByUser
+  // ============================================
   /**
    * Lấy bài viết của người dùng
    * @param {Number} userId - ID của người dùng
