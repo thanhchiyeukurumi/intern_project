@@ -68,9 +68,7 @@ class UserService {
             if (!user) {
                 throw new Error('Người dùng không tồn tại');
             }
-            return {
-                data: user
-            } 
+            return user; 
         } catch (err) {
             throw err;
         }
@@ -116,9 +114,7 @@ class UserService {
                 throw new Error('Người dùng không tồn tại');
             }
             await user.update(data);
-            return {
-                data: user
-            }
+            return user;
         } catch (err) {
             throw err;
         }

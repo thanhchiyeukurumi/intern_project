@@ -73,9 +73,7 @@ class CategoryService {
             if (!category) {
                 throw new Error('Không tìm thấy danh mục');
             }
-            return {
-                data: category
-            };
+            return category;
         } catch (err) {
             throw err;
         }
@@ -161,9 +159,7 @@ async createCategory(data) {
             }
 
             await category.update(data);
-            return {
-                data: category
-            }
+            return category;
         } catch (err) {
             throw err;
         }

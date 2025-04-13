@@ -1,22 +1,34 @@
+/**
+ * @desc: quy uoc cac service method tra ve 1 doi tuong nhu la getById, create, update, se tra ve doi tuong du lieu tho
+ * cac service method tra ve danh sach nhu la getAll... se tra ve 1 object co dang {data: [itemsArray], pagination: {total, page, limit}}
+ */
+
 module.exports = {
   // Có sự thay đổi nhỏ so với bản gốc
   /**
-   * 
-   * @param {*} res 
-   * @param {*} return {data: data, pagination: pagination} {tham so tra ve tu service}
-   * @returns 
+   * Xử lý response thành công cho GET (một hoặc nhiều item), PUT, PATCH, DELETE (có thể trả data).
+   * @param {Object} res - Đối tượng response của Express.
+   * @param {Object | {data: Array, pagination: Object}} serviceResult - Kết quả từ service.
+   *        - Đối với item đơn/update/delete: object dữ liệu thô.
+   *        - Đối với danh sách: object dạng { data: Array, pagination: Object }.
+   * @param {string} [message='ok'] - Thông điệp thành công (tùy chọn).
    */
-  ok: (res, data = {}) => {
-    let { pagination, ...rest } = data;
+  ok: (res, data) => {
     const response = {
       success: true,
-      data: data.data ?? data,
+      status: 200,
+      message: 'ok',
     };
-    if (pagination) {
-      response.pagination = pagination;
+
+    // Kiểm tra xem kết quả có phải là cấu trúc của danh sách phân trang không
+    if (data && typeof data === 'object' && Array.isArray(data.data) && data.pagination) {
+      response.data = data.data;
+      response.pagination = data.pagination;
+    } else {
+      // Nếu không, coi đó là dữ liệu của một đối tượng đơn lẻ
+      response.data = data;
+      // Không có pagination cho đối tượng đơn lẻ
     }
-    response.status = 200;
-    response.message = "ok"; 
     return res.status(200).send(response);
   },
   /**

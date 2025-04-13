@@ -100,7 +100,6 @@ class LanguageService {
 
       await language.destroy({ transaction });
       await transaction.commit();
-      return true;
     } catch (error) {
       await transaction.rollback();
       throw error;
