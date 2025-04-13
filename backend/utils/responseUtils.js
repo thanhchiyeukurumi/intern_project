@@ -16,8 +16,6 @@ module.exports = {
   ok: (res, data) => {
     const response = {
       success: true,
-      status: 200,
-      message: 'ok',
     };
 
     // Kiểm tra xem kết quả có phải là cấu trúc của danh sách phân trang không
@@ -29,6 +27,8 @@ module.exports = {
       response.data = data;
       // Không có pagination cho đối tượng đơn lẻ
     }
+    response.status = 200;
+    response.message = 'ok';
     return res.status(200).send(response);
   },
   /**

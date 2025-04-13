@@ -145,7 +145,7 @@ router.group("/posts", (router) => {
   router.get("/category/:categoryId", postController.getPostsByCategory);
   router.get("/user/:userId", postController.getPostsByUser);
   router.get("/:id", postController.getPostByIdOrSlug);
-  router.post("/", auth.authenticateJWT, validate(createPostValidation), postController.createPost);
+  router.post("/", auth.authenticateJWT, validate(createPostValidation), role.hasRole(["blogger"]), postController.createPost);
   router.put("/:id", auth.authenticateJWT, role.isAdminOrPostOwner(), validate(updatePostValidation), postController.updatePost);
   router.delete("/:id", auth.authenticateJWT, role.isAdminOrPostOwner(), postController.deletePost);
   router.get("/me", auth.authenticateJWT, postController.getPostsByUser);

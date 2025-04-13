@@ -10,8 +10,14 @@ class LanguageController {
    */
   async getAllLanguages(req, res) {
     try {
-      const languages = await languageService.getAllLanguages();
-      return ok(res, languages);
+      const options = {
+        page: 1,
+        limit: 1000,
+        orderBy: req.query.orderBy || 'id',
+        order: req.query.order || 'ASC',
+      };
+      const result = await languageService.getAllLanguages(options);
+      return ok(res, result);
     } catch (err) {
       return error(res, err.message);
     }

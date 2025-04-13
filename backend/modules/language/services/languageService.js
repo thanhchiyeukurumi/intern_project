@@ -6,13 +6,33 @@ class LanguageService {
   /**
    * Lấy danh sách ngôn ngữ
    */
-  async getAllLanguages() {
+  async getAllLanguages(options = {}) {
     try {
-      const languages = await Language.findAll({
-        order: [['id', 'ASC']]
-      });
+      const page = 1;
+      const limit = 1000;
+      const orderBy = options.orderBy || 'id';
+      const order = options.order || 'ASC';
+
+      const offset = (page - 1) * limit;
+      
+      const queryOptions = {
+        where: {},
+        order: [[orderBy, order]],
+        limit,
+        offset,
+        attributes: { exclude: ['createdAt', 'updatedAt'] }
+      };
+
+      const { count, rows } = await Language.findAndCountAll(queryOptions);
+
       return {
-        data: languages
+        data: rows,
+        pagination: {
+          total: count,
+          page,
+          limit,
+          totalPages: Math.ceil(count / limit)
+        }
       };
     } catch (error) {
       throw error;
