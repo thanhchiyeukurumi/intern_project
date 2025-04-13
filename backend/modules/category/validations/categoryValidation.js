@@ -25,7 +25,6 @@ const createCategoryValidation = [
     
     new BodyWithLocale('parent_id')
         .optional()                             // Có thể không truyền
-        .existsIn(Category, 'id')               // Nếu có thì phải tồn tại trong bảng Category
         .get(),
 ];
 

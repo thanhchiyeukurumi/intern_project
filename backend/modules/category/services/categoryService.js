@@ -71,7 +71,9 @@ class CategoryService {
                 attributes: { exclude: ['createdAt', 'updatedAt'] }
             });
             if (!category) {
-                throw new Error('Không tìm thấy danh mục');
+                const error = new Error('Không tìm thấy danh mục');
+                error.statusCode = 404;
+                throw error;
             }
             return category;
         } catch (err) {
@@ -90,53 +92,60 @@ class CategoryService {
      * @returns {Object} category - Danh mục vừa tạo
      * @throws  {Error} Nếu danh mục đã tồn tại hoặc có lỗi khác
      */
-async createCategory(data) {
-    // Bắt đầu một transaction để đảm bảo tính toàn vẹn dữ liệu
-    const transaction = await db.sequelize.transaction();
-    try {
-        // Chuẩn hóa parent_id: nếu không cung cấp hoặc là giá trị falsy (trừ 0 nếu 0 là ID hợp lệ), coi là null
-        const parentId = data.parent_id || null;
-        const categoryName = data.name;
+    async createCategory(data) {
+        // Bắt đầu một transaction để đảm bảo tính toàn vẹn dữ liệu
+        const transaction = await db.sequelize.transaction();
+        try {
+            // Chuẩn hóa parent_id: nếu không cung cấp hoặc là giá trị falsy (trừ 0 nếu 0 là ID hợp lệ), coi là null
+            const parentId = data.parent_id || null;
+            const categoryName = data.name;
 
-        // --- BƯỚC KIỂM TRA TRÙNG LẶP ---
-        const existingCategory = await Category.findOne({
-            where: {
-                name: categoryName
-            },
-            transaction // Thực hiện kiểm tra trong cùng transaction để tránh race condition
-        });
+            // --- BƯỚC KIỂM TRA TRÙNG LẶP ---
+            const existingCategory = await Category.findOne({
+                where: {
+                    name: categoryName
+                },
+                transaction // Thực hiện kiểm tra trong cùng transaction để tránh race condition
+            });
 
-        // Nếu tìm thấy danh mục trùng lặp
-        if (existingCategory) {
-            // Hủy bỏ transaction vì không tạo mới
-            await transaction.rollback();
-            // Ném lỗi rõ ràng để thông báo cho người dùng/hệ thống
-            const error = new Error('Danh mục đã tồn tại');
-            error.statusCode = 409; // HTTP Status Code 409 Conflict thường dùng cho trường hợp này
-            throw error;
-        }
-        // --- KẾT THÚC KIỂM TRA TRÙNG LẶP ---
+            // Nếu tìm thấy danh mục trùng lặp
+            if (existingCategory) {
+                // Hủy bỏ transaction vì không tạo mới
+                await transaction.rollback();
+                // Ném lỗi rõ ràng để thông báo cho người dùng/hệ thống
+                const error = new Error('Danh mục đã tồn tại');
+                error.statusCode = 409; // HTTP Status Code 409 Conflict thường dùng cho trường hợp này
+                throw error;
+            }
+            // --- KẾT THÚC KIỂM TRA TRÙNG LẶP ---
 
-        // Nếu không trùng lặp, tiến hành tạo mới danh mục
-        const category = await Category.create({
-            name: categoryName,
-            parent_id: parentId // Sử dụng parentId đã chuẩn hóa
-        }, { transaction }); // Tạo trong transaction
+            // --- Kiểm tra parent_id hợp lệ ---
+            if (parentId) {
+                const parentCategory = await Category.findByPk(parentId, { transaction });
+                if (!parentCategory) {
+                    const error = new Error('Danh mục cha không tồn tại');
+                    error.statusCode = 404; // Not Found
+                    throw error;
+                }
+            }
 
-        // Nếu tạo thành công, commit transaction
-        await transaction.commit();
+            // Nếu không trùng lặp, tiến hành tạo mới danh mục
+            const category = await Category.create({
+                name: categoryName,
+                parent_id: parentId // Sử dụng parentId đã chuẩn hóa
+            }, { transaction }); // Tạo trong transaction
 
-        // Trả về danh mục vừa tạo -> doan nay tra ve data khac voi phuong thuc GET
-        return category;
+            // Nếu tạo thành công, commit transaction
+            await transaction.commit();
+            return category;
 
-    } catch (err) {
-        // Nếu có bất kỳ lỗi nào xảy ra (kể cả lỗi trùng lặp đã throw ở trên), rollback transaction
-        // Kiểm tra xem transaction có còn hoạt động không trước khi rollback
-        if (transaction && !transaction.finished) {
-            await transaction.rollback();
-        }
-        // Ném lại lỗi để lớp gọi xử lý
-        throw err;
+        } catch (err) {
+            // Nếu có bất kỳ lỗi nào xảy ra (kể cả lỗi trùng lặp đã throw ở trên), rollback transaction
+            // Kiểm tra xem transaction có còn hoạt động không trước khi rollback
+            if (transaction && !transaction.finished) {
+                await transaction.rollback();
+            }
+            throw err;
         }
     }
 
@@ -152,15 +161,67 @@ async createCategory(data) {
      * @returns {Object} updated category
      */
     async updateCategory(id, data) {
+        // Bắt đầu một transaction để đảm bảo tính toàn vẹn dữ liệu
+        const transaction = await db.sequelize.transaction();
         try {
-            const category = await Category.findByPk(id);
+            // Chuẩn hóa parent_id: nếu không cung cấp hoặc là giá trị falsy (trừ 0 nếu 0 là ID hợp lệ), coi là null
+            const parentId = data.parent_id || null;
+            const categoryName = data.name;
+
+            // Kiểm tra danh mục cần cập nhật có tồn tại không
+            const category = await Category.findByPk(id, { transaction });
             if (!category) {
-                throw new Error('Không tìm thấy danh mục');
+                const error = new Error('Không tìm thấy danh mục');
+                error.statusCode = 404;
+                throw error;
             }
 
-            await category.update(data);
+            // Kiểm tra trùng lặp tên với các danh mục khác (loại trừ danh mục hiện tại)
+            if (categoryName) {
+                const existingCategory = await Category.findOne({
+                    where: {
+                        name: categoryName,
+                        id: { [Op.ne]: id } // không phải danh mục hiện tại
+                    },
+                    transaction
+                });
+
+                if (existingCategory) {
+                    await transaction.rollback();
+                    const error = new Error('Tên danh mục đã tồn tại');
+                    error.statusCode = 409;
+                    throw error;
+                }
+            }
+
+            // Kiểm tra parent_id hợp lệ
+            if (parentId) {
+                const parentCategory = await Category.findByPk(parentId, { transaction });
+                if (!parentCategory) {
+                    const error = new Error('Danh mục cha không tồn tại');
+                    error.statusCode = 404;
+                    throw error;
+                }
+
+                // Kiểm tra không thể đặt chính nó làm cha
+                if (parentId === id) {
+                    const error = new Error('Không thể đặt danh mục làm cha của chính nó');
+                    error.statusCode = 400;
+                    throw error;
+                }
+            }
+
+            // Cập nhật danh mục
+            await category.update(data, { transaction });
+
+            // Commit transaction nếu thành công
+            await transaction.commit();
             return category;
         } catch (err) {
+            // Rollback transaction nếu có lỗi
+            if (transaction && !transaction.finished) {
+                await transaction.rollback();
+            }
             throw err;
         }
     }
@@ -178,7 +239,9 @@ async createCategory(data) {
         try {
             const category = await Category.findByPk(id);
             if (!category) {
-                throw new Error('Không tìm thấy danh mục');
+                const error = new Error('Không tìm thấy danh mục');
+                error.statusCode = 404;
+                throw error;
             }
             await category.destroy();
         } catch (err) {

@@ -1,5 +1,5 @@
 const categoryService = require("../services/categoryService");
-const { ok, created, error } = require('../../../utils/responseUtils');
+const { ok, created, error, notFound, conflict, customError } = require('../../../utils/responseUtils');
 
 class CategoryController {
     // ============================================
@@ -44,6 +44,9 @@ class CategoryController {
             const result = await categoryService.getCategoryById(req.params.id);
             return ok(res, result);
         } catch (err) {
+            if (err.statusCode) {
+                return notFound(res, err.message);
+            }
             return error(res, err.message);
         }
     }
@@ -61,6 +64,8 @@ class CategoryController {
             const result = await categoryService.createCategory(req.body);
             return created(res, result, 'Danh mục đã được tạo thành công');
         } catch (err) {
+            if (err.statusCode == 404) { return notFound(res, err.message);} 
+            else if (err.statusCode == 409) { return conflict(res, err.message); }
             return error(res, err.message);
         }
     }
@@ -78,6 +83,9 @@ class CategoryController {
             const result = await categoryService.updateCategory(req.params.id, req.body);
             return ok(res, result, 'Danh mục đã được cập nhật thành công');
         } catch (err) {
+            if (err.statusCode == 404) { return notFound(res, err.message); }
+            else if (err.statusCode == 409) { return conflict(res, err.message); }
+            else if (err.statusCode == 400) { return customError(res, err.message); }
             return error(res, err.message);
         }
     }
@@ -95,6 +103,7 @@ class CategoryController {
             await categoryService.deleteCategory(req.params.id);
             return ok(res, 'Danh mục đã được xóa thành công');
         } catch (err) {
+            if (err.statusCode == 404) { return notFound(res, err.message); }
             return error(res, err.message);
         }
     }

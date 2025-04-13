@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "4276b239-7a39-45c6-b8dd-aed513584274",
-		"name": "Category API Test",
+		"name": "Category API Tests",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "37747897"
 	},
@@ -27,13 +27,13 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"// Được gọi sau mỗi request",
+					"// Được gọi sau khi tất cả các request trong collection chạy xong",
 					"const startTime = new Date(pm.environment.get('testStartTime'));",
 					"const endTime = new Date();",
 					"const durationMs = endTime - startTime;",
 					"",
 					"// Tính thời gian chạy tổng thể nếu đây là request cuối cùng",
-					"if (pm.info.requestName === 'delete cate') {",
+					"if (pm.info.requestName === 'Cleanup Conflict Category') {",
 					"    console.log('====================================');",
 					"    console.log('✅ Hoàn thành test API Category');",
 					"    console.log('⏰ Thời gian: ' + new Date().toLocaleString());",
@@ -51,10 +51,10 @@
 	],
 	"item": [
 		{
-			"name": "CRUD category Copy",
+			"name": "1. Authentication",
 			"item": [
 				{
-					"name": "Login",
+					"name": "Admin Login",
 					"event": [
 						{
 							"listen": "test",
@@ -62,65 +62,22 @@
 								"exec": [
 									"const response = pm.response.json();",
 									"",
-									"// Tạo bảng hiển thị thông tin cơ bản của response",
-									"console.log('=== KẾT QUẢ ĐĂNG NHẬP ===');",
-									"console.log('Status: ' + pm.response.code + ' ' + pm.response.status);",
-									"console.log('Response time: ' + pm.response.responseTime + 'ms');",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Đăng nhập Admin: ' + (response.success ? 'Thành công' : 'Thất bại'));",
 									"",
-									"// Kiểm tra xem có đăng nhập thành công không",
-									"pm.test(\"✅ Đăng nhập thành công\", function () {",
-									"    pm.expect(response.success).to.eql(true);",
+									"pm.test(\"Đăng nhập thành công\", function () {",
+									"    pm.expect(response.success).to.be.true;",
 									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
 									"});",
 									"",
-									"// Tìm và lưu token từ các vị trí có thể",
-									"let token = null;",
-									"",
-									"if (response.token) {",
-									"    // Trường hợp token nằm ở cấp 1",
-									"    token = response.token;",
-									"    pm.environment.set(\"token\", token);",
-									"    console.log('✅ Token được lưu từ response.token');",
-									"} else if (response.data && response.data.token) {",
-									"    // Trường hợp token nằm trong res.data.token",
-									"    token = response.data.token;",
-									"    pm.environment.set(\"token\", token);",
-									"    console.log('✅ Token được lưu từ response.data.token');",
-									"} else if (response.data && response.data.user && response.data.refreshToken) {",
-									"    // Trường hợp token trong cấu trúc phức tạp hơn",
-									"    token = response.data.token;",
-									"    pm.environment.set(\"token\", token);",
-									"    pm.environment.set(\"refreshToken\", response.data.refreshToken);",
-									"    ",
-									"    if (response.data.user && response.data.user.id) {",
-									"        pm.environment.set(\"userId\", response.data.user.id);",
-									"    }",
-									"    console.log('✅ Token được lưu từ cấu trúc user/refresh');",
-									"}",
-									"",
-									"// Hiển thị token đã lưu",
-									"const savedToken = pm.environment.get(\"token\");",
-									"",
-									"pm.test(\"✅ Token đã được lưu\", function () {",
-									"    pm.expect(savedToken).to.exist;",
-									"});",
-									"",
-									"// Hiển thị một phần của token để dễ nhận biết",
-									"if (savedToken) {",
-									"    const shortToken = savedToken.substring(0, 15) + '...';",
-									"    console.log('Token (đã lưu): ' + shortToken);",
-									"    ",
-									"    // Kiểm tra cấu trúc của token (thường là JWT)",
-									"    const tokenParts = savedToken.split('.');",
-									"    if (tokenParts.length === 3) {",
-									"        console.log('✅ Token có định dạng JWT hợp lệ');",
-									"    }",
-									"}",
-									"",
-									"console.log('========================');"
+									"// Lưu token vào biến môi trường",
+									"if (response.data && response.data.token) {",
+									"    pm.environment.set(\"adminToken\", response.data.token);",
+									"} else if (response.token) {",
+									"    pm.environment.set(\"adminToken\", response.token);",
+									"}"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -146,53 +103,13 @@
 								"auth",
 								"login"
 							]
-						}
+						},
+						"description": "Đăng nhập với quyền admin"
 					},
 					"response": []
 				},
 				{
-					"name": "Get all category",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:3000/categories?page=8",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"categories"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "8"
-								},
-								{
-									"key": "limit",
-									"value": "10",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Add category",
+					"name": "User Login",
 					"event": [
 						{
 							"listen": "test",
@@ -200,64 +117,85 @@
 								"exec": [
 									"const response = pm.response.json();",
 									"",
-									"// Tạo bảng hiển thị thông tin cơ bản của response",
-									"console.log('=== KẾT QUẢ TẠO DANH MỤC ===');",
-									"console.log('Status: ' + pm.response.code + ' ' + pm.response.status);",
-									"console.log('Response time: ' + pm.response.responseTime + 'ms');",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Đăng nhập User: ' + (response.success ? 'Thành công' : 'Thất bại'));",
 									"",
-									"// Kiểm tra xem tạo danh mục có thành công không",
-									"pm.test(\"✅ Tạo danh mục thành công\", function () {",
-									"    pm.expect(response.success).to.eql(true);",
+									"pm.test(\"Đăng nhập thành công\", function () {",
+									"    pm.expect(response.success).to.be.true;",
 									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
 									"});",
 									"",
-									"// Hiển thị cấu trúc của response để dễ debug",
-									"console.log('Cấu trúc response:');",
-									"console.log(JSON.stringify(response, null, 2).substring(0, 300) + '...');",
-									"",
-									"// Tìm và lưu category ID từ các vị trí có thể",
-									"let categoryId;",
-									"",
-									"if (response.data && response.data.data && response.data.data.id) {",
-									"    // Trường hợp ID nằm trong response.data.data.id",
-									"    categoryId = response.data.data.id;",
-									"    console.log('✅ ID được lấy từ response.data.data.id');",
-									"} else if (response.data && response.data.id) {",
-									"    // Trường hợp ID nằm trong response.data.id",
-									"    categoryId = response.data.id;",
-									"    console.log('✅ ID được lấy từ response.data.id');",
-									"} else if (response.data) {",
-									"    // Trường hợp response.data là số hoặc chuỗi chứa ID",
-									"    categoryId = response.data;",
-									"    console.log('✅ ID được lấy từ response.data');",
-									"}",
-									"",
-									"// Lưu ID vào biến môi trường",
-									"if (categoryId) {",
-									"    pm.environment.set(\"category_id\", categoryId);",
-									"    console.log('✅ Category ID đã lưu: ' + categoryId);",
-									"    ",
-									"    // Kiểm tra xem ID có phải là số hợp lệ không",
-									"    pm.test(\"✅ Category ID là số hợp lệ\", function() {",
-									"        pm.expect(Number.isFinite(Number(categoryId))).to.be.true;",
-									"    });",
-									"} else {",
-									"    console.error('❌ Không thể tìm thấy category_id trong response');",
-									"}",
-									"",
-									"// Thêm kiểm tra cho dữ liệu danh mục",
-									"if (response.data && response.data.data) {",
-									"    const category = response.data.data;",
-									"    console.log('Thông tin danh mục:');",
-									"    console.log('- ID: ' + category.id);",
-									"    console.log('- Tên: ' + category.name);",
-									"    console.log('- Slug: ' + category.slug);",
-									"}",
-									"",
-									"console.log('========================');"
+									"// Lưu token vào biến môi trường",
+									"if (response.data && response.data.token) {",
+									"    pm.environment.set(\"userToken\", response.data.token);",
+									"} else if (response.token) {",
+									"    pm.environment.set(\"userToken\", response.token);",
+									"}"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"user@example.com\",\r\n    \"password\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Đăng nhập với quyền user thông thường"
+					},
+					"response": []
+				}
+			],
+			"description": "Mục đăng nhập để lấy token cho các API test"
+		},
+		{
+			"name": "2. Happy Path CRUD",
+			"item": [
+				{
+					"name": "[Admin] Create Root Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Tạo danh mục: ' + (response.success ? 'Thành công' : 'Thất bại'));",
+									"",
+									"pm.test(\"Tạo danh mục thành công\", function () {",
+									"    pm.expect(response.success).to.be.true;",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									"",
+									"// Lưu ID danh mục để dùng cho các test tiếp theo",
+									"if (response.data && response.data.id) {",
+									"    pm.environment.set(\"category_id\", response.data.id);",
+									"    console.log('ID danh mục: ' + response.data.id);",
+									"} else if (response.data && response.data.data && response.data.data.id) {",
+									"    pm.environment.set(\"category_id\", response.data.data.id);",
+									"    console.log('ID danh mục: ' + response.data.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -267,7 +205,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{token}}",
+									"value": "{{adminToken}}",
 									"type": "string"
 								}
 							]
@@ -276,7 +214,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"test_category\"\r\n}",
+							"raw": "{\r\n  \"name\": \"Test Root Category\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -292,12 +230,13 @@
 							"path": [
 								"categories"
 							]
-						}
+						},
+						"description": "Tạo danh mục gốc mới (không có parent_id)"
 					},
 					"response": []
 				},
 				{
-					"name": "Get the category just created",
+					"name": "[Public] Get Created Category",
 					"event": [
 						{
 							"listen": "test",
@@ -305,54 +244,27 @@
 								"exec": [
 									"const response = pm.response.json();",
 									"",
-									"// Tạo bảng hiển thị thông tin cơ bản của response",
-									"console.log('=== THÔNG TIN CHI TIẾT DANH MỤC ===');",
-									"console.log('Status: ' + pm.response.code + ' ' + pm.response.status);",
-									"console.log('Response time: ' + pm.response.responseTime + 'ms');",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Lấy thông tin danh mục: ' + (response.success ? 'Thành công' : 'Thất bại'));",
 									"",
-									"// Kiểm tra xem lấy danh mục có thành công không",
-									"pm.test(\"✅ Lấy thông tin danh mục thành công\", function () {",
-									"    pm.expect(response.success).to.eql(true);",
+									"pm.test(\"Lấy thông tin danh mục thành công\", function () {",
+									"    pm.expect(response.success).to.be.true;",
 									"    pm.expect(pm.response.code).to.equal(200);",
 									"});",
 									"",
-									"// Kiểm tra ID của danh mục có đúng với ID đã lưu trong environment",
-									"const storedCategoryId = pm.environment.get(\"category_id\");",
-									"let categoryData;",
-									"",
-									"if (response.data && response.data.data) {",
-									"    categoryData = response.data.data;",
-									"} else if (response.data) {",
-									"    categoryData = response.data;",
-									"}",
-									"",
-									"if (categoryData) {",
-									"    pm.test(\"✅ ID danh mục khớp với giá trị đã lưu\", function() {",
-									"        pm.expect(categoryData.id.toString()).to.equal(storedCategoryId.toString());",
+									"// Kiểm tra dữ liệu danh mục",
+									"if (response.data) {",
+									"    const category = response.data.data || response.data;",
+									"    console.log('Tên danh mục: ' + category.name);",
+									"    console.log('ID danh mục: ' + category.id);",
+									"    ",
+									"    pm.test(\"Dữ liệu danh mục chính xác\", function() {",
+									"        pm.expect(category.id).to.equal(pm.environment.get(\"category_id\"));",
+									"        pm.expect(category.name).to.equal(\"Test Root Category\");",
 									"    });",
-									"    ",
-									"    // Hiển thị thông tin chi tiết của danh mục",
-									"    console.log('Chi tiết danh mục:');",
-									"    console.log('- ID: ' + categoryData.id);",
-									"    console.log('- Tên: ' + categoryData.name);",
-									"    console.log('- Slug: ' + categoryData.slug);",
-									"    ",
-									"    if (categoryData.parent_id) {",
-									"        console.log('- Danh mục cha: ' + categoryData.parent_id);",
-									"    } else {",
-									"        console.log('- Danh mục gốc (không có danh mục cha)');",
-									"    }",
-									"    ",
-									"    // Tạo liên kết giúp người dùng dễ dàng mở danh mục trên trình duyệt",
-									"    console.log('- URL: localhost:3000/categories/' + categoryData.id);",
-									"} else {",
-									"    console.error('❌ Không tìm thấy dữ liệu danh mục trong response');",
-									"}",
-									"",
-									"console.log('========================');"
+									"}"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -369,12 +281,13 @@
 								"categories",
 								"{{category_id}}"
 							]
-						}
+						},
+						"description": "Lấy thông tin danh mục vừa tạo (không cần xác thực)"
 					},
 					"response": []
 				},
 				{
-					"name": "Update category",
+					"name": "[Admin] Update Category (Add Parent)",
 					"event": [
 						{
 							"listen": "test",
@@ -382,64 +295,27 @@
 								"exec": [
 									"const response = pm.response.json();",
 									"",
-									"// Tạo bảng hiển thị thông tin cơ bản của response",
-									"console.log('=== KẾT QUẢ CẬP NHẬT DANH MỤC ===');",
-									"console.log('Status: ' + pm.response.code + ' ' + pm.response.status);",
-									"console.log('Response time: ' + pm.response.responseTime + 'ms');",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Cập nhật danh mục: ' + (response.success ? 'Thành công' : 'Thất bại'));",
 									"",
-									"// Lấy dữ liệu từ request để so sánh với response",
-									"const requestBody = JSON.parse(pm.request.body.raw);",
-									"console.log('Dữ liệu cập nhật:');",
-									"console.log(JSON.stringify(requestBody, null, 2));",
-									"",
-									"// Kiểm tra xem cập nhật danh mục có thành công không",
-									"pm.test(\"✅ Cập nhật danh mục thành công\", function () {",
-									"    pm.expect(response.success).to.eql(true);",
+									"pm.test(\"Cập nhật danh mục thành công\", function () {",
+									"    pm.expect(response.success).to.be.true;",
 									"    pm.expect(pm.response.code).to.equal(200);",
 									"});",
 									"",
-									"// Lấy dữ liệu danh mục đã cập nhật",
-									"let updatedCategory;",
-									"if (response.data && response.data.data) {",
-									"    updatedCategory = response.data.data;",
-									"} else if (response.data) {",
-									"    updatedCategory = response.data;",
-									"}",
-									"",
-									"if (updatedCategory) {",
-									"    // Kiểm tra tên danh mục đã được cập nhật chưa",
-									"    pm.test(\"✅ Tên danh mục đã được cập nhật\", function() {",
-									"        pm.expect(updatedCategory.name).to.equal(requestBody.name);",
+									"// Kiểm tra dữ liệu cập nhật",
+									"if (response.data) {",
+									"    const category = response.data.data || response.data;",
+									"    console.log('Tên mới: ' + category.name);",
+									"    console.log('ID danh mục cha: ' + category.parent_id);",
+									"    ",
+									"    pm.test(\"Dữ liệu cập nhật chính xác\", function() {",
+									"        pm.expect(category.name).to.equal(\"Updated Test Category\");",
+									"        pm.expect(category.parent_id.toString()).to.equal(\"1\");",
 									"    });",
-									"    ",
-									"    // Kiểm tra parent_id nếu có",
-									"    if (requestBody.parent_id) {",
-									"        pm.test(\"✅ Parent ID đã được cập nhật\", function() {",
-									"            const reqParentId = Number(requestBody.parent_id);",
-									"            const resParentId = Number(updatedCategory.parent_id);",
-									"            pm.expect(resParentId).to.equal(reqParentId);",
-									"        });",
-									"    }",
-									"    ",
-									"    // Hiển thị thông tin chi tiết của danh mục đã cập nhật",
-									"    console.log('Danh mục sau khi cập nhật:');",
-									"    console.log('- ID: ' + updatedCategory.id);",
-									"    console.log('- Tên: ' + updatedCategory.name);",
-									"    console.log('- Slug: ' + updatedCategory.slug);",
-									"    ",
-									"    if (updatedCategory.parent_id) {",
-									"        console.log('- Danh mục cha: ' + updatedCategory.parent_id);",
-									"    } else {",
-									"        console.log('- Danh mục gốc (không có danh mục cha)');",
-									"    }",
-									"} else {",
-									"    console.error('❌ Không tìm thấy dữ liệu danh mục trong response');",
-									"}",
-									"",
-									"console.log('========================');"
+									"}"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -449,7 +325,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{token}}",
+									"value": "{{adminToken}}",
 									"type": "string"
 								}
 							]
@@ -458,7 +334,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"test_category new\",\r\n  \"parent_id\": \"1\"\r\n}",
+							"raw": "{\r\n  \"name\": \"Updated Test Category\",\r\n  \"parent_id\": \"1\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -475,12 +351,45 @@
 								"categories",
 								"{{category_id}}"
 							]
-						}
+						},
+						"description": "Cập nhật tên và thêm danh mục cha cho danh mục"
 					},
 					"response": []
 				},
 				{
-					"name": "Get the category just updated",
+					"name": "[Public] Get Updated Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Lấy thông tin danh mục đã cập nhật: ' + (response.success ? 'Thành công' : 'Thất bại'));",
+									"",
+									"pm.test(\"Lấy thông tin danh mục thành công\", function () {",
+									"    pm.expect(response.success).to.be.true;",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"// Kiểm tra dữ liệu danh mục đã được cập nhật",
+									"if (response.data) {",
+									"    const category = response.data.data || response.data;",
+									"    console.log('Tên danh mục: ' + category.name);",
+									"    console.log('ID danh mục cha: ' + category.parent_id);",
+									"    ",
+									"    pm.test(\"Dữ liệu danh mục đã được cập nhật\", function() {",
+									"        pm.expect(category.id).to.equal(pm.environment.get(\"category_id\"));",
+									"        pm.expect(category.name).to.equal(\"Updated Test Category\");",
+									"        pm.expect(category.parent_id.toString()).to.equal(\"1\");",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -494,12 +403,13 @@
 								"categories",
 								"{{category_id}}"
 							]
-						}
+						},
+						"description": "Lấy thông tin danh mục sau khi cập nhật"
 					},
 					"response": []
 				},
 				{
-					"name": "Delete category",
+					"name": "[Admin] Delete Category",
 					"event": [
 						{
 							"listen": "test",
@@ -507,46 +417,15 @@
 								"exec": [
 									"const response = pm.response.json();",
 									"",
-									"// Tạo bảng hiển thị thông tin cơ bản của response",
-									"console.log('=== KẾT QUẢ XÓA DANH MỤC ===');",
-									"console.log('Status: ' + pm.response.code + ' ' + pm.response.status);",
-									"console.log('Response time: ' + pm.response.responseTime + 'ms');",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Xóa danh mục: ' + (response.success ? 'Thành công' : 'Thất bại'));",
 									"",
-									"// Lấy ID danh mục đã xóa từ URL",
-									"const url = pm.request.url.toString();",
-									"const deletedCategoryId = pm.environment.get(\"category_id\");",
-									"",
-									"console.log('Đã xóa danh mục với ID: ' + deletedCategoryId);",
-									"",
-									"// Kiểm tra xem xóa danh mục có thành công không",
-									"pm.test(\"✅ Xóa danh mục thành công\", function () {",
-									"    pm.expect(response.success).to.eql(true);",
+									"pm.test(\"Xóa danh mục thành công\", function () {",
+									"    pm.expect(response.success).to.be.true;",
 									"    pm.expect(pm.response.code).to.equal(200);",
-									"});",
-									"",
-									"// Kiểm tra thông báo trả về",
-									"if (response.message) {",
-									"    console.log('Thông báo: ' + response.message);",
-									"    ",
-									"    pm.test(\"✅ Nhận được thông báo xóa thành công\", function() {",
-									"        pm.expect(response.message).to.include('ok');",
-									"    });",
-									"}",
-									"",
-									"// Gợi ý kiểm tra lại sự tồn tại của danh mục",
-									"console.log('Gợi ý: Gửi request GET đến /categories/' + deletedCategoryId + ' để kiểm tra danh mục đã bị xóa chưa');",
-									"",
-									"// Tạo nút chạy tự động request kiểm tra",
-									"console.log('========================');",
-									"",
-									"// Xóa biến environment khi đã hoàn thành",
-									"setTimeout(function() {",
-									"    pm.environment.unset(\"category_id\");",
-									"    console.log('✅ Đã xóa biến category_id khỏi environment');",
-									"}, 1000);"
+									"});"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -556,7 +435,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{token}}",
+									"value": "{{adminToken}}",
 									"type": "string"
 								}
 							]
@@ -573,11 +452,1092 @@
 								"categories",
 								"{{category_id}}"
 							]
+						},
+						"description": "Xóa danh mục theo ID"
+					},
+					"response": []
+				},
+				{
+					"name": "[Public] Verify Deletion (Get Deleted Category)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Kiểm tra danh mục đã xóa: ' + (!response.success ? 'Không tìm thấy (đúng)' : 'Vẫn còn tồn tại (sai)'));",
+									"",
+									"pm.test(\"Danh mục đã bị xóa\", function () {",
+									"    pm.expect(response.success).to.be.false;",
+									"    pm.expect(pm.response.code).to.equal(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
 						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/categories/{{category_id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"{{category_id}}"
+							]
+						},
+						"description": "Kiểm tra xem danh mục đã bị xóa chưa"
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "Kiểm tra luồng CRUD cơ bản cho danh mục"
+		},
+		{
+			"name": "3. Validation Tests",
+			"item": [
+				{
+					"name": "[Admin] Create - Missing Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Test thiếu tên danh mục: ' + (!response.success ? 'Lỗi validation (đúng)' : 'Tạo thành công (sai)'));",
+									"",
+									"pm.test(\"Lỗi validation khi thiếu tên danh mục\", function () {",
+									"    pm.expect(response.success).to.be.false;",
+									"    pm.expect(pm.response.code).to.equal(422);",
+									"    ",
+									"    // Kiểm tra mảng lỗi validation",
+									"    pm.expect(response.errors).to.be.an('array');",
+									"    const nameError = response.errors.find(err => err.field === 'name');",
+									"    pm.expect(nameError).to.exist;",
+									"    console.log('Thông báo lỗi: ' + nameError.message);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"parent_id\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/categories",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories"
+							]
+						},
+						"description": "Kiểm tra validation khi thiếu tên danh mục"
+					},
+					"response": []
+				},
+				{
+					"name": "[Admin] Create - Name Too Short",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Test tên danh mục quá ngắn: ' + (!response.success ? 'Lỗi validation (đúng)' : 'Tạo thành công (sai)'));",
+									"",
+									"pm.test(\"Lỗi validation khi tên danh mục quá ngắn\", function () {",
+									"    pm.expect(response.success).to.be.false;",
+									"    pm.expect(pm.response.code).to.equal(422);",
+									"    ",
+									"    // Kiểm tra mảng lỗi validation",
+									"    pm.expect(response.errors).to.be.an('array');",
+									"    const nameError = response.errors.find(err => err.field === 'name');",
+									"    pm.expect(nameError).to.exist;",
+									"    console.log('Thông báo lỗi: ' + nameError.message);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"A\",\r\n  \"parent_id\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/categories",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories"
+							]
+						},
+						"description": "Kiểm tra validation khi tên danh mục quá ngắn (dưới 2 ký tự)"
+					},
+					"response": []
+				},
+				{
+					"name": "[Admin] Create - Invalid Parent ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Test ID danh mục cha không hợp lệ: ' + (!response.success ? 'Lỗi (đúng)' : 'Tạo thành công (sai)'));",
+									"",
+									"pm.test(\"Lỗi khi ID danh mục cha không tồn tại\", function () {",
+									"    pm.expect(response.success).to.be.false;",
+									"    pm.expect(pm.response.code).to.be.oneOf([404, 422]);",
+									"    ",
+									"    // Kiểm tra thông báo lỗi",
+									"    console.log('Thông báo lỗi: ' + response.message);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Test Category\",\r\n  \"parent_id\": \"99999\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/categories",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories"
+							]
+						},
+						"description": "Kiểm tra khi ID danh mục cha không tồn tại"
+					},
+					"response": []
+				},
+				{
+					"name": "[Admin] Update - Missing Name",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Tạo một danh mục mới để test update",
+									"const createRequest = {",
+									"    url: 'localhost:3000/categories',",
+									"    method: 'POST',",
+									"    header: {",
+									"        'Content-Type': 'application/json',",
+									"        'Authorization': 'Bearer ' + pm.environment.get('adminToken')",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            name: 'Temp Category For Update Test'",
+									"        })",
+									"    }",
+									"};",
+									"",
+									"pm.sendRequest(createRequest, function (err, res) {",
+									"    if (!err && res.code === 201) {",
+									"        const responseJson = res.json();",
+									"        if (responseJson.data && responseJson.data.id) {",
+									"            pm.environment.set('validation_category_id', responseJson.data.id);",
+									"        } else if (responseJson.data && responseJson.data.data && responseJson.data.data.id) {",
+									"            pm.environment.set('validation_category_id', responseJson.data.data.id);",
+									"        }",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Test cập nhật thiếu tên: ' + (!response.success ? 'Lỗi validation (đúng)' : 'Cập nhật thành công (sai)'));",
+									"",
+									"pm.test(\"Lỗi validation khi cập nhật thiếu tên\", function () {",
+									"    pm.expect(response.success).to.be.false;",
+									"    pm.expect(pm.response.code).to.equal(422);",
+									"    ",
+									"    // Kiểm tra mảng lỗi validation",
+									"    pm.expect(response.errors).to.be.an('array');",
+									"    const nameError = response.errors.find(err => err.field === 'name');",
+									"    pm.expect(nameError).to.exist;",
+									"    console.log('Thông báo lỗi: ' + nameError.message);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"parent_id\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/categories/{{validation_category_id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"{{validation_category_id}}"
+							]
+						},
+						"description": "Kiểm tra validation khi cập nhật thiếu tên danh mục"
+					},
+					"response": []
+				},
+				{
+					"name": "[Admin] Update - Invalid Parent ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Test cập nhật với ID cha không hợp lệ: ' + (!response.success ? 'Lỗi (đúng)' : 'Cập nhật thành công (sai)'));",
+									"",
+									"pm.test(\"Lỗi khi ID danh mục cha không tồn tại\", function () {",
+									"    pm.expect(response.success).to.be.false;",
+									"    pm.expect(pm.response.code).to.be.oneOf([404, 422]);",
+									"    ",
+									"    // Kiểm tra thông báo lỗi",
+									"    console.log('Thông báo lỗi: ' + response.message);",
+									"});",
+									"",
+									"// Xóa danh mục tạm thời sau khi test xong",
+									"pm.sendRequest({",
+									"    url: 'localhost:3000/categories/' + pm.environment.get('validation_category_id'),",
+									"    method: 'DELETE',",
+									"    header: {",
+									"        'Authorization': 'Bearer ' + pm.environment.get('adminToken')",
+									"    }",
+									"}, function (err, res) {",
+									"    if (!err && res.code === 200) {",
+									"        console.log('✓ Đã xóa danh mục tạm thời');",
+									"        pm.environment.unset('validation_category_id');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Updated Test Category\",\r\n  \"parent_id\": \"99999\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/categories/{{validation_category_id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"{{validation_category_id}}"
+							]
+						},
+						"description": "Kiểm tra khi cập nhật với ID danh mục cha không tồn tại"
+					},
+					"response": []
+				}
+			],
+			"description": "Kiểm tra các trường hợp validation lỗi"
+		},
+		{
+			"name": "4. Authorization Tests",
+			"item": [
+				{
+					"name": "[No Auth] Create Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Test tạo danh mục không có auth: ' + (!response.success ? 'Bị từ chối (đúng)' : 'Tạo thành công (sai)'));",
+									"",
+									"pm.test(\"Từ chối khi không có quyền\", function () {",
+									"    pm.expect(response.success).to.be.false;",
+									"    pm.expect(pm.response.code).to.equal(401);",
+									"    ",
+									"    // Kiểm tra thông báo lỗi",
+									"    console.log('Thông báo lỗi: ' + response.message);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Unauthorized Category\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/categories",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories"
+							]
+						},
+						"description": "Kiểm tra tạo danh mục khi không có xác thực"
+					},
+					"response": []
+				},
+				{
+					"name": "[User Auth] Create Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Test tạo danh mục với quyền user: ' + (!response.success ? 'Bị từ chối (đúng)' : 'Tạo thành công (sai)'));",
+									"",
+									"pm.test(\"Từ chối khi không có quyền admin\", function () {",
+									"    pm.expect(response.success).to.be.false;",
+									"    pm.expect(pm.response.code).to.equal(403);",
+									"    ",
+									"    // Kiểm tra thông báo lỗi",
+									"    console.log('Thông báo lỗi: ' + response.message);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"User Category\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/categories",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories"
+							]
+						},
+						"description": "Kiểm tra tạo danh mục với tài khoản user thường"
+					},
+					"response": []
+				},
+				{
+					"name": "[Admin] Create Category for Auth Tests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Tạo danh mục cho test auth: ' + (response.success ? 'Thành công' : 'Thất bại'));",
+									"",
+									"pm.test(\"Tạo danh mục thành công\", function () {",
+									"    pm.expect(response.success).to.be.true;",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									"",
+									"// Lưu ID danh mục để dùng cho các test tiếp theo",
+									"if (response.data && response.data.id) {",
+									"    pm.environment.set(\"auth_category_id\", response.data.id);",
+									"    console.log('ID danh mục: ' + response.data.id);",
+									"} else if (response.data && response.data.data && response.data.data.id) {",
+									"    pm.environment.set(\"auth_category_id\", response.data.data.id);",
+									"    console.log('ID danh mục: ' + response.data.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Auth Test Category\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/categories",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories"
+							]
+						},
+						"description": "Tạo danh mục để dùng cho các test authorization"
+					},
+					"response": []
+				},
+				{
+					"name": "[No Auth] Update Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Test cập nhật danh mục không có auth: ' + (!response.success ? 'Bị từ chối (đúng)' : 'Cập nhật thành công (sai)'));",
+									"",
+									"pm.test(\"Từ chối khi không có quyền\", function () {",
+									"    pm.expect(response.success).to.be.false;",
+									"    pm.expect(pm.response.code).to.equal(401);",
+									"    ",
+									"    // Kiểm tra thông báo lỗi",
+									"    console.log('Thông báo lỗi: ' + response.message);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Updated Without Auth\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/categories/{{auth_category_id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"{{auth_category_id}}"
+							]
+						},
+						"description": "Kiểm tra cập nhật danh mục khi không có xác thực"
+					},
+					"response": []
+				},
+				{
+					"name": "[User Auth] Update Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Test cập nhật danh mục với quyền user: ' + (!response.success ? 'Bị từ chối (đúng)' : 'Cập nhật thành công (sai)'));",
+									"",
+									"pm.test(\"Từ chối khi không có quyền admin\", function () {",
+									"    pm.expect(response.success).to.be.false;",
+									"    pm.expect(pm.response.code).to.equal(403);",
+									"    ",
+									"    // Kiểm tra thông báo lỗi",
+									"    console.log('Thông báo lỗi: ' + response.message);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Updated By User\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/categories/{{auth_category_id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"{{auth_category_id}}"
+							]
+						},
+						"description": "Kiểm tra cập nhật danh mục với tài khoản user thường"
+					},
+					"response": []
+				},
+				{
+					"name": "[No Auth] Delete Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Test xóa danh mục không có auth: ' + (!response.success ? 'Bị từ chối (đúng)' : 'Xóa thành công (sai)'));",
+									"",
+									"pm.test(\"Từ chối khi không có quyền\", function () {",
+									"    pm.expect(response.success).to.be.false;",
+									"    pm.expect(pm.response.code).to.equal(401);",
+									"    ",
+									"    // Kiểm tra thông báo lỗi",
+									"    console.log('Thông báo lỗi: ' + response.message);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/categories/{{auth_category_id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"{{auth_category_id}}"
+							]
+						},
+						"description": "Kiểm tra xóa danh mục khi không có xác thực"
+					},
+					"response": []
+				},
+				{
+					"name": "[User Auth] Delete Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Test xóa danh mục với quyền user: ' + (!response.success ? 'Bị từ chối (đúng)' : 'Xóa thành công (sai)'));",
+									"",
+									"pm.test(\"Từ chối khi không có quyền admin\", function () {",
+									"    pm.expect(response.success).to.be.false;",
+									"    pm.expect(pm.response.code).to.equal(403);",
+									"    ",
+									"    // Kiểm tra thông báo lỗi",
+									"    console.log('Thông báo lỗi: ' + response.message);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/categories/{{auth_category_id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"{{auth_category_id}}"
+							]
+						},
+						"description": "Kiểm tra xóa danh mục với tài khoản user thường"
+					},
+					"response": []
+				},
+				{
+					"name": "[Admin] Cleanup Auth Test Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Xóa danh mục test auth: ' + (response.success ? 'Thành công' : 'Thất bại'));",
+									"",
+									"pm.test(\"Xóa danh mục thành công\", function () {",
+									"    pm.expect(response.success).to.be.true;",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"// Xóa biến môi trường",
+									"pm.environment.unset(\"auth_category_id\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/categories/{{auth_category_id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"{{auth_category_id}}"
+							]
+						},
+						"description": "Xóa danh mục sau khi test authorization xong"
+					},
+					"response": []
+				}
+			],
+			"description": "Kiểm tra quyền truy cập và xác thực"
+		},
+		{
+			"name": "5. Resource Not Found Tests",
+			"item": [
+				{
+					"name": "[No Auth] Get Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Test lấy thông tin danh mục không có auth: ' + (!response.success ? 'Bị từ chối (đúng)' : 'Lấy thông tin thành công (sai)'));",
+									"",
+									"pm.test(\"Từ chối khi không có quyền\", function () {",
+									"    pm.expect(response.success).to.be.false;",
+									"    pm.expect(pm.response.code).to.equal(401);",
+									"    ",
+									"    // Kiểm tra thông báo lỗi",
+									"    console.log('Thông báo lỗi: ' + response.message);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/categories/{{category_id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"{{category_id}}"
+							]
+						},
+						"description": "Kiểm tra lấy thông tin danh mục khi không có xác thực"
+					},
+					"response": []
+				}
+			],
+			"description": "Kiểm tra các trường hợp tài nguyên không tồn tại"
+		},
+		{
+			"name": "6. Conflict Tests",
+			"item": [
+				{
+					"name": "[Admin] Create Category (For Conflict Test)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Tạo danh mục cho test conflict: ' + (response.success ? 'Thành công' : 'Thất bại'));",
+									"",
+									"pm.test(\"Tạo danh mục thành công\", function () {",
+									"    pm.expect(response.success).to.be.true;",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									"",
+									"// Lưu ID danh mục để dùng cho các test tiếp theo",
+									"if (response.data && response.data.id) {",
+									"    pm.environment.set(\"conflict_category_id\", response.data.id);",
+									"    pm.environment.set(\"conflict_category_name\", \"Conflict Test Category\");",
+									"    console.log('ID danh mục: ' + response.data.id);",
+									"} else if (response.data && response.data.data && response.data.data.id) {",
+									"    pm.environment.set(\"conflict_category_id\", response.data.data.id);",
+									"    pm.environment.set(\"conflict_category_name\", \"Conflict Test Category\");",
+									"    console.log('ID danh mục: ' + response.data.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Conflict Test Category\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/categories",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories"
+							]
+						},
+						"description": "Tạo danh mục để dùng cho các test trùng lặp"
+					},
+					"response": []
+				},
+				{
+					"name": "[Admin] Create Category - Duplicate Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Test tạo danh mục trùng tên: ' + (!response.success ? 'Lỗi trùng lặp (đúng)' : 'Tạo thành công (sai)'));",
+									"",
+									"pm.test(\"Báo lỗi khi tạo danh mục trùng tên\", function () {",
+									"    pm.expect(response.success).to.be.false;",
+									"    pm.expect(pm.response.code).to.equal(409); // Conflict",
+									"    ",
+									"    // Kiểm tra thông báo lỗi",
+									"    console.log('Thông báo lỗi: ' + response.message);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"{{conflict_category_name}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/categories",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories"
+							]
+						},
+						"description": "Kiểm tra tạo danh mục với tên đã tồn tại"
+					},
+					"response": []
+				},
+				{
+					"name": "Cleanup Conflict Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"// Log thông tin đơn giản",
+									"console.log('✅ Xóa danh mục test conflict: ' + (response.success ? 'Thành công' : 'Thất bại'));",
+									"",
+									"pm.test(\"Xóa danh mục thành công\", function () {",
+									"    pm.expect(response.success).to.be.true;",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"// Xóa biến môi trường",
+									"pm.environment.unset(\"conflict_category_id\");",
+									"pm.environment.unset(\"conflict_category_name\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/categories/{{conflict_category_id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"{{conflict_category_id}}"
+							]
+						},
+						"description": "Xóa danh mục sau khi test conflict xong"
+					},
+					"response": []
+				}
+			],
+			"description": "Kiểm tra các trường hợp xung đột dữ liệu"
 		}
 	]
 }

@@ -85,12 +85,26 @@ module.exports = {
       message: message || 'You do not have permission to perform this action.',
     });
   },
+  /**
+   * TODO: fix lai
+   */
+  invalidated: (res, validationErrors) => {
+    // Đảm bảo validationErrors luôn là một mảng hợp lệ
+    const errorsArray = Array.isArray(validationErrors) ? validationErrors : [];
 
-  invalidated: (res, errors) => {
     return res.status(422).send({
       success: false,
       status: 422,
-      data: errors
-    })
+      message: "Validation Failed", // Thông báo chung cho lỗi 422
+      errors: errorsArray          // Truyền mảng lỗi chi tiết vào đây
+    });
+  },
+
+  conflict: (res, message) => {
+    return res.status(409).send({
+      success: false,
+      status: 409,
+      message: message || 'Conflict',
+    });
   }
 };

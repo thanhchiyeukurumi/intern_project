@@ -1,5 +1,6 @@
 const { body } = require("express-validator");
 const stringUtils = require("utils/stringUtils");
+const {error} = require("utils/responseUtils");
 
 class WithLocale 
 {
@@ -77,6 +78,9 @@ class WithLocale
     }
 
     //Bo sung them
+    /**
+     * @deprecated: phan nay nen lam ben trong service
+     */
     existsIn(sequelizeModel, field) {
         this.withLocale = this.withLocale.custom(async (value) => {
             if (value === null || value === undefined) {
