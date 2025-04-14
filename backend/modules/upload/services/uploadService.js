@@ -5,6 +5,7 @@ const { cloudinary } = require('../../../configs/cloudinary');
 class UploadService {
   /**
    * Xử lý file sau khi upload lên Cloudinary
+   * @desc: Hàm này không upload lại nữa do đã được middleware Multer xử lý trước đó. Nó chỉ lấy thông tin file đã upload và trả về cho controller với cấu trúc chuẩn
    * @param {Object} file - File đã được upload qua multer-cloudinary
    * @param {Object} options - Các tùy chọn bổ sung
    * @returns {Object} - Thông tin file đã upload

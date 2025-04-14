@@ -58,7 +58,7 @@ const cloudinaryUpload = multer({
 // Các middleware riêng cho từng trường hợp sử dụng
 const uploadMiddleware = {
   // Upload đơn - Cloudinary
-  uploadSingleImage: cloudinaryUpload.single('image'),
+  uploadSingleImage: cloudinaryUpload.single('image'), // Chỉ định Multer chỉ tìm và xử lý 1 file duy nhất từ field có tên là 'image' trong muilitpart data
   uploadSingleAvatar: cloudinaryUpload.single('avatar'),
   
   // Upload nhiều - Cloudinary (tối đa 10 ảnh)

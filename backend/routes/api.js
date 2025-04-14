@@ -187,7 +187,12 @@ router.group("/comments", (router) => {
  * DELETE  /uploads/:publicId        - Xóa file đã upload
  */
 router.group("/uploads", (router) => {
-  router.post('/image', auth.authenticateJWT, validate(uploadSingleValidation), uploadMiddleware.uploadSingleImage, uploadController.uploadSingleImage);
+  router.post('/image', 
+    auth.authenticateJWT, 
+    validate(uploadSingleValidation), // Chạy các rule validation KHÔNG liên quan đến file
+    uploadMiddleware.uploadSingleImage, // Multer
+    uploadController.uploadSingleImage // Controller handle
+  );
   router.post('/images', auth.authenticateJWT, validate(uploadMultipleValidation), uploadMiddleware.uploadMultipleImages, uploadController.uploadMultipleImages);
   router.post('/editor', auth.authenticateJWT, validate(uploadEditorPreValidation), uploadMiddleware.uploadEditorImage, uploadController.uploadEditorImage);
   router.delete('/:publicId', auth.authenticateJWT, validate(deleteFileValidation), uploadController.deleteUploadedFile);
