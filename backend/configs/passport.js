@@ -18,7 +18,7 @@ const jwtOptions = {
 
 passport.use(new JwtStrategy(jwtOptions, async (jwtPayload, done) => {
   try {
-    // Tìm người dùng theo ID trong JWT payload
+    // Tìm người dùng theo ID trong JWT payload (nó sẽ lưu đầy đủ thông tin của người dùng vào req.user, trong khi đó tokwn jwt đã dc config trước thì chỉ lưu userid và role)
     const user = await db.User.findByPk(jwtPayload.userId, { 
       include: [{
         model: db.Role,

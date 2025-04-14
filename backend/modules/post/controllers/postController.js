@@ -1,5 +1,5 @@
 const postService = require('../services/postService');
-const { ok, created, notFound, error, customError } = require('../../../utils/responseUtils');
+const { ok, created, notFound, error, customError, conflict } = require('../../../utils/responseUtils');
 
 class PostController {
   // ============================================
@@ -53,9 +53,7 @@ class PostController {
       const post = await postService.getPostByIdOrSlug(identifier, incrementViews);
       return ok(res, post);
     } catch (err) {
-      if (err.message === 'Không tìm thấy bài viết') {
-        return notFound(res, err.message);
-      }
+      if (err.statusCode == 404) { return notFound(res, err.message); }
       return error(res, err.message);
     }
   }
@@ -74,6 +72,7 @@ class PostController {
       const post = await postService.createPost(req.body, userId);
       return created(res, post, 'Tạo bài viết thành công');
     } catch (err) {
+      if (err.statusCode == 409) { return conflict(res, err.message); }
       return error(res, err.message);
     }
   }
@@ -91,9 +90,7 @@ class PostController {
       const post = await postService.updatePost(req.params.id, req.body);
       return ok(res, post, 'Cập nhật bài viết thành công');
     } catch (err) {
-      if (err.message.includes('Không tìm thấy bài viết')) {
-        return notFound(res, err.message);
-      }
+      if (err.statusCode == 404) { return notFound(res, err.message); }
       return error(res, err.message);
     }
   }
@@ -111,9 +108,7 @@ class PostController {
       await postService.deletePost(req.params.id);
       return ok(res, 'Xóa bài viết thành công');
     } catch (err) {
-      if (err.message.includes('Không tìm thấy bài viết')) {
-        return notFound(res, err.message);
-      }
+      if (err.statusCode == 404) { return notFound(res, err.message); }
       return error(res, err.message);
     }
   }
@@ -139,6 +134,7 @@ class PostController {
       const result = await postService.getPostsByCategory(categoryId, options);
       return ok(res, result);
     } catch (err) {
+      if (err.statusCode == 404) { return notFound(res, err.message); }
       return error(res, err.message);
     }
   }
@@ -174,6 +170,7 @@ class PostController {
       const result = await postService.getPostsByUser(userId, options);
       return ok(res, result);
     } catch (err) {
+      if (err.statusCode == 404) { return notFound(res, err.message); }
       return error(res, err.message);
     }
   }
@@ -201,6 +198,7 @@ class PostController {
       const result = await postService.getAllPosts(options);
       return ok(res, result);
     } catch (err) {
+      if (err.statusCode == 404) { return notFound(res, err.message); }
       return error(res, err.message);
     }
   }

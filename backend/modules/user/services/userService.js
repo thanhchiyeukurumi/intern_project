@@ -118,7 +118,7 @@ class UserService {
      * @param {Object} data - Dữ liệu người dùng
      * @returns {Object} { data: user }
      */
-    async updateUser(id, data) {
+    async updateUser(id, data, role) {
         const transaction = await db.sequelize.transaction();
         try {
             const user = await User.findByPk(id, { transaction });
@@ -128,19 +128,57 @@ class UserService {
                 error.statusCode = 404;
                 throw error;
             }
-            // const allowUpdateData = {...data};
-            // delete allowUpdateData.username;
-            // delete allowUpdateData.email;
-            const [usernameExists, emailExists] = await Promise.all([
-                User.findOne({ where: { username: data.username }, transaction }),
-                User.findOne({ where: { email: data.email }, transaction })
-            ]);
-            if (usernameExists || emailExists) {
+            
+            // 2. Kiểm tra quyền thay đổi role
+            if (data.role_id && role != 1) {
                 await transaction.rollback();
-                const error = new Error(usernameExists ? 'Tên tài khoản đã tồn tại' : 'Email đã tồn tại');
-                error.statusCode = 409;
+                const error = new Error('Bạn không có quyền thay đổi vai trò người dùng');
+                error.statusCode = 403;
                 throw error;
             }
+
+            // Kiểm tra xem username hoặc email có bị thay đổi không
+            const usernameChanged = data.username && data.username !== user.username;
+            const emailChanged = data.email && data.email !== user.email;
+            
+            // Chỉ kiểm tra trùng lặp nếu có thay đổi
+            if (usernameChanged || emailChanged) {
+                const whereConditions = [];
+                
+                if (usernameChanged) {
+                    whereConditions.push({
+                        username: data.username,
+                        id: { [Op.ne]: id } // Loại trừ user hiện tại
+                    });
+                }
+                
+                if (emailChanged) {
+                    whereConditions.push({
+                        email: data.email,
+                        id: { [Op.ne]: id } // Loại trừ user hiện tại
+                    });
+                }
+                               
+                // Kiểm tra xem có user nào khác sử dụng username hoặc email này không
+                if (whereConditions.length > 0) {
+                    const existingUser = await User.findOne({
+                        where: { [Op.or]: whereConditions },
+                        transaction
+                    });
+                    
+                    if (existingUser) {
+                        await transaction.rollback();
+                        const error = new Error(
+                            existingUser.username === data.username 
+                            ? 'Tên tài khoản đã tồn tại' 
+                            : 'Email đã tồn tại'
+                        );
+                        error.statusCode = 409;
+                        throw error;
+                    }
+                }
+            }
+            
             await user.update(data, { transaction });
             await transaction.commit();
             return user;
@@ -151,7 +189,6 @@ class UserService {
             throw err;
         }
     }
-    // TODO: Kiểm tra lúc cập nhật có bị trùng email và username khác trong db không
 
     // ============================================
     // XÓA NGƯỜI DÙNG - deleteUser

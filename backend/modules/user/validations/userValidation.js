@@ -48,16 +48,16 @@ const createUserValidation = [
  */
 const updateUserValidation = [
     new BodyWithLocale('username')
-        .notEmpty()
+        .optional()
         .isLength({min: 3, max: 50})
         .matches(/^[a-zA-Z0-9]+$/)
         .get(),
     new BodyWithLocale('fullname')
-        .notEmpty()
+        .optional()
         .isLength({min: 3, max: 100})
         .get(),
     new BodyWithLocale('email')
-        .notEmpty()
+        .optional()
         .isEmail()
         .get(),
 ];

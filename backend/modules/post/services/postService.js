@@ -176,13 +176,10 @@ class PostService {
       const { categories, ...postData } = data;
       postData.user_id = userId;
       
-      const [existingPost, existingSlug] = await Promise.all([
-        Post.findOne({ where: { slug: postData.slug }, transaction }),
-        Post.findOne({ where: { title: postData.title }, transaction })
-      ]);
-      if (existingPost || existingSlug) {
+      const existingPost = await Post.findOne({ where: { title: postData.title }, transaction });
+      if (existingPost) {
         await transaction.rollback();
-        const error = new Error(existingPost ? 'Slug đã tồn tại' : 'Tiêu đề đã tồn tại');
+        const error = new Error('Tiêu đề đã tồn tại');
         error.statusCode = 409;
         throw error;
       }

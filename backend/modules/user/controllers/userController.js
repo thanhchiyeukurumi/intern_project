@@ -1,5 +1,5 @@
 const userService = require("../services/userService");
-const { ok, created, error } = require('../../../utils/responseUtils');
+const { ok, created, error, notFound, conflict, forbidden } = require('../../../utils/responseUtils');
 
 class UserController { 
     // ============================================
@@ -79,11 +79,13 @@ class UserController {
      */
     async updateUser(req, res) {
         try {   
-            const user = await userService.updateUser(req.params.id, req.body);
+            // console.log(req.user); -.>>>> debug
+            const user = await userService.updateUser(req.params.id, req.body, req.user.role_id);
             return ok(res, user, 'Người dùng đã được cập nhật thành công');
         } catch (err) {
             if (err.statusCode == 404) { return notFound(res, err.message); }
             if (err.statusCode == 409) { return conflict(res, err.message); }
+            if (err.statusCode == 403) { return forbidden(res, err.message); }
             return error(res, err.message);
         }
     }      
