@@ -66,7 +66,9 @@ class UserService {
                 attributes: { exclude: ['password'] }
             });
             if (!user) {
-                throw new Error('Người dùng không tồn tại');
+                const error = new Error('Người dùng không tồn tại');
+                error.statusCode = 404;
+                throw error;
             }
             return user; 
         } catch (err) {
@@ -83,18 +85,27 @@ class UserService {
      * @returns {Object} { data: user }
      */
     async createUser(data) {    
+        const transaction = await db.sequelize.transaction();
         try {
             const existingUser = await User.findOne({
                 where: {
                     username: data.username
-                }
+                },
+                transaction
             });
             if (existingUser) {
-                throw new Error('Tên tài khoản đã tồn tại');
+                await transaction.rollback();
+                const error = new Error('Tên tài khoản đã tồn tại');
+                error.statusCode = 409;
+                throw error;
             }
-            const user = await User.create(data);
+            const user = await User.create(data, { transaction });
+            await transaction.commit();
             return user;
         } catch (err) {
+            if (transaction && !transaction.finished) {
+                await transaction.rollback();
+            }
             throw err;
         }
     }
@@ -108,14 +119,35 @@ class UserService {
      * @returns {Object} { data: user }
      */
     async updateUser(id, data) {
+        const transaction = await db.sequelize.transaction();
         try {
-            const user = await User.findByPk(id);
+            const user = await User.findByPk(id, { transaction });
             if (!user) {
-                throw new Error('Người dùng không tồn tại');
+                await transaction.rollback();
+                const error = new Error('Người dùng không tồn tại');
+                error.statusCode = 404;
+                throw error;
             }
-            await user.update(data);
+            // const allowUpdateData = {...data};
+            // delete allowUpdateData.username;
+            // delete allowUpdateData.email;
+            const [usernameExists, emailExists] = await Promise.all([
+                User.findOne({ where: { username: data.username }, transaction }),
+                User.findOne({ where: { email: data.email }, transaction })
+            ]);
+            if (usernameExists || emailExists) {
+                await transaction.rollback();
+                const error = new Error(usernameExists ? 'Tên tài khoản đã tồn tại' : 'Email đã tồn tại');
+                error.statusCode = 409;
+                throw error;
+            }
+            await user.update(data, { transaction });
+            await transaction.commit();
             return user;
         } catch (err) {
+            if (transaction && !transaction.finished) {
+                await transaction.rollback();
+            }   
             throw err;
         }
     }
@@ -132,7 +164,9 @@ class UserService {
         try {
             const user = await User.findByPk(id);
             if (!user) {
-                throw new Error('Người dùng không tồn tại');    
+                const error = new Error('Người dùng không tồn tại');
+                error.statusCode = 404;
+                throw error;
             }
             await user.destroy();
         } catch (err) {

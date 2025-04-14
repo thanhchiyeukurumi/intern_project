@@ -34,8 +34,8 @@ class LanguageService {
           totalPages: Math.ceil(count / limit)
         }
       };
-    } catch (error) {
-      throw error;
+    } catch (err) {
+      throw err;
     }
   }
 
@@ -44,15 +44,17 @@ class LanguageService {
    */
   async getLanguageById(id) {
     try {
-      const language = await Language.findByPk(id);
+      const language = await Language.findByPk(id, {
+        attributes: { exclude: ['createdAt', 'updatedAt'] }
+      }); 
       if (!language) {
-        throw new Error('Không tìm thấy ngôn ngữ');
+        const error = new Error('Không tìm thấy ngôn ngữ');
+        error.statusCode = 404;
+        throw error;
       }
-      return {
-        data: language
-      }
-    } catch (error) {
-      throw error;
+      return language;
+    } catch (err) {
+      throw err;
     }
   }
 
@@ -62,15 +64,29 @@ class LanguageService {
   async createLanguage(data) {
     const transaction = await db.sequelize.transaction();
     try {
-      const language = await Language.create(data, { transaction });
+      const languageName = data.name;
+      const existingLanguage = await Language.findOne({
+        where: { name: languageName },
+        transaction
+      });
+      if (existingLanguage) {
+        const error = new Error('Tên ngôn ngữ đã tồn tại');
+        error.statusCode = 409;
+        throw error;
+      }
+      const language = await Language.create({
+        name: languageName,
+        locale: data.locale,
+        is_active: data.is_active
+      }, { transaction });
       await transaction.commit();
       return language;
-    } catch (error) {
+    } catch (err) {
       await transaction.rollback();
-      if (error.name === 'SequelizeUniqueConstraintError') {
-        throw new Error('Locale đã tồn tại');
-      }
-      throw error;
+      if (transaction && !transaction.finished) {
+        await transaction.rollback();
+    }
+      throw err;
     }
   }
 
@@ -82,18 +98,28 @@ class LanguageService {
     try {
       const language = await Language.findByPk(id, { transaction });
       if (!language) {
-        throw new Error('Không tìm thấy ngôn ngữ');
+        const error = new Error('Không tìm thấy ngôn ngữ');
+        error.statusCode = 404;
+        throw error;
       }
-
+      const existingLanguage = await Language.findOne({
+        where: { name: data.name },
+        transaction
+      });
+      if (existingLanguage) {
+        const error = new Error('Tên ngôn ngữ đã tồn tại');
+        error.statusCode = 409;
+        throw error;
+      }
       await language.update(data, { transaction });
       await transaction.commit();
       return language;
-    } catch (error) {
+    } catch (err) {
       await transaction.rollback();
-      if (error.name === 'SequelizeUniqueConstraintError') {
-        throw new Error('Locale đã tồn tại');
+      if (transaction && !transaction.finished) {
+        await transaction.rollback();
       }
-      throw error;
+      throw err;
     }
   }
 
@@ -105,7 +131,9 @@ class LanguageService {
     try {
       const language = await Language.findByPk(id, { transaction });
       if (!language) {
-        throw new Error('Không tìm thấy ngôn ngữ');
+        const error = new Error('Không tìm thấy ngôn ngữ');
+        error.statusCode = 404;
+        throw error;
       }
 
       // Kiểm tra xem ngôn ngữ có đang được sử dụng không
@@ -115,14 +143,16 @@ class LanguageService {
       });
 
       if (postCount > 0) {
-        throw new Error('Không thể xóa ngôn ngữ vì đang có bài viết sử dụng');
+        const error = new Error('Không thể xóa ngôn ngữ vì đang có bài viết sử dụng');
+        error.statusCode = 409;
+        throw error;
       }
 
       await language.destroy({ transaction });
       await transaction.commit();
-    } catch (error) {
+    } catch (err) {
       await transaction.rollback();
-      throw error;
+      throw err;
     }
   }
 }

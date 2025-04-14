@@ -142,7 +142,9 @@ class PostService {
       });
       
       if (!post) {
-        throw new Error('Không tìm thấy bài viết');
+        const error = new Error('Không tìm thấy bài viết');
+        error.statusCode = 404;
+        throw error;
       }
       
       // Tăng lượt xem nếu được yêu cầu
@@ -174,6 +176,26 @@ class PostService {
       const { categories, ...postData } = data;
       postData.user_id = userId;
       
+      const [existingPost, existingSlug] = await Promise.all([
+        Post.findOne({ where: { slug: postData.slug }, transaction }),
+        Post.findOne({ where: { title: postData.title }, transaction })
+      ]);
+      if (existingPost || existingSlug) {
+        await transaction.rollback();
+        const error = new Error(existingPost ? 'Slug đã tồn tại' : 'Tiêu đề đã tồn tại');
+        error.statusCode = 409;
+        throw error;
+      }
+      const categoryExists  = await Category.findAll({
+        where: { id: categories },
+        transaction
+      });
+      if (categoryExists.length !== categories.length) {
+        await transaction.rollback();
+        const error = new Error('Một hoặc nhiều danh mục không tồn tại');
+        error.statusCode = 404;
+        throw error;
+      }
       const post = await Post.create(postData, { transaction });
       
       // Thêm các danh mục cho bài viết
@@ -191,7 +213,9 @@ class PostService {
       // Lấy thông tin đầy đủ của bài viết
       return this.getPostByIdOrSlug(post.id);
     } catch (error) {
-      await transaction.rollback();
+      if (transaction && !transaction.finished) {
+        await transaction.rollback();
+      }
       throw error;
     }
   }
@@ -216,7 +240,10 @@ class PostService {
       }, { transaction });
       
       if (!post) {
-        throw new Error('Không tìm thấy bài viết');
+        await transaction.rollback();
+        const error = new Error('Không tìm thấy bài viết');
+        error.statusCode = 404;
+        throw error;
       }
       
       // Cập nhật thông tin bài viết

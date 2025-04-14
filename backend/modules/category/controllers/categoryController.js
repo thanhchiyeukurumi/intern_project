@@ -44,9 +44,7 @@ class CategoryController {
             const result = await categoryService.getCategoryById(req.params.id);
             return ok(res, result);
         } catch (err) {
-            if (err.statusCode) {
-                return notFound(res, err.message);
-            }
+            if (err.statusCode == 404) { return notFound(res, err.message); }
             return error(res, err.message);
         }
     }
@@ -64,7 +62,7 @@ class CategoryController {
             const result = await categoryService.createCategory(req.body);
             return created(res, result, 'Danh mục đã được tạo thành công');
         } catch (err) {
-            if (err.statusCode == 404) { return notFound(res, err.message);} 
+            if (err.statusCode == 404) { return notFound(res, err.message); } 
             else if (err.statusCode == 409) { return conflict(res, err.message); }
             return error(res, err.message);
         }

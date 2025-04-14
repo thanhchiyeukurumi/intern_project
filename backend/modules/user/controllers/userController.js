@@ -46,6 +46,7 @@ class UserController {
             const user = await userService.getUserById(req.params.id);
             return ok(res, user);
         } catch (err) {
+            if (err.statusCode == 404) { return notFound(res, err.message); }
             return error(res, err.message);
         }
     }   
@@ -63,6 +64,7 @@ class UserController {
             const user = await userService.createUser(req.body);
             return created(res, user);
         } catch (err) {
+            if (err.statusCode == 409) { return conflict(res, err.message); }   
             return error(res, err.message);
         }
     }   
@@ -80,6 +82,8 @@ class UserController {
             const user = await userService.updateUser(req.params.id, req.body);
             return ok(res, user, 'Người dùng đã được cập nhật thành công');
         } catch (err) {
+            if (err.statusCode == 404) { return notFound(res, err.message); }
+            if (err.statusCode == 409) { return conflict(res, err.message); }
             return error(res, err.message);
         }
     }      
@@ -97,6 +101,7 @@ class UserController {
             await userService.deleteUser(req.params.id);
             return ok(res, 'Người dùng đã được xóa thành công');
         } catch (err) {
+            if (err.statusCode == 404) { return notFound(res, err.message); }
             return error(res, err.message);
         }
     }      

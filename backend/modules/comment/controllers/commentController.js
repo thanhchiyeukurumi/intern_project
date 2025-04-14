@@ -1,5 +1,5 @@
 const commentService = require('../services/commentService');
-const { ok, created, notFound, error, customError } = require('../../../utils/responseUtils');
+const { ok, created, notFound, error, customError, conflict } = require('../../../utils/responseUtils');
 
 class CommentController {
   // ============================================
@@ -27,6 +27,7 @@ class CommentController {
       const result = await commentService.getCommentsByPostId(postId, options);
       return ok(res, result);
     } catch (err) {
+      if (err.statusCode == 404) { return notFound(res, err.message); }
       return error(res, err.message);
     }
   }
@@ -45,9 +46,7 @@ class CommentController {
       const comment = await commentService.getCommentById(commentId);
       return ok(res, comment);
     } catch (err) {
-      if (err.message === 'Không tìm thấy bình luận') {
-        return notFound(res, err.message);
-      }
+      if (err.statusCode == 404) { return notFound(res, err.message); }
       return error(res, err.message);
     }
   }
@@ -65,8 +64,10 @@ class CommentController {
       const userId = req.user.id;
       const postId = req.params.postId;
       const comment = await commentService.createComment(req.body, userId, postId);
-      return created(res, comment, 'Thêm bình luận thành công');
+      return created(res, comment);
     } catch (err) {
+      if (err.statusCode == 404) { return notFound(res, err.message); }
+      else if (err.statusCode == 409) { return conflict(res, err.message); }
       return error(res, err.message);
     }
   }
@@ -85,11 +86,13 @@ class CommentController {
       const userId = req.user.id;
       
       const comment = await commentService.updateComment(commentId, req.body, userId);
-      return ok(res, comment, 'Cập nhật bình luận thành công');
+      return ok(res, comment);
     } catch (err) {
-      if (err.message.includes('Không tìm thấy bình luận')) {
+      if (err.statusCode == 404 || err.message.includes('Không tìm thấy bình luận')) {
         return notFound(res, err.message);
       }
+      else if (err.statusCode == 409) { return conflict(res, err.message); }
+      else if (err.statusCode == 403) { return customError(res, 403, err.message); }
       return error(res, err.message);
     }
   }
@@ -109,14 +112,10 @@ class CommentController {
       const isAdmin = req.user.role?.name === 'admin';
       
       await commentService.deleteComment(commentId, userId, isAdmin);
-      return ok(res, null, 'Xóa bình luận thành công');
+      return ok(res, null);
     } catch (err) {
-      if (err.message === 'Không tìm thấy bình luận') {
-        return notFound(res, err.message);
-      }
-      if (err.message === 'Bạn không có quyền xóa bình luận này') {
-        return customError(res, 403, err.message);
-      }
+      if (err.statusCode == 404) { return notFound(res, err.message); }
+      if (err.statusCode == 403) { return customError(res, 403, err.message); }
       return error(res, err.message);
     }
   }
@@ -139,7 +138,7 @@ class CommentController {
       }
       
       if (!userId) {
-        return error(res, 'Thiếu ID người dùng', 400);
+        return customError(res, 400, 'Thiếu ID người dùng');
       }
       
       const options = {
@@ -152,6 +151,7 @@ class CommentController {
       const result = await commentService.getCommentsByUserId(userId, options);
       return ok(res, result);
     } catch (err) {
+      if (err.statusCode == 404) { return notFound(res, err.message); }
       return error(res, err.message);
     }
   }

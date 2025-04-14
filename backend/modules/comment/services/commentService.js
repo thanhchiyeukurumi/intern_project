@@ -14,6 +14,14 @@ class CommentService {
    */
   async getCommentsByPostId(postId, options = {}) {
     try {
+      // Kiểm tra post có tồn tại không
+      const post = await Post.findByPk(postId);
+      if (!post) {
+        const error = new Error('Không tìm thấy bài viết');
+        error.statusCode = 404;
+        throw error;
+      }
+      
       const {
         page = 1,
         limit = 10,
@@ -74,7 +82,9 @@ class CommentService {
       });
       
       if (!comment) {
-        throw new Error('Không tìm thấy bình luận');
+        const error = new Error('Không tìm thấy bình luận');
+        error.statusCode = 404;
+        throw error;
       }
       
       return comment;
@@ -96,6 +106,15 @@ class CommentService {
     const transaction = await db.sequelize.transaction();
     
     try {
+      // Kiểm tra post có tồn tại không
+      const post = await Post.findByPk(postId, { transaction });
+      if (!post) {
+        await transaction.rollback();
+        const error = new Error('Không tìm thấy bài viết');
+        error.statusCode = 404;
+        throw error;
+      }
+      
       // Tạo bình luận mới
       const commentData = {
         ...data,
@@ -110,7 +129,9 @@ class CommentService {
       // Lấy thông tin đầy đủ của bình luận
       return this.getCommentById(comment.id);
     } catch (error) {
-      await transaction.rollback();
+      if (transaction && !transaction.finished) {
+        await transaction.rollback();
+      }
       throw error;
     }
   }
@@ -129,13 +150,21 @@ class CommentService {
     const transaction = await db.sequelize.transaction();
     
     try {
-      // Kiểm tra bình luận tồn tại và thuộc về người dùng
-      const comment = await Comment.findOne({
-        where: { id: commentId, user_id: userId }
-      }, { transaction });
-      
+      // Kiểm tra bình luận tồn tại không
+      const comment = await Comment.findByPk(commentId, { transaction });
       if (!comment) {
-        throw new Error('Không tìm thấy bình luận hoặc bạn không có quyền chỉnh sửa');
+        await transaction.rollback();
+        const error = new Error('Không tìm thấy bình luận');
+        error.statusCode = 404;
+        throw error;
+      }
+      
+      // Kiểm tra người dùng có quyền cập nhật không
+      if (comment.user_id !== userId) {
+        await transaction.rollback();
+        const error = new Error('Bạn không có quyền chỉnh sửa bình luận này');
+        error.statusCode = 403;
+        throw error;
       }
       
       // Cập nhật bình luận
@@ -146,7 +175,9 @@ class CommentService {
       // Lấy thông tin đầy đủ của bình luận
       return this.getCommentById(commentId);
     } catch (error) {
-      await transaction.rollback();
+      if (transaction && !transaction.finished) {
+        await transaction.rollback();
+      }
       throw error;
     }
   }
@@ -169,12 +200,18 @@ class CommentService {
       const comment = await Comment.findByPk(commentId, { transaction });
       
       if (!comment) {
-        throw new Error('Không tìm thấy bình luận');
+        await transaction.rollback();
+        const error = new Error('Không tìm thấy bình luận');
+        error.statusCode = 404;
+        throw error;
       }
       
       // Kiểm tra quyền xóa (admin hoặc chủ sở hữu)
       if (!isAdmin && comment.user_id !== userId) {
-        throw new Error('Bạn không có quyền xóa bình luận này');
+        await transaction.rollback();
+        const error = new Error('Bạn không có quyền xóa bình luận này');
+        error.statusCode = 403;
+        throw error;
       }
       
       // Xóa bình luận
@@ -183,7 +220,9 @@ class CommentService {
       await transaction.commit();
       return true;
     } catch (error) {
-      await transaction.rollback();
+      if (transaction && !transaction.finished) {
+        await transaction.rollback();
+      }
       throw error;
     }
   }
@@ -199,6 +238,14 @@ class CommentService {
    */
   async getCommentsByUserId(userId, options = {}) {
     try {
+      // Kiểm tra user có tồn tại không
+      const user = await User.findByPk(userId);
+      if (!user) {
+        const error = new Error('Không tìm thấy người dùng');
+        error.statusCode = 404;
+        throw error;
+      }
+      
       const {
         page = 1,
         limit = 10,
