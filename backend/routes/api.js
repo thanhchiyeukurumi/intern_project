@@ -118,6 +118,7 @@ router.group("/user", (router) => {
   router.post("/", auth.authenticateJWT, role.hasRole(["admin"]), validate(createUserValidation), userController.createUser);
   router.put("/:id", auth.authenticateJWT, role.isAdminOrOwner(), userController.updateUser);
   router.delete("/:id", auth.authenticateJWT, role.isAdminOrOwner(), userController.deleteUser);
+  router.get("/:userId/comments", commentController.getCommentsByUserId);
 });
 
 /**
@@ -168,9 +169,8 @@ router.group("/posts", (router) => {
  */ 
 router.group("/comments", (router) => {
   router.get("/:id", commentController.getCommentById);
-  router.put("/:id", auth.authenticateJWT, role.isAdminOrCommentOwner(), validate(updateCommentValidation), commentController.updateComment);
+  router.put("/:id", auth.authenticateJWT, role.isOwner(), validate(updateCommentValidation), commentController.updateComment);
   router.delete("/:id", auth.authenticateJWT, role.isAdminOrCommentOwner(), commentController.deleteComment);
-  router.get("/user/:userId", commentController.getCommentsByUserId);
   router.get("/me", auth.authenticateJWT, commentController.getCommentsByUserId);
 });
 
@@ -189,7 +189,6 @@ router.group("/comments", (router) => {
 router.group("/uploads", (router) => {
   router.post('/image', auth.authenticateJWT, validate(uploadSingleValidation), uploadMiddleware.uploadSingleImage, uploadController.uploadSingleImage);
   router.post('/images', auth.authenticateJWT, validate(uploadMultipleValidation), uploadMiddleware.uploadMultipleImages, uploadController.uploadMultipleImages);
-  router.post('/editor', auth.authenticateJWT, validate(uploadEditorPreValidation), uploadMiddleware.uploadEditorImage, uploadController.uploadEditorImage);
   router.post('/editor', auth.authenticateJWT, validate(uploadEditorPreValidation), uploadMiddleware.uploadEditorImage, uploadController.uploadEditorImage);
   router.delete('/:publicId', auth.authenticateJWT, validate(deleteFileValidation), uploadController.deleteUploadedFile);
 });

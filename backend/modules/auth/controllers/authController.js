@@ -1,7 +1,7 @@
 const { validationResult } = require('express-validator');
 const authService = require('../services/authService');
 const jwtUtils = require('../../../utils/jwtUtils');
-const { ok, error, unauthorized, invalidated, created, customError } = require('../../../utils/responseUtils');
+const { ok, error, unauthorized, invalidated, created, customError, conflict } = require('../../../utils/responseUtils');
 
 class AuthController {
   // ============================================
@@ -37,8 +37,8 @@ class AuthController {
         token 
       }, 'Đăng ký tài khoản thành công.');
     } catch (err) {
-      const statusCode = err.statusCode || 500;
-      return customError(res, statusCode, err.message || 'Đã xảy ra lỗi khi đăng ký tài khoản.');
+      if (err.statusCode == 409) { return conflict(res, err.message); }
+      return error(res, err.message);
     }
   }
 
