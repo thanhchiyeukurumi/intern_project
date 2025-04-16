@@ -3,8 +3,15 @@ const { Language, Post } = db;
 const { Sequelize } = require('sequelize');
 
 class LanguageService {
-  /**
-   * Lấy danh sách ngôn ngữ
+  // ============================================ 
+  // LẤY DANH SÁCH NGÔN NGỮ - getAllLanguages    
+  // ============================================
+  /** 
+   * Get all languages  
+   * @param {Object} options - Options for the query
+   * @param {string} options.orderBy - The field to order by
+   * @param {string} options.order - The order direction
+   * @returns {Promise<Object>} - A promise that resolves to an object containing the languages and pagination information
    */
   async getAllLanguages(options = {}) {
     try {
@@ -39,8 +46,13 @@ class LanguageService {
     }
   }
 
-  /**
-   * Lấy thông tin một ngôn ngữ
+  // ============================================
+  // LẤY THÔNG TIN MỘT NGÔN NGỮ - getLanguageById
+  // ============================================
+  /** 
+   * Get language by ID
+   * @param {number} id - The ID of the language
+   * @returns {Promise<Object>} - A promise that resolves to the language object
    */
   async getLanguageById(id) {
     try {
@@ -58,8 +70,13 @@ class LanguageService {
     }
   }
 
-  /**
-   * Tạo ngôn ngữ mới
+  // ============================================
+  // TẠO NGÔN NGỮ MỚI - createLanguage
+  // ============================================
+  /** 
+   * Create a new language
+   * @param {Object} data - The data for the new language
+   * @returns {Promise<Object>} - A promise that resolves to the new language object
    */
   async createLanguage(data) {
     const transaction = await db.sequelize.transaction();
@@ -90,8 +107,14 @@ class LanguageService {
     }
   }
 
-  /**
-   * Cập nhật ngôn ngữ
+  // ============================================
+  // CẬP NHẬT NGÔN NGỮ - updateLanguage
+  // ============================================
+  /** 
+   * Update a language
+   * @param {number} id - The ID of the language
+   * @param {Object} data - The data for the updated language
+   * @returns {Promise<Object>} - A promise that resolves to the updated language object
    */
   async updateLanguage(id, data) {
     const transaction = await db.sequelize.transaction();
@@ -123,8 +146,13 @@ class LanguageService {
     }
   }
 
-  /**
-   * Xóa ngôn ngữ
+  // ============================================
+  // XÓA NGÔN NGỮ - deleteLanguage
+  // ============================================
+  /** 
+   * Delete a language
+   * @param {number} id - The ID of the language
+   * @returns {Promise<Object>} - A promise that resolves to the deleted language object
    */
   async deleteLanguage(id) {
     const transaction = await db.sequelize.transaction();
