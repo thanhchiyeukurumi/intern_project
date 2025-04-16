@@ -5,7 +5,6 @@
  * @usage   Sử dụng trong middleware để kiểm tra dữ liệu từ request body
  */
 
-const { Category } = require('models');
 const { BodyWithLocale } = require('kernels/rules');
 
 // ============================================
@@ -46,8 +45,7 @@ const updateCategoryValidation = [
     
     new BodyWithLocale('parent_id')
         .optional()
-        .existsIn(Category, 'id')
-        .get()
+        .get(),
 ];
 
 module.exports = {

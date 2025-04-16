@@ -1,6 +1,6 @@
 const db = require('models');
 const { Language, Post } = db;
-const { Sequelize } = require('sequelize');
+const { Op } = require('sequelize');
 
 class LanguageService {
   // ============================================ 
@@ -125,14 +125,17 @@ class LanguageService {
         error.statusCode = 404;
         throw error;
       }
-      const existingLanguage = await Language.findOne({
-        where: { name: data.name },
-        transaction
-      });
-      if (existingLanguage) {
-        const error = new Error('Tên ngôn ngữ đã tồn tại');
-        error.statusCode = 409;
-        throw error;
+      if (language.name){
+        const existingLanguage = await Language.findOne({
+          where: { name: data.name, id: { [Op.ne]: id } },
+          transaction
+        });
+        if (existingLanguage) {
+          await transaction.rollback();
+          const error = new Error('Tên ngôn ngữ đã tồn tại');
+          error.statusCode = 409;
+          throw error;
+        }
       }
       await language.update(data, { transaction });
       await transaction.commit();

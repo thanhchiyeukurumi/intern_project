@@ -165,8 +165,8 @@
 				}
 			],
 			"description": "Mục đăng nhập để lấy token cho các API test"
-		},
-		{
+				},
+				{
 			"name": "2. Happy Path CRUD",
 			"item": [
 				{
@@ -1351,8 +1351,8 @@
 				}
 			],
 			"description": "Kiểm tra các trường hợp tài nguyên không tồn tại"
-		},
-		{
+				},
+				{
 			"name": "6. Conflict Tests",
 			"item": [
 				{

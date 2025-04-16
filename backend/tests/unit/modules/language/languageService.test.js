@@ -1,6 +1,7 @@
 const languageService = require('modules/language/services/languageService');
 const db = require('models');
 const { Language, Post } = db;
+const { Op } = require('sequelize');
 
 // Mock các models để tránh gọi database thật
 jest.mock('models', () => {
@@ -54,7 +55,7 @@ describe('Language Service', () => {
       // Act
       const result = await languageService.getAllLanguages({
         page: 1,
-        limit: 10,
+        limit: 1000, // default limit, not change
         orderBy: 'name',
         order: 'ASC'
       });
@@ -62,7 +63,7 @@ describe('Language Service', () => {
       // Assert
       expect(Language.findAndCountAll).toHaveBeenCalledWith(expect.objectContaining({
         order: [['name', 'ASC']],
-        limit: 10,
+        limit: 1000, // default limit, not change
         offset: 0
       }));
       
@@ -71,7 +72,7 @@ describe('Language Service', () => {
         pagination: {
           total: 2,
           page: 1,
-          limit: 10,
+          limit: 1000, // default limit, not change
           totalPages: 1
         }
       });
@@ -144,20 +145,37 @@ describe('Language Service', () => {
       // Arrange
       const id = 1;
       const updateData = { name: 'Tiếng Việt Mới', locale: 'vi-VN' };
-      const existingLanguage = { id, name: 'Tiếng Việt', locale: 'vi', update: jest.fn() };
+      const existingLanguage = { 
+        id, 
+        name: 'Tiếng Việt', 
+        locale: 'vi', 
+        update: jest.fn().mockImplementation(function(data) {
+          Object.assign(this, data);
+          return this;
+        })
+      };
       
       Language.findByPk.mockResolvedValue(existingLanguage);
-      Language.findOne.mockResolvedValue(null); // Không tìm thấy ngôn ngữ trùng tên
-      existingLanguage.update.mockResolvedValue({ id, ...updateData });
-
+      Language.findOne.mockResolvedValue(null);
+    
       // Act
       const result = await languageService.updateLanguage(id, updateData);
-
+    
       // Assert
       expect(Language.findByPk).toHaveBeenCalledWith(id, expect.any(Object));
-      expect(Language.findOne).toHaveBeenCalled();
+      expect(Language.findOne).toHaveBeenCalledWith({
+        where: { 
+          name: updateData.name,
+          id: { [Op.ne]: id }
+        },
+        transaction: expect.any(Object)
+      });
       expect(existingLanguage.update).toHaveBeenCalledWith(updateData, expect.any(Object));
-      expect(result).toEqual({ id, ...updateData });
+      expect(result).toEqual(expect.objectContaining({
+        id,
+        name: updateData.name,
+        locale: updateData.locale
+      }));
     });
 
     it('nên ném lỗi 404 khi không tìm thấy ID', async () => {
@@ -187,24 +205,38 @@ describe('Language Service', () => {
 
   describe('deleteLanguage', () => {
     it('nên xóa ngôn ngữ thành công', async () => {
-      // Arrange
-      const id = 1;
-      const mockLanguage = { id, name: 'Tiếng Việt', locale: 'vi', destroy: jest.fn() };
-      
-      Language.findByPk.mockResolvedValue(mockLanguage);
-      Post.count.mockResolvedValue(0); // Không có bài viết nào sử dụng ngôn ngữ này
-      mockLanguage.destroy.mockResolvedValue(undefined);
+  // Arrange
+  const id = 1;
+  const mockLanguage = { id, name: 'Tiếng Việt', locale: 'vi', destroy: jest.fn() };
+  const transactionInstance = await db.sequelize.transaction(); // Lấy instance mock transaction
 
-      // Act
-      await languageService.deleteLanguage(id);
+  Language.findByPk.mockResolvedValue(mockLanguage);
+  Post.count.mockResolvedValue(0);
+  mockLanguage.destroy.mockResolvedValue(undefined);
+  transactionInstance.commit.mockResolvedValue(undefined); // Mock commit
+  transactionInstance.rollback.mockResolvedValue(undefined); // Mock rollback
 
-      // Assert
-      expect(Language.findByPk).toHaveBeenCalledWith(id, expect.any(Object));
-      expect(Post.count).toHaveBeenCalledWith(expect.objectContaining({
-        where: { language_id: id }
-      }), expect.any(Object));
-      expect(mockLanguage.destroy).toHaveBeenCalled();
-    });
+  // Act
+  await languageService.deleteLanguage(id);
+
+  // Assert
+  expect(Language.findByPk).toHaveBeenCalledWith(id, { transaction: transactionInstance }); // Kiểm tra findByPk với transaction
+
+  // --- SỬA Ở ĐÂY ---
+  // Kiểm tra Post.count được gọi với MỘT object chứa cả where và transaction
+  expect(Post.count).toHaveBeenCalledWith(
+    expect.objectContaining({ // Mong đợi MỘT object
+      where: { language_id: id }, // Chứa key 'where'
+      transaction: transactionInstance // Và chứa key 'transaction' với đúng instance
+    })
+    // Không có tham số thứ hai nữa
+  );
+  // --- KẾT THÚC SỬA ---
+
+  expect(mockLanguage.destroy).toHaveBeenCalledWith({ transaction: transactionInstance }); // Kiểm tra destroy với transaction
+  expect(transactionInstance.commit).toHaveBeenCalledTimes(1); // Kiểm tra commit
+  expect(transactionInstance.rollback).not.toHaveBeenCalled(); // Đảm bảo không rollback
+});
 
     it('nên ném lỗi 404 khi không tìm thấy ID', async () => {
       // Arrange

@@ -43,10 +43,14 @@ describe('Language Validation', () => {
       
       // Act
       const result = await runValidation(createLanguageValidation, invalidData);
-      
+      const errors = result.array();
       // Assert
       expect(result.isEmpty()).toBe(false);
-      expect(result.array()[0].path).toBe('locale');
+      // expect(result.array()[0].path).toBe('locale'); // Mong đợi có lỗi
+      expect(errors).toHaveLength(1); // Mong đợi có 1 lỗi
+      expect(errors[0].path).toBe('locale'); // Mong đợi lỗi ở trường locale
+      // expect(errors[0].msg).toBe('Locale is required'); // Mong đợi thông báo lỗi
+
     });
     
     it('Lỗi thiếu name', async () => {

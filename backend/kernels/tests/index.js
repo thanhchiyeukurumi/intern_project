@@ -8,7 +8,8 @@ const testDb = config.database.test;
 const sequelize = new Sequelize(testDb.database, testDb.username,testDb.password, {
     host: testDb.host,
     dialect: 'mysql',
-    dialectOptions: testDb.dialectOptions
+    dialectOptions: testDb.dialectOptions,
+    logging: config.database.logging
 })
 
 const umzug = new Umzug({
@@ -25,7 +26,8 @@ const umzug = new Umzug({
     },
     context: sequelize.getQueryInterface(),
     storage: new SequelizeStorage({sequelize}),
-    logger: console,
+    // logger: console,
+    logger: undefined,
     logging: false
 })
 
