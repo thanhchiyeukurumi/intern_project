@@ -1,0 +1,326 @@
+@import "tailwindcss";
+
+@layer base {
+    :root {
+      /* Màu chính (primary color scheme) */
+      --admin-primary: theme('colors.indigo.600');
+      --admin-primary-hover: theme('colors.indigo.700');
+      --admin-primary-bg: theme('colors.indigo.800');
+      --admin-primary-light: theme('colors.indigo.100');
+      --admin-primary-active: theme('colors.indigo.700');
+      
+      /* Màu phụ */
+      --admin-secondary: theme('colors.gray.500');
+      --admin-secondary-hover: theme('colors.gray.600');
+      
+      /* Màu text */
+      --admin-text-primary: theme('colors.gray.900');
+      --admin-text-secondary: theme('colors.gray.700');
+      --admin-text-tertiary: theme('colors.gray.500');
+      
+      /* Màu nền */
+      --admin-bg-body: theme('colors.gray.100');
+      --admin-bg-card: theme('colors.white');
+      --admin-bg-sidebar: var(--admin-primary-bg);
+      
+      /* Màu biểu thị trạng thái */
+      --admin-success: theme('colors.green.500');
+      --admin-success-light: theme('colors.green.100');
+      --admin-warning: theme('colors.yellow.500');
+      --admin-warning-light: theme('colors.yellow.100');
+      --admin-error: theme('colors.red.500');
+      --admin-error-light: theme('colors.red.100');
+      --admin-info: theme('colors.blue.500');
+      --admin-info-light: theme('colors.blue.100');
+      
+      /* Kích thước và spacing */
+      --admin-sidebar-width: 16rem; /* tương đương w-64 */
+      --admin-header-height: 4rem;
+      --admin-content-padding: 1.5rem; /* tương đương p-6 */
+      --admin-card-radius: 0.5rem; /* tương đương rounded-lg */
+      
+      /* Shadow */
+      --admin-shadow-sm: theme('boxShadow.sm');
+      --admin-shadow-md: theme('boxShadow.md');
+      
+      /* Border */
+      --admin-border-color: theme('colors.gray.200');
+    }
+    
+    /* Định nghĩa theme tối */
+    [data-theme="dark"] {
+      --admin-primary: theme('colors.indigo.500');
+      --admin-primary-hover: theme('colors.indigo.400');
+      --admin-primary-bg: theme('colors.gray.800');
+      --admin-primary-light: theme('colors.indigo.900');
+      --admin-primary-active: theme('colors.indigo.600');
+      
+      --admin-bg-body: theme('colors.gray.900');
+      --admin-bg-card: theme('colors.gray.800');
+      
+      --admin-text-primary: theme('colors.gray.100');
+      --admin-text-secondary: theme('colors.gray.300');
+      --admin-text-tertiary: theme('colors.gray.400');
+      
+      --admin-border-color: theme('colors.gray.700');
+      --admin-shadow-sm: none;
+
+      --admin-success-light: theme('colors.green.900');
+      --admin-warning-light: theme('colors.yellow.900');
+      --admin-error-light: theme('colors.red.900');
+      --admin-info-light: theme('colors.blue.900');
+    }
+    
+    /* Định nghĩa theme khác như blue-theme */
+    [data-theme="blue"] {
+      --admin-primary: theme('colors.blue.600');
+      --admin-primary-hover: theme('colors.blue.700');
+      --admin-primary-bg: theme('colors.blue.800');
+      --admin-primary-light: theme('colors.blue.100');
+      --admin-primary-active: theme('colors.blue.700');
+    }
+  }
+
+  @layer components {
+    /* Base admin layout */
+    .admin-layout {
+      background-color: var(--admin-bg-body);
+      @apply font-sans;
+    }
+
+    /* Layout container */
+    .admin-container {
+      @apply flex h-screen overflow-hidden;
+    }
+
+    /* Layout components */
+    .admin-sidebar {
+      background-color: var(--admin-bg-sidebar);
+      color: white;
+      width: var(--admin-sidebar-width);
+      @apply flex-shrink-0 hidden md:block h-full;
+    }
+    
+    .admin-sidebar-brand {
+      @apply text-2xl font-bold flex items-center justify-center mb-8;
+    }
+
+    .admin-main {
+      @apply flex-1 flex flex-col overflow-hidden;
+    }
+    
+    .admin-header {
+      background-color: var(--admin-bg-card);
+      box-shadow: var(--admin-shadow-sm);
+      @apply py-4 px-6 flex items-center justify-between;
+    }
+
+    .admin-header-title {
+      @apply text-xl font-semibold;
+      color: var(--admin-text-primary);
+    }
+    
+    .admin-content {
+      @apply flex-1 overflow-y-auto p-6;
+    }
+
+    .admin-menu-button {
+      @apply focus:outline-none md:hidden mr-3;
+      color: var(--admin-text-secondary);
+    }
+    
+    /* Component styles */
+    .admin-card {
+      background-color: var(--admin-bg-card);
+      border-radius: var(--admin-card-radius);
+      box-shadow: var(--admin-shadow-sm);
+      @apply p-6 mb-6;
+    }
+    
+    .admin-btn {
+      @apply py-2 px-4 rounded-lg font-medium focus:outline-none;
+    }
+    
+    .admin-btn-primary {
+      background-color: var(--admin-primary);
+      color: white;
+      @apply hover:opacity-90;
+    }
+    
+    .admin-btn-secondary {
+      @apply bg-gray-200 text-gray-700 hover:bg-gray-300;
+    }
+
+    .admin-btn-danger {
+      background-color: var(--admin-error);
+      color: white;
+      @apply hover:opacity-90;
+    }
+    
+    /* Navigation */
+    .admin-nav-item {
+      @apply mb-1;
+    }
+
+    .admin-nav-link {
+      @apply flex items-center py-2 px-4 rounded-lg;
+    }
+    
+    .admin-nav-link.active {
+      background-color: var(--admin-primary-active);
+    }
+    
+    .admin-nav-link:hover:not(.active) {
+      background-color: var(--admin-primary-hover);
+    }
+    
+    .admin-nav-icon {
+      @apply mr-3 w-6;
+    }
+
+    /* Dropdown */
+    .admin-dropdown {
+      @apply relative;
+    }
+
+    .admin-profile {
+      @apply flex items-center focus:outline-none;
+    }
+    
+    .admin-profile-img {
+      @apply h-8 w-8 rounded-full object-cover;
+    }
+    
+    .admin-profile-name {
+      @apply ml-2;
+      color: var(--admin-text-secondary);
+    }
+    
+    /* Stats cards */
+    .admin-stats-grid {
+      @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6;
+    }
+    
+    .admin-stats-card {
+      @apply flex items-center;
+    }
+    
+    .admin-stats-icon {
+      @apply rounded-full p-3 text-xl;
+    }
+    
+    .admin-stats-icon.primary {
+      background-color: var(--admin-primary-light);
+      color: var(--admin-primary);
+    }
+    
+    .admin-stats-icon.success {
+      background-color: var(--admin-success-light);
+      color: var(--admin-success);
+    }
+    
+    .admin-stats-icon.warning {
+      background-color: var(--admin-warning-light);
+      color: var(--admin-warning);
+    }
+    
+    .admin-stats-icon.error {
+      background-color: var(--admin-error-light);
+      color: var(--admin-error);
+    }
+
+    .admin-stats-content {
+      @apply ml-4;
+    }
+    
+    .admin-stats-title {
+      @apply text-sm font-medium;
+      color: var(--admin-text-tertiary);
+    }
+    
+    .admin-stats-value {
+      @apply text-2xl font-semibold;
+      color: var(--admin-text-primary);
+    }
+
+    .admin-trend {
+      @apply mt-4 text-sm;
+    }
+
+    .admin-trend-up {
+      @apply font-medium;
+      color: var(--admin-success);
+    }
+
+    .admin-trend-down {
+      @apply font-medium;
+      color: var(--admin-error);
+    }
+
+    .admin-trend-info {
+      color: var(--admin-text-tertiary);
+    }
+    
+    /* Chart container */
+    .admin-chart-container {
+      @apply h-80;
+    }
+
+    .admin-chart-title {
+      @apply text-lg font-semibold mb-4;
+      color: var(--admin-text-primary);
+    }
+    
+    /* Tables */
+    .admin-table {
+      @apply min-w-full divide-y divide-gray-200;
+    }
+    
+    .admin-table-header {
+      background-color: var(--admin-bg-tertiary);
+    }
+    
+    .admin-table-th {
+      @apply px-6 py-3 text-left text-xs font-medium uppercase tracking-wider;
+      color: var(--admin-text-tertiary);
+    }
+    
+    .admin-table-row {
+      background-color: var(--admin-bg-card);
+      border-bottom: 1px solid var(--admin-border-color);
+    }
+    
+    .admin-table-cell {
+      @apply px-6 py-4 whitespace-nowrap;
+      color: var(--admin-text-primary);
+    }
+    
+    /* Form elements */
+    .admin-form-group {
+      @apply mb-6;
+    }
+    
+    .admin-form-label {
+      @apply block text-sm font-medium mb-2;
+      color: var(--admin-text-secondary);
+    }
+    
+    .admin-form-input {
+      @apply w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2;
+      border-color: var(--admin-border-color);
+    }
+
+    .admin-form-input:focus {
+      border-color: var(--admin-primary);
+    }
+
+    .admin-form-select {
+      @apply w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2;
+      border-color: var(--admin-border-color);
+      background-color: var(--admin-bg-card);
+    }
+
+    .admin-form-select:focus {
+      border-color: var(--admin-primary);
+    }
+  }

@@ -1,6 +1,9 @@
 @import "tailwindcss";
 /* @plugin "daisyui"; */
 
+
+
 @import "./admin.css";
 @import "./user.css";
 @import "./blogger.css";
+
