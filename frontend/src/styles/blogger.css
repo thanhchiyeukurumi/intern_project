@@ -11,6 +11,307 @@
     max-height: 500px; /* Đủ cao để hiển thị nội dung */
 }
 
+@layer base {
+    :root {
+      /* Màu chính (primary color scheme) */
+      --blogger-primary: theme('colors.blue.600');
+      --blogger-primary-hover: theme('colors.blue.700');
+      --blogger-primary-bg: theme('colors.blue.50');
+      --blogger-primary-light: theme('colors.blue.100');
+      --blogger-primary-active: theme('colors.blue.700');
+      
+      /* Màu phụ */
+      --blogger-secondary: theme('colors.gray.500');
+      --blogger-secondary-hover: theme('colors.gray.600');
+      
+      /* Màu text */
+      --blogger-text-primary: theme('colors.gray.900');
+      --blogger-text-secondary: theme('colors.gray.700');
+      --blogger-text-tertiary: theme('colors.gray.500');
+      
+      /* Màu nền */
+      --blogger-bg-body: theme('colors.gray.100');
+      --blogger-bg-card: theme('colors.white');
+      --blogger-bg-sidebar: var(--blogger-bg-card);
+      
+      /* Màu biểu thị trạng thái */
+      --blogger-success: theme('colors.green.500');
+      --blogger-success-light: theme('colors.green.100');
+      --blogger-warning: theme('colors.yellow.500');
+      --blogger-warning-light: theme('colors.yellow.100');
+      --blogger-error: theme('colors.red.500');
+      --blogger-error-light: theme('colors.red.100');
+      --blogger-info: theme('colors.blue.500');
+      --blogger-info-light: theme('colors.blue.100');
+      
+      /* Kích thước và spacing */
+      --blogger-sidebar-width: 16rem; /* tương đương w-64 */
+      --blogger-header-height: 4rem;
+      --blogger-content-padding: 1.5rem; /* tương đương p-6 */
+      --blogger-card-radius: 0.5rem; /* tương đương rounded-lg */
+      
+      /* Shadow */
+      --blogger-shadow-sm: theme('boxShadow.sm');
+      --blogger-shadow-md: theme('boxShadow.md');
+      
+      /* Border */
+      --blogger-border-color: theme('colors.gray.200');
+    }
+    
+    /* Định nghĩa theme tối */
+    [data-theme="dark"] {
+      --blogger-primary: theme('colors.blue.500');
+      --blogger-primary-hover: theme('colors.blue.400');
+      --blogger-primary-bg: theme('colors.gray.800');
+      --blogger-primary-light: theme('colors.blue.900');
+      --blogger-primary-active: theme('colors.blue.600');
+      
+      --blogger-bg-body: theme('colors.gray.900');
+      --blogger-bg-card: theme('colors.gray.800');
+      
+      --blogger-text-primary: theme('colors.gray.100');
+      --blogger-text-secondary: theme('colors.gray.300');
+      --blogger-text-tertiary: theme('colors.gray.400');
+      
+      --blogger-border-color: theme('colors.gray.700');
+      --blogger-shadow-sm: none;
+
+      --blogger-success-light: theme('colors.green.900');
+      --blogger-warning-light: theme('colors.yellow.900');
+      --blogger-error-light: theme('colors.red.900');
+      --blogger-info-light: theme('colors.blue.900');
+    }
+}
+
+@layer components {
+    /* Base blogger layout */
+    .blogger-layout {
+      background-color: var(--blogger-bg-body);
+      @apply font-sans;
+    }
+
+    /* Layout container */
+    .blogger-container {
+      @apply flex h-screen overflow-hidden;
+    }
+
+    /* Layout components */
+    .blogger-sidebar {
+      background-color: var(--blogger-bg-sidebar);
+      color: var(--blogger-text-primary);
+      width: var(--blogger-sidebar-width);
+      border-right: 1px solid var(--blogger-border-color);
+      @apply flex-shrink-0 hidden md:block h-full;
+    }
+    
+    .blogger-sidebar-brand {
+      @apply text-2xl font-bold flex items-center justify-center mb-8;
+    }
+
+    .blogger-main {
+      @apply flex-1 flex flex-col overflow-hidden;
+    }
+    
+    .blogger-header {
+      background-color: var(--blogger-bg-card);
+      box-shadow: var(--blogger-shadow-sm);
+      border-bottom: 1px solid var(--blogger-border-color);
+      @apply py-4 px-6 flex items-center justify-between;
+    }
+
+    .blogger-header-title {
+      @apply text-xl font-semibold;
+      color: var(--blogger-text-primary);
+    }
+    
+    .blogger-content {
+      @apply flex-1 overflow-y-auto p-6;
+    }
+
+    .blogger-menu-button {
+      @apply focus:outline-none md:hidden mr-3;
+      color: var(--blogger-text-secondary);
+    }
+    
+    /* Component styles */
+    .blogger-card {
+      background-color: var(--blogger-bg-card);
+      border-radius: var(--blogger-card-radius);
+      box-shadow: var(--blogger-shadow-sm);
+      border: 1px solid var(--blogger-border-color);
+      @apply p-6 mb-6;
+    }
+    
+    .blogger-btn {
+      @apply py-2 px-4 rounded-lg font-medium focus:outline-none;
+    }
+    
+    .blogger-btn-primary {
+      background-color: var(--blogger-primary);
+      color: white;
+      @apply hover:opacity-90;
+    }
+    
+    .blogger-btn-secondary {
+      @apply bg-gray-200 text-gray-700 hover:bg-gray-300;
+    }
+
+    .blogger-btn-danger {
+      background-color: var(--blogger-error);
+      color: white;
+      @apply hover:opacity-90;
+    }
+    
+    /* Navigation */
+    .blogger-nav-item {
+      @apply mb-1;
+    }
+
+    .blogger-nav-link {
+      @apply flex items-center py-2 px-4 rounded-lg;
+    }
+    
+    .blogger-nav-link.active {
+      background-color: var(--blogger-primary-bg);
+      color: var(--blogger-primary);
+    }
+    
+    .blogger-nav-link:hover:not(.active) {
+      @apply bg-gray-50;
+      color: var(--blogger-text-secondary);
+    }
+    
+    .blogger-nav-icon {
+      @apply mr-3 w-5;
+    }
+
+    /* Dropdown */
+    .blogger-dropdown {
+      @apply relative;
+    }
+
+    .blogger-profile {
+      @apply flex items-center focus:outline-none;
+    }
+    
+    .blogger-profile-img {
+      @apply h-8 w-8 rounded-full object-cover;
+    }
+    
+    .blogger-profile-name {
+      @apply ml-2;
+      color: var(--blogger-text-secondary);
+    }
+    
+    /* Stats cards */
+    .blogger-stats-grid {
+      @apply grid grid-cols-1 md:grid-cols-2 gap-6 mb-6;
+    }
+    
+    .blogger-stats-card {
+      background-color: var(--blogger-bg-card);
+      border-radius: var(--blogger-card-radius);
+      box-shadow: var(--blogger-shadow-sm);
+      border: 1px solid var(--blogger-border-color);
+      @apply p-5;
+    }
+    
+    .blogger-stats-icon {
+      @apply text-xl;
+    }
+    
+    .blogger-stats-icon.primary {
+      color: var(--blogger-primary);
+    }
+    
+    .blogger-stats-icon.success {
+      color: var(--blogger-success);
+    }
+    
+    .blogger-stats-icon.warning {
+      color: var(--blogger-warning);
+    }
+    
+    .blogger-stats-icon.error {
+      color: var(--blogger-error);
+    }
+
+    .blogger-stats-title {
+      @apply text-sm font-medium;
+      color: var(--blogger-text-tertiary);
+    }
+    
+    .blogger-stats-value {
+      @apply text-3xl font-bold mt-2;
+      color: var(--blogger-text-primary);
+    }
+    
+    /* Tables */
+    .blogger-table {
+      @apply min-w-full divide-y divide-gray-200;
+    }
+    
+    .blogger-table-header {
+      background-color: var(--blogger-bg-tertiary);
+    }
+    
+    .blogger-table-th {
+      @apply px-6 py-3 text-left text-xs font-medium uppercase tracking-wider;
+      color: var(--blogger-text-tertiary);
+    }
+    
+    .blogger-table-row {
+      background-color: var(--blogger-bg-card);
+      border-bottom: 1px solid var(--blogger-border-color);
+    }
+    
+    .blogger-table-cell {
+      @apply px-6 py-4 whitespace-nowrap;
+      color: var(--blogger-text-primary);
+    }
+    
+    /* Form elements */
+    .blogger-form-group {
+      @apply mb-6;
+    }
+    
+    .blogger-form-label {
+      @apply block text-sm font-medium mb-2;
+      color: var(--blogger-text-secondary);
+    }
+    
+    .blogger-form-input {
+      @apply w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2;
+      border-color: var(--blogger-border-color);
+    }
+
+    .blogger-form-input:focus {
+      border-color: var(--blogger-primary);
+    }
+
+    .blogger-form-select {
+      @apply w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2;
+      border-color: var(--blogger-border-color);
+      background-color: var(--blogger-bg-card);
+    }
+
+    .blogger-form-select:focus {
+      border-color: var(--blogger-primary);
+    }
+
+    /* Thêm các lớp CSS cho empty state */
+    .blogger-empty-state {
+      @apply text-center py-12;
+    }
+
+    .blogger-empty-icon {
+      @apply text-4xl text-gray-400 mb-4;
+    }
+
+    .blogger-empty-text {
+      @apply text-gray-500;
+    }
+}
 
 @layer quilljsshit {
            /* Cải thiện giao diện Quill */
