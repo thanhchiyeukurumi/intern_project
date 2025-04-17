@@ -3,6 +3,9 @@ const db = require('../../../models');
 const jwtUtils = require('../../../utils/jwtUtils');
 
 class AuthService {
+  // ============================================
+  // ĐĂNG KÝ TÀI KHOẢN MỚI - register
+  // ============================================
   /**
    * Đăng ký tài khoản mới
    * @param {Object} userData - Thông tin đăng ký: username, fullname, email, password, ...
@@ -48,8 +51,6 @@ class AuthService {
       fullname: userData.fullname,
       email: userData.email.toLowerCase(),
       password: hashedPassword,
-      description: userData.description || '',
-      avatar: userData.avatar || null,
       role_id: userRole.id
     });
     
@@ -66,12 +67,11 @@ class AuthService {
     delete userObj.password;
     
     // Tạo access token JWT
-    const token = jwtUtils.generate({
-      id: userObj.id,
-      email: userObj.email,
-      role: userObj.role?.name || 'user'
-    });
-    
+    const token = jwtUtils.sign(
+      userObj.id,
+      userObj.role?.name || 'user'
+    );
+
     // Tạo refresh token
     const refreshToken = jwtUtils.signRefreshToken(
       userObj.id,
@@ -85,6 +85,9 @@ class AuthService {
     };
   }
 
+  // ============================================
+  // ĐĂNG NHẬP - login
+  // ============================================
   /**
    * Đăng nhập
    * @param {String} email - Email đăng nhập
@@ -119,12 +122,11 @@ class AuthService {
     const userObj = user.toJSON();
     delete userObj.password;
     
-    // Tạo access token
-    const token = jwtUtils.generate({
-      id: userObj.id,
-      email: userObj.email,
-      role: userObj.role?.name || 'user'
-    });
+   // Tạo access token JWT
+    const token = jwtUtils.sign(
+      userObj.id,
+      userObj.role?.name || 'user'
+    );
     
     // Tạo refresh token
     const refreshToken = jwtUtils.signRefreshToken(
@@ -139,6 +141,7 @@ class AuthService {
     };
   }
 
+  // ============================================
   /**
    * Xử lý người dùng OAuth
    * @param {Object} oauthUser - Thông tin user từ OAuth provider
@@ -149,11 +152,10 @@ class AuthService {
     const userObj = oauthUser;
     
     // Tạo access token
-    const token = jwtUtils.generate({
-      id: userObj.id,
-      email: userObj.email,
-      role: userObj.role?.name || 'user'
-    });
+    const token = jwtUtils.sign(
+      userObj.id,
+      userObj.role?.name || 'user'
+    );
     
     // Tạo refresh token
     const refreshToken = jwtUtils.signRefreshToken(
@@ -168,6 +170,9 @@ class AuthService {
     };
   }
 
+  // ============================================
+  // LẤY THÔNG TIN NGƯỜI DÙNG HIỆN TẠI - getCurrentUser
+  // ============================================
   /**
    * Lấy thông tin người dùng hiện tại
    * @param {Number} userId - ID của người dùng
@@ -175,10 +180,6 @@ class AuthService {
    */
   async getCurrentUser(userId) {
     const user = await db.User.findByPk(userId, {
-      include: [{
-        model: db.Role,
-        as: 'role'
-      }],
       attributes: { exclude: ['password'] }
     });
     

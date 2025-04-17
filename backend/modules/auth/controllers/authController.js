@@ -1,12 +1,16 @@
 const { validationResult } = require('express-validator');
 const authService = require('../services/authService');
 const jwtUtils = require('../../../utils/jwtUtils');
-const { ok, error, unauthorized, invalidated, created, customError } = require('../../../utils/responseUtils');
+const { ok, error, unauthorized, invalidated, created, customError, conflict } = require('../../../utils/responseUtils');
 
 class AuthController {
+  // ============================================
+  // ĐĂNG KÝ TÀI KHOẢN MỚI - register
+  // ============================================
   /**
-   * Đăng ký tài khoản mới
-   * @route POST /api/auth/register
+   * POST /auth/register
+   * @desc    Đăng ký tài khoản mới
+   * @access  Public
    */
   async register(req, res) {
     try {
@@ -33,14 +37,18 @@ class AuthController {
         token 
       }, 'Đăng ký tài khoản thành công.');
     } catch (err) {
-      const statusCode = err.statusCode || 500;
-      return customError(res, statusCode, err.message || 'Đã xảy ra lỗi khi đăng ký tài khoản.');
+      if (err.statusCode == 409) { return conflict(res, err.message); }
+      return error(res, err.message);
     }
   }
 
-  /**
-   * Đăng nhập
-   * @route POST /api/auth/login
+  // ============================================
+  // ĐĂNG NHẬP - login
+  // ============================================
+  /** 
+   * POST /auth/login
+   * @desc    Đăng nhập
+   * @access  Public
    */
   async login(req, res) {
     try {
@@ -74,9 +82,13 @@ class AuthController {
     }
   }
 
+  // ============================================
+  // LÀM MỚI TOKEN - refreshToken
+  // ============================================
   /**
-   * Làm mới token
-   * @route POST /api/auth/refresh-token
+   * POST /auth/refresh-token
+   * @desc    Làm mới token
+   * @access  Public
    */
   async refreshToken(req, res) {
     try {
@@ -129,9 +141,13 @@ class AuthController {
     }
   }
 
+  // ============================================
+  // ĐĂNG XUẤT - logout
+  // ============================================
   /**
-   * Đăng xuất
-   * @route POST /api/auth/logout
+   * POST /auth/logout
+   * @desc    Đăng xuất
+   * @access  Public
    */
   async logout(req, res) {
     try {
@@ -144,9 +160,13 @@ class AuthController {
     }
   }
 
+  // ============================================
+  // XỬ LÝ CALLBACK TỪ GOOGLE - googleCallback
+  // ============================================
   /**
-   * Xử lý callback từ Google OAuth
-   * @route GET /api/auth/google/callback
+   * POST /auth/google/callback
+   * @desc    Xử lý callback từ Google OAuth
+   * @access  Public
    */
   async googleCallback(req, res) {
     try {
@@ -172,37 +192,13 @@ class AuthController {
     }
   }
 
+  // ============================================
+  // LẤY THÔNG TIN NGƯỜI DÙNG HIỆN TẠI - getCurrentUser
+  // ============================================
   /**
-   * Xử lý callback từ GitHub OAuth
-   * @route GET /api/auth/github/callback
-   */
-  async githubCallback(req, res) {
-    try {
-      if (!req.user) {
-        return unauthorized(res, 'Đăng nhập GitHub thất bại.');
-      }
-
-      // Xử lý người dùng OAuth
-      const { user, token, refreshToken } = await authService.handleOAuthUser(req.user);
-
-      // Tạo query params từ tokens để gửi về frontend
-      const queryParams = new URLSearchParams({
-        token,
-        refreshToken
-      }).toString();
-
-      // Chuyển hướng đến frontend với token
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-      return res.redirect(`${frontendUrl}/auth/oauth?${queryParams}`);
-    } catch (err) {
-      const statusCode = err.statusCode || 500;
-      return error(res, err.message || 'Đã xảy ra lỗi khi đăng nhập với GitHub.');
-    }
-  }
-
-  /**
-   * Lấy thông tin người dùng hiện tại
-   * @route GET /api/auth/me
+   * GET /auth/me
+   * @desc    Lấy thông tin người dùng hiện tại
+   * @access  Private
    */
   async getCurrentUser(req, res) {
     try {
@@ -215,9 +211,13 @@ class AuthController {
     }
   }
 
+  // ============================================
+  // XÁC THỰC TOKEN - verifyToken
+  // ============================================
   /**
-   * Xác thực token
-   * @route GET /api/auth/verify-token
+   * GET /auth/verify-token
+   * @desc    Xác thực token
+   * @access  Private
    */
   async verifyToken(req, res) {
     try {

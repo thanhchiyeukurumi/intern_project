@@ -26,6 +26,7 @@ module.exports = {
       socketPath: process.env.DATABASE_TEST_SOCKET || "",
       charset: "utf8mb4"
     },
+    logging: false // Disable logging in test environment
   },
   production: {
     username: process.env.PROD_DB_USERNAME,

@@ -8,43 +8,43 @@
     <script src="../../assets/js/pages/admin.js" defer></script>
     <link rel="stylesheet" href="../../dist/tailwind.css">
 </head>
-<body class="bg-gray-100 font-sans">
-    <div class="flex h-screen overflow-hidden">
+<body class="admin-layout">
+    <div class="admin-container">
         <!-- Sidebar -->
-        <aside class="bg-indigo-800 text-white w-64 flex-shrink-0 hidden md:block">
+        <aside class="admin-sidebar">
             <div class="p-4">
-                <div class="flex items-center justify-center mb-8">
-                    <span class="text-2xl font-bold">AdminPanel</span>
+                <div class="admin-sidebar-brand">
+                    <span>AdminPanel</span>
                 </div>
                 <nav>
                     <ul>
-                        <li class="mb-1">
-                            <a href="dashboard.html" class="flex items-center py-2 px-4 bg-indigo-700 rounded-lg">
-                                <i class="fas fa-tachometer-alt mr-3 w-6"></i>
+                        <li class="admin-nav-item">
+                            <a href="dashboard.html" class="admin-nav-link active">
+                                <i class="fas fa-tachometer-alt admin-nav-icon"></i>
                                 <span>Dashboard</span>
                             </a>
                         </li>
-                        <li class="mb-1">
-                            <a href="post.html" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
-                                <i class="fas fa-file-alt mr-3 w-6"></i>
+                        <li class="admin-nav-item">
+                            <a href="post.html" class="admin-nav-link">
+                                <i class="fas fa-file-alt admin-nav-icon"></i>
                                 <span>Posts</span>
                             </a>
                         </li>
-                        <li class="mb-1">
-                            <a href="users.html" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
-                                <i class="fas fa-users mr-3 w-6"></i>
+                        <li class="admin-nav-item">
+                            <a href="users.html" class="admin-nav-link">
+                                <i class="fas fa-users admin-nav-icon"></i>
                                 <span>Users</span>
                             </a>
                         </li>
-                        <li class="mb-1">
-                            <a href="categories.html" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
-                                <i class="fas fa-folder mr-3 w-6"></i>
+                        <li class="admin-nav-item">
+                            <a href="categories.html" class="admin-nav-link">
+                                <i class="fas fa-folder admin-nav-icon"></i>
                                 <span>Categories</span>
                             </a>
                         </li>
-                        <li class="mb-1">
-                            <a href="settings.html" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
-                                <i class="fas fa-cog mr-3 w-6"></i>
+                        <li class="admin-nav-item">
+                            <a href="settings.html" class="admin-nav-link">
+                                <i class="fas fa-cog admin-nav-icon"></i>
                                 <span>Settings</span>
                             </a>
                         </li>
@@ -52,120 +52,114 @@
                 </nav>
             </div>
             <div class="absolute bottom-0 w-64 p-4">
-                <a href="#" class="flex items-center py-2 px-4 rounded-lg hover:bg-indigo-700">
-                    <i class="fas fa-sign-out-alt mr-3"></i>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-sign-out-alt admin-nav-icon"></i>
                     <span>Logout</span>
                 </a>
             </div>
         </aside>
 
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="admin-main">
             <!-- Top Header -->
-            <header class="bg-white shadow-sm py-4 px-6">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <button class="text-gray-500 focus:outline-none md:hidden mr-3" id="mobile-menu-button">
-                            <i class="fas fa-bars"></i>
-                        </button>
-                        <h1 class="text-xl font-semibold">User Management</h1>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="relative">
-                            <button class="flex items-center focus:outline-none">
-                                <img class="h-8 w-8 rounded-full object-cover" src="https://randomuser.me/api/portraits/men/75.jpg" alt="User Profile">
-                                <span class="ml-2 text-gray-700">John Doe</span>
-                            </button>
-                        </div>
-                    </div>
+            <header class="admin-header">
+                <div class="flex items-center">
+                    <button class="admin-menu-button" id="mobile-menu-button">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="admin-header-title">Dashboard Overview</h1>
+                </div>
+                <div class="admin-dropdown">
+                    <button class="admin-profile">
+                        <img class="admin-profile-img" src="https://randomuser.me/api/portraits/men/75.jpg" alt="User Profile">
+                        <span class="admin-profile-name">John Doe</span>
+                    </button>
                 </div>
             </header>
 
             <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto p-6">
+            <main class="admin-content">
                 <div class="container mx-auto">
                     <!-- Stats Cards -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                        <div class="bg-white rounded-lg shadow-sm p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 rounded-full bg-indigo-100 text-indigo-600">
-                                    <i class="fas fa-file-alt text-xl"></i>
+                    <div class="admin-stats-grid">
+                        <div class="admin-card">
+                            <div class="admin-stats-card">
+                                <div class="admin-stats-icon primary">
+                                    <i class="fas fa-file-alt"></i>
                                 </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-500 font-medium">Total Posts</p>
-                                    <p class="text-2xl font-semibold">124</p>
+                                <div class="admin-stats-content">
+                                    <p class="admin-stats-title">Total Posts</p>
+                                    <p class="admin-stats-value">124</p>
                                 </div>
                             </div>
-                            <div class="mt-4">
-                                <span class="text-green-500 text-sm font-medium">
+                            <div class="admin-trend">
+                                <span class="admin-trend-up">
                                     <i class="fas fa-arrow-up"></i> 12% 
                                 </span>
-                                <span class="text-gray-500 text-sm">since last month</span>
+                                <span class="admin-trend-info">since last month</span>
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-lg shadow-sm p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 rounded-full bg-green-100 text-green-600">
-                                    <i class="fas fa-users text-xl"></i>
+                        <div class="admin-card">
+                            <div class="admin-stats-card">
+                                <div class="admin-stats-icon success">
+                                    <i class="fas fa-users"></i>
                                 </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-500 font-medium">Total Users</p>
-                                    <p class="text-2xl font-semibold">752</p>
+                                <div class="admin-stats-content">
+                                    <p class="admin-stats-title">Total Users</p>
+                                    <p class="admin-stats-value">752</p>
                                 </div>
                             </div>
-                            <div class="mt-4">
-                                <span class="text-green-500 text-sm font-medium">
+                            <div class="admin-trend">
+                                <span class="admin-trend-up">
                                     <i class="fas fa-arrow-up"></i> 5.3% 
                                 </span>
-                                <span class="text-gray-500 text-sm">since last month</span>
+                                <span class="admin-trend-info">since last month</span>
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-lg shadow-sm p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
-                                    <i class="fas fa-comment text-xl"></i>
+                        <div class="admin-card">
+                            <div class="admin-stats-card">
+                                <div class="admin-stats-icon warning">
+                                    <i class="fas fa-comment"></i>
                                 </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-500 font-medium">Comments</p>
-                                    <p class="text-2xl font-semibold">328</p>
+                                <div class="admin-stats-content">
+                                    <p class="admin-stats-title">Comments</p>
+                                    <p class="admin-stats-value">328</p>
                                 </div>
                             </div>
-                            <div class="mt-4">
-                                <span class="text-green-500 text-sm font-medium">
+                            <div class="admin-trend">
+                                <span class="admin-trend-up">
                                     <i class="fas fa-arrow-up"></i> 8.1% 
                                 </span>
-                                <span class="text-gray-500 text-sm">since last month</span>
+                                <span class="admin-trend-info">since last month</span>
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-lg shadow-sm p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 rounded-full bg-red-100 text-red-600">
-                                    <i class="fas fa-eye text-xl"></i>
+                        <div class="admin-card">
+                            <div class="admin-stats-card">
+                                <div class="admin-stats-icon error">
+                                    <i class="fas fa-eye"></i>
                                 </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-500 font-medium">Total Views</p>
-                                    <p class="text-2xl font-semibold">25.4K</p>
+                                <div class="admin-stats-content">
+                                    <p class="admin-stats-title">Total Views</p>
+                                    <p class="admin-stats-value">25.4K</p>
                                 </div>
                             </div>
-                            <div class="mt-4">
-                                <span class="text-green-500 text-sm font-medium">
+                            <div class="admin-trend">
+                                <span class="admin-trend-up">
                                     <i class="fas fa-arrow-up"></i> 15.6% 
                                 </span>
-                                <span class="text-gray-500 text-sm">since last month</span>
+                                <span class="admin-trend-info">since last month</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="">
-                        <!-- Chart -->
-                        <div class=" bg-white rounded-lg shadow-sm p-6 mb-6">
-                            <h2 class="text-lg font-semibold mb-4">Total Post In Last Month</h2>
-                            <div class="h-80 w-45">     
-                                <div class="inset-0 flex items-center justify-center">
-                                    <img src="https://www.chartjs.org/docs/latest/assets/img/usage-1.be7a12cd.png" alt="Traffic Chart" class="max-w-[100px] max-h-[100px] object-contain">
-                                </div>
+                    <!-- Chart -->
+                    <div class="admin-card">
+                        <h2 class="admin-chart-title">Total Post In Last Month</h2>
+                        <div class="admin-chart-container">     
+                            <div class="inset-0 flex items-center justify-center">
+                                <img src="https://www.chartjs.org/docs/latest/assets/img/usage-1.be7a12cd.png" alt="Traffic Chart" class="max-w-xl max-h-64 object-contain">
                             </div>
                         </div>
                     </div>

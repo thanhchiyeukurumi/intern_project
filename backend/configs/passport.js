@@ -2,7 +2,6 @@ const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const GithubStrategy = require('passport-github2').Strategy;
 const db = require('models');
 const jwtConfig = require('configs/jwt');
 const hash = require('kernels/hash');
@@ -19,8 +18,8 @@ const jwtOptions = {
 
 passport.use(new JwtStrategy(jwtOptions, async (jwtPayload, done) => {
   try {
-    // Tìm người dùng theo ID trong JWT payload
-    const user = await db.User.findByPk(jwtPayload.id, {
+    // Tìm người dùng theo ID trong JWT payload (nó sẽ lưu đầy đủ thông tin của người dùng vào req.user, trong khi đó tokwn jwt đã dc config trước thì chỉ lưu userid và role)
+    const user = await db.User.findByPk(jwtPayload.userId, { 
       include: [{
         model: db.Role,
         as: 'role'
@@ -79,67 +78,6 @@ passport.use(new GoogleStrategy({
         avatar: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null,
         password: hashedPassword,
         description: '',
-        role_id: userRole.id
-      });
-
-      // Tải lại user với role
-      user = await db.User.findByPk(user.id, {
-        include: [{
-          model: db.Role,
-          as: 'role'
-        }]
-      });
-    }
-
-    // Loại bỏ password từ user object
-    const userObj = user.toJSON();
-    delete userObj.password;
-
-    return done(null, userObj);
-  } catch (error) {
-    return done(error, false);
-  }
-}));
-
-// GitHub OAuth strategy
-passport.use(new GithubStrategy({
-  clientID: process.env.GITHUB_CLIENT_ID,
-  clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  callbackURL: process.env.GITHUB_CALLBACK_URL,
-  scope: ['user:email'],
-  passReqToCallback: true
-}, async (req, accessToken, refreshToken, profile, done) => {
-  try {
-    // Lấy email chính của GitHub
-    const primaryEmail = profile.emails && profile.emails.length > 0
-      ? profile.emails.find(email => email.primary)?.value || profile.emails[0].value
-      : `${profile.username}@github.com`; // Fallback if no email available
-
-    // Tìm người dùng theo email
-    let user = await db.User.findOne({
-      where: { email: primaryEmail },
-      include: [{
-        model: db.Role,
-        as: 'role'
-      }]
-    });
-
-    // Nếu không tìm thấy, tạo người dùng mới
-    if (!user) {
-      // Lấy vai trò 'user' mặc định
-      const userRole = await db.Role.findOne({ where: { name: 'user' } });
-
-      // Tạo mật khẩu ngẫu nhiên sử dụng kernels/hash
-      const randomPassword = Math.random().toString(36).slice(-16);
-      const hashedPassword = await hash.make(randomPassword);
-
-      user = await db.User.create({
-        username: profile.username || primaryEmail.split('@')[0],
-        fullname: profile.displayName || profile.username,
-        email: primaryEmail,
-        avatar: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null,
-        password: hashedPassword,
-        description: profile.bio || '',
         role_id: userRole.id
       });
 
