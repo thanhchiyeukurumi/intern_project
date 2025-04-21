@@ -6,38 +6,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings - Hoang Thanh</title>
     <link rel="stylesheet" href="../../dist/tailwind.css">
-    <link rel="stylesheet" href="../../styles/blogger.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Đảm bảo theme-toggle.js được load TRƯỚC blogger.js nếu blogger.js cần các hàm từ theme-toggle -->
     <script src="../../assets/js/pages/theme-toggle.js" defer></script>
     <script src="../../assets/js/components/componentsConfig.js" defer></script>
     <script src="../../assets/js/pages/blogger.js" defer></script>
 </head>
 
-<body class="bg-gray-100 text-gray-900 blogger-layout">    
+<body class="bg-[var(--blogger-bg-body)] text-[var(--blogger-text-primary)]" data-theme="light"> <!-- Áp dụng màu chữ chính cho body -->
     <!-- Header -->
-
-    
-    <header class="bg-white shadow-sm">
+    <!-- Xóa dark:bg-red-400 -->
+    <header class="bg-[var(--blogger-bg-header)] shadow-[var(--blogger-shadow)]">
         <div class="max-w mx-3 px-2 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
-                <h1 class="text-2xl font-bold">QuickBlog - Blogger</h1>
-    
+                <!-- Thay đổi màu chữ tiêu đề header -->
+                <h1 class="text-2xl font-bold text-[var(--blogger-text-primary)]">QuickBlog - Blogger</h1>
+
                 <!-- User Profile Dropdown -->
                 <div class="relative">
                     <button id="userDropdownButton" class="flex items-center gap-2" aria-expanded="false">
                         <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256"
                             alt="Profile" class="w-8 h-8 rounded-full">
-                        <span class="font-medium">thanhthikalyce</span>
-                        <i class="fas fa-chevron-down text-gray-500 text-xs transition-transform"></i>
+                        <!-- Thay đổi màu chữ username -->
+                        <span class="font-medium text-[var(--blogger-text-primary)]">thanhthikalyce</span>
+                        <!-- Thay đổi màu icon chevron -->
+                        <i class="fas fa-chevron-down text-[var(--blogger-icon-secondary)] text-xs transition-transform"></i>
                     </button>
-    
+
                     <!-- Dropdown Menu -->
                     <div id="userDropdown"
-                        class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100">
-                        <a href="#" class="px-4 py-2.5 text-sm hover:bg-gray-50 block">Edit Profile</a>
-                        <a href="#" class="px-4 py-2.5 text-sm hover:bg-gray-50 block">Settings</a>
-                        <hr class="my-1">
-                        <a href="#" class="px-4 py-2.5 text-sm hover:bg-gray-50 block text-red-600">Log out</a>
+                        class="hidden absolute right-0 mt-2 w-48 bg-[var(--blogger-bg-dropdown)] rounded-md shadow-[var(--blogger-shadow-lg)] py-1 z-10 border border-[var(--blogger-border-dropdown)]">
+                        <!-- Thay đổi màu chữ và hover -->
+                        <a href="#" class="px-4 py-2.5 text-sm text-[var(--blogger-text-secondary)] hover:bg-[var(--blogger-bg-dropdown-hover)] block">Edit Profile</a>
+                        <a href="#" class="px-4 py-2.5 text-sm text-[var(--blogger-text-secondary)] hover:bg-[var(--blogger-bg-dropdown-hover)] block">Settings</a>
+                        <hr class="my-1 border-[var(--blogger-border-dropdown)]"> <!-- Thêm border color cho hr -->
+                        <!-- Thay đổi màu chữ danger và hover -->
+                        <a href="#" class="px-4 py-2.5 text-sm hover:bg-[var(--blogger-bg-dropdown-hover)] block text-[var(--blogger-text-danger)]">Log out</a>
                     </div>
                 </div>
             </div>
@@ -47,120 +51,131 @@
     <div class="flex">
         <!-- Sidebar -->
         <aside
-        class="right-sidebar bg-white border-r border-gray-200 min-h-screen transition-all duration-300 hidden lg:block">
-        <div class="px-4 py-6">
-            <nav class="space-y-2">
-                <a href="./dashboard.html"
-                    class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <i class="fas fa-chart-line w-5"></i>
-                    <span class="nav-text">Dashboard</span>
-                </a>
-                <a href="./post.html"
-                    class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <i class="fas fa-file-lines w-5"></i>
-                    <span class="nav-text">Posts</span>
-                </a>
-                <a href="./media.html"
-                    class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <i class="fas fa-photo-film w-5"></i>
-                    <span class="nav-text">Media</span>
-                </a>
-                <a href="./comments.html"
-                    class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <i class="fas fa-comments w-5"></i>
-                    <span class="nav-text">Comments</span>
-                </a>
-                <a href="./profile.html"
-                    class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <i class="fas fa-user w-5"></i>
-                    <span class="nav-text">Profile</span>
-                </a>
-                <a href="./settings.html"
-                    class="flex items-center gap-3 px-4 py-2.5 bg-blue-50 text-blue-700 rounded-lg">
-                    <i class="fas fa-gear w-5"></i>
-                    <span class="nav-text">Settings</span>
-                </a>
-            </nav>
-        </div>
-    </aside>
+        class="right-sidebar bg-[var(--blogger-bg-sidebar)] border-r border-[var(--blogger-border-color)] min-h-screen transition-all duration-300 hidden lg:block">
+            <div class="px-4 py-6">
+                <nav class="space-y-2">
+                    <!-- Link thường -->
+                    <a href="./dashboard.html"
+                        class="flex items-center gap-3 px-4 py-2.5 text-[var(--blogger-text-sidebar)] hover:bg-[var(--blogger-bg-sidebar-hover)] rounded-lg">
+                        <i class="fas fa-chart-line w-5"></i>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                    <a href="./post.html"
+                        class="flex items-center gap-3 px-4 py-2.5 text-[var(--blogger-text-sidebar)] hover:bg-[var(--blogger-bg-sidebar-hover)] rounded-lg">
+                        <i class="fas fa-file-lines w-5"></i>
+                        <span class="nav-text">Posts</span>
+                    </a>
+                    <a href="./media.html"
+                        class="flex items-center gap-3 px-4 py-2.5 text-[var(--blogger-text-sidebar)] hover:bg-[var(--blogger-bg-sidebar-hover)] rounded-lg">
+                        <i class="fas fa-photo-film w-5"></i>
+                        <span class="nav-text">Media</span>
+                    </a>
+                    <a href="./comments.html"
+                        class="flex items-center gap-3 px-4 py-2.5 text-[var(--blogger-text-sidebar)] hover:bg-[var(--blogger-bg-sidebar-hover)] rounded-lg">
+                        <i class="fas fa-comments w-5"></i>
+                        <span class="nav-text">Comments</span>
+                    </a>
+                    <a href="./profile.html"
+                        class="flex items-center gap-3 px-4 py-2.5 text-[var(--blogger-text-sidebar)] hover:bg-[var(--blogger-bg-sidebar-hover)] rounded-lg">
+                        <i class="fas fa-user w-5"></i>
+                        <span class="nav-text">Profile</span>
+                    </a>
+                    <!-- Link active -->
+                    <a href="./settings.html"
+                        class="flex items-center gap-3 px-4 py-2.5 bg-[var(--blogger-bg-sidebar-active)] text-[var(--blogger-text-sidebar-active)] rounded-lg">
+                        <i class="fas fa-gear w-5"></i>
+                        <span class="nav-text">Settings</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
 
         <!-- Settings Main Content -->
         <main class="flex-1 p-6">
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                <!-- Account Info Section -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-0">
-                    <h2 class="text-2xl font-bold mb-6">Account Info</h2>
-                    
+            <!-- Đổi màu nền, shadow, border cho card lớn bao ngoài -->
+            <div class="bg-[var(--blogger-bg-card)] rounded-xl shadow-[var(--blogger-shadow)] border border-[var(--blogger-border-color)]">
+                <!-- Account Info Section - Card con bên trong không cần đổi màu vì card cha đã đổi -->
+                <div class="p-8 mb-0"> <!-- Không cần border ở đây nữa vì card cha đã có -->
+                    <h2 class="text-2xl font-bold mb-6 text-[var(--blogger-text-primary)]">Account Info</h2>
+
                     <div class="space-y-6">
                         <!-- Email -->
                         <div>
-                            <label class="block text-sm font-medium mb-2">Email</label>
-                            <div class="border border-gray-200 rounded-lg px-4 py-3 bg-gray-50">
+                            <label class="block text-sm font-medium mb-2 text-[var(--blogger-text-secondary)]">Email</label>
+                            <!-- Đổi màu nền, border, text cho div readonly -->
+                            <div class="border border-[var(--blogger-border-color)] rounded-lg px-4 py-3 bg-[var(--blogger-bg-readonly)] text-[var(--blogger-text-primary)]">
                                 thanhthikalyce@example.com
                             </div>
-                            <p class="text-gray-500 text-sm mt-2">Contact support to change your email</p>
+                            <!-- Đổi màu text phụ -->
+                            <p class="text-[var(--blogger-text-tertiary)] text-sm mt-2">Contact support to change your email</p>
                         </div>
 
                         <!-- Website -->
                         <div>
-                            <label class="block text-sm font-medium mb-2">Website</label>
-                            <div class="border border-gray-200 rounded-lg px-4 py-3 bg-gray-50">
+                            <label class="block text-sm font-medium mb-2 text-[var(--blogger-text-secondary)]">Website</label>
+                            <div class="border border-[var(--blogger-border-color)] rounded-lg px-4 py-3 bg-[var(--blogger-bg-readonly)] text-[var(--blogger-text-primary)]">
                                 https://thanhthikalyce.blog
                             </div>
-                            <p class="text-gray-500 text-sm mt-2">Your public website URL</p>
+                            <p class="text-[var(--blogger-text-tertiary)] text-sm mt-2">Your public website URL</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Preferences Section -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-                    <h2 class="text-2xl font-bold mb-6">Preferences</h2>
-                    
+                <!-- Preferences Section - Card con -->
+                <div class="p-8"> <!-- Không cần border/bg/shadow ở đây -->
+                    <h2 class="text-2xl font-bold mb-6 text-[var(--blogger-text-primary)]">Preferences</h2>
+
                     <div class="space-y-8">
                         <!-- Theme Selection -->
                         <div>
-                            <h3 class="text-lg font-medium mb-4">Theme</h3>
+                            <h3 class="text-lg font-medium mb-4 text-[var(--blogger-text-primary)]">Theme</h3>
                             <div class="grid gap-4 sm:grid-cols-2">
-                                <label class="flex items-center gap-4 p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-gray-300">
-                                    <input type="radio" name="theme" value="light" class="text-blue-600" checked>
+                                <!-- Đổi màu border, hover border cho label -->
+                                <label class="flex items-center gap-4 p-4 border border-[var(--blogger-border-color)] rounded-lg cursor-pointer hover:border-[var(--blogger-border-hover)]">
+                                    <input type="radio" name="theme" value="light" class="text-[var(--blogger-focus-ring-color)]" checked> <!-- Dùng màu focus làm màu radio -->
                                     <div class="flex-1">
-                                        <span class="block font-medium">Light Mode</span>
-                                        <span class="block text-sm text-gray-500 mt-1">Default theme</span>
+                                        <!-- Đổi màu text -->
+                                        <span class="block font-medium text-[var(--blogger-text-primary)]">Light Mode</span>
+                                        <span class="block text-sm text-[var(--blogger-text-tertiary)] mt-1">Default theme</span>
                                     </div>
-                                    <i class="fas fa-sun text-gray-400"></i>
+                                    <!-- Đổi màu icon -->
+                                    <i class="fas fa-sun text-[var(--blogger-icon-color)]"></i>
                                 </label>
-                                
-                                <label class="flex items-center gap-4 p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-gray-300">
-                                    <input type="radio" name="theme" value="dark" class="text-blue-600">
+
+                                <label class="flex items-center gap-4 p-4 border border-[var(--blogger-border-color)] rounded-lg cursor-pointer hover:border-[var(--blogger-border-hover)]">
+                                    <input type="radio" name="theme" value="dark" class="text-[var(--blogger-focus-ring-color)]">
                                     <div class="flex-1">
-                                        <span class="block font-medium">Dark Mode</span>
-                                        <span class="block text-sm text-gray-500 mt-1">Low-light viewing</span>
+                                        <span class="block font-medium text-[var(--blogger-text-primary)]">Dark Mode</span>
+                                        <span class="block text-sm text-[var(--blogger-text-tertiary)] mt-1">Low-light viewing</span>
                                     </div>
-                                    <i class="fas fa-moon text-gray-400"></i>
+                                    <i class="fas fa-moon text-[var(--blogger-icon-color)]"></i>
                                 </label>
                             </div>
                         </div>
 
                         <!-- Language Selection -->
                         <div>
-                            <h3 class="text-lg font-medium mb-4">Language</h3>
+                            <h3 class="text-lg font-medium mb-4 text-[var(--blogger-text-primary)]">Language</h3>
                             <div class="relative">
-                                <select class="w-full border border-gray-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                                <!-- Đổi màu nền, border, text, focus cho select -->
+                                <select class="w-full border border-[var(--blogger-border-color)] bg-[var(--blogger-bg-select)] text-[var(--blogger-text-primary)] rounded-lg px-4 py-3 focus:ring-2 focus:ring-[var(--blogger-focus-ring-color)] focus:border-[var(--blogger-focus-ring-color)] outline-none">
                                     <option>English</option>
                                     <option>Vietnamese</option>
                                     <option>Japanese</option>
                                 </select>
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3">
-                                    <i class="fas fa-chevron-down text-gray-400"></i>
+                                    <!-- Đổi màu icon -->
+                                    <i class="fas fa-chevron-down text-[var(--blogger-icon-color)]"></i>
                                 </div>
                             </div>
-                            <p class="text-gray-500 text-sm mt-2">Choose your preferred language</p>
+                            <p class="text-[var(--blogger-text-tertiary)] text-sm mt-2">Choose your preferred language</p>
                         </div>
                     </div>
 
                     <!-- Save Button -->
                     <div class="pt-6">
-                        <button class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
+                        <!-- Đổi màu nút -->
+                        <button class="px-6 py-2 bg-[var(--blogger-button-primary-bg)] hover:bg-[var(--blogger-button-primary-hover-bg)] text-[var(--blogger-button-text)] rounded-lg font-medium transition">
                             Save Changes
                         </button>
                     </div>
@@ -168,5 +183,48 @@
             </div>
         </main>
     </div>
+
+    <script>
+        // Script hiện có trong blogger.js xử lý dropdown user profile đã đủ
+        // Cần thêm script để xử lý radio button theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeRadios = document.querySelectorAll('input[name="theme"]');
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+
+            // 1. Đặt trạng thái checked ban đầu cho radio button dựa trên theme hiện tại
+            themeRadios.forEach(radio => {
+                if (radio.value === currentTheme) {
+                    radio.checked = true;
+                }
+                // 2. Thêm event listener cho mỗi radio button
+                radio.addEventListener('change', function() {
+                    if (this.checked) {
+                        // Gọi hàm setTheme từ theme-toggle.js (đảm bảo nó đã được load và export ra window)
+                        if (window.setTheme) {
+                            window.setTheme(this.value);
+                        } else {
+                            console.error('setTheme function not found. Make sure theme-toggle.js is loaded correctly.');
+                            // Fallback nếu hàm không tồn tại
+                            localStorage.setItem('blogger-theme', this.value);
+                            document.documentElement.setAttribute('data-theme', this.value);
+                        }
+                    }
+                });
+            });
+
+             // Xử lý logic của nút Save (nếu cần, ví dụ lưu ngôn ngữ)
+             const saveButton = document.querySelector('button.bg-\\[var\\(--blogger-button-primary-bg\\)\\]'); // Tìm nút Save
+             if(saveButton) {
+                saveButton.addEventListener('click', function() {
+                    // Logic lưu cài đặt khác (ví dụ: ngôn ngữ) có thể thêm vào đây
+                    // Ví dụ:
+                    const selectedLang = document.querySelector('select').value;
+                    console.log('Saving settings... Theme:', document.documentElement.getAttribute('data-theme'), 'Language:', selectedLang);
+                    // Hiển thị thông báo thành công (tùy chọn)
+                    alert('Settings saved!');
+                });
+             }
+        });
+    </script>
 </body>
-</html>       
+</html>

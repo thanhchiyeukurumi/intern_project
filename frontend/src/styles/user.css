@@ -14,4 +14,16 @@
   --card-shadow-hover: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+@layer base {
+  /* .hero-section {
+    background-color: var(--text-primary);
+  } */
+}
+@layer components {
+  /* .hero-section {
+    background-color: var(--text-primary);
+  } */
+}
+
+
 
