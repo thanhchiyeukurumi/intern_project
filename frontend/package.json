@@ -8,6 +8,7 @@
     "build": "postcss ./src/styles/index.css -o ./dist/styles.css",
     "watch": "npx postcss styles.css -o dist/styles.css --watch",
     "preview": "vite preview",
+    "build:pcss": "npx postcss ./src/styles/index.css -o ./src/dist/tailwind.css --watch",
     "build:css": "npx @tailwindcss/cli -i ./src/styles/index.css -o ./src/dist/tailwind.css --watch"
   },
   "keywords": [
@@ -21,9 +22,12 @@
     "@tailwindcss/cli": "^4.0.17",
     "@tailwindcss/postcss": "^4.0.17",
     "antd": "^5.24.6",
+    "autoprefixer": "^10.4.21",
     "chart.js": "^4.4.8",
     "daisyui": "^5.0.11",
+    "lit": "^3.3.0",
     "postcss": "^8.5.3",
+    "postcss-cli": "^11.0.1",
     "repomix": "^0.3.1",
     "tailwindcss": "^4.0.17"
   }

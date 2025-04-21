@@ -1,56 +1,61 @@
-const { body } = require('express-validator');
+/**
+ * Auth Validation Rules
+ * -----------------------------
+ * @desc    Tập hợp các rule xác thực dữ liệu đầu vào cho API Đăng ký và Đăng nhập
+ * @usage   Sử dụng trong middleware để kiểm tra dữ liệu từ request body
+ */
 
+const { BodyWithLocale } = require('kernels/rules');
+
+// ============================================
+// ĐĂNG KÝ TÀI KHOẢN MỚI - registerValidation
+// ============================================
 /**
  * Validation rules cho đăng ký tài khoản
  */
 const registerValidation = [
-  body('username')
-    .trim()
-    .notEmpty().withMessage('Tên đăng nhập không được để trống')
-    .isLength({ min: 3, max: 50 }).withMessage('Tên đăng nhập phải từ 3-50 ký tự')
-    .matches(/^[a-zA-Z0-9_]+$/).withMessage('Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới'),
+  new BodyWithLocale('username')
+    .notEmpty()
+    .isLength({ min: 5, max: 50 })
+    .matches(/^[a-zA-Z0-9_]+$/)
+    .get(),
   
-  body('fullname')
-    .trim()
-    .notEmpty().withMessage('Họ tên không được để trống')
-    .isLength({ min: 2, max: 100 }).withMessage('Họ tên phải từ 2-100 ký tự'),
+  new BodyWithLocale('fullname')
+    .notEmpty()
+    .isLength({ min: 2, max: 100 })
+    .get(),
   
-  body('email')
-    .trim()
-    .notEmpty().withMessage('Email không được để trống')
-    .isEmail().withMessage('Email không hợp lệ')
-    .normalizeEmail(),
+  new BodyWithLocale('email')
+    .notEmpty()
+    .isEmail()
+    .get(),
   
-  body('password')
-    .notEmpty().withMessage('Mật khẩu không được để trống')
-    .isLength({ min: 6 }).withMessage('Mật khẩu phải có ít nhất 6 ký tự')
-    .matches(/\d/).withMessage('Mật khẩu phải chứa ít nhất 1 số'),
-  
-  body('confirmPassword')
-    .notEmpty().withMessage('Xác nhận mật khẩu không được để trống')
-    .custom((value, { req }) => {
-      if (value !== req.body.password) {
-        throw new Error('Xác nhận mật khẩu không khớp');
-      }
-      return true;
-    }),
-  
-  body('description')
-    .default('')
+  new BodyWithLocale('password')
+    .notEmpty()
+    .isLength({ min: 6 })
+    .matches(/\d/)
+    .get(),
 ];
 
+// ============================================
+// ĐĂNG NHẬP - loginValidation
+// ============================================
 /**
  * Validation rules cho đăng nhập
+ * - email: bắt buộc, định dạng email
+ * - password: bắt buộc, độ dài từ 6 ký tự trở lên, chứa ít nhất 1 số
  */
 const loginValidation = [
-  body('email')
-    .trim()
-    .notEmpty().withMessage('Email không được để trống')
-    .isEmail().withMessage('Email không hợp lệ')
-    .normalizeEmail(),
+  new BodyWithLocale('email')
+    .notEmpty()
+    .isEmail()
+    .get(),
   
-  body('password')
-    .notEmpty().withMessage('Mật khẩu không được để trống')
+  new BodyWithLocale('password')
+    .notEmpty()
+    .isLength({ min: 6 })
+    .matches(/\d/)
+    .get(),
 ];
 
 module.exports = {

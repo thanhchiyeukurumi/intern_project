@@ -58,135 +58,176 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Khởi tạo các nút dropdown trong bảng
 function initActionDropdowns() {
-    const actionButtons = document.querySelectorAll('.action-btn');
-    
+    // Sử dụng data-action để tìm nút toggle dropdown
+    const actionButtons = document.querySelectorAll('[data-action="toggle-action-menu"]');
+
     if (actionButtons.length > 0) {
         actionButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const targetDropdown = document.getElementById(button.dataset.dropdown);
-                
+            // Xóa listener cũ để tránh gắn nhiều lần nếu hàm chạy lại
+            const clickHandler = (e) => {
+                 e.stopPropagation();
+                // Lấy ID của dropdown mục tiêu từ thuộc tính data-dropdown
+                const targetDropdownId = button.dataset.dropdown;
+                if (!targetDropdownId) {
+                    console.error('Button does not have data-dropdown attribute:', button);
+                    return;
+                }
+                const targetDropdown = document.getElementById(targetDropdownId);
+
                 if (targetDropdown) {
-                    // Đóng tất cả các dropdown khác
+                    // Đóng tất cả các dropdown khác (vẫn dùng class .action-dropdown để tìm chúng)
                     document.querySelectorAll('.action-dropdown').forEach(dropdown => {
-                        if (dropdown.id !== button.dataset.dropdown) {
+                        if (dropdown.id !== targetDropdownId) {
                             dropdown.classList.add('hidden');
                         }
                     });
-                    
+
                     // Hiển thị/ẩn dropdown hiện tại
                     targetDropdown.classList.toggle('hidden');
+                } else {
+                    console.error(`Dropdown with ID "${targetDropdownId}" not found.`);
                 }
-            });
+            };
+             // Gắn listener mới
+            button.removeEventListener('click', clickHandler); // Đảm bảo không bị trùng
+            button.addEventListener('click', clickHandler);
         });
-        
-        // Đóng tất cả các dropdown khi click bên ngoài
-        document.addEventListener('click', () => {
-            document.querySelectorAll('.action-dropdown').forEach(dropdown => {
-                dropdown.classList.add('hidden');
-            });
+
+        // Đóng tất cả các dropdown khi click bên ngoài (logic này vẫn ổn)
+        document.addEventListener('click', (e) => {
+             // Chỉ đóng nếu click không phải vào nút toggle action menu
+            if (!e.target.closest('[data-action="toggle-action-menu"]')) {
+                document.querySelectorAll('.action-dropdown').forEach(dropdown => {
+                    dropdown.classList.add('hidden');
+                });
+            }
         });
     }
 }
 
 // Khởi tạo các nút expand/collapse cho bài viết có bản dịch
 function initExpandButtons() {
-    const expandButtons = document.querySelectorAll('.expand-btn');
-    
+    // Sử dụng data-action để tìm nút expand
+    const expandButtons = document.querySelectorAll('[data-action="expand-toggle"]');
+
     if (expandButtons.length > 0) {
         expandButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                // Lấy ID của bài viết
-                const postId = button.getAttribute('data-post-id');
-                // Tìm phần bài viết phụ tương ứng
-                const translationContainer = document.getElementById(`translation-${postId}`);
-                
+            // Xóa listener cũ
+             const clickHandler = () => {
+                 // Lấy ID của bài viết từ data-post-id
+                const postId = button.dataset.postId; // Sử dụng dataset
+                if (!postId) {
+                    console.error('Expand button does not have data-post-id:', button);
+                    return;
+                }
+                // Tìm phần bài viết phụ tương ứng bằng ID
+                const translationContainer = document.getElementById(`translation-${postId}`); // Giữ nguyên cách tìm này
+
                 if (translationContainer) {
                     // Toggle class expanded để hiện/ẩn bài viết phụ
-                    translationContainer.classList.toggle('expanded');
-                    
+                    // Cập nhật: Nên dùng class CSS riêng thay vì 'expanded' nếu nó xung đột
+                    translationContainer.classList.toggle('is-expanded'); // Ví dụ: đổi thành 'is-expanded'
+
                     // Xoay biểu tượng mũi tên
-                    const icon = button.querySelector('i');
-                    if (translationContainer.classList.contains('expanded')) {
-                        icon.classList.remove('fa-chevron-right');
-                        icon.classList.add('fa-chevron-down');
-                    } else {
-                        icon.classList.remove('fa-chevron-down');
-                        icon.classList.add('fa-chevron-right');
+                    const icon = button.querySelector('i'); // Giữ nguyên cách tìm icon
+                    if (icon) {
+                        if (translationContainer.classList.contains('is-expanded')) {
+                            icon.classList.remove('fa-chevron-right');
+                            icon.classList.add('fa-chevron-down');
+                        } else {
+                            icon.classList.remove('fa-chevron-down');
+                            icon.classList.add('fa-chevron-right');
+                        }
                     }
+                } else {
+                     console.error(`Translation container with ID "translation-${postId}" not found.`);
                 }
-            });
+            };
+            button.removeEventListener('click', clickHandler);
+            button.addEventListener('click', clickHandler);
         });
     }
+     // Thêm CSS cho class mới nếu cần (trong blogger.css)
+    /*
+    .translation-container { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+    .translation-container.is-expanded { max-height: 500px; }
+    */
 }
 
 // Khởi tạo các nút xóa bài viết (từ dropdown menu và từ nút xóa trực tiếp ở các bản dịch)
 function initDeletePostButtons() {
     // Xử lý nút xóa từ dropdown menu (xóa bài viết gốc)
-    const deletePostButtons = document.querySelectorAll('.action-dropdown a[class*="text-red-600"]');
-    
+    // Sử dụng data-action để tìm nút xóa post
+    const deletePostButtons = document.querySelectorAll('.action-dropdown a[data-action="delete-post"]');
+
     if (deletePostButtons.length > 0) {
         deletePostButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Xác nhận trước khi xóa
+             const clickHandler = function(e) { // Dùng function thường để giữ `this`
+                 e.preventDefault();
+                e.stopPropagation(); // Ngăn sự kiện click lan ra ngoài đóng dropdown
+
                 if (confirm('Bạn có chắc chắn muốn xóa bài viết này không? Tất cả bản dịch cũng sẽ bị xóa.')) {
                     // Tìm phần tử bài viết cần xóa (div cha với class post-item)
-                    const postItem = this.closest('.post-item');
-                    
+                    const postItem = this.closest('.post-item'); // Giữ nguyên cách tìm post-item
+
                     if (postItem) {
-                        // Xóa bài viết khỏi DOM
                         postItem.remove();
-                        
-                        // Cập nhật số lượng bài viết
-                        updatePostCount();
+                        updatePostCount(); // Gọi hàm cập nhật số lượng
                     }
                 }
-            });
+            };
+            button.removeEventListener('click', clickHandler);
+            button.addEventListener('click', clickHandler);
         });
     }
-    
+
     // Xử lý nút xóa cho các bản dịch (chỉ xóa bản dịch đó)
-    const deleteTranslationButtons = document.querySelectorAll('.translation-container .fa-trash');
-    
+    // Sử dụng data-action để tìm nút xóa translation
+    const deleteTranslationButtons = document.querySelectorAll('[data-action="delete-translation"]'); // Chọn thẳng nút button
+
     if (deleteTranslationButtons.length > 0) {
-        deleteTranslationButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
+        deleteTranslationButtons.forEach(button => { // Lặp qua các nút button
+            const clickHandler = function(e) { // Dùng function thường
                 e.preventDefault();
-                
-                // Xác nhận trước khi xóa
+                e.stopPropagation();
+
                 if (confirm('Bạn có chắc chắn muốn xóa bản dịch này không?')) {
-                    // Tìm phần tử bản dịch cần xóa (div cha với class bg-white)
-                    const translationItem = this.closest('.bg-white.rounded-lg');
-                    
+                    // Tìm phần tử bản dịch cần xóa bằng class marker đã thêm
+                    const translationItem = this.closest('.translation-item-card');
+
                     if (translationItem) {
-                        // Xóa bản dịch khỏi DOM
                         translationItem.remove();
+                        // Nếu cần, có thể cập nhật số lượng bản dịch hiển thị
+                    } else {
+                         console.error('Could not find parent .translation-item-card for delete button:', this);
                     }
                 }
-            });
+            };
+             button.removeEventListener('click', clickHandler);
+            button.addEventListener('click', clickHandler);
         });
     }
 }
 
 // Cập nhật số lượng bài viết được hiển thị
 function updatePostCount() {
-    const postCountElement = document.querySelector('.px-6.py-4.border-b h3');
-    const postsContainer = document.querySelector('.divide-y.divide-gray-200');
-    
-    if (postCountElement && postsContainer) {
-        // Đếm số lượng bài viết còn lại
+    // Sử dụng ID đã thêm vào HTML
+    const postCountElement = document.getElementById('post-count-header');
+    const postsContainer = document.getElementById('posts-list-container');
+    const pagingText = document.getElementById('post-paging-info'); // Sử dụng ID
+
+    // Kiểm tra tất cả các phần tử cần thiết
+    if (postCountElement && postsContainer && pagingText) {
+        // Đếm số lượng bài viết còn lại (vẫn dùng class .post-item để đếm)
         const remainingPosts = postsContainer.querySelectorAll('.post-item').length;
-        
-        // Cập nhật text hiển thị
+
+        // Cập nhật text hiển thị số lượng
         postCountElement.textContent = `All Posts (${remainingPosts})`;
-        
+
         // Cập nhật phần paging bên dưới
-        const pagingText = document.querySelector('.px-6.py-4.border-t .text-sm.text-gray-500');
-        if (pagingText) {
-            pagingText.textContent = `Showing 1-${remainingPosts} of ${remainingPosts} posts`;
-        }
+        pagingText.textContent = `Showing 1-${remainingPosts} of ${remainingPosts} posts`;
+    } else {
+         console.warn("Could not update post count. Missing elements:", { postCountElement, postsContainer, pagingText });
     }
 }
 

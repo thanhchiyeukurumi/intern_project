@@ -1,5 +1,6 @@
 const { body } = require("express-validator");
 const stringUtils = require("utils/stringUtils");
+const {error} = require("utils/responseUtils");
 
 class WithLocale 
 {
@@ -76,6 +77,44 @@ class WithLocale
         return this.withLocale
     }
 
+    //Bo sung them
+    /**
+     * @deprecated: phan nay nen lam ben trong service
+     */
+    existsIn(sequelizeModel, field) {
+        this.withLocale = this.withLocale.custom(async (value) => {
+            if (value === null || value === undefined) {
+                return true; // Cho phép null/undefined
+            }
+            
+            const recordExist = await sequelizeModel.findOne({
+                where: {
+                    [field]: value
+                }
+            });
+
+            if (!recordExist) {
+                throw new Error(stringUtils.capitalize(this.field) + " does not exist");
+            }
+            return true;
+        }).bail();
+        return this;
+    }
+
+    optional() {
+        this.withLocale = this.withLocale.optional();
+        return this;
+    }
+
+    matches(pattern) {
+        this.withLocale = this.withLocale.matches(pattern).withMessage(stringUtils.capitalize(this.field)+" is not in correct format").bail()
+        return this;
+    }
+    
+    isBoolean() {
+        this.withLocale = this.withLocale.isBoolean().withMessage(stringUtils.capitalize(this.field)+" must be boolean").bail()
+        return this;
+    }
 }
 
 module.exports = WithLocale

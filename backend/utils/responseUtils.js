@@ -1,13 +1,42 @@
-module.exports = {
-  ok: (res, data) => {
-    return res.status(200).send({
-      success: true,
-      data,
-      status: 200,
-      message: "ok"
-    });
-  },
+/**
+ * @desc: quy uoc cac service method tra ve 1 doi tuong nhu la getById, create, update, se tra ve doi tuong du lieu tho
+ * cac service method tra ve danh sach nhu la getAll... se tra ve 1 object co dang {data: [itemsArray], pagination: {total, page, limit}}
+ */
 
+module.exports = {
+  // Có sự thay đổi nhỏ so với bản gốc
+  /**
+   * Xử lý response thành công cho GET (một hoặc nhiều item), PUT, PATCH, DELETE (có thể trả data).
+   * @param {Object} res - Đối tượng response của Express.
+   * @param {Object | {data: Array, pagination: Object}} serviceResult - Kết quả từ service.
+   *        - Đối với item đơn/update/delete: object dữ liệu thô.
+   *        - Đối với danh sách: object dạng { data: Array, pagination: Object }.
+   * @param {string} [message='ok'] - Thông điệp thành công (tùy chọn).
+   */
+  ok: (res, data) => {
+    const response = {
+      success: true,
+    };
+
+    // Kiểm tra xem kết quả có phải là cấu trúc của danh sách phân trang không
+    if (data && typeof data === 'object' && Array.isArray(data.data) && data.pagination) {
+      response.data = data.data;
+      response.pagination = data.pagination;
+    } else {
+      // Nếu không, coi đó là dữ liệu của một đối tượng đơn lẻ
+      response.data = data;
+      // Không có pagination cho đối tượng đơn lẻ
+    }
+    response.status = 200;
+    response.message = 'ok';
+    return res.status(200).send(response);
+  },
+  /**
+   * 
+   * @param {*} res 
+   * @param {*} return data  (tham so tra ve tu service)
+   * @returns 
+   */
   created: (res, data) => {
     return res.status(201).send({
       success: true,
@@ -56,12 +85,26 @@ module.exports = {
       message: message || 'You do not have permission to perform this action.',
     });
   },
+  /**
+   * TODO: fix lai
+   */
+  invalidated: (res, validationErrors) => {
+    // Đảm bảo validationErrors luôn là một mảng hợp lệ
+    const errorsArray = Array.isArray(validationErrors) ? validationErrors : [];
 
-  invalidated: (res, errors) => {
     return res.status(422).send({
       success: false,
       status: 422,
-      data: errors
-    })
+      message: "Validation Failed", // Thông báo chung cho lỗi 422
+      errors: errorsArray          // Truyền mảng lỗi chi tiết vào đây
+    });
+  },
+
+  conflict: (res, message) => {
+    return res.status(409).send({
+      success: false,
+      status: 409,
+      message: message || 'Conflict',
+    });
   }
 };

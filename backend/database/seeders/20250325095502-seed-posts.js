@@ -15,7 +15,7 @@ module.exports = {
           {
             id: 1,
             user_id: 3, // blogger
-            abstract: 'Tổng quan về React Native',
+            // abstract: 'Tổng quan về React Native',
             title: 'Hướng dẫn React Native cho người mới bắt đầu',
             content: 'React Native là một framework phát triển ứng dụng di động đa nền tảng được Facebook phát triển. ' + faker.lorem.paragraphs(5),
             description: 'Bài viết hướng dẫn chi tiết về React Native dành cho những người mới bắt đầu',
@@ -29,7 +29,7 @@ module.exports = {
           {
             id: 2,
             user_id: 3, // blogger
-            abstract: 'React Native Guide',
+            // abstract: 'React Native Guide',
             title: 'React Native Guide for Beginners',
             content: 'React Native is a cross-platform mobile app development framework developed by Facebook. ' + faker.lorem.paragraphs(5),
             description: 'A detailed guide on React Native for beginners',
@@ -53,7 +53,7 @@ module.exports = {
             return {
               id: index + 3,
               user_id: userId,
-              abstract: faker.lorem.sentence(),
+              // abstract: faker.lorem.sentence(),
               title: title,
               content: faker.lorem.paragraphs(5),
               description: faker.lorem.paragraph(),
@@ -71,7 +71,7 @@ module.exports = {
           {
             id: 1,
             user_id: 3, // testblogger
-            abstract: 'Test Post',
+            // abstract: 'Test Post',
             title: 'Test Post Title',
             content: 'This is a test post content...',
             description: 'Test post description',
@@ -85,7 +85,7 @@ module.exports = {
           {
             id: 2,
             user_id: 2, // testuser -> chỉ để test
-            abstract: 'Another Test Post',
+            // abstract: 'Another Test Post',
             title: 'Another Test Post Title',
             content: 'This is another test post content...',
             description: 'Another test post description',

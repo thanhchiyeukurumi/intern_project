@@ -1,464 +1,96 @@
+/* src/styles/blogger.css */
 @import "tailwindcss";
-/* @import url('https://fonts.googleapis.com/css2?family=Merriweather :wght@400;700&display=swap'); */
-.translation-container {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-    /* @apply bg-red-500; */
+@import "./admin.css"; /* Đảm bảo các import khác vẫn giữ nguyên */
+@import "./user.css";
+
+/* ... */
+
+@layer base {
+    /* Biến cho Theme Sáng (Mặc định) */
+    :root {
+        /* Nền */
+        --blogger-bg-body: theme('colors.gray.100');
+        --blogger-bg-card: theme('colors.white');
+        --blogger-bg-header: theme('colors.white');
+        --blogger-bg-sidebar: theme('colors.white');
+        --blogger-bg-dropdown: theme('colors.white');
+        --blogger-bg-dropdown-hover: theme('colors.gray.50');
+        --blogger-bg-sidebar-hover: theme('colors.gray.50');
+        --blogger-bg-sidebar-active: theme('colors.blue.50');
+        --blogger-bg-readonly: theme('colors.gray.50');
+        --blogger-bg-select: theme('colors.white');
+
+        /* Chữ */
+        --blogger-text-primary: theme('colors.gray.900');
+        --blogger-text-secondary: theme('colors.gray.600');
+        --blogger-text-tertiary: theme('colors.gray.500');
+        --blogger-text-link: theme('colors.blue.600');
+        --blogger-text-danger: theme('colors.red.600');
+        --blogger-text-sidebar: theme('colors.gray.600');
+        --blogger-text-sidebar-active: theme('colors.blue.700');
+        --blogger-button-text: theme('colors.white');
+
+        /* Viền */
+        --blogger-border-color: theme('colors.gray.200');
+        --blogger-border-dropdown: theme('colors.gray.100');
+        --blogger-border-hover: theme('colors.gray.300');
+        --blogger-focus-ring-color: theme('colors.blue.500'); /* Màu viền/ring khi focus */
+
+        /* Đổ bóng */
+        --blogger-shadow: theme('boxShadow.sm');
+        --blogger-shadow-lg: theme('boxShadow.lg');
+
+        /* Nút */
+        --blogger-button-primary-bg: theme('colors.blue.600');
+        --blogger-button-primary-hover-bg: theme('colors.blue.700');
+
+        /* Icon */
+        --blogger-icon-color: theme('colors.gray.400');
+        --blogger-icon-secondary: theme('colors.gray.500'); /* Ví dụ thêm */
+    }
+
+    /* Biến cho Theme Tối */
+    html[data-theme="dark"] {
+        /* Nền */
+        --blogger-bg-body: theme('colors.gray.900');
+        --blogger-bg-card: theme('colors.gray.800');
+        --blogger-bg-header: theme('colors.gray.800');
+        --blogger-bg-sidebar: theme('colors.gray.800');
+        --blogger-bg-dropdown: theme('colors.gray.700');
+        --blogger-bg-dropdown-hover: theme('colors.gray.600');
+        --blogger-bg-sidebar-hover: theme('colors.gray.700');
+        --blogger-bg-sidebar-active: theme('colors.blue.900'); /* Tối hơn */
+        --blogger-bg-readonly: theme('colors.gray.700');
+        --blogger-bg-select: theme('colors.gray.700');
+
+        /* Chữ */
+        --blogger-text-primary: theme('colors.gray.100');
+        --blogger-text-secondary: theme('colors.gray.300');
+        --blogger-text-tertiary: theme('colors.gray.400');
+        --blogger-text-link: theme('colors.blue.400');
+        --blogger-text-danger: theme('colors.red.500');
+        --blogger-text-sidebar: theme('colors.gray.300');
+        --blogger-text-sidebar-active: theme('colors.blue.300'); /* Sáng hơn */
+        --blogger-button-text: theme('colors.white');
+
+        /* Viền */
+        --blogger-border-color: theme('colors.gray.700');
+        --blogger-border-dropdown: theme('colors.gray.600');
+        --blogger-border-hover: theme('colors.gray.600');
+        --blogger-focus-ring-color: theme('colors.blue.400');
+
+        /* Đổ bóng */
+        --blogger-shadow: none; /* Bỏ shadow ở theme tối cho phẳng hơn */
+        --blogger-shadow-lg: theme('boxShadow.lg'); /* Giữ lại shadow lớn nếu cần */
+
+        /* Nút */
+        --blogger-button-primary-bg: theme('colors.blue.500');
+        --blogger-button-primary-hover-bg: theme('colors.blue.600');
+
+        /* Icon */
+        --blogger-icon-color: theme('colors.gray.500');
+        --blogger-icon-secondary: theme('colors.gray.400');
+    }
 }
 
-.translation-container.expanded {
-    max-height: 500px; /* Đủ cao để hiển thị nội dung */
-}
-
-
-@layer quilljsshit {
-           /* Cải thiện giao diện Quill */
-           .ql-toolbar.ql-snow {
-            border-radius: 0.5rem 0.5rem 0 0;
-            border-color: #e5e7eb;
-            background-color: #f9fafb;
-            padding: 12px;
-        }
-        
-        .ql-container.ql-snow {
-            border-radius: 0 0 0.5rem 0.5rem;
-            border-color: #e5e7eb;
-            background-color: white;
-        }
-        
-        .ql-editor {
-            min-height: 500px;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-            font-family: 'Merriweather ', sans-serif;
-            font-size: 18px;
-            line-height: 1.7;
-        }
-        
-        .ql-editor h1 {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            line-height: 1.3;
-        }
-        
-        .ql-editor h2 {
-            font-size: 24px;
-            font-weight: bold;
-            margin-top: 30px;
-            margin-bottom: 16px;
-        }
-        
-        .ql-editor p {
-            margin-bottom: 20px;
-        }
-        
-        /* Cải thiện hiển thị ảnh trong trình soạn thảo */
-        .ql-editor img {
-            display: block;
-            max-width: 100%;
-            width: 100%;
-            height: auto;
-            margin: 20px auto;
-            border-radius: 8px;
-        }
-        
-        .ql-editor .image-caption {
-            text-align: center;
-            font-size: 14px;
-            color: #666;
-            margin-top: -15px;
-            margin-bottom: 20px;
-        }
-        
-        /* Phần xem trước */
-        .preview-container {
-            display: none; 
-            padding: 30px;
-            max-width: 960px;
-            margin: 0 auto;
-            font-family: inherit;
-            background-color: #f5f5f5;
-        }
-        
-        .preview-article {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 2rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        
-        .preview-title {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            line-height: 1.3;
-        }
-        
-        .preview-meta {
-            display: flex;
-            align-items: center;
-            margin-bottom: 24px;
-            font-size: 14px;
-            color: #757575;
-        }
-        
-        .preview-category {
-            margin-right: 16px;
-            padding: 4px 10px;
-            background-color: #f0f0f0;
-            border-radius: 4px;
-        }
-        
-        .preview-content {
-            font-size: 18px;
-            line-height: 1.7;
-        }
-        
-        .preview-content img {
-            display: block;
-            max-width: 100%;
-            height: auto;
-            margin: 20px auto;
-            border-radius: 8px;
-        }
-        
-        .preview-content p {
-            margin-bottom: 20px;
-        }
-        
-        .preview-content .image-caption {
-            text-align: center;
-            font-size: 14px;
-            color: #666;
-            margin-top: -15px;
-            margin-bottom: 20px;
-        }
-
-        /* Chuyển tab */
-        .tab-active {
-            background-color: white;
-            border-bottom: 3px solid #2563eb;
-            color: #2563eb;
-            font-weight: 600;
-        }
-        
-        /* Cải thiện các nút trong toolbar */
-        .ql-formats button {
-            width: 32px !important;
-            height: 32px !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-        }
-        
-        .ql-formats button:hover {
-            background-color: #e5e7eb !important;
-            border-radius: 4px !important;
-        }
-        
-        /* Kiểu cho phần thêm hình ảnh vào bài viết */
-        .media-section {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-        
-        .media-item {
-            width: 100px;
-            height: 100px;
-            border-radius: 6px;
-            object-fit: cover;
-            border: 1px solid #e5e7eb;
-            cursor: pointer;
-        }
-        
-        /* Thêm kiểu cho article */
-        .prose {
-            max-width: none;
-            font-size: 18px;
-            line-height: 1.7;
-        }
-        
-        .prose img {
-            display: block;
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            margin: 20px auto;
-            border-radius: 8px;
-        }
-        
-        .prose h2 {
-            font-size: 24px;
-            font-weight: bold;
-            margin-top: 30px;
-            margin-bottom: 16px;
-        }
-        
-        .image-wrapper {
-            margin: 20px 0;
-            text-align: center;
-        }
-        
-        .image-wrapper img {
-            display: block;
-            margin: 0 auto;
-            max-width: 100%;
-            border-radius: 8px;
-        }
-        
-        .image-wrapper .caption {
-            font-size: 14px;
-            color: #666;
-            margin-top: 8px;
-        }
-
-        /* Bọc trình soạn thảo trong container có chiều rộng giống với PostDetail */
-        .editor-wrapper {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 0.5rem;
-            overflow: hidden;
-        }
-
-        /* Thêm style cho post-detail-style */
-        .post-detail-style {
-            font-family: 'Merriweather ', sans-serif;
-            font-size: 18px;
-            line-height: 1.7;
-        }
-
-        /* Thiết lập container cho toàn bộ editor và các thành phần liên quan */
-        .content-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* Cập nhật quill container để có border tốt hơn */
-        .editor-wrapper .ql-container.ql-snow {
-            border: 1px solid #e5e7eb;
-            border-top: none;
-        }
-
-        .editor-wrapper .ql-toolbar.ql-snow {
-            border: 1px solid #e5e7eb;
-        }
-
-        /* Nâng cấp font chữ và giao diện cho trình soạn thảo */
-        #editor-container .ql-editor {
-            font-family: 'Merriweather ', sans-serif;
-
-            font-size: 18px;
-            line-height: 1.8;
-            color: #333;
-            padding: 20px 30px;
-            letter-spacing: 0.01em;
-            text-rendering: optimizeLegibility;
-            -webkit-font-smoothing: antialiased;
-        }
-        
-        #editor-container .ql-editor p {
-            padding-bottom: 0.2em;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-        }
-        
-        #editor-container .ql-editor h1, 
-        #editor-container .ql-editor h2, 
-        #editor-container .ql-editor h3 {
-            font-family: 'Merriweather ', serif;
-            font-weight: 700;
-            margin-top: 1.5em;
-            margin-bottom: 0.8em;
-            color: #222;
-        }
-        
-        #editor-container .ql-editor h1 {
-            font-size: 32px;
-            line-height: 1.3;
-        }
-        
-        #editor-container .ql-editor h2 {
-            font-size: 26px;
-            line-height: 1.4;
-        }
-        
-        #editor-container .ql-editor h3 {
-            font-size: 22px;
-            line-height: 1.5;
-        }
-
-        #editor-container .ql-editor ul, 
-        #editor-container .ql-editor ol {
-            padding-left: 1.5em;
-            margin-bottom: 1.5em;
-        }
-        
-        #editor-container .ql-editor li {
-            margin-bottom: 0.5em;
-        }
-        
-        #editor-container .ql-editor a {
-            color: #0066cc;
-            text-decoration: underline;
-        }
-        
-        #editor-container .ql-editor blockquote {
-            border-left: 4px solid #ccc;
-            padding-left: 16px;
-            color: #555;
-            font-style: italic;
-        }
-        
-        /* Cải thiện toolbar */
-        .ql-toolbar.ql-snow {
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-            background-color: #f9f9f9;
-            border: 1px solid #e2e8f0;
-        }
-        
-        /* Cải thiện container */
-        .ql-container.ql-snow {
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-            border: 1px solid #e2e8f0;
-            border-top: none;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-
-        /* Tùy chỉnh chi tiết trong phần xem trước */
-        #preview-container .preview-article {
-            font-family: inherit;
-            font-size: 18px;
-            line-height: 1.8;
-            color: #333;
-        }
-
-        /* Thêm kiểu cho văn bản được chọn (selection) */
-        #editor-container .ql-editor::selection,
-        #editor-container .ql-editor *::selection {
-            background-color: rgba(66, 153, 225, 0.2);
-        }
-
-        /* Hiệu ứng khi hover vào link */
-        #editor-container .ql-editor a:hover {
-            color: #004499;
-        }
-
-        /* Kiểu cho khối code */
-        #editor-container .ql-editor pre.ql-syntax {
-            background-color: #f8f8f8;
-            color: #333;
-            overflow: visible;
-            border-radius: 4px;
-            padding: 1em;
-            margin-bottom: 1.5em;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 0.9em;
-            white-space: pre-wrap;
-        }
-
-        /* Kiểu cho code inline */
-        #editor-container .ql-editor code {
-            background-color: #f0f0f0;
-            padding: 0.2em 0.4em;
-            border-radius: 3px;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 0.9em;
-        }
-
-        /* Tăng độ tương phản cho màu của các nút định dạng trong toolbar */
-        .ql-snow .ql-stroke {
-            stroke: #444;
-        }
-
-        .ql-snow .ql-fill {
-            fill: #444;
-        }
-
-        .ql-snow.ql-toolbar button:hover,
-        .ql-snow.ql-toolbar button.ql-active {
-            background-color: rgba(0, 0, 0, 0.08);
-        }
-
-        /* Thêm phần bottom helper text cho editor */
-        /* .editor-wrapper:after {
-            content: "Nhấn Tab để dùng lệnh định dạng văn bản nhanh";
-            display: block;
-            text-align: right;
-            font-size: 12px;
-            color: #888;
-            padding: 4px 10px;
-            background-color: #f9f9f9;
-            border: 1px solid #e2e8f0;
-            border-top: none;
-            border-radius: 0 0 8px 8px;
-        } */
-
-        /* Cải thiện transition font */
-        body {
-            transition: opacity 0.1s ease-in-out;
-        }
-        
-        body:not(.fonts-loaded) .ql-editor,
-        body:not(.fonts-loaded) #preview-container {
-            font-family: 'Merriweather ', serif;
-        }
-        
-        /* Thêm focus style đẹp hơn cho editor */
-        .ql-container.ql-snow:focus-within {
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-        }
-        
-        /* Hiệu ứng transition nhẹ cho tất cả các phần tử trong editor */
-        .ql-editor * {
-            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-        }
-        
-        /* Ảnh sáng khi được chọn */
-        .ql-editor img:focus, .ql-editor img.is-selected {
-            outline: 2px solid rgba(59, 130, 246, 0.5);
-            outline-offset: 2px;
-        }
-        
-        /* Hiệu ứng typed cho placeholder */
-        .ql-editor.ql-blank::before {
-            color: #aaa;
-            font-style: italic;
-            transition: opacity 0.2s ease;
-            opacity: 0.8;
-        }
-        
-        .ql-editor.ql-blank:focus::before {
-            opacity: 0.5;
-        }
-        
-        /* Font nền sáng hơn cho input fields trong form (không áp dụng cho quill) */
-        #post-form input[type="text"], 
-        #post-form select, 
-        #post-form textarea,
-        #post-form label,
-        #post-form button {
-            font-family: inherit;
-        }
-
-        /* Giữ font San Francisco cho editor quill */
-        .post-detail-style, 
-        .ql-editor {
-            font-family: 'Merriweather ', serif;
-        }
-        
-        /* Tối ưu font rendering chung */
-        * {
-            text-rendering: optimizeLegibility;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-}
+/* ... các layer khác ... */

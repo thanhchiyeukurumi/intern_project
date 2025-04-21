@@ -14,8 +14,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     fullname: {
       type: DataTypes.STRING(100),
-      allowNull: false,
-      unique: "fullname"
+      allowNull: false
     },
     password: {
       type: DataTypes.STRING(255),
@@ -32,7 +31,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     description: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: true,
+      defaultValue: null
     },
     role_id: {
       type: DataTypes.INTEGER,

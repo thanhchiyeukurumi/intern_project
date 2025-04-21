@@ -2,8 +2,8 @@
 /* @plugin "daisyui"; */
 
 
-@import "./base.css";
+
 @import "./admin.css";
 @import "./user.css";
 @import "./blogger.css";
-@import "./auth.css";
+

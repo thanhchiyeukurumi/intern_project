@@ -6,30 +6,32 @@
     <title>Media Management - Hoang Thanh</title>
     <link rel="stylesheet" href="../../dist/tailwind.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../../assets/js/pages/theme-toggle.js" defer></script>
+    <script src="../../assets/js/components/componentsConfig.js" defer></script>
     <script src="../../assets/js/pages/blogger.js" defer></script>
 </head>
-<body class="bg-gray-100 text-gray-900">
+<body class="bg-[var(--blogger-bg-body)] text-[var(--blogger-text-primary)]" data-theme="light">
    <!-- Header -->
-   <header class="bg-white shadow-sm">
+   <header class="bg-[var(--blogger-bg-header)] shadow-[var(--blogger-shadow)]">
     <div class="max-w mx-3 px-2 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center py-4">
-            <h1 class="text-2xl font-bold">QuickBlog - Blogger</h1>
+            <h1 class="text-2xl font-bold text-[var(--blogger-text-primary)]">QuickBlog - Blogger</h1>
             <!-- User Profile Dropdown -->
             <div class="relative">
                 <button id="userDropdownButton" class="flex items-center gap-2" aria-expanded="false">
                     <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256"
                         alt="Profile" class="w-8 h-8 rounded-full">
-                    <span class="font-medium">thanhthikalyce</span>
-                    <i class="fas fa-chevron-down text-gray-500 text-xs transition-transform"></i>
+                    <span class="font-medium text-[var(--blogger-text-primary)]">thanhthikalyce</span>
+                    <i class="fas fa-chevron-down text-[var(--blogger-icon-secondary)] text-xs transition-transform"></i>
                 </button>
 
                 <!-- Dropdown Menu -->
                 <div id="userDropdown"
-                    class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100">
-                    <a href="#" class="px-4 py-2.5 text-sm hover:bg-gray-50 block">Edit Profile</a>
-                    <a href="#" class="px-4 py-2.5 text-sm hover:bg-gray-50 block">Settings</a>
-                    <hr class="my-1">
-                    <a href="#" class="px-4 py-2.5 text-sm hover:bg-gray-50 block text-red-600">Log out</a>
+                    class="hidden absolute right-0 mt-2 w-48 bg-[var(--blogger-bg-dropdown)] rounded-md shadow-[var(--blogger-shadow-lg)] py-1 z-10 border border-[var(--blogger-border-dropdown)]">
+                    <a href="#" class="px-4 py-2.5 text-sm text-[var(--blogger-text-secondary)] hover:bg-[var(--blogger-bg-dropdown-hover)] block">Edit Profile</a>
+                    <a href="#" class="px-4 py-2.5 text-sm text-[var(--blogger-text-secondary)] hover:bg-[var(--blogger-bg-dropdown-hover)] block">Settings</a>
+                    <hr class="my-1 border-[var(--blogger-border-dropdown)]">
+                    <a href="#" class="px-4 py-2.5 text-sm hover:bg-[var(--blogger-bg-dropdown-hover)] block text-[var(--blogger-text-danger)]">Log out</a>
                 </div>
             </div>
         </div>
@@ -38,30 +40,30 @@
 
     <div class="flex">
        <!-- Sidebar -->
-       <aside class="right-sidebar bg-white border-r border-gray-200 min-h-screen transition-all duration-300 hidden lg:block">
+       <aside class="right-sidebar bg-[var(--blogger-bg-sidebar)] border-r border-[var(--blogger-border-color)] min-h-screen transition-all duration-300 hidden lg:block">
         <div class="px-4 py-6">
             <nav class="space-y-2">
-                <a href="./dashboard.html" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <a href="./dashboard.html" class="flex items-center gap-3 px-4 py-2.5 text-[var(--blogger-text-sidebar)] hover:bg-[var(--blogger-bg-sidebar-hover)] rounded-lg">
                     <i class="fas fa-chart-line w-5"></i>
                     <span class="nav-text">Dashboard</span>
                 </a>
-                <a href="./post.html" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <a href="./post.html" class="flex items-center gap-3 px-4 py-2.5 text-[var(--blogger-text-sidebar)] hover:bg-[var(--blogger-bg-sidebar-hover)] rounded-lg">
                     <i class="fas fa-file-lines w-5"></i>
                     <span class="nav-text">Posts</span>
                 </a>
-                <a href="./media.html" class="flex items-center gap-3 px-4 py-2.5 bg-blue-50 text-blue-700 rounded-lg">
+                <a href="./media.html" class="flex items-center gap-3 px-4 py-2.5 bg-[var(--blogger-bg-sidebar-active)] text-[var(--blogger-text-sidebar-active)] rounded-lg">
                     <i class="fas fa-photo-film w-5"></i>
                     <span class="nav-text">Media</span>
                 </a>
-                <a href="./comments.html" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <a href="./comments.html" class="flex items-center gap-3 px-4 py-2.5 text-[var(--blogger-text-sidebar)] hover:bg-[var(--blogger-bg-sidebar-hover)] rounded-lg">
                     <i class="fas fa-comments w-5"></i>
                     <span class="nav-text">Comments</span>
                 </a>
-                <a href="./profile.html" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <a href="./profile.html" class="flex items-center gap-3 px-4 py-2.5 text-[var(--blogger-text-sidebar)] hover:bg-[var(--blogger-bg-sidebar-hover)] rounded-lg">
                     <i class="fas fa-user w-5"></i>
                     <span class="nav-text">Profile</span>
                 </a>
-                <a href="./settings.html" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <a href="./settings.html" class="flex items-center gap-3 px-4 py-2.5 text-[var(--blogger-text-sidebar)] hover:bg-[var(--blogger-bg-sidebar-hover)] rounded-lg">
                     <i class="fas fa-gear w-5"></i>
                     <span class="nav-text">Settings</span>
                 </a>
@@ -72,20 +74,20 @@
         <!-- Main Content -->
         <main class="flex-1 p-6">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold">Media Library</h2>
+                <h2 class="text-2xl font-bold text-[var(--blogger-text-primary)]">Media Library</h2>
                 <div class="flex gap-3">
                     <div class="hidden lg:block relative">
-                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                        <input type="text" placeholder="Search media..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-[var(--blogger-text-tertiary)]"></i>
+                        <input type="text" placeholder="Search media..." class="pl-9 pr-4 py-2 border border-[var(--blogger-border-color)] rounded-lg focus:ring-2 focus:ring-[var(--blogger-focus-ring-color)] focus:border-[var(--blogger-focus-ring-color)] outline-none bg-[var(--blogger-bg-select)] text-[var(--blogger-text-primary)]">
                     </div>
                 </div>
             </div>
 
             <!-- Media Grid -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                <div class="px-6 py-4 border-b border-gray-200">
+            <div class="bg-[var(--blogger-bg-card)] rounded-xl shadow-[var(--blogger-shadow)] border border-[var(--blogger-border-color)]">
+                <div class="px-6 py-4 border-b border-[var(--blogger-border-color)]">
                     <div class="flex items-center justify-between">
-                        <h3 class="font-medium">All Image (12)</h3>
+                        <h3 class="font-medium text-[var(--blogger-text-primary)]">All Image (12)</h3>
                         <div class="flex gap-3">
                            
                         </div>
@@ -95,146 +97,146 @@
                 <div class="p-6">
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                         <!-- Media Item 1 -->
-                        <div class="border border-gray-200 rounded-lg overflow-hidden group">
-                            <div class="relative aspect-square bg-gray-100">
+                        <div class="border border-[var(--blogger-border-color)] rounded-lg overflow-hidden group">
+                            <div class="relative aspect-square bg-[var(--blogger-bg-body)]">
                                 <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Media item" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
                                     <div class="flex gap-2">
-                                        <button class="p-2 bg-white rounded-full text-gray-700 hover:text-blue-600">
+                                        <button class="p-2 bg-[var(--blogger-bg-card)] rounded-full text-[var(--blogger-text-primary)] hover:text-[var(--blogger-text-link)]">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <button class="p-2 bg-white rounded-full text-gray-700 hover:text-red-600">
+                                        <button class="p-2 bg-[var(--blogger-bg-card)] rounded-full text-[var(--blogger-text-primary)] hover:text-[var(--blogger-text-danger)]">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             <div class="p-2 text-sm">
-                                <p class="truncate font-medium">image-01.jpg</p>
-                                <p class="text-gray-500 text-xs">May 15, 2023 • 560 KB</p>
+                                <p class="truncate font-medium text-[var(--blogger-text-primary)]">image-01.jpg</p>
+                                <p class="text-[var(--blogger-text-tertiary)] text-xs">May 15, 2023 • 560 KB</p>
                             </div>
                         </div>
 
                         <!-- Media Item 2 -->
-                        <div class="border border-gray-200 rounded-lg overflow-hidden group">
-                            <div class="relative aspect-square bg-gray-100">
+                        <div class="border border-[var(--blogger-border-color)] rounded-lg overflow-hidden group">
+                            <div class="relative aspect-square bg-[var(--blogger-bg-body)]">
                                 <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Media item" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
                                     <div class="flex gap-2">
-                                        <button class="p-2 bg-white rounded-full text-gray-700 hover:text-blue-600">
+                                        <button class="p-2 bg-[var(--blogger-bg-card)] rounded-full text-[var(--blogger-text-primary)] hover:text-[var(--blogger-text-link)]">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <button class="p-2 bg-white rounded-full text-gray-700 hover:text-red-600">
+                                        <button class="p-2 bg-[var(--blogger-bg-card)] rounded-full text-[var(--blogger-text-primary)] hover:text-[var(--blogger-text-danger)]">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             <div class="p-2 text-sm">
-                                <p class="truncate font-medium">profile-photo.png</p>
-                                <p class="text-gray-500 text-xs">Apr 27, 2023 • 340 KB</p>
+                                <p class="truncate font-medium text-[var(--blogger-text-primary)]">profile-photo.png</p>
+                                <p class="text-[var(--blogger-text-tertiary)] text-xs">Apr 27, 2023 • 340 KB</p>
                             </div>
                         </div>
 
                         <!-- Media Item 4 (Video) -->
-                        <div class="border border-gray-200 rounded-lg overflow-hidden group">
-                            <div class="relative aspect-square bg-gray-100">
+                        <div class="border border-[var(--blogger-border-color)] rounded-lg overflow-hidden group">
+                            <div class="relative aspect-square bg-[var(--blogger-bg-body)]">
                                 <div class="absolute inset-0 flex items-center justify-center">
                                     <i class="fas fa-play-circle text-white text-4xl"></i>
                                 </div>
                                 <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Video thumbnail" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
                                     <div class="flex gap-2">
-                                        <button class="p-2 bg-white rounded-full text-gray-700 hover:text-blue-600">
+                                        <button class="p-2 bg-[var(--blogger-bg-card)] rounded-full text-[var(--blogger-text-primary)] hover:text-[var(--blogger-text-link)]">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <button class="p-2 bg-white rounded-full text-gray-700 hover:text-red-600">
+                                        <button class="p-2 bg-[var(--blogger-bg-card)] rounded-full text-[var(--blogger-text-primary)] hover:text-[var(--blogger-text-danger)]">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             <div class="p-2 text-sm">
-                                <p class="truncate font-medium">intro-video.mp4</p>
-                                <p class="text-gray-500 text-xs">Feb 18, 2023 • 24.5 MB</p>
+                                <p class="truncate font-medium text-[var(--blogger-text-primary)]">intro-video.mp4</p>
+                                <p class="text-[var(--blogger-text-tertiary)] text-xs">Feb 18, 2023 • 24.5 MB</p>
                             </div>
                         </div>
 
                         <!-- Media Item 5 -->
-                        <div class="border border-gray-200 rounded-lg overflow-hidden group">
-                            <div class="relative aspect-square bg-gray-100">
+                        <div class="border border-[var(--blogger-border-color)] rounded-lg overflow-hidden group">
+                            <div class="relative aspect-square bg-[var(--blogger-bg-body)]">
                                 <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Media item" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
                                     <div class="flex gap-2">
-                                        <button class="p-2 bg-white rounded-full text-gray-700 hover:text-blue-600">
+                                        <button class="p-2 bg-[var(--blogger-bg-card)] rounded-full text-[var(--blogger-text-primary)] hover:text-[var(--blogger-text-link)]">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <button class="p-2 bg-white rounded-full text-gray-700 hover:text-red-600">
+                                        <button class="p-2 bg-[var(--blogger-bg-card)] rounded-full text-[var(--blogger-text-primary)] hover:text-[var(--blogger-text-danger)]">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             <div class="p-2 text-sm">
-                                <p class="truncate font-medium">banner-image.jpg</p>
-                                <p class="text-gray-500 text-xs">Jan 5, 2023 • 780 KB</p>
+                                <p class="truncate font-medium text-[var(--blogger-text-primary)]">banner-image.jpg</p>
+                                <p class="text-[var(--blogger-text-tertiary)] text-xs">Jan 5, 2023 • 780 KB</p>
                             </div>
                         </div>
 
                         <!-- More Media Items 6-10 -->
                         <!-- Repeat similar structure for more items -->
-                        <div class="border border-gray-200 rounded-lg overflow-hidden group">
-                            <div class="relative aspect-square bg-gray-100">
+                        <div class="border border-[var(--blogger-border-color)] rounded-lg overflow-hidden group">
+                            <div class="relative aspect-square bg-[var(--blogger-bg-body)]">
                                 <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Media item" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
                                     <div class="flex gap-2">
-                                        <button class="p-2 bg-white rounded-full text-gray-700 hover:text-blue-600">
+                                        <button class="p-2 bg-[var(--blogger-bg-card)] rounded-full text-[var(--blogger-text-primary)] hover:text-[var(--blogger-text-link)]">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <button class="p-2 bg-white rounded-full text-gray-700 hover:text-red-600">
+                                        <button class="p-2 bg-[var(--blogger-bg-card)] rounded-full text-[var(--blogger-text-primary)] hover:text-[var(--blogger-text-danger)]">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             <div class="p-2 text-sm">
-                                <p class="truncate font-medium">header-bg.png</p>
-                                <p class="text-gray-500 text-xs">Jan 3, 2023 • 1.1 MB</p>
+                                <p class="truncate font-medium text-[var(--blogger-text-primary)]">header-bg.png</p>
+                                <p class="text-[var(--blogger-text-tertiary)] text-xs">Jan 3, 2023 • 1.1 MB</p>
                             </div>
                         </div>
 
-                        <div class="border border-gray-200 rounded-lg overflow-hidden group">
-                            <div class="relative aspect-square bg-gray-100">
+                        <div class="border border-[var(--blogger-border-color)] rounded-lg overflow-hidden group">
+                            <div class="relative aspect-square bg-[var(--blogger-bg-body)]">
                                 <img src="https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256" alt="Media item" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
                                     <div class="flex gap-2">
-                                        <button class="p-2 bg-white rounded-full text-gray-700 hover:text-blue-600">
+                                        <button class="p-2 bg-[var(--blogger-bg-card)] rounded-full text-[var(--blogger-text-primary)] hover:text-[var(--blogger-text-link)]">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <button class="p-2 bg-white rounded-full text-gray-700 hover:text-red-600">
+                                        <button class="p-2 bg-[var(--blogger-bg-card)] rounded-full text-[var(--blogger-text-primary)] hover:text-[var(--blogger-text-danger)]">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             <div class="p-2 text-sm">
-                                <p class="truncate font-medium">product-shot.jpg</p>
-                                <p class="text-gray-500 text-xs">Dec 15, 2022 • 890 KB</p>
+                                <p class="truncate font-medium text-[var(--blogger-text-primary)]">product-shot.jpg</p>
+                                <p class="text-[var(--blogger-text-tertiary)] text-xs">Dec 15, 2022 • 890 KB</p>
                             </div>
                         </div>
 
                     </div>
                 </div>
                 
-                <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-                    <div class="text-sm text-gray-500">
+                <div class="px-6 py-4 border-t border-[var(--blogger-border-color)] flex items-center justify-between">
+                    <div class="text-sm text-[var(--blogger-text-tertiary)]">
                         Showing 1-8 of 12 items
                     </div>
                     <div class="flex items-center gap-2">
-                        <button class="px-3 py-1 border border-gray-300 rounded text-gray-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <button class="px-3 py-1 border border-[var(--blogger-border-color)] rounded text-[var(--blogger-text-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed">
                             Previous
                         </button>
-                        <button class="px-3 py-1 border border-gray-300 rounded text-gray-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <button class="px-3 py-1 border border-[var(--blogger-border-color)] rounded text-[var(--blogger-text-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed">
                             Next
                         </button>
                     </div>
