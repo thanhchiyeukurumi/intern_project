@@ -3,14 +3,15 @@ import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 /**
- * Guard kiểm tra người dùng có quyền Admin
- * Yêu cầu người dùng đã đăng nhập và có role 'admin'
+ * Guard kiểm tra người dùng có quyền Blogger
+ * Yêu cầu người dùng đã đăng nhập và có role 'blogger'
+ * Cho phép người dùng có role 'admin' vì admin thường có toàn quyền
  */
-export const adminGuard: CanActivateFn = (route, state) => {
+export const bloggerGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (authService.isLoggedIn() && authService.hasRole('admin')) {
+  if (authService.isLoggedIn() && (authService.hasRole('blogger') || authService.hasRole('admin'))) {
     return true;
   }
 
