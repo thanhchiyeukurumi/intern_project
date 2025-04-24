@@ -8,6 +8,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { ThemeService } from '../../../../core/services/theme.service';
 
 interface Language {
   id: number;
@@ -40,12 +41,22 @@ export class AdminSettingComponent implements OnInit {
   newLanguageCode = '';
   languages: Language[] = [];
   
+  constructor(private themeService: ThemeService) {}
+
   ngOnInit(): void {
     this.languages = [
       { id: 1, name: 'English', code: 'en' },
       { id: 2, name: 'Spanish', code: 'es' },
       { id: 3, name: 'French', code: 'fr' }
     ];
+    
+    // Initialize dark mode state from ThemeService
+    this.darkModeEnabled = this.themeService.isDarkMode();
+    
+    // Subscribe to theme changes
+    this.themeService.darkMode$.subscribe(isDarkMode => {
+      this.darkModeEnabled = isDarkMode;
+    });
   }
   
   addLanguage(): void {
@@ -63,5 +74,9 @@ export class AdminSettingComponent implements OnInit {
   
   removeLanguage(id: number): void {
     this.languages = this.languages.filter(lang => lang.id !== id);
+  }
+
+  toggleDarkMode(): void {
+    this.themeService.toggleDarkMode();
   }
 }

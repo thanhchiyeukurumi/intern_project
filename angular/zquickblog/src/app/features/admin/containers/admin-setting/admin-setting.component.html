@@ -1,4 +1,4 @@
-<nz-card>
+<nz-card ngSkipHydration>
   <div class="header-container">
     <div class="title-section">
       <div>
@@ -16,7 +16,7 @@
         <div class="form-row">
           <div class="form-label">Dark Mode</div>
           <div class="form-control">
-            <nz-switch [(ngModel)]="darkModeEnabled"></nz-switch>
+            <nz-switch [(ngModel)]="darkModeEnabled" (ngModelChange)="toggleDarkMode()"></nz-switch>
           </div>
         </div>
         

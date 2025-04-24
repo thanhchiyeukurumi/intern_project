@@ -87,3 +87,51 @@
 .admin-table-dark .ant-table-tbody > tr.ant-table-row:hover > td {
   background-color: var(--admin-bg-tertiary);
 }
+
+
+
+
+
+
+
+
+/* --- Thêm các quy tắc này --- */
+
+/* Áp dụng style cơ bản cho nz-card */
+.ant-card {
+  background-color: var(--admin-bg-tertiary); /* Màu nền mặc định (light theme) */
+  border: 1px solid var(--admin-border);    /* Đồng bộ màu viền */
+  color: var(--admin-text-primary);         /* Đồng bộ màu chữ cơ bản */
+}
+
+/* Ghi đè style cho nz-card khi ở dark theme */
+[data-theme="dark"] .ant-card {
+  background-color: var(--admin-bg-secondary); /* Màu nền cho dark theme */
+  border-color: var(--admin-border);           /* Màu viền cho dark theme */
+  color: var(--admin-text-primary);            /* Màu chữ cho dark theme */
+}
+
+/* Tùy chọn: Style cho phần header của card nếu cần */
+.ant-card-head {
+  background-color: transparent; /* Hoặc var(--admin-bg-tertiary) nếu muốn có nền khác */
+  border-bottom: 1px solid var(--admin-border);
+  color: var(--admin-text-primary);
+}
+
+[data-theme="dark"] .ant-card-head {
+  border-bottom-color: var(--admin-border);
+  color: var(--admin-text-primary);
+  /* background-color: var(--admin-bg-tertiary); /* Có thể cần nếu muốn nền header khác body trong dark */
+}
+
+/* Tùy chọn: Style cho phần body của card (thường kế thừa là đủ) */
+.ant-card-body {
+  /* Thường không cần ghi đè background ở đây trừ khi có style cụ thể */
+  color: var(--admin-text-primary); /* Đảm bảo màu chữ đúng */
+}
+
+[data-theme="dark"] .ant-card-body {
+   color: var(--admin-text-primary);
+}
+
+/* --- Kết thúc phần thêm --- */

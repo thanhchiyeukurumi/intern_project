@@ -1,94 +1,57 @@
-import { Inject, Injectable } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
-import { BehaviorSubject } from 'rxjs';
-import { StorageService } from './storage.service';
-import { THEME_KEY } from '../constants/storage-keys';
-
-export type Theme = 'light' | 'dark';
+import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeService {
-  private themeSubject = new BehaviorSubject<Theme>('light');
-  currentTheme$ = this.themeSubject.asObservable();
+  private renderer: Renderer2;
+  private darkModeSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public darkMode$: Observable<boolean> = this.darkModeSubject.asObservable();
+  
+  private readonly STORAGE_KEY = 'admin-dark-theme';
 
-  constructor(
-    @Inject(DOCUMENT) private document: Document,
-    private storageService: StorageService
-  ) {}
+  constructor(rendererFactory: RendererFactory2) {
+    this.renderer = rendererFactory.createRenderer(null, null);
+    this.initializeTheme();
+  }
 
-  /**
-   * Khởi tạo theme khi ứng dụng bắt đầu
-   * Thứ tự ưu tiên: localStorage -> prefers-color-scheme -> light (mặc định)
-   */
-  initTheme(): void {
-    // Lấy theme từ localStorage
-    const savedTheme = this.storageService.getLocalItem<Theme>(THEME_KEY);
+  private initializeTheme(): void {
+    // Check saved theme preference or use system preference as default
+    const isDarkMode = this.getCurrentThemeState();
+    this.setDarkMode(isDarkMode);
+  }
 
-    if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
-      this._setTheme(savedTheme);
-      return;
+  private getCurrentThemeState(): boolean {
+    const savedTheme = localStorage.getItem(this.STORAGE_KEY);
+    if (savedTheme) {
+      return savedTheme === 'enabled';
     }
+    // Check system preference if no saved preference
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
 
-    // Kiểm tra prefers-color-scheme của hệ thống
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      this._setTheme('dark');
-      return;
+  public toggleDarkMode(): void {
+    const currentValue = this.darkModeSubject.getValue();
+    this.setDarkMode(!currentValue);
+  }
+
+  public setDarkMode(isDarkMode: boolean): void {
+    // Update theme in DOM
+    if (isDarkMode) {
+      this.renderer.setAttribute(document.documentElement, 'data-theme', 'dark');
+    } else {
+      this.renderer.removeAttribute(document.documentElement, 'data-theme');
     }
-
-    // Mặc định là light
-    this._setTheme('light');
-  }
-
-  /**
-   * Chuyển đổi giữa theme sáng và tối
-   */
-  toggleTheme(): void {
-    const currentTheme = this.themeSubject.value;
-    const newTheme: Theme = currentTheme === 'light' ? 'dark' : 'light';
-    this._setTheme(newTheme);
-  }
-
-  /**
-   * Đặt theme cụ thể
-   */
-  setTheme(theme: Theme): void {
-    this._setTheme(theme);
-  }
-
-  /**
-   * Đặt theme được chỉ định, cập nhật BehaviorSubject, lưu vào localStorage
-   * và cập nhật thuộc tính data-theme trên thẻ HTML
-   */
-  private _setTheme(theme: Theme): void {
-    // Cập nhật BehaviorSubject
-    this.themeSubject.next(theme);
     
-    // Lưu vào localStorage
-    this.storageService.setLocalItem(THEME_KEY, theme);
+    // Save preference to localStorage
+    localStorage.setItem(this.STORAGE_KEY, isDarkMode ? 'enabled' : 'disabled');
     
-    // Cập nhật data-theme trên HTML element
-    this.document.documentElement.setAttribute('data-theme', theme);
-    
-    // Tùy chọn: Cập nhật meta theme-color cho mobile browsers
-    const metaThemeColor = this.document.querySelector('meta[name="theme-color"]');
-    if (metaThemeColor) {
-      metaThemeColor.setAttribute('content', theme === 'dark' ? '#333333' : '#ffffff');
-    }
+    // Update subject value
+    this.darkModeSubject.next(isDarkMode);
   }
 
-  /**
-   * Lấy theme hiện tại
-   */
-  getCurrentTheme(): Theme {
-    return this.themeSubject.value;
-  }
-
-  /**
-   * Kiểm tra xem theme hiện tại có phải là dark hay không
-   */
-  isDarkTheme(): boolean {
-    return this.themeSubject.value === 'dark';
+  public isDarkMode(): boolean {
+    return this.darkModeSubject.getValue();
   }
 }
