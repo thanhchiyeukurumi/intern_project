@@ -1,0 +1,145 @@
+/* src/app/features/blogger/blogger.style.css */
+@import '../../shared/styles/variables.css'; /* (Optional) Import biến dùng chung nếu có */
+
+/* Blogger Theme Colors - Ví dụ, bạn có thể tùy chỉnh */
+:root {
+  /* Primary Colors */
+  --blogger-primary: #0ea5e9; /* Sky Blue */
+  --blogger-primary-hover: #0284c7;
+  --blogger-primary-active: #0369a1;
+
+  /* Text Colors */
+  --blogger-text-primary: #1f2937;
+  --blogger-text-secondary: #6b7280;
+  --blogger-text-tertiary: #9ca3af;
+
+  /* Background Colors */
+  --blogger-bg-primary: #f8fafc; /* Lighter Gray */
+  --blogger-bg-secondary: #f1f5f9;
+  --blogger-bg-tertiary: #ffffff;
+
+  /* Border Colors */
+  --blogger-border: #e2e8f0;
+
+  /* Icon Colors */
+  --blogger-icon-bg-primary: #e0f2fe;
+  --blogger-icon-color-primary: #0ea5e9;
+
+  /* ... Thêm các biến khác nếu cần ... */
+}
+
+/* Dark Theme Overrides for Blogger */
+[data-theme="dark"] {
+  /* Primary Colors */
+  --blogger-primary: #38bdf8; /* Lighter Sky Blue for Dark */
+  --blogger-primary-hover: #0ea5e9;
+  --blogger-primary-active: #0284c7;
+
+  /* Text Colors */
+  --blogger-text-primary: #f1f5f9;
+  --blogger-text-secondary: #cbd5e1;
+  --blogger-text-tertiary: #94a3b8;
+
+  /* Background Colors */
+  --blogger-bg-primary: #1e293b; /* Slate */
+  --blogger-bg-secondary: #334155;
+  --blogger-bg-tertiary: #475569;
+
+  /* Border Colors */
+  --blogger-border: #475569;
+
+  /* Icon Colors */
+  --blogger-icon-bg-primary: #0c4a6e; /* Darker Blue */
+  --blogger-icon-color-primary: #7dd3fc;
+
+  /* ... Thêm các biến dark theme khác ... */
+}
+
+/* --- Style chung cho các component Blogger --- */
+
+/* Ví dụ: Style cho Card trong Blogger */
+.blogger-container nz-card,
+.blogger-container .ant-card {
+  background-color: var(--blogger-bg-tertiary);
+  border: 1px solid var(--blogger-border);
+  color: var(--blogger-text-primary);
+  margin-bottom: 20px; /* Khoảng cách chung */
+}
+
+[data-theme="dark"] .blogger-container nz-card,
+[data-theme="dark"] .blogger-container .ant-card {
+  background-color: var(--blogger-bg-secondary);
+  border-color: var(--blogger-border);
+  color: var(--blogger-text-primary);
+}
+
+/* Style cho Page Header */
+.blogger-container .page-header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--blogger-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+ [data-theme="dark"] .blogger-container .page-header {
+    border-bottom-color: var(--blogger-border);
+ }
+
+/* ... Thêm các style dùng chung khác ... */
+
+/* --- Ghi đè style của Ant Design nếu cần cho Blogger --- */
+.blogger-container .ant-input,
+.blogger-container .ant-select-selector,
+.blogger-container .ant-input-number {
+    background-color: var(--blogger-bg-tertiary) !important;
+    border-color: var(--blogger-border) !important;
+    color: var(--blogger-text-primary) !important;
+}
+
+ [data-theme="dark"] .blogger-container .ant-input,
+ [data-theme="dark"] .blogger-container .ant-select-selector,
+ [data-theme="dark"] .blogger-container .ant-input-number {
+    background-color: var(--blogger-bg-secondary) !important;
+    border-color: var(--blogger-border) !important;
+    color: var(--blogger-text-primary) !important;
+}
+
+.blogger-container .ant-table {
+  background-color: var(--blogger-bg-tertiary);
+}
+
+.blogger-container .ant-table-thead > tr > th {
+  background-color: var(--blogger-bg-secondary);
+  color: var(--blogger-text-primary);
+  border-bottom: 1px solid var(--blogger-border);
+}
+
+ .blogger-container .ant-table-tbody > tr > td {
+   border-bottom: 1px solid var(--blogger-border);
+   color: var(--blogger-text-primary);
+ }
+
+ .blogger-container .ant-table-tbody > tr.ant-table-row:hover > td {
+   background-color: var(--blogger-bg-secondary);
+ }
+
+ [data-theme="dark"] .blogger-container .ant-table {
+   background-color: var(--blogger-bg-secondary);
+ }
+
+ [data-theme="dark"] .blogger-container .ant-table-thead > tr > th {
+    background-color: var(--blogger-bg-tertiary);
+    color: var(--blogger-text-primary);
+    border-bottom-color: var(--blogger-border);
+ }
+ [data-theme="dark"] .blogger-container .ant-table-tbody > tr > td {
+    border-bottom-color: var(--blogger-border);
+    color: var(--blogger-text-primary);
+ }
+  [data-theme="dark"] .blogger-container .ant-table-tbody > tr.ant-table-row:hover > td {
+   background-color: var(--blogger-bg-tertiary);
+ }
+
+/* ... Các ghi đè khác ... */

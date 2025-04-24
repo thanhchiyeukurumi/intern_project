@@ -1,0 +1,41 @@
+.page-header {
+  margin-bottom: 24px;
+}
+
+.profile-container {
+  max-width: 800px;
+}
+
+.avatar-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  
+  nz-avatar {
+    margin-right: 16px;
+  }
+  
+  .avatar-upload-area {
+    display: flex;
+    flex-direction: column;
+    
+    .upload-hint {
+      margin-top: 8px;
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.45);
+    }
+  }
+}
+
+.form-hint {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+  margin-top: 4px;
+}
+
+:host-context([data-theme="dark"]) {
+  .form-hint,
+  .avatar-upload-area .upload-hint {
+    color: rgba(255, 255, 255, 0.45);
+  }
+}

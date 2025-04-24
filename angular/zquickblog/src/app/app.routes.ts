@@ -6,6 +6,10 @@ export const routes: Routes = [
     loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule)
   },
   {
+    path: 'blogger',
+    loadChildren: () => import('./features/blogger/blogger.module').then(m => m.BloggerModule)
+  },
+  {
     path: '',
     redirectTo: 'admin',
     pathMatch: 'full'

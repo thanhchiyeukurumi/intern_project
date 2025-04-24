@@ -1,0 +1,95 @@
+<nz-layout class="app-layout blogger-container">
+  <nz-sider class="menu-sidebar"
+    nzCollapsible
+    nzWidth="256px"
+    nzBreakpoint="md"
+    [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null">
+    <div class="sidebar-logo">
+      <a routerLink="/blogger/dashboard">
+        <span *ngIf="!isCollapsed">BloggerPanel</span>
+        <span *ngIf="isCollapsed">BP</span>
+      </a>
+    </div>
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/blogger/dashboard">
+          <span nz-icon nzType="dashboard"></span>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/blogger/posts">
+          <span nz-icon nzType="file-text"></span>
+          <span>Posts</span>
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/blogger/media">
+          <span nz-icon nzType="picture"></span>
+          <span>Media</span>
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/blogger/comments">
+          <span nz-icon nzType="comment"></span>
+          <span>Comments</span>
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/blogger/profile">
+          <span nz-icon nzType="user"></span>
+          <span>Profile</span>
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/blogger/settings">
+          <span nz-icon nzType="setting"></span>
+          <span>Settings</span>
+        </a>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header class="app-header">
+      <div class="header-left">
+        <span class="trigger-icon" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" 
+              (click)="isCollapsed = !isCollapsed"></span>
+      </div>
+      <div class="header-rightuser-profile-dropdown">
+        <a nz-dropdown [nzDropdownMenu]="menu">
+          <nz-avatar [nzSrc]="avatarUrl" nzSize="small"></nz-avatar>
+          <span class="username">{{ username }}</span>
+          <span nz-icon nzType="down"></span>
+        </a>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item routerLink="/blogger/profile">
+              <span nz-icon nzType="user" nzTheme="outline"></span>
+              Edit Profile
+            </li>
+            <li nz-menu-item routerLink="/blogger/settings">
+              <span nz-icon nzType="setting" nzTheme="outline"></span>
+              Settings
+            </li>
+            <li nz-menu-divider></li>
+            <li nz-menu-item (click)="toggleTheme()">
+              <span nz-icon [nzType]="isDarkMode ? 'bulb' : 'bulb'" nzTheme="outline"></span>
+              {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+            </li>
+            <li nz-menu-divider></li>
+            <li nz-menu-item (click)="logout()">
+              <span nz-icon nzType="logout" nzTheme="outline"></span>
+              Log out
+            </li>
+          </ul>
+        </nz-dropdown-menu>
+      </div>
+    </nz-header>
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

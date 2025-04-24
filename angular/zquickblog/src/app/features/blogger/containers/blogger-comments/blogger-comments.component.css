@@ -1,0 +1,146 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-header h2 {
+  margin-bottom: 0;
+}
+
+.page-header .action-area {
+  display: flex;
+}
+
+.page-header .action-area .search-box {
+  width: 250px;
+}
+
+.comments-list .comment-card {
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.comments-list .comment-card:last-child {
+  margin-bottom: 0;
+}
+
+.comments-list .comment-card .comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.comments-list .comment-card .comment-header .author-info {
+  display: flex;
+  align-items: center;
+}
+
+.comments-list .comment-card .comment-header .author-info .author-details {
+  margin-left: 12px;
+}
+
+.comments-list .comment-card .comment-header .author-info .author-details .author-name {
+  margin: 0;
+  font-size: 16px;
+}
+
+.comments-list .comment-card .comment-header .author-info .author-details .author-email {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.comments-list .comment-card .comment-header .comment-meta {
+  text-align: right;
+}
+
+.comments-list .comment-card .comment-header .comment-meta .comment-date {
+  display: block;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+  margin-top: 4px;
+}
+
+.comments-list .comment-card .comment-content {
+  margin-bottom: 16px;
+}
+
+.comments-list .comment-card .comment-content .post-title {
+  font-size: 13px;
+  margin-bottom: 8px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.comments-list .comment-card .comment-content .post-title a {
+  color: #1890ff;
+}
+
+.comments-list .comment-card .comment-content .post-title a:hover {
+  text-decoration: underline;
+}
+
+.comments-list .comment-card .comment-content .comment-text {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.comments-list .comment-card .comment-response {
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.comments-list .comment-card .comment-response .response-header {
+  margin-bottom: 8px;
+}
+
+.comments-list .comment-card .comment-response .response-header .response-label {
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.comments-list .comment-card .comment-response .response-text {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.comments-list .comment-card .comment-response .response-actions {
+  margin-top: 8px;
+  text-align: right;
+}
+
+.comments-list .comment-card .comment-reply {
+  margin-bottom: 16px;
+}
+
+.comments-list .comment-card .comment-reply .reply-actions {
+  margin-top: 8px;
+  text-align: right;
+}
+
+.comments-list .comment-card .comment-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 0;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.empty-state [nz-icon] {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-state p {
+  font-size: 16px;
+  margin: 0;
+}

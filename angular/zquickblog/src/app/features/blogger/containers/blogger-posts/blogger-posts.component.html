@@ -1,0 +1,81 @@
+<div class="page-header">
+  <h2 nz-typography>Posts</h2>
+  
+  <div class="header-actions">
+    <nz-input-group [nzSuffix]="suffixIconSearch" class="search-box">
+      <input type="text" nz-input placeholder="Search posts..." [(ngModel)]="searchText" (keyup.enter)="onSearch()"/>
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <span nz-icon nzType="search"></span>
+    </ng-template>
+    
+    <nz-select [(ngModel)]="filterStatus" (ngModelChange)="onStatusFilterChange()" class="status-filter">
+      <nz-option nzValue="all" nzLabel="All"></nz-option>
+      <nz-option nzValue="published" nzLabel="Published"></nz-option>
+      <nz-option nzValue="draft" nzLabel="Draft"></nz-option>
+      <nz-option nzValue="pending" nzLabel="Pending"></nz-option>
+    </nz-select>
+    
+    <a routerLink="/blogger/posts/new" nz-button nzType="primary">
+      <span nz-icon nzType="plus"></span>
+      New Post
+    </a>
+  </div>
+</div>
+
+<nz-table
+  #postsTable
+  [nzData]="displayPosts"
+  nzTableLayout="auto"
+  [nzPageSize]="10"
+  [nzFrontPagination]="true">
+  <thead>
+    <tr>
+      <th *ngFor="let column of listOfColumns" [nzSortFn]="column.compare">
+        {{ column.title }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let post of postsTable.data">
+      <td>
+        <a [routerLink]="['/blogger/posts/edit', post.id]" class="post-title">{{ post.title }}</a>
+      </td>
+      <td>
+        <nz-tag [nzColor]="getStatusColor(post.status)">{{ post.status | titlecase }}</nz-tag>
+      </td>
+      <td>{{ post.publishedAt || 'Not published' }}</td>
+      <td>
+        <div class="category-tags">
+          <nz-tag *ngFor="let cat of post.category">{{ cat }}</nz-tag>
+        </div>
+      </td>
+      <td>
+        <span nz-icon nzType="eye"></span> {{ post.views }}
+      </td>
+      <td>
+        <span nz-icon nzType="message"></span> {{ post.comments }}
+      </td>
+      <td>
+        <a nz-button nzType="text" nzSize="small" [routerLink]="['/blogger/posts/edit', post.id]" nzTooltipTitle="Edit" nzTooltipPlacement="top" nz-tooltip>
+          <span nz-icon nzType="edit"></span>
+        </a>
+        
+        <button *ngIf="post.status !== 'published'" nz-button nzType="text" nzSize="small" (click)="publishPost(post.id)" nzTooltipTitle="Publish" nzTooltipPlacement="top" nz-tooltip>
+          <span nz-icon nzType="check-circle"></span>
+        </button>
+        
+        <a nz-button nzType="text" nzSize="small" [routerLink]="['/post', post.id]" target="_blank" nzTooltipTitle="View" nzTooltipPlacement="top" nz-tooltip>
+          <span nz-icon nzType="eye"></span>
+        </a>
+        
+        <button nz-button nzType="text" nzSize="small" nz-popconfirm nzPopconfirmTitle="Are you sure you want to delete this post?" (nzOnConfirm)="deletePost(post.id)" nzTooltipTitle="Delete" nzTooltipPlacement="top" nz-tooltip>
+          <span nz-icon nzType="delete"></span>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<!-- Empty State -->
+<nz-empty *ngIf="displayPosts.length === 0" [nzNotFoundContent]="'No posts found'" class="empty-state"></nz-empty>
