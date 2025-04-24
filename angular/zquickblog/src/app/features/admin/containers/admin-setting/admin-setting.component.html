@@ -1,0 +1,123 @@
+<nz-card>
+  <div class="header-container">
+    <div class="title-section">
+      <div>
+        <h2 class="card-title">Settings</h2>
+        <p class="subtitle">Manage system settings and preferences</p>
+      </div>
+    </div>
+  </div>
+
+  <nz-tabset class="settings-tabs">
+    <nz-tab nzTitle="General">
+      <div class="section-container">
+        <h3 class="section-title">System Preferences</h3>
+        
+        <div class="form-row">
+          <div class="form-label">Dark Mode</div>
+          <div class="form-control">
+            <nz-switch [(ngModel)]="darkModeEnabled"></nz-switch>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-label">Email Notifications</div>
+          <div class="form-control">
+            <nz-switch [(ngModel)]="emailNotifications"></nz-switch>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-label">Backup Frequency</div>
+          <div class="form-control">
+            <nz-select class="select-control" [(ngModel)]="backupFrequency">
+              <nz-option nzValue="daily" nzLabel="Daily"></nz-option>
+              <nz-option nzValue="weekly" nzLabel="Weekly"></nz-option>
+              <nz-option nzValue="monthly" nzLabel="Monthly"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        
+        <div class="action-container">
+          <button nz-button nzType="primary">Save Changes</button>
+        </div>
+      </div>
+    </nz-tab>
+    
+    <nz-tab nzTitle="Language">
+      <div class="section-container">
+        <h3 class="section-title">Language Management</h3>
+        
+        <div class="form-row form-inline">
+          <nz-input-group [nzPrefix]="prefixLanguage" class="language-input">
+            <input type="text" nz-input placeholder="Add new language..." [(ngModel)]="newLanguage" />
+          </nz-input-group>
+          <ng-template #prefixLanguage>
+            <i nz-icon nzType="global"></i>
+          </ng-template>
+          
+          <nz-input-group [nzPrefix]="prefixCode" class="language-code-input">
+            <input type="text" nz-input placeholder="Code (e.g. en)" [(ngModel)]="newLanguageCode" />
+          </nz-input-group>
+          <ng-template #prefixCode>
+            <i nz-icon nzType="code"></i>
+          </ng-template>
+          <button nz-button nzType="primary" (click)="addLanguage()">
+            <i nz-icon nzType="plus"></i> Add
+          </button>
+        </div>
+
+        <!-- <nz-divider></nz-divider> -->
+        
+        <div class="language-list">
+          <div class="language-item" *ngFor="let language of languages">
+            <div class="language-info">
+              <span class="language-name">{{ language.name }}</span>
+              <span class="language-code">{{ language.code }}</span>
+            </div>
+            <div class="language-actions">
+              <button nz-button nzType="text" nzDanger (click)="removeLanguage(language.id)">
+                <i nz-icon nzType="delete"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div *ngIf="languages.length === 0" class="empty-state">
+            No languages added yet
+          </div>
+        </div>
+      </div>
+    </nz-tab>
+    
+    <nz-tab nzTitle="Security">
+      <div class="section-container">
+        <h3 class="section-title">Security Settings</h3>
+        
+        <div class="form-row">
+          <div class="form-label">Current Password</div>
+          <div class="form-control">
+            <input nz-input type="password" placeholder="Enter current password" />
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-label">New Password</div>
+          <div class="form-control">
+            <input nz-input type="password" placeholder="Enter new password" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-label">Confirm Password</div>
+          <div class="form-control">
+            <input nz-input type="password" placeholder="Confirm new password" />
+          </div>
+        </div>
+        
+        <div class="action-container">
+          <button nz-button nzType="primary">Change Password</button>
+        </div>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+</nz-card>

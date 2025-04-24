@@ -1,0 +1,83 @@
+<nz-card ngSkipHydration>
+  <div class="header-container">
+    <div class="title-section">
+      <div>
+        <h2 class="card-title">All Users</h2>
+        <p class="subtitle">Manage users, add, edit or delete</p>
+      </div>
+      <button nz-button nzType="primary">
+        <i nz-icon nzType="plus"></i> Add User
+      </button>
+    </div>
+
+    <div class="filter-section">
+      <div class="search-container">
+        <nz-input-group [nzPrefix]="prefixIconSearch">
+          <input type="text" nz-input placeholder="Search users..." [(ngModel)]="searchValue" />
+        </nz-input-group>
+        <ng-template #prefixIconSearch>
+          <i nz-icon nzType="search"></i>
+        </ng-template>
+      </div>
+
+      <div class="role-filter">
+        <span class="filter-label">Role:</span>
+        <nz-select class="filter-select" nzPlaceHolder="All Roles" [(ngModel)]="selectedRole">
+          <nz-option nzValue="null" nzLabel="All Roles"></nz-option>
+          <nz-option nzValue="admin" nzLabel="Admin"></nz-option>
+          <nz-option nzValue="editor" nzLabel="Editor"></nz-option>
+          <nz-option nzValue="subscriber" nzLabel="Subscriber"></nz-option>
+        </nz-select>
+      </div>
+    </div>
+  </div>
+
+  <nz-table 
+    #basicTable 
+    [nzData]="listOfData"
+    [nzShowPagination]="false" 
+    class="users-table">
+    <thead>
+      <tr>
+        <th [nzWidth]="'50px'" [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th [nzAlign]="'right'">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+        <td>
+          <div class="user-cell">
+            <nz-avatar [nzSrc]="data.avatar"></nz-avatar>
+            <span class="user-name">{{ data.name }}</span>
+          </div>
+        </td>
+        <td>{{ data.email }}</td>
+        <td>
+          <nz-tag [nzColor]="getRoleColor(data.role)">{{ data.role }}</nz-tag>
+        </td>
+        <td [nzAlign]="'right'" class="action-buttons">
+          <button nz-button nzType="link" class="edit-button">
+            <i nz-icon nzType="edit"></i>
+          </button>
+          <button nz-button nzType="link" class="delete-button">
+            <i nz-icon nzType="delete"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <div class="pagination-container">
+    <div class="pagination-info">
+      Showing <strong>1</strong> to <strong>10</strong> of <strong>20</strong> results
+    </div>
+    <div class="pagination-buttons">
+      <button nz-button nzType="default">Previous</button>
+      <button nz-button nzType="primary">Next</button>
+    </div>
+  </div>
+</nz-card>

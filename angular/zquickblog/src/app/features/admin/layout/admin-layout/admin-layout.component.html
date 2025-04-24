@@ -1,0 +1,69 @@
+<nz-layout class="admin-layout">
+    <!-- Sidebar -->
+    <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzWidth]="256" class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <span *ngIf="!isCollapsed">AdminPanel</span>
+        <span *ngIf="isCollapsed">AP</span>
+      </div>
+      <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+        <li nz-menu-item routerLink="/dashboard" routerLinkActive="ant-menu-item-selected">
+          <i nz-icon nzType="dashboard"></i>
+          <span>Dashboard</span>
+        </li>
+        <li nz-menu-item routerLink="/posts" routerLinkActive="ant-menu-item-selected">
+          <i nz-icon nzType="file-text"></i>
+          <span>Posts</span>
+        </li>
+        <li nz-menu-item routerLink="/users" routerLinkActive="ant-menu-item-selected">
+          <i nz-icon nzType="user"></i>
+          <span>Users</span>
+        </li>
+        <li nz-menu-item routerLink="/categories" routerLinkActive="ant-menu-item-selected">
+          <i nz-icon nzType="folder"></i>
+          <span>Categories</span>
+        </li>
+        <li nz-menu-item routerLink="/settings" routerLinkActive="ant-menu-item-selected">
+          <i nz-icon nzType="setting"></i>
+          <span>Settings</span>
+        </li>
+        <li nz-menu-item class="logout-item">
+          <i nz-icon nzType="logout"></i>
+          <span>Logout</span>
+        </li>
+      </ul>
+    </nz-sider>
+  
+    <nz-layout class="admin-main">
+      <!-- Header -->
+      <nz-header class="admin-header">
+        <div class="header-left">
+          <span class="trigger-icon" (click)="toggleCollapsed()">
+            <i nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
+          </span>
+          <h1 class="admin-header-title">Admin Dashboard</h1>
+        </div>
+        <div class="header-right">
+          <a nz-dropdown [nzDropdownMenu]="menu">
+            <nz-avatar nzSrc="https://randomuser.me/api/portraits/men/75.jpg"></nz-avatar>
+            <span class="admin-profile-name">John Doe</span>
+          </a>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu>
+              <!-- <li nz-menu-item>Profile</li> -->
+              <li nz-menu-item routerLink="/settings">Settings</li>
+              <li nz-menu-divider></li>
+              <li nz-menu-item>Logout</li>
+            </ul>
+          </nz-dropdown-menu>
+        </div>
+      </nz-header>
+  
+      <!-- Content - Router Outlet -->
+      <nz-content class="admin-content">
+        <router-outlet></router-outlet>
+      </nz-content>
+  
+      <!-- Footer -->
+      <nz-footer class="admin-footer">Admin Dashboard ©2025 Created with NG-Zorro</nz-footer>
+    </nz-layout>
+  </nz-layout>

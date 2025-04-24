@@ -1,0 +1,89 @@
+/* Admin Theme Colors */
+:root {
+  /* Primary Colors */
+  --admin-primary: #3730a3;
+  --admin-primary-hover: #4338ca;
+  --admin-primary-active: #4f46e5;
+  
+  /* Text Colors */
+  --admin-text-primary: #1f2937;
+  --admin-text-secondary: #6b7280;
+  --admin-text-tertiary: #9ca3af;
+  
+  /* Background Colors */
+  --admin-bg-primary: #f3f4f6;
+  --admin-bg-secondary: #f9fafb;
+  --admin-bg-tertiary: #ffffff;
+  
+  /* Border Colors */
+  --admin-border: #e5e7eb;
+  
+  /* Action Colors */
+  --admin-edit: #4f46e5;
+  --admin-edit-hover: #4338ca;
+  --admin-delete: #ef4444;
+  --admin-delete-hover: #dc2626;
+  
+  /* Status Colors */
+  --admin-success: #10b981;
+  --admin-success-bg: #dcfce7;
+  --admin-warning: #f59e0b;
+  --admin-warning-bg: #fef3c7;
+  --admin-error: #ef4444;
+  --admin-error-bg: #fee2e2;
+  
+  /* Icon Colors */
+  --admin-icon-bg-primary: #e0e7ff;
+  --admin-icon-color-primary: #4f46e5;
+}
+
+/* Dark Theme Colors */
+[data-theme="dark"] {
+  /* Primary Colors */
+  --admin-primary: #1f2937;
+  --admin-primary-hover: #374151;
+  --admin-primary-active: #4f46e5;
+  
+  /* Text Colors */
+  --admin-text-primary: #f3f4f6;
+  --admin-text-secondary: #d1d5db;
+  --admin-text-tertiary: #9ca3af;
+  
+  /* Background Colors */
+  --admin-bg-primary: #111827;
+  --admin-bg-secondary: #1f2937;
+  --admin-bg-tertiary: #374151;
+  
+  /* Border Colors */
+  --admin-border: #374151;
+  
+  /* Action Colors remain the same */
+  
+  /* Status Colors - Background Changes */
+  --admin-success-bg: #064e3b;
+  --admin-warning-bg: #78350f;
+  --admin-error-bg: #7f1d1d;
+  
+  /* Icon Colors */
+  --admin-icon-bg-primary: #312e81;
+  --admin-icon-color-primary: #6366f1;
+}
+
+/* Table Styles */
+.admin-table-dark .ant-table {
+  background-color: var(--admin-bg-secondary);
+  color: var(--admin-text-primary);
+}
+
+.admin-table-dark .ant-table-thead > tr > th {
+  background-color: var(--admin-bg-tertiary);
+  color: var(--admin-text-primary);
+}
+
+.admin-table-dark .ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-table-dark .ant-table-tbody > tr.ant-table-row:hover > td {
+  background-color: var(--admin-bg-tertiary);
+}

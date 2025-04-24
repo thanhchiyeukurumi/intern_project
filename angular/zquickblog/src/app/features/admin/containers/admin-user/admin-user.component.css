@@ -1,0 +1,107 @@
+@import '../../admin.style.css';
+
+/* Users Component Styles */
+.header-container {
+  margin-bottom: 24px;
+}
+
+.title-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--admin-text-primary);
+  margin: 0;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: var(--admin-text-secondary);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.filter-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.search-container {
+  flex-grow: 1;
+  min-width: 200px;
+}
+
+.role-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-label {
+  color: var(--admin-text-secondary);
+  font-size: 0.875rem;
+}
+
+.filter-select {
+  min-width: 150px;
+}
+
+.user-cell {
+  display: flex;
+  align-items: center;
+}
+
+.user-name {
+  margin-left: 12px;
+  color: var(--admin-text-primary);
+  font-weight: 500;
+}
+
+.action-buttons {
+  white-space: nowrap;
+}
+
+.edit-button {
+  color: var(--admin-edit);
+}
+
+.edit-button:hover {
+  color: var(--admin-edit-hover);
+}
+
+.delete-button {
+  color: var(--admin-delete);
+}
+
+.delete-button:hover {
+  color: var(--admin-delete-hover);
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.pagination-info {
+  color: var(--admin-text-secondary);
+  font-size: 0.875rem;
+}
+
+.pagination-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+/* Dark theme is handled by CSS variables */

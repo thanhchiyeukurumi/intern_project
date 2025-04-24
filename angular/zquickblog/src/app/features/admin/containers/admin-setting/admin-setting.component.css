@@ -1,0 +1,118 @@
+@import '../../admin.style.css';
+
+.header-container {
+  margin-bottom: 24px;
+}
+
+.title-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--admin-text-primary);
+  margin: 0;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: var(--admin-text-secondary);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.section-container {
+  padding: 16px 0;
+}
+
+.section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--admin-text-primary);
+  margin-bottom: 24px;
+}
+
+.form-row {
+  display: flex;
+  margin-bottom: 24px;
+  align-items: center;
+}
+
+.form-label {
+  width: 180px;
+  color: var(--admin-text-secondary);
+  font-weight: 500;
+}
+
+.form-control {
+  flex: 1;
+}
+
+.select-control {
+  width: 100%;
+  max-width: 300px;
+}
+
+.action-container {
+  margin-top: 32px;
+}
+
+/* Language Tab Styles */
+.form-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.language-input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.language-code-input {
+  width: 120px;
+}
+
+.language-list {
+  margin-top: 16px;
+}
+
+.language-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  background-color: var(--admin-bg-secondary);
+  border-radius: 4px;
+  border: 1px solid var(--admin-border);
+}
+
+.language-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.language-name {
+  font-weight: 500;
+  color: var(--admin-text-primary);
+}
+
+.language-code {
+  color: var(--admin-text-secondary);
+  font-size: 0.875rem;
+  background-color: var(--admin-bg-tertiary);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 32px 0;
+  color: var(--admin-text-tertiary);
+}

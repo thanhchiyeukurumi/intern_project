@@ -1,0 +1,110 @@
+@import '../../admin.style.css';
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.stats-row {
+  margin-bottom: 24px;
+}
+
+/* Stats Cards */
+.stats-card {
+  margin-bottom: 16px;
+}
+
+.stats-icon-container {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.stats-icon {
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.stats-icon.primary {
+  background-color: var(--admin-icon-bg-primary);
+  color: var(--admin-icon-color-primary);
+}
+
+.stats-icon.success {
+  background-color: var(--admin-success-bg);
+  color: var(--admin-success);
+}
+
+.stats-icon.warning {
+  background-color: var(--admin-warning-bg);
+  color: var(--admin-warning);
+}
+
+.stats-icon.error {
+  background-color: var(--admin-error-bg);
+  color: var(--admin-error);
+}
+
+:host ::ng-deep .ant-statistic-title {
+  font-size: 0.875rem;
+  color: var(--admin-text-secondary);
+}
+
+:host ::ng-deep .ant-statistic-content {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--admin-text-primary);
+}
+
+.trend-info {
+  margin-top: 12px;
+  font-size: 0.875rem;
+}
+
+.trend-up {
+  color: var(--admin-success);
+  font-weight: 500;
+  margin-right: 4px;
+}
+
+.trend-down {
+  color: var(--admin-error);
+  font-weight: 500;
+  margin-right: 4px;
+}
+
+.trend-period {
+  color: var(--admin-text-secondary);
+}
+
+/* Chart Card */
+.chart-card {
+  margin-bottom: 24px;
+}
+
+.chart-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--admin-text-primary);
+  margin-bottom: 16px;
+}
+
+.chart-container {
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-image {
+  max-width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+}
+
+/* Dark theme overrides handled by CSS variables */

@@ -1,0 +1,133 @@
+/* Main Layout */
+.admin-layout {
+    min-height: 100vh;
+  }
+  
+  /* Sidebar */
+  .admin-sidebar {
+    background-color: var(--admin-primary);
+  }
+  
+  .admin-sidebar-brand {
+    height: 64px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--admin-icon-bg-primary);
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  :host ::ng-deep .ant-menu-dark {
+    background-color: var(--admin-primary);
+  }
+  
+  :host ::ng-deep .ant-menu-item-selected {
+    background-color: var(--admin-primary-hover) !important;
+  }
+  
+  :host ::ng-deep .ant-menu-item:hover:not(.ant-menu-item-selected) {
+    background-color: var(--admin-primary-hover) !important;
+  }
+  
+  .logout-item {
+    position: absolute;
+    bottom: 16px;
+    width: 100%;
+  }
+  
+  /* Header */
+  .admin-header {
+    background-color: var(--admin-bg-tertiary);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    height: 64px;
+  }
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .trigger-icon {
+    font-size: 18px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color 0.3s;
+    color: var(--admin-text-secondary);
+  }
+  
+  .trigger-icon:hover {
+    color: var(--admin-primary-active);
+  }
+  
+  .admin-header-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--admin-text-primary);
+  }
+  
+  .header-right {
+    padding-right: 24px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .admin-profile-name {
+    margin-left: 8px;
+    color: var(--admin-text-secondary);
+  }
+  
+  /* Content */
+  .admin-content {
+    padding: 24px;
+    background-color: var(--admin-bg-primary);
+    overflow-y: auto;
+  }
+  
+  /* Footer */
+  .admin-footer {
+    text-align: center;
+    color: var(--admin-text-secondary);
+    background-color: var(--admin-bg-primary);
+  }
+  
+  /* Dark Theme Styles - Will be applied when the parent has data-theme="dark" */
+  :host-context([data-theme="dark"]) .admin-sidebar {
+    background-color: var(--admin-primary);
+  }
+  
+  :host-context([data-theme="dark"]) .ant-menu-dark {
+    background-color: var(--admin-primary);
+  }
+  
+  :host-context([data-theme="dark"]) .ant-menu-item-selected {
+    background-color: var(--admin-primary-active) !important;
+  }
+  
+  :host-context([data-theme="dark"]) .admin-header {
+    background-color: var(--admin-bg-secondary);
+  }
+  
+  :host-context([data-theme="dark"]) .admin-header-title {
+    color: var(--admin-text-primary);
+  }
+  
+  :host-context([data-theme="dark"]) .trigger-icon {
+    color: var(--admin-text-secondary);
+  }
+  
+  :host-context([data-theme="dark"]) .admin-content {
+    background-color: var(--admin-bg-primary);
+  }
+  
+  :host-context([data-theme="dark"]) .admin-footer {
+    background-color: var(--admin-bg-primary);
+    color: var(--admin-text-tertiary);
+  }

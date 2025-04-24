@@ -1,0 +1,85 @@
+<nz-card ngSkipHydration>
+  <div class="container">
+    <!-- Stats Grid -->
+    <div nz-row [nzGutter]="16" class="stats-row">
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12" [nzLg]="6" [nzXl]="6">
+        <nz-card class="stats-card primary-card">
+          <div class="stats-icon-container">
+            <div class="stats-icon primary">
+              <i nz-icon nzType="file-text"></i>
+            </div>
+          </div>
+          <nz-statistic [nzValue]="124" [nzTitle]="'Total Posts'"></nz-statistic>
+          <div class="trend-info">
+            <span class="trend-up">
+              <i nz-icon nzType="arrow-up"></i> 12% 
+            </span>
+            <span class="trend-period">since last month</span>
+          </div>
+        </nz-card>
+      </div>
+      
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12" [nzLg]="6" [nzXl]="6">
+        <nz-card class="stats-card success-card">
+          <div class="stats-icon-container">
+            <div class="stats-icon success">
+              <i nz-icon nzType="user"></i>
+            </div>
+          </div>
+          <nz-statistic [nzValue]="752" [nzTitle]="'Total Users'"></nz-statistic>
+          <div class="trend-info">
+            <span class="trend-up">
+              <i nz-icon nzType="arrow-up"></i> 5.3% 
+            </span>
+            <span class="trend-period">since last month</span>
+          </div>
+        </nz-card>
+      </div>
+      
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12" [nzLg]="6" [nzXl]="6">
+        <nz-card class="stats-card warning-card">
+          <div class="stats-icon-container">
+            <div class="stats-icon warning">
+              <i nz-icon nzType="comment"></i>
+            </div>
+          </div>
+          <nz-statistic [nzValue]="328" [nzTitle]="'Comments'"></nz-statistic>
+          <div class="trend-info">
+            <span class="trend-up">
+              <i nz-icon nzType="arrow-up"></i> 8.1% 
+            </span>
+            <span class="trend-period">since last month</span>
+          </div>
+        </nz-card>
+      </div>
+      
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12" [nzLg]="6" [nzXl]="6">
+        <nz-card class="stats-card error-card">
+          <div class="stats-icon-container">
+            <div class="stats-icon error">
+              <i nz-icon nzType="eye"></i>
+            </div>
+          </div>
+          <nz-statistic [nzValue]="25400" [nzValueTemplate]="valueTemplate" [nzTitle]="'Total Views'"></nz-statistic>
+          <ng-template #valueTemplate>
+            <span>25.4K</span>
+          </ng-template>
+          <div class="trend-info">
+            <span class="trend-up">
+              <i nz-icon nzType="arrow-up"></i> 15.6% 
+            </span>
+            <span class="trend-period">since last month</span>
+          </div>
+        </nz-card>
+      </div>
+    </div>
+
+    <!-- Chart Card -->
+    <nz-card class="chart-card">
+      <h3 class="chart-title">Total Posts In Last Month</h3>
+      <div class="chart-container">
+        <img src="https://www.chartjs.org/docs/latest/assets/img/usage-1.be7a12cd.png" alt="Traffic Chart" class="chart-image">
+      </div>
+    </nz-card>
+  </div>
+</nz-card>
