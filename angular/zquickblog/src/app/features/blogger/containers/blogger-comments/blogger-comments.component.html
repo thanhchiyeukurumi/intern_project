@@ -1,8 +1,11 @@
 <div class="page-header">
   <h2 nz-typography>Comments</h2>
+  
   <div class="action-area">
     <nz-input-group [nzSuffix]="suffixIconSearch" class="search-box">
-      <input type="text" nz-input placeholder="Search comments..." [(ngModel)]="searchText"/>
+      <input type="text" 
+             nz-input placeholder="Search comments..." 
+             [(ngModel)]="searchText"/>
     </nz-input-group>
     <ng-template #suffixIconSearch>
       <span nz-icon nzType="search"></span>

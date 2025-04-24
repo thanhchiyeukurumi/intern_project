@@ -8,6 +8,7 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 
+
 interface DashboardStats {
   totalPosts: number;
   totalViews: number;
@@ -17,7 +18,7 @@ interface DashboardStats {
 @Component({
   selector: 'app-blogger-dashboard',
   templateUrl: './blogger-dashboard.component.html',
-  styleUrls: ['./blogger-dashboard.component.scss'],
+  styleUrls: ['./blogger-dashboard.component.css'],
   standalone: true,
   imports: [
     CommonModule,

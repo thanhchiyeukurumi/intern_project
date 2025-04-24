@@ -1,197 +1,198 @@
 <div class="page-header">
   <h2 nz-typography>Settings</h2>
+  <div class="action-area">
+    <!-- Không có action nào cho trang Settings -->
+  </div>
 </div>
 
-<div class="settings-container">
-  <nz-card>
-    <nz-tabset>
-      <!-- General Settings Tab -->
-      <nz-tab nzTitle="General">
-        <form nz-form [formGroup]="generalForm" (ngSubmit)="saveGeneralSettings()">
-          <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="blogName">Blog Name</nz-form-label>
-            <nz-form-control [nzSm]="12" [nzXs]="24">
-              <input nz-input id="blogName" formControlName="blogName" placeholder="Your blog name" />
-            </nz-form-control>
-          </nz-form-item>
-          
-          <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="blogDescription">Description</nz-form-label>
-            <nz-form-control [nzSm]="12" [nzXs]="24">
-              <textarea 
-                nz-input 
-                id="blogDescription" 
-                formControlName="blogDescription"
-                [nzAutosize]="{ minRows: 2, maxRows: 6 }" 
-                placeholder="A short description of your blog">
-              </textarea>
-            </nz-form-control>
-          </nz-form-item>
-          
-          <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="defaultLanguage">Default Language</nz-form-label>
-            <nz-form-control [nzSm]="12" [nzXs]="24">
-              <nz-select id="defaultLanguage" formControlName="defaultLanguage" nzPlaceHolder="Select a language">
-                <nz-option 
-                  *ngFor="let option of defaultLanguageOptions" 
-                  [nzValue]="option.value" 
-                  [nzLabel]="option.label">
-                </nz-option>
-              </nz-select>
-            </nz-form-control>
-          </nz-form-item>
-          
-          <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="postsPerPage">Posts Per Page</nz-form-label>
-            <nz-form-control [nzSm]="12" [nzXs]="24">
-              <nz-input-number 
-                id="postsPerPage" 
-                formControlName="postsPerPage" 
-                nzMin="1" 
-                nzMax="50">
-              </nz-input-number>
-            </nz-form-control>
-          </nz-form-item>
-          
-          <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="enableComments">Enable Comments</nz-form-label>
-            <nz-form-control [nzSm]="12" [nzXs]="24">
-              <nz-switch id="enableComments" formControlName="enableComments"></nz-switch>
-            </nz-form-control>
-          </nz-form-item>
-          
-          <nz-form-item>
-            <nz-form-control [nzOffset]="6" [nzSm]="16" [nzXs]="24">
-              <button nz-button nzType="primary" [nzLoading]="isLoading" type="submit">
-                Save General Settings
-              </button>
-            </nz-form-control>
-          </nz-form-item>
-        </form>
-      </nz-tab>
-      
-      <!-- Privacy Settings Tab -->
-      <nz-tab nzTitle="Privacy">
-        <form nz-form [formGroup]="privacyForm" (ngSubmit)="savePrivacySettings()">
-          <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="makeProfilePublic">Public Profile</nz-form-label>
-            <nz-form-control [nzSm]="12" [nzXs]="24">
-              <nz-switch id="makeProfilePublic" formControlName="makeProfilePublic"></nz-switch>
-              <div class="setting-hint">Make your profile visible to anyone</div>
-            </nz-form-control>
-          </nz-form-item>
-          
-          <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="showEmail">Show Email</nz-form-label>
-            <nz-form-control [nzSm]="12" [nzXs]="24">
-              <nz-switch id="showEmail" formControlName="showEmail"></nz-switch>
-              <div class="setting-hint">Display your email address on your public profile</div>
-            </nz-form-control>
-          </nz-form-item>
-          
-          <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="allowSearchEngines">Search Engine Visibility</nz-form-label>
-            <nz-form-control [nzSm]="12" [nzXs]="24">
-              <nz-switch id="allowSearchEngines" formControlName="allowSearchEngines"></nz-switch>
-              <div class="setting-hint">Allow search engines to index your blog</div>
-            </nz-form-control>
-          </nz-form-item>
-          
-          <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="cookieConsent">Cookie Consent</nz-form-label>
-            <nz-form-control [nzSm]="12" [nzXs]="24">
-              <nz-switch id="cookieConsent" formControlName="cookieConsent"></nz-switch>
-              <div class="setting-hint">Show cookie consent banner to visitors</div>
-            </nz-form-control>
-          </nz-form-item>
-          
-          <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="dataCollection">Data Collection</nz-form-label>
-            <nz-form-control [nzSm]="12" [nzXs]="24">
-              <nz-switch id="dataCollection" formControlName="dataCollection"></nz-switch>
-              <div class="setting-hint">Allow anonymous usage data collection to improve our service</div>
-            </nz-form-control>
-          </nz-form-item>
-          
-          <nz-form-item>
-            <nz-form-control [nzOffset]="6" [nzSm]="16" [nzXs]="24">
-              <button nz-button nzType="primary" [nzLoading]="isLoading" type="submit">
-                Save Privacy Settings
-              </button>
-            </nz-form-control>
-          </nz-form-item>
-        </form>
-      </nz-tab>
-      
-      <!-- Integrations Tab -->
-      <nz-tab nzTitle="Integrations">
-        <form nz-form [formGroup]="integrationForm" (ngSubmit)="saveIntegrationSettings()">
-          <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="googleAnalyticsId">Google Analytics</nz-form-label>
-            <nz-form-control [nzSm]="12" [nzXs]="24">
-              <input nz-input id="googleAnalyticsId" formControlName="googleAnalyticsId" placeholder="UA-XXXXXXXXX-X" />
-              <div class="setting-hint">Enter your Google Analytics tracking ID</div>
-            </nz-form-control>
-          </nz-form-item>
-          
-          <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="facebookPixelId">Facebook Pixel</nz-form-label>
-            <nz-form-control [nzSm]="12" [nzXs]="24">
-              <input nz-input id="facebookPixelId" formControlName="facebookPixelId" placeholder="XXXXXXXXXXXXXXXX" />
-              <div class="setting-hint">Enter your Facebook Pixel ID</div>
-            </nz-form-control>
-          </nz-form-item>
-          
-          <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="disqusShortname">Disqus Shortname</nz-form-label>
-            <nz-form-control [nzSm]="12" [nzXs]="24">
-              <input nz-input id="disqusShortname" formControlName="disqusShortname" placeholder="yoursitename" />
-              <div class="setting-hint">Enter your Disqus shortname to enable comments</div>
-            </nz-form-control>
-          </nz-form-item>
-          
-          <nz-form-item>
-            <nz-form-control [nzOffset]="6" [nzSm]="16" [nzXs]="24">
-              <button nz-button nzType="primary" [nzLoading]="isLoading" type="submit">
-                Save Integration Settings
-              </button>
-            </nz-form-control>
-          </nz-form-item>
-        </form>
-      </nz-tab>
-      
-      <!-- Data & Account Tab -->
-      <nz-tab nzTitle="Data & Account">
-        <nz-divider nzText="Data Management"></nz-divider>
+<nz-card>
+  <nz-tabset>
+    <!-- General Settings Tab -->
+    <nz-tab nzTitle="General">
+      <form nz-form [formGroup]="generalForm" (ngSubmit)="saveGeneralSettings()">
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="blogName">Blog Name</nz-form-label>
+          <nz-form-control [nzSm]="12" [nzXs]="24">
+            <input nz-input id="blogName" formControlName="blogName" placeholder="Your blog name" />
+          </nz-form-control>
+        </nz-form-item>
         
-        <div class="account-action-card">
-          <div class="action-content">
-            <div class="action-title">Export Your Data</div>
-            <div class="action-description">Download all of your posts, comments, and profile information as a ZIP file.</div>
-          </div>
-          <div class="action-button">
-            <button nz-button (click)="exportData()">
-              <span nz-icon nzType="download"></span>
-              Export Data
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="blogDescription">Description</nz-form-label>
+          <nz-form-control [nzSm]="12" [nzXs]="24">
+            <textarea 
+              nz-input 
+              id="blogDescription" 
+              formControlName="blogDescription"
+              [nzAutosize]="{ minRows: 2, maxRows: 6 }" 
+              placeholder="A short description of your blog">
+            </textarea>
+          </nz-form-control>
+        </nz-form-item>
+        
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="defaultLanguage">Default Language</nz-form-label>
+          <nz-form-control [nzSm]="12" [nzXs]="24">
+            <nz-select id="defaultLanguage" formControlName="defaultLanguage" nzPlaceHolder="Select a language">
+              <nz-option 
+                *ngFor="let option of defaultLanguageOptions" 
+                [nzValue]="option.value" 
+                [nzLabel]="option.label">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="postsPerPage">Posts Per Page</nz-form-label>
+          <nz-form-control [nzSm]="12" [nzXs]="24">
+            <nz-input-number 
+              id="postsPerPage" 
+              formControlName="postsPerPage" 
+              nzMin="1" 
+              nzMax="50">
+            </nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+        
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="enableComments">Enable Comments</nz-form-label>
+          <nz-form-control [nzSm]="12" [nzXs]="24">
+            <nz-switch id="enableComments" formControlName="enableComments"></nz-switch>
+          </nz-form-control>
+        </nz-form-item>
+        
+        <nz-form-item>
+          <nz-form-control [nzOffset]="6" [nzSm]="16" [nzXs]="24">
+            <button nz-button nzType="primary" [nzLoading]="isLoading" type="submit">
+              Save General Settings
             </button>
-          </div>
-        </div>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </nz-tab>
+    
+    <!-- Privacy Settings Tab -->
+    <nz-tab nzTitle="Privacy">
+      <form nz-form [formGroup]="privacyForm" (ngSubmit)="savePrivacySettings()">
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="makeProfilePublic">Public Profile</nz-form-label>
+          <nz-form-control [nzSm]="12" [nzXs]="24">
+            <nz-switch id="makeProfilePublic" formControlName="makeProfilePublic"></nz-switch>
+            <div class="setting-hint">Make your profile visible to anyone</div>
+          </nz-form-control>
+        </nz-form-item>
         
-        <nz-divider nzText="Danger Zone"></nz-divider>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="showEmail">Show Email</nz-form-label>
+          <nz-form-control [nzSm]="12" [nzXs]="24">
+            <nz-switch id="showEmail" formControlName="showEmail"></nz-switch>
+            <div class="setting-hint">Display your email address on your public profile</div>
+          </nz-form-control>
+        </nz-form-item>
         
-        <div class="account-action-card danger-zone">
-          <div class="action-content">
-            <div class="action-title">Delete Your Account</div>
-            <div class="action-description">Permanently remove your account and all of your content. This action cannot be undone.</div>
-          </div>
-          <div class="action-button">
-            <button nz-button nzDanger (click)="deleteAccount()">
-              <span nz-icon nzType="delete"></span>
-              Delete Account
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="allowSearchEngines">Search Engine Visibility</nz-form-label>
+          <nz-form-control [nzSm]="12" [nzXs]="24">
+            <nz-switch id="allowSearchEngines" formControlName="allowSearchEngines"></nz-switch>
+            <div class="setting-hint">Allow search engines to index your blog</div>
+          </nz-form-control>
+        </nz-form-item>
+        
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="cookieConsent">Cookie Consent</nz-form-label>
+          <nz-form-control [nzSm]="12" [nzXs]="24">
+            <nz-switch id="cookieConsent" formControlName="cookieConsent"></nz-switch>
+            <div class="setting-hint">Show cookie consent banner to visitors</div>
+          </nz-form-control>
+        </nz-form-item>
+        
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="dataCollection">Data Collection</nz-form-label>
+          <nz-form-control [nzSm]="12" [nzXs]="24">
+            <nz-switch id="dataCollection" formControlName="dataCollection"></nz-switch>
+            <div class="setting-hint">Allow anonymous usage data collection to improve our service</div>
+          </nz-form-control>
+        </nz-form-item>
+        
+        <nz-form-item>
+          <nz-form-control [nzOffset]="6" [nzSm]="16" [nzXs]="24">
+            <button nz-button nzType="primary" [nzLoading]="isLoading" type="submit">
+              Save Privacy Settings
             </button>
-          </div>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </nz-tab>
+    
+    <!-- Integrations Tab -->
+    <nz-tab nzTitle="Integrations">
+      <form nz-form [formGroup]="integrationForm" (ngSubmit)="saveIntegrationSettings()">
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="googleAnalyticsId">Google Analytics</nz-form-label>
+          <nz-form-control [nzSm]="12" [nzXs]="24">
+            <input nz-input id="googleAnalyticsId" formControlName="googleAnalyticsId" placeholder="UA-XXXXXXXXX-X" />
+            <div class="setting-hint">Enter your Google Analytics tracking ID</div>
+          </nz-form-control>
+        </nz-form-item>
+        
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="facebookPixelId">Facebook Pixel</nz-form-label>
+          <nz-form-control [nzSm]="12" [nzXs]="24">
+            <input nz-input id="facebookPixelId" formControlName="facebookPixelId" placeholder="XXXXXXXXXXXXXXXX" />
+            <div class="setting-hint">Enter your Facebook Pixel ID</div>
+          </nz-form-control>
+        </nz-form-item>
+        
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="disqusShortname">Disqus Shortname</nz-form-label>
+          <nz-form-control [nzSm]="12" [nzXs]="24">
+            <input nz-input id="disqusShortname" formControlName="disqusShortname" placeholder="yoursitename" />
+            <div class="setting-hint">Enter your Disqus shortname to enable comments</div>
+          </nz-form-control>
+        </nz-form-item>
+        
+        <nz-form-item>
+          <nz-form-control [nzOffset]="6" [nzSm]="16" [nzXs]="24">
+            <button nz-button nzType="primary" [nzLoading]="isLoading" type="submit">
+              Save Integration Settings
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </nz-tab>
+    
+    <!-- Data & Account Tab -->
+    <nz-tab nzTitle="Data & Account">
+      <nz-divider nzText="Data Management"></nz-divider>
+      
+      <div class="account-action-card">
+        <div class="action-content">
+          <div class="action-title">Export Your Data</div>
+          <div class="action-description">Download all of your posts, comments, and profile information as a ZIP file.</div>
         </div>
-      </nz-tab>
-    </nz-tabset>
-  </nz-card>
-</div>
+        <div class="action-button">
+          <button nz-button (click)="exportData()">
+            <span nz-icon nzType="download"></span>
+            Export Data
+          </button>
+        </div>
+      </div>
+      
+      <nz-divider nzText="Danger Zone"></nz-divider>
+      
+      <div class="account-action-card danger-zone">
+        <div class="action-content">
+          <div class="action-title">Delete Your Account</div>
+          <div class="action-description">Permanently remove your account and all of your content. This action cannot be undone.</div>
+        </div>
+        <div class="action-button">
+          <button nz-button nzDanger (click)="deleteAccount()">
+            <span nz-icon nzType="delete"></span>
+            Delete Account
+          </button>
+        </div>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+</nz-card>

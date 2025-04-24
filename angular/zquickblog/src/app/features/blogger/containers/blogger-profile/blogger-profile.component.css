@@ -1,0 +1,41 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-header h2 {
+  margin-bottom: 0;
+}
+
+.page-header .action-area {
+  display: flex;
+}
+
+.avatar-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.avatar-section nz-avatar {
+  margin-right: 16px;
+}
+
+.avatar-section .avatar-upload-area {
+  display: flex;
+  flex-direction: column;
+}
+
+.avatar-section .avatar-upload-area .upload-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.form-hint {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+  margin-top: 4px;
+}

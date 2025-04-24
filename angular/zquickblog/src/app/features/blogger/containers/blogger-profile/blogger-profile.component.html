@@ -1,63 +1,64 @@
 <div class="page-header">
   <h2 nz-typography>Profile</h2>
+  <div class="action-area">
+    <!-- Không có action nào cho trang Profile -->
+  </div>
 </div>
 
-<div class="profile-container">
-  <nz-card>
-    <form nz-form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
-      <!-- Avatar Section -->
-      <div class="avatar-section">
-        <nz-avatar [nzSize]="84" [nzSrc]="avatarUrl"></nz-avatar>
-        <div class="avatar-upload-area">
-          <nz-upload 
-            [(nzFileList)]="fileList"
-            [nzBeforeUpload]="beforeUpload"
-            [nzShowUploadList]="false">
-            <button nz-button>
-              <span nz-icon nzType="upload"></span>
-              Change Avatar
-            </button>
-          </nz-upload>
-          <div class="upload-hint">Recommended size: 256x256 pixels</div>
-        </div>
+<nz-card>
+  <form nz-form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <!-- Avatar Section -->
+    <div class="avatar-section">
+      <nz-avatar [nzSize]="84" [nzSrc]="avatarUrl"></nz-avatar>
+      <div class="avatar-upload-area">
+        <nz-upload 
+          [(nzFileList)]="fileList"
+          [nzBeforeUpload]="beforeUpload"
+          [nzShowUploadList]="false">
+          <button nz-button>
+            <span nz-icon nzType="upload"></span>
+            Change Avatar
+          </button>
+        </nz-upload>
+        <div class="upload-hint">Recommended size: 256x256 pixels</div>
       </div>
+    </div>
 
-      <!-- Username (Non-editable) -->
-      <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24">Username</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24">
-          <input nz-input formControlName="username" readonly />
-          <div class="form-hint">Username cannot be changed</div>
-        </nz-form-control>
-      </nz-form-item>
+    <!-- Username (Non-editable) -->
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24">Username</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input formControlName="username" readonly />
+        <div class="form-hint">Username cannot be changed</div>
+      </nz-form-control>
+    </nz-form-item>
 
-      <!-- Name (Editable) -->
-      <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>Name</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input your name!">
-          <input nz-input formControlName="name" placeholder="Your display name" />
-        </nz-form-control>
-      </nz-form-item>
+    <!-- Name (Editable) -->
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>Name</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input your name!">
+        <input nz-input formControlName="name" placeholder="Your display name" />
+      </nz-form-control>
+    </nz-form-item>
 
-      <!-- About Me (Editable) -->
-      <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>About Me</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input a short description about yourself!">
-          <textarea 
-            nz-input 
-            formControlName="aboutMe"
-            [nzAutosize]="{ minRows: 3, maxRows: 6 }"
-            placeholder="A short bio to show on your profile">
-          </textarea>
-        </nz-form-control>
-      </nz-form-item>
+    <!-- About Me (Editable) -->
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>About Me</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input a short description about yourself!">
+        <textarea 
+          nz-input 
+          formControlName="aboutMe"
+          [nzAutosize]="{ minRows: 3, maxRows: 6 }"
+          placeholder="A short bio to show on your profile">
+        </textarea>
+      </nz-form-control>
+    </nz-form-item>
 
-      <!-- Submit Button -->
-      <nz-form-item>
-        <nz-form-control [nzOffset]="6" [nzSm]="14" [nzXs]="24">
-          <button nz-button nzType="primary" [nzLoading]="isLoading" type="submit">Save Changes</button>
-        </nz-form-control>
-      </nz-form-item>
-    </form>
-  </nz-card>
-</div>
+    <!-- Submit Button -->
+    <nz-form-item>
+      <nz-form-control [nzOffset]="6" [nzSm]="14" [nzXs]="24">
+        <button nz-button nzType="primary" [nzLoading]="isLoading" type="submit">Save Changes</button>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-card>

@@ -10,6 +10,7 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzTypographyModule } from 'ng-zorro-antd/typography'; //ưth?????
 
 interface Comment {
   id: string;
@@ -38,7 +39,8 @@ interface Comment {
     NzPopconfirmModule,
     NzAvatarModule,
     NzInputModule,
-    NzBadgeModule
+    NzBadgeModule,
+    NzTypographyModule
   ]
 })
 export class BloggerCommentsComponent {

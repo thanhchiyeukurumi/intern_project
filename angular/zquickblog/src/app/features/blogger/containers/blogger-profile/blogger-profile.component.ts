@@ -13,7 +13,7 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
 @Component({
   selector: 'app-blogger-profile',
   templateUrl: './blogger-profile.component.html',
-  styleUrls: ['./blogger-profile.component.scss'],
+  styleUrls: ['./blogger-profile.component.css'],
   standalone: true,
   imports: [
     CommonModule,

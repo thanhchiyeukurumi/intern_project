@@ -1,0 +1,55 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-header h2 {
+  margin-bottom: 0;
+}
+
+.page-header .action-area {
+  display: flex;
+}
+
+.setting-hint {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+  margin-top: 4px;
+}
+
+.account-action-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border: 1px solid #f0f0f0;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.account-action-card .action-content .action-title {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.account-action-card .action-content .action-description {
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
+}
+
+.account-action-card .action-button {
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+
+.account-action-card.danger-zone {
+  border-color: #ffccc7;
+  background-color: #fff2f0;
+}
+
+.account-action-card.danger-zone .action-title {
+  color: #cf1322;
+}

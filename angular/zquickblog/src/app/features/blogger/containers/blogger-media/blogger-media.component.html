@@ -1,9 +1,8 @@
 <div class="page-header">
   <h2 nz-typography>Media Library</h2>
 
-  <div class="header-actions">
+  <div class="action-area">
     <nz-input-group [nzSuffix]="suffixIconSearch" class="search-box">
-      <!-- Trigger search on input change -->
       <input
         type="text"
         nz-input
@@ -29,89 +28,97 @@
   </div>
 </div>
 
-<!-- Progress bar for uploads -->
-<nz-progress *ngIf="isUploading" [nzPercent]="uploadProgress" nzStatus="active" class="upload-progress"></nz-progress>
+<nz-card>
+  <!-- Progress bar for uploads -->
+  <nz-progress *ngIf="isUploading" [nzPercent]="uploadProgress" nzStatus="active" class="upload-progress"></nz-progress>
 
-<!-- Grid View -->
-<div *ngIf="viewMode === 'grid'" class="media-grid">
-  <!-- Check if filtered list is empty -->
-  <nz-empty *ngIf="mediaItems.length === 0 && !isUploading" [nzNotFoundContent]="'No media files found' + (searchText ? ' matching your search' : '')" class="empty-state"></nz-empty>
-
-  <div nz-row [nzGutter]="[16, 16]">
-    <!-- Loop through filtered items -->
-    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8" [nzLg]="6" *ngFor="let item of mediaItems; trackBy: trackById">
-      <nz-card class="media-card" [nzCover]="coverTemplate">
-        <ng-template #coverTemplate>
-          <div class="media-thumbnail">
-            <!-- Use item.thumbnail which now handles images and placeholders -->
-            <img [src]="item.thumbnail" [alt]="item.name" />
-            <div class="media-overlay">
-              <div class="overlay-actions">
-                <button nz-button nzType="text" nzShape="circle" (click)="copyUrl(item.url)" nzTooltipTitle="Copy URL" nzTooltipPlacement="bottom" nz-tooltip>
-                  <span nz-icon nzType="copy"></span>
-                </button>
-                <button nz-button nzType="text" nzShape="circle" nz-popconfirm nzPopconfirmTitle="Are you sure delete this file?" (nzOnConfirm)="deleteMedia(item.id)" nzTooltipTitle="Delete" nzTooltipPlacement="bottom" nz-tooltip>
-                  <span nz-icon nzType="delete"></span>
-                </button>
+  <!-- Grid View -->
+  <div *ngIf="viewMode === 'grid'" class="media-grid">
+    <div nz-row [nzGutter]="[16, 16]">
+      <!-- Loop through filtered items -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8" [nzLg]="6" *ngFor="let item of mediaItems; trackBy: trackById">
+        <nz-card class="media-card" [nzCover]="coverTemplate">
+          <ng-template #coverTemplate>
+            <div class="media-thumbnail">
+              <!-- Use item.thumbnail which now handles images and placeholders -->
+              <img [src]="item.thumbnail" [alt]="item.name" />
+              <div class="media-overlay">
+                <div class="overlay-actions">
+                  <button nz-button nzType="text" nzShape="circle" (click)="copyUrl(item.url)" nzTooltipTitle="Copy URL" nzTooltipPlacement="bottom" nz-tooltip>
+                    <span nz-icon nzType="copy"></span>
+                  </button>
+                  <button nz-button nzType="text" nzShape="circle" nz-popconfirm nzPopconfirmTitle="Are you sure delete this file?" (nzOnConfirm)="deleteMedia(item.id)" nzTooltipTitle="Delete" nzTooltipPlacement="bottom" nz-tooltip>
+                    <span nz-icon nzType="delete"></span>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </ng-template>
-        <nz-card-meta
-          [nzTitle]="titleTemplate"
-          [nzDescription]="descriptionTemplate">
-        </nz-card-meta>
-        <ng-template #titleTemplate>
-            <span nz-typography nzEllipsis [nzTooltipTitle]="item.name" nz-tooltip>{{ item.name }}</span>
-        </ng-template>
-         <ng-template #descriptionTemplate>
-            <div class="media-meta">
-                <span>{{ item.size }}</span>
-                <span>{{ item.uploadDate }}</span>
-            </div>
-        </ng-template>
-      </nz-card>
+          </ng-template>
+          <nz-card-meta
+            [nzTitle]="titleTemplate"
+            [nzDescription]="descriptionTemplate">
+          </nz-card-meta>
+          <ng-template #titleTemplate>
+              <span nz-typography nzEllipsis [nzTooltipTitle]="item.name" nz-tooltip>{{ item.name }}</span>
+          </ng-template>
+           <ng-template #descriptionTemplate>
+              <div class="media-meta">
+                  <span>{{ item.size }}</span>
+                  <span>{{ item.uploadDate }}</span>
+              </div>
+          </ng-template>
+        </nz-card>
+      </div>
+    </div>
+    
+    <!-- Check if filtered list is empty -->
+    <div class="empty-state" *ngIf="mediaItems.length === 0 && !isUploading">
+      <span nz-icon nzType="file-image" nzTheme="outline"></span>
+      <p>No media files found {{ searchText ? 'matching your search' : '' }}</p>
     </div>
   </div>
-</div>
 
-<!-- List View -->
-<div *ngIf="viewMode === 'list'" class="media-list">
-   <!-- Check if filtered list is empty -->
-  <nz-empty *ngIf="mediaItems.length === 0 && !isUploading" [nzNotFoundContent]="'No media files found' + (searchText ? ' matching your search' : '')" class="empty-state"></nz-empty>
-
-  <!-- Only show table if there are items -->
-  <nz-table #basicTable *ngIf="mediaItems.length > 0" [nzData]="mediaItems" [nzShowPagination]="false" nzSize="small">
-    <thead>
-      <tr>
-        <th nzWidth="80px">Preview</th>
-        <th>Name</th>
-        <th nzWidth="100px">Size</th>
-        <th nzWidth="150px">Date</th>
-        <th nzWidth="100px">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Loop through filtered items -->
-      <tr *ngFor="let item of basicTable.data; trackBy: trackById">
-        <td>
-          <div class="file-preview">
-            <!-- Use item.thumbnail -->
-            <img [src]="item.thumbnail" [alt]="item.name" class="file-thumbnail-list" />
-          </div>
-        </td>
-        <td><span nz-typography nzEllipsis [nzTooltipTitle]="item.name" nz-tooltip>{{ item.name }}</span></td>
-        <td>{{ item.size }}</td>
-        <td>{{ item.uploadDate }}</td>
-        <td>
-          <button nz-button nzType="text" nzShape="circle" (click)="copyUrl(item.url)" nz-tooltip nzTooltipTitle="Copy URL">
-            <span nz-icon nzType="copy"></span>
-          </button>
-          <button nz-button nzType="text" nzShape="circle" nz-popconfirm nzPopconfirmTitle="Are you sure delete this file?" (nzOnConfirm)="deleteMedia(item.id)" nz-tooltip nzTooltipTitle="Delete">
-            <span nz-icon nzType="delete"></span>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </nz-table>
-</div>
+  <!-- List View -->
+  <div *ngIf="viewMode === 'list'" class="media-list">
+    <!-- Only show table if there are items -->
+    <nz-table #basicTable *ngIf="mediaItems.length > 0" [nzData]="mediaItems" [nzShowPagination]="false" nzSize="small">
+      <thead>
+        <tr>
+          <th nzWidth="80px">Preview</th>
+          <th>Name</th>
+          <th nzWidth="100px">Size</th>
+          <th nzWidth="150px">Date</th>
+          <th nzWidth="100px">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Loop through filtered items -->
+        <tr *ngFor="let item of basicTable.data; trackBy: trackById">
+          <td>
+            <div class="file-preview">
+              <!-- Use item.thumbnail -->
+              <img [src]="item.thumbnail" [alt]="item.name" class="file-thumbnail-list" />
+            </div>
+          </td>
+          <td><span nz-typography nzEllipsis [nzTooltipTitle]="item.name" nz-tooltip>{{ item.name }}</span></td>
+          <td>{{ item.size }}</td>
+          <td>{{ item.uploadDate }}</td>
+          <td>
+            <button nz-button nzType="text" nzShape="circle" (click)="copyUrl(item.url)" nz-tooltip nzTooltipTitle="Copy URL">
+              <span nz-icon nzType="copy"></span>
+            </button>
+            <button nz-button nzType="text" nzShape="circle" nz-popconfirm nzPopconfirmTitle="Are you sure delete this file?" (nzOnConfirm)="deleteMedia(item.id)" nz-tooltip nzTooltipTitle="Delete">
+              <span nz-icon nzType="delete"></span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    
+    <!-- Check if filtered list is empty -->
+    <div class="empty-state" *ngIf="mediaItems.length === 0 && !isUploading">
+      <span nz-icon nzType="file-image" nzTheme="outline"></span>
+      <p>No media files found {{ searchText ? 'matching your search' : '' }}</p>
+    </div>
+  </div>
+</nz-card>

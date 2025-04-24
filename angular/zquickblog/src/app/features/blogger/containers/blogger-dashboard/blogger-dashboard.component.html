@@ -1,16 +1,18 @@
-<div class="dashboard-header">
+<div class="page-header">
   <h2 nz-typography>Dashboard</h2>
-  <nz-select 
-    [(ngModel)]="selectedTimeRange" 
-    (ngModelChange)="onTimeRangeChange($event)"
-    class="time-range-select">
-    <nz-option *ngFor="let option of timeRangeOptions" [nzValue]="option.value" [nzLabel]="option.label"></nz-option>
-  </nz-select>
+  <div class="action-area">
+    <nz-select 
+      [(ngModel)]="selectedTimeRange" 
+      (ngModelChange)="onTimeRangeChange($event)"
+      class="time-range-select">
+      <nz-option *ngFor="let option of timeRangeOptions" [nzValue]="option.value" [nzLabel]="option.label"></nz-option>
+    </nz-select>
+  </div>
 </div>
 
-<div nz-row [nzGutter]="16">
-  <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8">
-    <nz-card>
+<nz-card>
+  <div nz-row [nzGutter]="16">
+    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8">
       <div class="stat-card">
         <div class="stat-icon posts">
           <span nz-icon nzType="file-text" nzTheme="outline"></span>
@@ -25,11 +27,9 @@
           </div>
         </div>
       </div>
-    </nz-card>
-  </div>
-  
-  <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8">
-    <nz-card>
+    </div>
+    
+    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8">
       <div class="stat-card">
         <div class="stat-icon views">
           <span nz-icon nzType="eye" nzTheme="outline"></span>
@@ -44,11 +44,9 @@
           </div>
         </div>
       </div>
-    </nz-card>
-  </div>
-  
-  <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8">
-    <nz-card>
+    </div>
+    
+    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8">
       <div class="stat-card">
         <div class="stat-icon comments">
           <span nz-icon nzType="message" nzTheme="outline"></span>
@@ -63,36 +61,36 @@
           </div>
         </div>
       </div>
-    </nz-card>
+    </div>
   </div>
-</div>
 
-<div nz-row [nzGutter]="16" style="margin-top: 16px;">
-  <div nz-col [nzSpan]="24">
-    <nz-card nzTitle="Recent Posts Activity">
-      <div class="chart-placeholder">
-        <span nz-icon nzType="line-chart" nzTheme="outline" style="font-size: 4rem; opacity: 0.2;"></span>
-      </div>
-    </nz-card>
+  <div nz-row [nzGutter]="16" style="margin-top: 16px;">
+    <div nz-col [nzSpan]="24">
+      <nz-card nzTitle="Recent Posts Activity">
+        <div class="chart-placeholder">
+          <span nz-icon nzType="line-chart" nzTheme="outline" style="font-size: 4rem; opacity: 0.2;"></span>
+        </div>
+      </nz-card>
+    </div>
   </div>
-</div>
 
-<div nz-row [nzGutter]="16" style="margin-top: 16px;">
-  <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
-    <nz-card nzTitle="Recent Comments">
-      <div class="empty-placeholder">
-        <span nz-icon nzType="comment" nzTheme="outline" style="font-size: 2rem; opacity: 0.2;"></span>
-        <p>No recent comments</p>
-      </div>
-    </nz-card>
+  <div nz-row [nzGutter]="16" style="margin-top: 16px;">
+    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+      <nz-card nzTitle="Recent Comments">
+        <div class="empty-state">
+          <span nz-icon nzType="comment" nzTheme="outline"></span>
+          <p>No recent comments</p>
+        </div>
+      </nz-card>
+    </div>
+    
+    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+      <nz-card nzTitle="Top Posts">
+        <div class="empty-state">
+          <span nz-icon nzType="trophy" nzTheme="outline"></span>
+          <p>No data available</p>
+        </div>
+      </nz-card>
+    </div>
   </div>
-  
-  <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
-    <nz-card nzTitle="Top Posts">
-      <div class="empty-placeholder">
-        <span nz-icon nzType="trophy" nzTheme="outline" style="font-size: 2rem; opacity: 0.2;"></span>
-        <p>No data available</p>
-      </div>
-    </nz-card>
-  </div>
-</div>
+</nz-card>

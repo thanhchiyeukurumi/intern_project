@@ -32,7 +32,7 @@ interface MediaItem {
 @Component({
   selector: 'app-blogger-media',
   templateUrl: './blogger-media.component.html',
-  styleUrls: ['./blogger-media.component.scss'],
+  styleUrls: ['./blogger-media.component.css'],
   standalone: true,
   imports: [
     CommonModule,

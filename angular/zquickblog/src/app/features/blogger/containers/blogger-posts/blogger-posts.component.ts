@@ -14,6 +14,7 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzCardModule } from 'ng-zorro-antd/card';
 
 interface Post {
   id: number;
@@ -29,7 +30,7 @@ interface Post {
 @Component({
   selector: 'app-blogger-posts',
   templateUrl: './blogger-posts.component.html',
-  styleUrls: ['./blogger-posts.component.scss'],
+  styleUrls: ['./blogger-posts.component.css'],
   standalone: true,
   imports: [
     CommonModule,
@@ -45,7 +46,8 @@ interface Post {
     NzTypographyModule,
     NzBadgeModule,
     NzSelectModule,
-    NzEmptyModule
+    NzEmptyModule,
+    NzCardModule
   ]
 })
 export class BloggerPostsComponent implements OnInit {

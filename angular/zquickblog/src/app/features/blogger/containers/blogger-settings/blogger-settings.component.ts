@@ -16,7 +16,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 @Component({
   selector: 'app-blogger-settings',
   templateUrl: './blogger-settings.component.html',
-  styleUrls: ['./blogger-settings.component.scss'],
+  styleUrls: ['./blogger-settings.component.css'],
   standalone: true,
   imports: [
     CommonModule,
