@@ -1,0 +1,16 @@
+<div class="quill-editor-container">
+  <nz-tabset class="article-tabs" (nzSelectedIndexChange)="changeTab($event)">
+    <nz-tab nzTitle="Soạn thảo">
+      <div *ngIf="isLoading" class="loading-container">
+        <span>Đang tải trình soạn thảo...</span>
+      </div>
+      <div #editor class="editor-area"></div>
+    </nz-tab>
+    <nz-tab nzTitle="Xem trước">
+      <div class="preview-container" *ngIf="previewContent">
+        <div class="article-preview" [innerHTML]="previewContent | safeHtml"></div>
+      </div>
+      <nz-empty *ngIf="!previewContent" nzNotFoundContent="Chưa có nội dung để xem trước"></nz-empty>
+    </nz-tab>
+  </nz-tabset>
+</div> 

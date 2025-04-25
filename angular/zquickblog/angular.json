@@ -35,7 +35,9 @@
               "src/theme.less",
               "src/styles.css",
               "src/app/features/admin/admin.style.css",
-              "node_modules/ng-zorro-antd/ng-zorro-antd.min.css"
+              "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
+              "node_modules/quill/dist/quill.snow.css",
+              "node_modules/quill/dist/quill.bubble.css"
             ],
             "scripts": [],
             "server": "src/main.server.ts",
