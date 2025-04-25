@@ -1,0 +1,257 @@
+/* General Layout */
+.public-layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .public-content {
+    flex: 1 0 auto; /* Cho phép content lớn lên và co lại, nhưng không co nhỏ hơn nội dung */
+    /* Thêm padding nếu cần */
+    padding: 24px;
+  }
+  
+  /* Header Styles */
+  .public-header {
+    background-color: #f5f5f5; /* Tailwind bg-[#f5f5f5] */
+    padding: 0; /* Xóa padding mặc định của nz-header */
+    border-bottom: 1px solid #e5e7eb; /* Tailwind border-gray-200 */
+    position: sticky; /* Giữ header ở trên cùng khi cuộn */
+    top: 0;
+    z-index: 10; /* Đảm bảo header nổi lên trên */
+    height: auto; /* Để chiều cao tự điều chỉnh theo padding */
+  }
+  
+  .header-container {
+    max-width: 1120px; /* Tailwind max-w-7xl */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem 1rem; /* Tailwind py-4 px-4 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  @media (min-width: 640px) { /* sm */
+    .header-container {
+      padding-left: 1.5rem; /* sm:px-6 */
+      padding-right: 1.5rem;
+    }
+  }
+  @media (min-width: 1024px) { /* lg */
+    .header-container {
+      padding-left: 2rem; /* lg:px-8 */
+      padding-right: 2rem;
+    }
+  }
+  
+  .logo a {
+    font-size: 1.5rem; /* Tailwind text-2xl */
+    font-weight: 700; /* Tailwind font-bold */
+    color: #11182c; /* Màu chữ mặc định hoặc màu bạn muốn */
+    text-decoration: none;
+  }
+  
+  /* Desktop Navigation */
+  .desktop-nav {
+    display: none; /* Ẩn mặc định */
+  }
+  
+  @media (min-width: 768px) { /* md */
+    .desktop-nav {
+      display: flex; /* Hiện trên màn hình md trở lên */
+    }
+  }
+  
+  /* Custom style cho menu ngang */
+  .header-menu {
+    line-height: normal; /* Reset line-height để căn giữa tốt hơn */
+    border-bottom: none; /* Bỏ border mặc định của menu ngang */
+    background: transparent; /* Nền trong suốt */
+    display: flex;
+    align-items: center; /* Căn giữa các item theo chiều dọc */
+    gap: 1.5rem; /* Tailwind space-x-8 (ước lượng) */
+  }
+  
+  .header-menu .ant-menu-item,
+  .header-menu .ant-menu-submenu {
+    padding: 0.5rem 0; /* Tailwind py-2 */
+    margin: 0;
+    top: 0; /* Reset top */
+    border-bottom: 2px solid transparent !important; /* Reset border bottom */
+    color: #374151; /* Tailwind text-gray-700 */
+  }
+  
+  .header-menu .ant-menu-item a,
+  .header-menu .ant-menu-submenu a {
+     color: #374151; /* Tailwind text-gray-700 */
+     text-decoration: none;
+     transition: color 0.3s;
+  }
+  
+  .header-menu .ant-menu-item:hover,
+  .header-menu .ant-menu-item-active,
+  .header-menu .ant-menu-item a:hover,
+  .header-menu .ant-menu-item-active a {
+    color: #11182c !important; /* Tailwind hover:text-gray-900 */
+    border-bottom: 2px solid transparent !important; /* Vẫn không có border khi hover */
+  }
+  
+  .header-menu .ant-menu-item-selected,
+  .header-menu .ant-menu-item-selected a {
+     color: #11182c !important; /* Màu khi active */
+     border-bottom: 2px solid transparent !important; /* Vẫn không có border khi selected */
+  }
+  
+  /* Style riêng cho item chứa button */
+  .header-menu li.no-hover-effect,
+  .header-menu li.no-hover-effect.ant-menu-item:hover,
+  .header-menu li.no-hover-effect.ant-menu-item-active {
+    border-bottom: none !important;
+    padding: 0 !important; /* Bỏ padding để button căn chỉnh */
+  }
+  .header-menu li.no-hover-effect > .ant-menu-title-content > a {
+     display: inline-block; /* Để button hiển thị đúng */
+  }
+  
+  /* Style cho button "Get started" */
+  .get-started-btn {
+    background-color: #000000; /* Tailwind bg-black */
+    color: #ffffff; /* Tailwind text-white */
+    border: none;
+    /* padding: 0.5rem 1rem; Tailwind px-4 py-2 */ /* nz-button đã có padding */
+    border-radius: 9999px; /* Tailwind rounded-full */
+    line-height: inherit; /* Đảm bảo text căn giữa */
+  }
+  
+  .get-started-btn:hover,
+  .get-started-btn:focus {
+    background-color: #333333; /* Màu hover tối hơn chút */
+    color: #ffffff;
+  }
+  
+  /* Mobile Trigger */
+  .mobile-trigger {
+    display: block; /* Hiện mặc định */
+  }
+  
+  @media (min-width: 768px) { /* md */
+    .mobile-trigger {
+      display: none; /* Ẩn trên màn hình md trở lên */
+    }
+  }
+  
+  .mobile-trigger button {
+    color: #374151; /* Tailwind text-gray-700 */
+  }
+  
+  /* Mobile Menu Drawer */
+  .mobile-menu-drawer {
+    border: none; /* Bỏ border nếu có */
+  }
+  .mobile-menu-drawer .ant-menu-item {
+    color: #374151;
+    padding: 0.5rem 1rem !important; /* Tailwind block px-4 py-2 */
+  }
+  .mobile-menu-drawer .ant-menu-item a {
+     color: inherit;
+  }
+  .mobile-menu-drawer .ant-menu-item:hover {
+    background-color: #f3f4f6; /* Tailwind hover:bg-gray-100 */
+    color: #11182c;
+  }
+  .mobile-menu-drawer .ant-menu-item-selected {
+    background-color: #e5e7eb; /* Màu nền nhẹ khi active */
+  }
+  
+  .mobile-menu-drawer li.no-hover-effect,
+  .mobile-menu-drawer li.no-hover-effect.ant-menu-item:hover {
+    background-color: transparent !important;
+  }
+  
+  .get-started-btn-mobile {
+    margin-top: 0.5rem; /* Khoảng cách với link bên trên */
+    background-color: #000000;
+    color: #ffffff;
+    border-radius: 9999px;
+  }
+  .get-started-btn-mobile:hover,
+  .get-started-btn-mobile:focus {
+     background-color: #333333;
+     color: #ffffff;
+  }
+  
+  
+  /* Footer Styles */
+  .public-footer {
+    background-color: #f5f5f5; /* Tailwind bg-[#f5f5f5] */
+    padding: 2rem 0; /* Tailwind py-8 */
+    border-top: 1px solid #e5e7eb; /* Tailwind border-gray-200 */
+    margin-top: 3rem; /* Tailwind mt-12 */
+    flex-shrink: 0; /* Ngăn footer co lại */
+    color: #374151; /* Tailwind text-gray-700 */
+  }
+  
+  .footer-container {
+    max-width: 1120px; /* Tailwind max-w-7xl */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem; /* Tailwind px-4 */
+    padding-right: 1rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column; /* Mặc định là cột */
+  }
+  
+  @media (min-width: 768px) { /* md */
+    .footer-container {
+      flex-direction: row; /* Chuyển sang hàng trên md */
+      justify-content: space-between;
+      align-items: center;
+      text-align: left;
+    }
+    .copyright-text {
+      margin-bottom: 0; /* Bỏ margin bottom trên md */
+    }
+  }
+  
+  @media (min-width: 640px) { /* sm */
+    .footer-container {
+      padding-left: 1.5rem; /* sm:px-6 */
+      padding-right: 1.5rem;
+    }
+  }
+  @media (min-width: 1024px) { /* lg */
+    .footer-container {
+      padding-left: 2rem; /* lg:px-8 */
+      padding-right: 2rem;
+    }
+  }
+  
+  .copyright-text {
+    margin-bottom: 1rem; /* Tailwind mb-4 */
+  }
+  
+  .footer-nav {
+    display: flex;
+    flex-wrap: wrap; /* Tailwind flex-wrap */
+    justify-content: center; /* Tailwind justify-center */
+    gap: 1rem; /* Tailwind space-x-4 */
+  }
+  
+  @media (min-width: 768px) { /* md */
+    .footer-nav {
+      justify-content: flex-end; /* Căn phải trên md */
+    }
+  }
+  
+  .footer-link {
+    color: #374151; /* Tailwind text-gray-700 */
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .footer-link:hover {
+    color: #11182c; /* Tailwind hover:text-gray-900 */
+    text-decoration: underline; /* Tailwind hover:underline */
+  }

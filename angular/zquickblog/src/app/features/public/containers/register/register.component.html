@@ -1,0 +1,145 @@
+<!-- Header Section (Tương tự HTML gốc) -->
+<div class="register-header">
+  <div class="register-header-container">
+    <h1 nz-typography class="page-title">Join QuickBlog</h1>
+    <p nz-typography nzType="secondary" class="page-description">Create an account to start sharing your ideas.</p>
+  </div>
+</div>
+
+<!-- Form Section -->
+<div class="form-container">
+  <nz-card class="register-card">
+    <form nz-form [formGroup]="registerForm" (ngSubmit)="submitForm()">
+      <!-- Full Name -->
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="fullName">Full Name</nz-form-label>
+        <nz-form-control nzHasFeedback [nzErrorTip]="fullNameErrorTpl">
+          <input nz-input id="fullName" formControlName="fullName" placeholder="Enter your full name" />
+          <ng-template #fullNameErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">Full name is required!</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Email -->
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="email">Email Address</nz-form-label>
+        <nz-form-control nzHasFeedback [nzErrorTip]="emailErrorTpl">
+          <input nz-input id="email" type="email" formControlName="email" placeholder="Enter your email address" />
+          <ng-template #emailErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">Email is required!</ng-container>
+            <ng-container *ngIf="control.hasError('email')">Invalid email format!</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Password -->
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="password">Password</nz-form-label>
+        <nz-form-control nzHasFeedback [nzErrorTip]="passwordErrorTpl">
+          <nz-input-group [nzSuffix]="suffixTemplatePassword">
+            <input
+              [type]="passwordVisible ? 'text' : 'password'"
+              nz-input
+              id="password"
+              formControlName="password"
+              placeholder="Create a password" />
+          </nz-input-group>
+          <ng-template #suffixTemplatePassword>
+            <span nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="togglePasswordVisibility()"></span>
+          </ng-template>
+          <!-- Error Template -->
+          <ng-template #passwordErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">Password is required!</ng-container>
+            <ng-container *ngIf="control.hasError('minlength')">Password must be at least 8 characters long.</ng-container>
+            <ng-container *ngIf="control.hasError('pattern')">Password must include a number and a symbol.</ng-container>
+          </ng-template>
+           <!-- Hint Text -->
+          <div nz-form-explain class="password-hint">Password must be at least 8 characters long and include a number and symbol</div>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Confirm Password -->
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="confirmPassword">Confirm Password</nz-form-label>
+        <nz-form-control nzHasFeedback [nzErrorTip]="confirmPasswordErrorTpl">
+           <nz-input-group [nzSuffix]="suffixTemplateConfirmPassword">
+            <input
+              [type]="confirmPasswordVisible ? 'text' : 'password'"
+              nz-input
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              placeholder="Confirm your password" />
+          </nz-input-group>
+           <ng-template #suffixTemplateConfirmPassword>
+            <span nz-icon [nzType]="confirmPasswordVisible ? 'eye-invisible' : 'eye'" (click)="toggleConfirmPasswordVisibility()"></span>
+          </ng-template>
+          <!-- Error Template -->
+          <ng-template #confirmPasswordErrorTpl let-control>
+             <ng-container *ngIf="control.hasError('required')">Please confirm your password!</ng-container>
+             <!-- Lỗi khớp mật khẩu được xử lý ở FormGroup, có thể hiển thị ở đây nếu muốn -->
+             <ng-container *ngIf="!control.hasError('required') && registerForm.hasError('passwordsNotMatching') && control.dirty">Passwords do not match!</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Terms and Conditions -->
+      <nz-form-item>
+        <nz-form-control>
+            <label nz-checkbox formControlName="terms">
+                <span>I agree to QuickBlog's <a routerLink="/terms" class="form-link">Terms of Service</a> and <a routerLink="/privacy" class="form-link">Privacy Policy</a></span>
+            </label>
+            <!-- Hiển thị lỗi nếu checkbox 'terms' không được chọn và đã dirty -->
+            <ng-container *ngIf="registerForm.get('terms')?.hasError('required') && registerForm.get('terms')?.dirty">
+              <div nz-form-explain class="terms-error">You must agree to the terms.</div>
+            </ng-container>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Newsletter -->
+      <nz-form-item>
+        <nz-form-control>
+            <label nz-checkbox formControlName="newsletter">
+                <span>Send me emails with QuickBlog updates, stories from authors I follow, and more</span>
+            </label>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Create Account Button -->
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary" nzBlock class="register-button" type="submit" [nzLoading]="isLoading">
+            Create Account
+          </button>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Sign In Link -->
+      <div class="signin-link">
+        <p>
+          Already have an account? <a routerLink="/auth/login" class="form-link font-medium">Sign in</a>
+        </p>
+      </div>
+    </form>
+
+     <!-- Social Sign Up Divider -->
+    <nz-divider nzText="Or sign up with" nzOrientation="center" class="social-divider"></nz-divider>
+
+     <!-- Social Sign Up Buttons -->
+    <div nz-row [nzGutter]="8" nzJustify="center">
+        <div nz-col>
+            <button nz-button class="social-button">
+                <i nz-icon nzType="google"></i>
+                <!-- <span>Sign up with Google</span> -->
+            </button>
+        </div>
+         <!-- Add other social buttons here if needed -->
+         <!-- <div nz-col>
+            <button nz-button class="social-button">
+                 <i nz-icon nzType="facebook"></i>
+            </button>
+         </div> -->
+    </div>
+
+  </nz-card>
+</div>

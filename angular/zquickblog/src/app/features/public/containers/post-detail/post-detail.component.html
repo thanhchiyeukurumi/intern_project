@@ -1,0 +1,159 @@
+<ng-container *ngIf="isLoading">
+  <!-- Skeleton Loading State -->
+  <div class="post-detail-skeleton">
+      <div class="skeleton-header">
+           <div class="skeleton-author-container">
+              <div class="skeleton-avatar"></div>
+              <div class="skeleton-author-details">
+                  <div class="skeleton-line short"></div>
+                  <div class="skeleton-line medium"></div>
+                  <div class="skeleton-line x-short"></div>
+              </div>
+           </div>
+           <div class="skeleton-title"></div>
+      </div>
+      <div class="skeleton-content">
+          <div class="skeleton-line full" *ngFor="let i of [1,2]"></div>
+          <div class="skeleton-heading"></div>
+          <div class="skeleton-line full" *ngFor="let i of [1,2,3]"></div>
+           <div class="skeleton-heading"></div>
+          <div class="skeleton-line full" *ngFor="let i of [1,2]"></div>
+      </div>
+       <!-- Skeleton for comments and related -->
+       <div class="skeleton-section"></div>
+       <div class="skeleton-section"></div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!isLoading && post">
+<!-- Post Container -->
+<article class="post-container">
+  <!-- Post Header -->
+  <header class="post-header">
+    <address class="author-info">
+      <div class="author-container">
+        <nz-avatar [nzSize]="64" [nzSrc]="post.author.avatarUrl" nzIcon="user" class="author-image"></nz-avatar>
+        <div class="author-bio">
+          <!-- Link tới trang tác giả nếu có -->
+          <a *ngIf="post.author.profileLink" [routerLink]="post.author.profileLink" class="author-name-link">
+              <span class="author-name">{{ post.author.name }}</span>
+          </a>
+          <span *ngIf="!post.author.profileLink" class="author-name">{{ post.author.name }}</span>
+
+          <p nz-typography nzType="secondary" class="author-description">{{ post.author.title }}</p>
+          <p nz-typography nzType="secondary" class="author-date">
+            <time [attr.datetime]="post.publishDate">{{ post.publishDate }}</time> <!-- Cần format date nếu là object Date -->
+          </p>
+        </div>
+      </div>
+    </address>
+    <h1 nz-typography class="post-title">{{ post.title }}</h1>
+  </header>
+
+  <!-- Post Content -->
+  <!-- ** Quan trọng: Sử dụng innerHTML tiềm ẩn rủi ro XSS nếu HTML không được sanitize ** -->
+  <!-- Chỉ dùng nếu bạn tin tưởng nguồn HTML hoặc đã sanitize nó trước khi gán vào post.contentHtml -->
+  <div class="post-content-body" [innerHTML]="post.contentHtml">
+     <!-- Nội dung HTML sẽ được render ở đây -->
+  </div>
+  <!-- HOẶC: Nếu content là Markdown, bạn cần dùng thư viện như ngx-markdown -->
+  <!-- <markdown [data]="post.contentMarkdown"></markdown> -->
+
+</article>
+
+<!-- Comment Section -->
+<section class="comment-section">
+    <nz-card class="comment-card" [nzBordered]="false">
+        <!-- Comment Header -->
+        <div class="comment-section-header">
+            <h2 nz-typography class="comment-section-title">Discussion ({{ comments.length }})</h2>
+        </div>
+
+        <!-- Comment Form -->
+        <form nz-form [formGroup]="commentForm" (ngSubmit)="submitComment()" class="comment-form">
+            <nz-form-item>
+                <nz-form-control [nzErrorTip]="commentErrorTpl">
+                    <textarea
+                        nz-input
+                        formControlName="commentText"
+                        placeholder="Write a comment..."
+                        [nzAutosize]="{ minRows: 4, maxRows: 8 }"
+                    ></textarea>
+                     <ng-template #commentErrorTpl let-control>
+                         <ng-container *ngIf="control.hasError('required')">Comment cannot be empty.</ng-container>
+                         <ng-container *ngIf="control.hasError('minlength')">Comment must be at least 5 characters long.</ng-container>
+                     </ng-template>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+               <nz-form-control>
+                  <button nz-button nzType="primary" type="submit" [nzLoading]="isSubmittingComment" class="post-comment-button">
+                    Post comment
+                  </button>
+               </nz-form-control>
+            </nz-form-item>
+        </form>
+
+        <!-- Comment List -->
+         <ng-container *ngIf="comments.length > 0">
+           <nz-divider></nz-divider> <!-- Đường kẻ phân cách form và list -->
+           <div class="comment-list">
+             <article *ngFor="let comment of comments" class="comment-item">
+               <footer class="comment-item-footer">
+                 <div class="comment-author">
+                   <nz-avatar [nzSize]="24" [nzSrc]="comment.authorAvatar" nzIcon="user" class="commenter-image"></nz-avatar>
+                   <p class="commenter-name">{{ comment.authorName }}</p>
+                   <p nz-typography nzType="secondary" class="comment-date">
+                     <time [attr.datetime]="comment.date">{{ comment.date }}</time>
+                   </p>
+                 </div>
+                 <!-- Comment Options Dropdown -->
+                  <button nz-button nzType="text" nz-dropdown [nzDropdownMenu]="commentMenu" nzPlacement="bottomRight" class="comment-options-button">
+                      <span nz-icon nzType="ellipsis"></span>
+                  </button>
+                  <nz-dropdown-menu #commentMenu="nzDropdownMenu">
+                      <ul nz-menu>
+                      <li nz-menu-item (click)="editComment(comment.id)">Edit</li>
+                      <li nz-menu-item (click)="deleteComment(comment.id)">Remove</li>
+                      </ul>
+                  </nz-dropdown-menu>
+               </footer>
+               <p class="comment-text">{{ comment.text }}</p>
+             </article>
+           </div>
+         </ng-container>
+
+    </nz-card>
+</section>
+
+<!-- Related Articles Section -->
+<aside class="related-articles-section" *ngIf="relatedArticles.length > 0">
+    <nz-card class="related-articles-card" [nzBordered]="false">
+        <h2 nz-typography class="section-title">Related articles</h2>
+        <div nz-row [nzGutter]="[32, 32]" class="related-articles-grid">
+            <div nz-col [nzXs]="24" [nzSm]="12" *ngFor="let article of relatedArticles">
+                <article class="related-article-item">
+                    <a [routerLink]="['/post', article.id]" class="related-article-image-link">
+                       <img [src]="article.imageUrl" [alt]="article.title" class="related-article-image">
+                    </a>
+                    <h3 class="related-article-title">
+                        <a [routerLink]="['/post', article.id]" class="related-article-title-link">{{ article.title }}</a>
+                    </h3>
+                    <p nz-typography nzType="secondary" class="related-article-excerpt">{{ article.excerpt }}</p>
+                    <a [routerLink]="['/post', article.id]" class="related-article-read-link">
+                        Read in {{ article.readTime }} minutes
+                    </a>
+                </article>
+            </div>
+        </div>
+    </nz-card>
+</aside>
+</ng-container>
+
+<!-- Hiển thị thông báo nếu không tìm thấy bài viết -->
+<ng-container *ngIf="!isLoading && !post">
+  <div class="post-not-found">
+      <nz-empty nzNotFoundContent="Post not found"></nz-empty>
+      <button nz-button nzType="primary" routerLink="/">Go back home</button>
+  </div>
+</ng-container>

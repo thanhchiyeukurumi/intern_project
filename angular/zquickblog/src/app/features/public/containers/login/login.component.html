@@ -1,0 +1,107 @@
+<!-- Login Header -->
+<div class="login-header">
+  <div class="login-header-container">
+    <h1 nz-typography class="page-title">Welcome Back</h1>
+    <p nz-typography nzType="secondary" class="page-description">Sign in to access your account.</p>
+  </div>
+</div>
+
+<!-- Login Form Container -->
+<div class="form-container">
+  <nz-card class="login-card">
+    <form nz-form [formGroup]="loginForm" (ngSubmit)="submitForm()">
+      <!-- Email -->
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="email">Email Address</nz-form-label>
+        <nz-form-control nzHasFeedback [nzErrorTip]="emailErrorTpl">
+          <input nz-input id="email" type="email" formControlName="email" placeholder="Enter your email address" />
+          <ng-template #emailErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">Email is required!</ng-container>
+            <ng-container *ngIf="control.hasError('email')">Invalid email format!</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Password -->
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="password">Password</nz-form-label>
+        <nz-form-control nzHasFeedback [nzErrorTip]="passwordErrorTpl">
+          <nz-input-group [nzSuffix]="suffixTemplatePassword">
+            <input
+              [type]="passwordVisible ? 'text' : 'password'"
+              nz-input
+              id="password"
+              formControlName="password"
+              placeholder="Enter your password" />
+          </nz-input-group>
+          <ng-template #suffixTemplatePassword>
+            <span nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="togglePasswordVisibility()"></span>
+          </ng-template>
+          <ng-template #passwordErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">Password is required!</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Remember Me & Forgot Password -->
+      <nz-form-item class="extra-options">
+        <nz-form-control>
+          <div class="options-container">
+            <label nz-checkbox formControlName="rememberMe">
+              <span>Remember me</span>
+            </label>
+            <a (click)="showResetPasswordModal(resetPasswordContent)" class="form-link forgot-password-link">Forgot password?</a>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Login Button -->
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary" nzBlock class="login-button" type="submit" [nzLoading]="isLoading">
+            Sign In
+          </button>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Create Account Link -->
+      <div class="create-account-link">
+        <p>
+          Don't have an account? <a routerLink="/auth/register" class="form-link font-medium">Create account</a>
+        </p>
+      </div>
+    </form>
+
+    <!-- Social Sign In Divider -->
+    <nz-divider nzText="Or sign in with" nzOrientation="center" class="social-divider"></nz-divider>
+
+    <!-- Social Sign In Buttons -->
+    <div nz-row [nzGutter]="8" nzJustify="center">
+      <div nz-col>
+        <button nz-button class="social-button">
+          <i nz-icon nzType="google"></i>
+        </button>
+      </div>
+      <!-- Add other social buttons here if needed -->
+    </div>
+
+  </nz-card>
+</div>
+
+<!-- Template cho nội dung Modal Reset Password -->
+<ng-template #resetPasswordContent>
+  <p nz-typography nzType="secondary" style="margin-bottom: 16px;">Enter the email address associated with your account, and we'll send you a link to reset your password.</p>
+  <!-- **** Sử dụng nz-form-item và formControl **** -->
+  <nz-form-item>
+    <nz-form-label nzRequired>Email Address</nz-form-label>
+    <nz-form-control [nzHasFeedback]="resetEmailControl.dirty" [nzErrorTip]="resetEmailErrorTip"> <!-- Thêm nzHasFeedback nếu muốn icon -->
+        <!-- **** Thay [(ngModel)] bằng [formControl] **** -->
+        <input nz-input type="email" [formControl]="resetEmailControl" placeholder="your.email@example.com" />
+        <!-- **** Sử dụng 'resetEmailControl' để kiểm tra lỗi **** -->
+        <ng-template #resetEmailErrorTip>
+           <ng-container *ngIf="resetEmailControl.hasError('required')">Email is required!</ng-container>
+           <ng-container *ngIf="resetEmailControl.hasError('email')">Invalid email format!</ng-container>
+        </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+</ng-template>

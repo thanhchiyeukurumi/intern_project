@@ -1,0 +1,155 @@
+/* Kế thừa các class chung từ register.component.css nếu có file chung */
+/* Hoặc copy/paste các style cần thiết từ register.component.css */
+
+/* -- Copy các style từ register.component.css -- */
+/* Login Header */
+.login-header {
+  background-color: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.login-header-container {
+  max-width: 768px;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (min-width: 640px) {
+  .login-header { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .login-header-container { max-width: 1120px; }
+}
+@media (min-width: 1024px) {
+  .login-header { padding-left: 2rem; padding-right: 2rem; }
+}
+.page-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+.page-description {
+  font-size: 1.25rem;
+  color: #4b5563;
+}
+
+/* Form Container */
+.form-container {
+  max-width: 448px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+@media (min-width: 640px) { .form-container { padding: 0 1.5rem; } }
+@media (min-width: 1024px) { .form-container { padding: 0 2rem; } }
+
+.login-card {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Form Elements */
+nz-form-label {
+  color: #374151;
+  font-weight: 500;
+  padding: 0;
+  line-height: inherit;
+}
+nz-input-group span[nz-icon] {
+  cursor: pointer;
+  color: #6b7280;
+}
+nz-input-group span[nz-icon]:hover {
+  color: #374151;
+}
+.form-link {
+   color: #000000;
+   text-decoration: none; /* Bỏ gạch chân mặc định, chỉ hiện khi hover */
+   font-weight: inherit;
+   cursor: pointer; /* Thêm con trỏ */
+   transition: color 0.3s;
+}
+.form-link.font-medium {
+    font-weight: 500;
+}
+.form-link:hover {
+   color: #333333;
+   text-decoration: underline; /* Thêm gạch chân khi hover */
+}
+
+/* --- Style riêng cho Login --- */
+
+/* Container cho Remember Me và Forgot Password */
+.options-container {
+    display: flex;
+    justify-content: space-between; /* Đẩy 2 phần tử ra hai bên */
+    align-items: center;
+    width: 100%;
+}
+
+/* Điều chỉnh khoảng cách của nz-form-item chứa options */
+.extra-options.ant-form-item {
+    margin-bottom: 1.5rem; /* Tailwind mb-6 */
+}
+
+/* Style checkbox "Remember me" */
+.options-container label[nz-checkbox] span:last-child {
+  font-size: 0.875rem; /* Tailwind text-sm */
+  color: #374151; /* Tailwind text-gray-700 */
+  margin-left: 0.5rem; /* Tailwind ml-2 */
+  padding: 0; /* Reset padding */
+}
+
+/* Style link "Forgot password?" */
+.forgot-password-link {
+    font-size: 0.875rem; /* Tailwind text-sm */
+}
+
+/* Login Button */
+.login-button { /* Tương tự register-button */
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  height: auto;
+  line-height: 1.75rem; /* Điều chỉnh nếu cần */
+  padding-top: 0.75rem; /* Ước lượng py-3 */
+  padding-bottom: 0.75rem;
+}
+.login-button:hover,
+.login-button:focus {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+/* Create Account Link */
+.create-account-link { /* Tương tự signin-link */
+  text-align: center;
+  margin-top: 1.5rem;
+}
+.create-account-link p {
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+/* Social Divider & Buttons (Giữ nguyên như Register) */
+.social-divider {
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+:host ::ng-deep .social-divider .ant-divider-inner-text {
+   background-color: #f5f5f5;
+   color: #6b7280;
+   font-size: 0.875rem;
+}
+[data-theme="dark"] :host ::ng-deep .social-divider .ant-divider-inner-text {
+    background-color: var(--blogger-bg-tertiary);
+}
+.social-button {
+    width: 100%;
+    border-color: #d1d5db;
+    color: #6b7280;
+}
+.social-button:hover {
+    background-color: #f9fafb;
+    border-color: #9ca3af;
+    color: #374151;
+}
+.social-button i {
+    font-size: 1.25rem;
+}

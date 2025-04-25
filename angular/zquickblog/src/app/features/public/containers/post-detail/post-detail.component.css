@@ -1,0 +1,427 @@
+/* -- Kế thừa Variables từ theme chung -- */
+:host {
+  --text-primary: #1f2937;
+  --text-secondary: #4b5563;
+  --text-tertiary: #6b7280;
+  --bg-page: #f5f5f5;
+  --bg-card: #ffffff;
+  --border-color: #e5e7eb;
+  --border-color-input: #d1d5db; /* border-gray-400 */
+  --link-color: #000000;
+  --link-hover-color: #333333;
+  --button-primary-bg: #1f2937; /* bg-gray-900 */
+  --button-primary-text: #ffffff;
+  --button-primary-hover-bg: #374151; /* hover:bg-gray-800 */
+}
+
+[data-theme="dark"] :host {
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --bg-page: #1e293b;
+  --bg-card: #334155;
+  --border-color: #475569;
+  --border-color-input: #64748b;
+  --link-color: #ffffff;
+  --link-hover-color: #e5e7eb;
+  --button-primary-bg: #e5e7eb; /* Light button on dark bg */
+  --button-primary-text: #1f2937;
+  --button-primary-hover-bg: #f3f4f6;
+}
+
+/* -- Component Styles -- */
+:host {
+  display: block;
+  background-color: var(--bg-page);
+}
+
+/* Post Container */
+.post-container,
+.comment-section,
+.related-articles-section {
+  max-width: 48rem; /* Tailwind max-w-3xl */
+  margin: 2rem auto; /* py-8 mx-auto */
+  padding: 0 1rem; /* px-4 */
+}
+@media (min-width: 640px) { /* sm */
+  .post-container,
+  .comment-section,
+  .related-articles-section {
+    padding: 0 1.5rem; /* sm:px-6 */
+  }
+}
+@media (min-width: 1024px) { /* lg */
+  .post-container,
+  .comment-section,
+  .related-articles-section {
+    padding: 0 2rem; /* lg:px-8 */
+     /* margin-top: 2.5rem;
+     margin-bottom: 2.5rem; */
+  }
+}
+
+/* Add Card Styling for Post Container if desired (like comments/related) */
+.post-container {
+    background-color: var(--bg-card);
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow-md */
+    padding: 2rem; /* Add padding inside */
+}
+@media (min-width: 640px) { .post-container { padding: 2.5rem; } }
+@media (min-width: 1024px) { .post-container { padding: 3rem; } }
+
+
+/* Post Header */
+.post-header {
+  margin-bottom: 1rem; /* mb-4 */
+}
+@media (min-width: 1024px) { /* lg */
+  .post-header { margin-bottom: 1.5rem; } /* lg:mb-6 */
+}
+
+.author-info {
+  margin-bottom: 1.5rem; /* mb-6 */
+}
+.author-container {
+  display: inline-flex; /* inline-flex */
+  align-items: center;
+  margin-right: 0.75rem; /* mr-3 */
+}
+.author-image {
+  margin-right: 1rem; /* mr-4 */
+  /* nz-avatar handles size/shape */
+}
+.author-bio { }
+.author-name-link,
+.author-name {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 700; /* font-bold */
+  color: var(--text-primary); /* text-gray-900 */
+  text-decoration: none;
+  display: block; /* Make it block for margin */
+  margin-bottom: 0.125rem;
+}
+.author-name-link:hover { text-decoration: underline; }
+
+.author-description,
+.author-date {
+  font-size: 1rem; /* text-base */
+  color: var(--text-secondary); /* text-gray-500 */
+  line-height: 1.5;
+  margin: 0;
+}
+.author-date {
+  margin-top: 0.25rem;
+}
+
+.post-title {
+  margin-bottom: 1rem; /* mb-4 */
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 800; /* font-extrabold */
+  line-height: 1.3; /* leading-tight */
+  color: var(--text-primary); /* text-dark-900 */
+}
+@media (min-width: 1024px) { /* lg */
+  .post-title {
+    margin-bottom: 1.5rem; /* lg:mb-6 */
+    font-size: 2.25rem; /* lg:text-4xl */
+  }
+}
+
+/* Post Content Body */
+/* Style basic HTML elements rendered by [innerHTML] */
+/* This provides basic typography similar to Tailwind's `prose` */
+.post-content-body {
+  color: var(--text-primary);
+  line-height: 1.7;
+}
+
+.post-content-body p {
+  margin-bottom: 1.25em;
+  font-size: 1.125rem; /* Adjust base font size if needed */
+}
+
+.post-content-body h2 {
+  font-size: 1.5em; /* Relative to parent */
+  font-weight: 700;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+
+.post-content-body h3 {
+  font-size: 1.25em;
+  font-weight: 600;
+  margin-top: 1.8em;
+  margin-bottom: 0.8em;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.post-content-body a {
+  color: var(--link-color); /* Or a specific link color */
+  text-decoration: underline;
+}
+.post-content-body a:hover {
+  color: var(--link-hover-color);
+}
+
+.post-content-body ul,
+.post-content-body ol {
+  margin-bottom: 1.25em;
+  padding-left: 1.5em;
+}
+
+.post-content-body li {
+  margin-bottom: 0.5em;
+}
+
+.post-content-body blockquote {
+  margin: 1.5em 0;
+  padding-left: 1em;
+  border-left: 0.25em solid var(--border-color);
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.post-content-body pre,
+.post-content-body code {
+  font-family: monospace; /* Use monospace font */
+  background-color: var(--bg-tag); /* Light background */
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+}
+.post-content-body pre {
+    padding: 1em;
+    overflow-x: auto;
+    margin-bottom: 1.25em;
+}
+
+/* Comment Section */
+.comment-section {
+    margin-top: 3rem; /* Space above comments */
+}
+.comment-card {
+  background-color: var(--bg-card);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+/* Adjust card padding */
+:host ::ng-deep .comment-card .ant-card-body {
+    padding: 1.5rem; /* p-6 */
+}
+
+.comment-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem; /* mb-6 */
+}
+.comment-section-title {
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 700; /* font-bold */
+  color: var(--text-primary); /* text-gray-900 */
+}
+@media (min-width: 1024px) { /* lg */
+  .comment-section-title { font-size: 1.5rem; } /* lg:text-2xl */
+}
+
+/* Comment Form */
+.comment-form {
+  margin-bottom: 1.5rem; /* mb-6 */
+}
+/* Adjust spacing for form items if needed */
+.comment-form nz-form-item {
+   margin-bottom: 1rem;
+}
+:host ::ng-deep .comment-form textarea.ant-input {
+    padding: 0.5rem 0; /* py-2 px-0 */
+    border: none !important; /* border-0 */
+    box-shadow: none !important; /* focus:outline-none */
+    resize: vertical; /* Allow vertical resize */
+    background-color: transparent !important; /* Match container bg */
+    font-size: 0.875rem; /* text-sm */
+    color: var(--text-primary); /* text-black */
+}
+/* Container for textarea with border */
+.comment-input-container {
+    padding: 0.5rem 1rem; /* py-2 px-4 */
+    margin-bottom: 1rem; /* mb-4 */
+    background-color: var(--bg-card); /* bg-white */
+    border-radius: 0.5rem; /* rounded-lg */
+    border: 1px solid var(--border-color-input); /* border border-gray-400 */
+}
+[data-theme="dark"] .comment-input-container {
+    background-color: var(--bg-page); /* Adjust dark bg if needed */
+}
+
+.post-comment-button {
+  /* display: inline-flex; align-items: center; */ /* nz-button handles this */
+  padding: 0.625rem 1rem !important; /* py-2.5 px-4 */
+  font-size: 0.875rem !important; /* text-sm */
+  font-weight: 500 !important; /* font-medium */
+  text-align: center;
+  color: var(--button-primary-text) !important;
+  background-color: var(--button-primary-bg) !important;
+  border: none !important;
+  border-radius: 0.5rem !important; /* rounded-lg */
+  /* focus:ring-4 focus:ring-gray-200 */ /* NZ handles focus */
+}
+.post-comment-button:hover {
+  background-color: var(--button-primary-hover-bg) !important;
+  color: var(--button-primary-text) !important;
+}
+
+/* Comment List */
+.comment-list nz-divider {
+    margin: 1.5rem 0 !important; /* Space around divider */
+}
+.comment-item {
+  /* padding: 1.5rem; /* p-6 */ /* Removed, handled by card */
+  margin-bottom: 1.5rem; /* mb-6 */
+  font-size: 1rem; /* text-base */
+  background-color: var(--bg-card); /* bg-white */
+  border-radius: 0.5rem; /* rounded-lg */
+  padding: 1.5rem; /* Add padding if not using card for each comment */
+}
+.comment-item:last-child { margin-bottom: 0; }
+
+.comment-item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem; /* mb-2 */
+}
+.comment-author {
+  display: flex;
+  align-items: center;
+}
+.commenter-image {
+  margin-right: 0.75rem; /* mr-3 */
+  /* nz-avatar handles size/shape */
+}
+.commenter-name {
+  font-weight: 600; /* font-semibold */
+  font-size: 0.875rem; /* text-sm */
+  color: var(--text-primary);
+  margin: 0 0.75rem 0 0; /* mr-3 */
+}
+.comment-date {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--text-secondary);
+}
+.comment-options-button {
+  color: var(--text-tertiary) !important; /* text-gray-500 */
+  background-color: var(--bg-card) !important;
+  /* padding: 0.5rem !important; /* p-2 */
+}
+.comment-options-button:hover {
+   background-color: var(--bg-tag) !important; /* hover:bg-gray-100 */
+}
+
+.comment-text {
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+/* Related Articles Section */
+.related-articles-section {
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+}
+.related-articles-card {
+  background-color: var(--bg-card);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+:host ::ng-deep .related-articles-card .ant-card-body {
+    padding: 2rem 1rem; /* px-4 */
+}
+@media (min-width: 640px) { :host ::ng-deep .related-articles-card .ant-card-body { padding: 2.5rem 1.5rem; } }
+@media (min-width: 1024px) { :host ::ng-deep .related-articles-card .ant-card-body { padding: 3rem 2rem; } }
+
+.related-articles-section .section-title { /* Re-use class */
+   margin-bottom: 2rem; /* mb-8 */
+}
+.related-articles-grid {
+   /* nz-row handles grid */
+}
+.related-article-item {
+    /* Styling for each article */
+}
+.related-article-image-link { }
+.related-article-image {
+   margin-bottom: 1.25rem; /* mb-5 */
+   border-radius: 0.5rem; /* rounded-lg */
+   width: 100%;
+   aspect-ratio: 16 / 9; /* Maintain aspect ratio */
+   object-fit: cover;
+}
+.related-article-title {
+  margin-bottom: 0.5rem; /* mb-2 */
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 700; /* font-bold */
+  line-height: 1.4; /* leading-tight */
+  color: var(--text-primary);
+}
+.related-article-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+.related-article-title-link:hover { text-decoration: underline; }
+
+.related-article-excerpt {
+  margin-bottom: 1rem; /* mb-4 */
+  color: var(--text-secondary);
+  line-height: 1.6;
+  /* Optional line clamp */
+   overflow: hidden;
+   display: -webkit-box;
+   -webkit-line-clamp: 2;
+   -webkit-box-orient: vertical;
+}
+.related-article-read-link {
+  display: inline-flex; /* inline-flex items-center */
+  align-items: center;
+  font-weight: 500; /* font-medium */
+  text-decoration: underline; /* underline */
+  text-underline-offset: 4px; /* underline-offset-4 */
+  color: var(--link-color); /* text-black */
+}
+.related-article-read-link:hover {
+  text-decoration: none; /* hover:no-underline */
+  color: var(--link-hover-color);
+}
+
+/* Post Not Found */
+.post-not-found {
+    text-align: center;
+    padding: 4rem 1rem;
+}
+.post-not-found button {
+    margin-top: 1.5rem;
+}
+
+/* --- Skeleton Loading Specific Styles --- */
+.post-detail-skeleton {
+    max-width: 48rem;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--bg-card);
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+.skeleton-header { margin-bottom: 2rem; }
+.skeleton-author-container { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+.skeleton-avatar { width: 64px; height: 64px; background-color: var(--border-color); border-radius: 50%; }
+.skeleton-author-details { flex-grow: 1; }
+.skeleton-line { height: 1rem; background-color: var(--border-color); border-radius: 4px; margin-bottom: 0.5rem; }
+.skeleton-line.short { width: 40%; }
+.skeleton-line.medium { width: 60%; }
+.skeleton-line.x-short { width: 30%; }
+.skeleton-line.full { width: 100%; }
+.skeleton-title { width: 70%; height: 2.5rem; background-color: var(--border-color); border-radius: 4px; }
+.skeleton-content { margin-bottom: 2rem; }
+.skeleton-heading { width: 50%; height: 1.8rem; background-color: var(--border-color); border-radius: 4px; margin: 1.5rem 0 1rem 0; }
+.skeleton-section { height: 150px; background-color: var(--border-color); border-radius: 0.5rem; margin-bottom: 2rem; }

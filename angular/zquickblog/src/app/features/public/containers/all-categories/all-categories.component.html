@@ -1,0 +1,105 @@
+<!-- Categories Header -->
+<div class="categories-header">
+    <div class="categories-header-container">
+      <h1 nz-typography class="page-title">Explore Topics</h1>
+      <p nz-typography nzType="secondary" class="page-description">
+        Find stories and perspectives on the topics that matter to you.
+      </p>
+  
+      <!-- Topics Search -->
+      <div class="search-container">
+        <nz-input-group [nzSuffix]="suffixButton">
+          <input
+            type="text"
+            nz-input
+            placeholder="Search topics..."
+            [(ngModel)]="searchText"
+            (keyup.enter)="searchTopics()"
+            class="search-input" />
+        </nz-input-group>
+        <ng-template #suffixButton>
+          <button nz-button nzType="text" class="search-button" (click)="searchTopics()">
+            <span nz-icon nzType="search"></span>
+          </button>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Topic Categories Content -->
+  <div class="categories-content">
+    <div class="categories-content-container">
+      <h2 nz-typography class="section-title">Popular Topics</h2>
+  
+      <!-- Topic Pills with Horizontal Scroll -->
+      <div class="topics-scroll-container">
+        <div class="topics-scroll-wrapper">
+          <a *ngFor="let topic of popularTopicPills" [routerLink]="['/category', topic.slug]" class="topic-pill">
+            {{ topic.name }}
+          </a>
+        </div>
+        <!-- Gradient fades (nếu muốn giữ lại hiệu ứng này bằng CSS) -->
+        <div class="scroll-fade-left"></div>
+        <div class="scroll-fade-right"></div>
+      </div>
+  
+      <!-- Featured Topics Grid -->
+      <div nz-row [nzGutter]="[32, 32]" class="topics-grid"> <!-- Thêm gutter dọc -->
+        <div nz-col [nzXs]="24" [nzMd]="12" [nzLg]="8" *ngFor="let topic of featuredTopics">
+          <nz-card class="topic-card" nzHoverable> <!-- nzHoverable cho hiệu ứng khi di chuột -->
+            <div class="card-content">
+              <!-- Card Header -->
+              <div class="card-header">
+                <div class="topic-icon" [ngClass]="[getIconBgClass(topic.iconBgColor), getIconColorClass(topic.iconColor)]">
+                  <!-- Sử dụng i tag cho Font Awesome -->
+                  <i [class]="topic.iconClass"></i>
+                </div>
+                <h3 nz-typography class="topic-title">{{ topic.title }}</h3>
+              </div>
+              <!-- Description -->
+              <p nz-typography nzType="secondary" class="topic-description">{{ topic.description }}</p>
+              <!-- Explore Link -->
+              <a [routerLink]="topic.exploreLink" class="topic-link" [ngClass]="getLinkColorClass(topic.exploreLinkColor)">Explore {{ topic.title }} →</a>
+  
+              <!-- Popular Articles -->
+              <div class="topic-articles">
+                <nz-divider></nz-divider> <!-- Đường kẻ ngang -->
+                <h4 class="articles-title">Popular articles</h4>
+                <ul class="articles-list">
+                  <li *ngFor="let article of topic.popularArticles">
+                    <a [routerLink]="article.url" class="article-link">{{ article.title }}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nz-card>
+        </div>
+      </div>
+  
+      <!-- More Topics Button -->
+      <div class="more-topics-container">
+        <button nz-button class="explore-more-button">
+          Explore More Topics
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Recommended Publications Section -->
+  <div class="publications-section">
+    <div class="publications-container">
+      <h2 nz-typography class="section-title">Recommended Write</h2>
+      <div nz-row [nzGutter]="[32, 32]" class="publications-grid">
+        <div nz-col [nzXs]="24" [nzSm]="12" [nzLg]="6" *ngFor="let pub of recommendedPublications">
+            <div class="publication-card">
+               <img [src]="pub.imageUrl" [alt]="pub.title + ' cover'" class="publication-image">
+               <h3 nz-typography class="publication-title">{{ pub.title }}</h3>
+               <p nz-typography nzType="secondary" class="publication-description">{{ pub.description }}</p>
+               <a [href]="pub.followLink" target="_blank" rel="noopener noreferrer" class="publication-link">Follow</a> <!-- Giữ href nếu là link ngoài -->
+               <!-- Hoặc dùng button nếu là action trong app -->
+               <!-- <button nz-button nzType="link" class="publication-link">Follow</button> -->
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>

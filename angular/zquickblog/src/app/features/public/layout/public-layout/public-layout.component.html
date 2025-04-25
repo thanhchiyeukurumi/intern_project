@@ -1,0 +1,79 @@
+<nz-layout class="public-layout" ngSkipHydration>
+    <!-- Header -->
+    <nz-header class="public-header">
+      <div class="header-container">
+        <!-- Logo -->
+        <div class="logo">
+          <a routerLink="/">QuickBlog</a>
+        </div>
+  
+        <!-- Desktop Navigation -->
+        <div class="desktop-nav">
+          <!-- Sử dụng nz-menu cho navigation -->
+          <ul nz-menu nzMode="horizontal" class="header-menu">
+            <li nz-menu-item>
+              <!-- Sử dụng routerLink thay cho href -->
+              <a routerLink="/posts">Posts</a>
+            </li>
+            <li nz-menu-item>
+              <a routerLink="/login">Sign in</a>
+            </li>
+            <!-- Sử dụng nz-button cho "Get started" -->
+            <li nz-menu-item class="no-hover-effect"> <!-- Bỏ hiệu ứng hover mặc định -->
+              <a routerLink="/register" nz-button class="get-started-btn">Get started</a>
+            </li>
+          </ul>
+        </div>
+  
+        <!-- Mobile Menu Trigger -->
+        <div class="mobile-trigger">
+          <button nz-button nzType="text" (click)="isMobileMenuVisible = true" aria-label="Open menu">
+            <span nz-icon nzType="menu"></span>
+          </button>
+        </div>
+      </div>
+    </nz-header>
+  
+    <!-- Mobile Menu Drawer -->
+    <nz-drawer
+        [nzClosable]="true"
+        [nzVisible]="isMobileMenuVisible"
+        nzPlacement="right"
+        nzTitle="Menu"
+        (nzOnClose)="isMobileMenuVisible = false">
+      <ng-container *nzDrawerContent>
+        <ul nz-menu nzMode="inline" class="mobile-menu-drawer">
+          <li nz-menu-item (click)="closeMobileMenu()">
+            <a routerLink="/posts">Posts</a>
+          </li>
+          <li nz-menu-item (click)="closeMobileMenu()">
+            <a routerLink="/login">Sign in</a>
+          </li>
+          <li nz-menu-item class="no-hover-effect">
+            <a routerLink="/register" nz-button nzType="primary" nzBlock class="get-started-btn-mobile" (click)="closeMobileMenu()">Get started</a>
+          </li>
+        </ul>
+      </ng-container>
+    </nz-drawer>
+  
+    <!-- Content Area -->
+    <nz-content class="public-content">
+      <!-- Nội dung của từng trang sẽ được hiển thị ở đây -->
+      <router-outlet></router-outlet>
+    </nz-content>
+  
+    <!-- Footer -->
+    <nz-footer class="public-footer">
+      <div class="footer-container">
+        <span class="copyright-text">
+          © 2025 <a routerLink="/" class="footer-link">QuickBlog™</a>. All Rights Reserved.
+        </span>
+        <nav class="footer-nav">
+          <a routerLink="/blog" class="footer-link">Blog</a>
+          <a routerLink="/privacy" class="footer-link">Privacy</a>
+          <a routerLink="/terms" class="footer-link">Terms</a>
+          <a routerLink="/teams" class="footer-link">Teams</a>
+        </nav>
+      </div>
+    </nz-footer>
+  </nz-layout>

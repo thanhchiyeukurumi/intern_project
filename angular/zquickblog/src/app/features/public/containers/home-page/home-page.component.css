@@ -1,0 +1,210 @@
+/* -- Variables (Nên đặt ở file global hoặc layout nếu dùng nhiều) -- */
+:host {
+  --text-primary: #1f2937; /* Gần giống text-gray-900 */
+  --text-secondary: #4b5563; /* Gần giống text-gray-700 */
+  --bg-hero: #f5f5f5; /* Màu nền chung */
+  --button-bg: #000000;
+  --button-text: #ffffff;
+  --button-hover-bg: #333333;
+}
+[data-theme="dark"] :host {
+   /* Ví dụ màu cho dark theme, bạn cần định nghĩa rõ hơn */
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --bg-hero: #1e293b; /* Màu nền tối */
+  --button-bg: #ffffff;
+  --button-text: #000000;
+  --button-hover-bg: #e5e7eb;
+}
+
+/* -- Component Styles -- */
+:host {
+  display: block; /* Đảm bảo component chiếm không gian */
+  background-color: var(--bg-hero); /* Áp dụng màu nền */
+  color: var(--text-primary); /* Màu chữ mặc định */
+}
+
+.hero-section {
+  display: grid;
+  grid-template-columns: 1fr; /* Mặc định 1 cột */
+  gap: 2rem; /* Tailwind gap-8 */
+  align-items: center;
+  min-height: 70vh; /* Chiều cao tối thiểu */
+  padding: 2rem 1rem; /* Tailwind py-8 px-4 */
+  margin-top: 1rem; /* Tailwind mt-4 */
+  max-width: 1120px; /* Giới hạn chiều rộng tổng thể nếu cần */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Responsive Grid for Large Screens */
+@media (min-width: 1024px) { /* lg */
+  .hero-section {
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* Tailwind lg:grid-cols-2 */
+    padding: 0.5rem 2rem; /* Tailwind lg:px-8, md:py-2 */
+    margin-top: 0.5rem; /* Tailwind md:mt-2 */
+  }
+}
+@media (min-width: 768px) { /* md */
+   .hero-section {
+     padding-top: 0.5rem; /* Tailwind md:py-2 */
+     padding-bottom: 0.5rem;
+     margin-top: 0.5rem; /* Tailwind md:mt-2 */
+   }
+}
+@media (min-width: 640px) { /* sm */
+  .hero-section {
+    padding-left: 1.5rem; /* sm:px-6 */
+    padding-right: 1.5rem;
+  }
+}
+
+
+.hero-content {
+  max-width: 42rem; /* Tailwind max-w-2xl */
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center; /* Tailwind text-center */
+}
+
+@media (min-width: 768px) { /* md */
+  .hero-content {
+    text-align: left; /* Tailwind md:text-left */
+    margin-left: 0; /* Reset margin auto */
+    margin-right: 0;
+    padding-left: 1rem; /* Giữ padding */
+    padding-right: 1rem;
+  }
+}
+@media (min-width: 1024px) { /* lg */
+   .hero-content {
+      padding-left: 4rem; /* Tailwind lg:px-16 */
+      padding-right: 4rem; /* Ước lượng */
+   }
+}
+
+.hero-title {
+  font-size: 2.25rem; /* Tailwind text-4xl */
+  font-weight: 700; /* Tailwind font-bold */
+  line-height: 1.25; /* Tailwind leading-tight */
+  color: var(--text-primary);
+}
+
+@media (min-width: 768px) { /* md */
+  .hero-title {
+    font-size: 3rem; /* Tailwind md:text-5xl */
+  }
+}
+@media (min-width: 1024px) { /* lg */
+  .hero-title {
+    font-size: 4.5rem; /* Tailwind lg:text-7xl */
+  }
+}
+
+.hero-description {
+  margin-top: 1rem; /* Tailwind mt-4 */
+  font-size: 0.875rem; /* Tailwind text-sm */
+  color: var(--text-secondary);
+}
+
+@media (min-width: 768px) { /* md */
+  .hero-description {
+    font-size: 1rem; /* Tailwind md:text-base */
+  }
+}
+@media (min-width: 1024px) { /* lg */
+  .hero-description {
+    font-size: 1.125rem; /* Tailwind lg:text-lg */
+  }
+}
+
+.hero-button {
+  margin-top: 1.5rem; /* Tailwind mt-6 */
+}
+
+@media (min-width: 768px) { /* md */
+  .hero-button {
+    margin-top: 2rem; /* Tailwind md:mt-8 */
+  }
+}
+
+/* Style cho nút "Start reading" nếu dùng nz-button */
+.start-reading-btn {
+  background-color: var(--button-bg) !important;
+  border-color: var(--button-bg) !important;
+  color: var(--button-text) !important;
+  border-radius: 9999px !important; /* Tailwind rounded-full */
+  padding-left: 1.5rem !important; /* Tailwind px-6 */
+  padding-right: 1.5rem !important;
+  padding-top: 0.75rem !important; /* Tailwind py-3 */
+  padding-bottom: 0.75rem !important;
+  height: auto !important; /* Cho phép chiều cao tự điều chỉnh */
+  line-height: 1.25rem !important; /* Căn giữa text */
+  transition: background-color 0.3s ease;
+}
+
+.start-reading-btn:hover,
+.start-reading-btn:focus {
+  background-color: var(--button-hover-bg) !important;
+  border-color: var(--button-hover-bg) !important;
+  color: var(--button-text) !important;
+}
+
+/* Style cho nút nếu dùng thẻ <a> thuần túy */
+.start-reading-link {
+  display: inline-block; /* Để áp dụng padding */
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  padding: 0.75rem 1.5rem; /* Tailwind px-6 py-3 */
+  border-radius: 9999px; /* Tailwind rounded-full */
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.start-reading-link:hover {
+  background-color: var(--button-hover-bg);
+  color: var(--button-text); /* Đảm bảo màu chữ không đổi */
+}
+
+
+.hero-image-container {
+  overflow: hidden;
+  display: flex; /* Cho phép căn chỉnh bên trong */
+  justify-content: center; /* Căn giữa mặc định (mobile) */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  /* Tailwind ml-64 px-6 my-auto khá lạ, cần xem lại mục đích */
+  /* padding: 0 1.5rem; /* Tailwind px-6 */
+  /* margin-top: auto; /* Tailwind my-auto */
+  /* margin-bottom: auto; */
+}
+
+@media (min-width: 768px) { /* md */
+  .hero-image-container {
+     justify-content: flex-end; /* Tailwind md:justify-end */
+  }
+}
+
+@media (min-width: 1024px) { /* lg */
+  .hero-image-container {
+     display: block; /* Tailwind lg:block */
+     /* margin-left: 16rem; /* Tailwind ml-64 - Có thể điều chỉnh */
+     padding: 0; /* Reset padding nếu cần */
+     margin: 0; /* Reset margin */
+     align-self: center; /* Căn giữa chính nó trong grid cell */
+     justify-self: end; /* Căn phải chính nó trong grid cell */
+  }
+}
+
+
+.hero-image {
+  width: 75%; /* Tailwind w-3/4 */
+  max-width: 28rem; /* Tailwind max-w-md */
+  height: auto; /* Giữ tỷ lệ */
+  display: block; /* Loại bỏ khoảng trắng thừa */
+}
+
+@media (min-width: 768px) { /* md */
+  .hero-image {
+     width: 100%; /* Tailwind md:w-full */
+  }
+}
