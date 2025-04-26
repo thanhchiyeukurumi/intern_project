@@ -1,228 +1,377 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Pipe, PipeTransform } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; // For comment form
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser'; // Import DomSanitizer
+import { FormsModule } from '@angular/forms';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
-import { NzCardModule } from 'ng-zorro-antd/card'; // For comments and related articles
-import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzFormModule } from 'ng-zorro-antd/form'; // For comment form
-import { NzGridModule } from 'ng-zorro-antd/grid'; // For related articles grid
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown'; // For comment options
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { switchMap, delay } from 'rxjs/operators';
-import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzListModule } from 'ng-zorro-antd/list'; // For sidebar list
+import { NzSkeletonModule } from 'ng-zorro-antd/skeleton'; // Enhanced skeleton
+import { NzCommentModule } from 'ng-zorro-antd/comment'; // For comments
+import { NzEmptyModule } from 'ng-zorro-antd/empty'; // For empty state
+import { NzFormModule } from 'ng-zorro-antd/form'; // For form
+import { NzInputModule } from 'ng-zorro-antd/input'; // For input
+import { NzMessageService } from 'ng-zorro-antd/message'; // For notification messages
+import { Subject } from 'rxjs';
+import { switchMap, takeUntil, delay } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-// Interfaces (tùy chọn)
+// --- Interfaces for Post Detail View ---
 interface AuthorInfo {
+  id: string;
   name: string;
-  title: string;
   avatarUrl: string;
-  profileLink?: string; // Link to author's profile/blog
+  profileLink?: string; // Link to the author's profile page
 }
 
-interface PostData {
+interface BlogPost {
   id: string;
   title: string;
+  /** Full HTML content of the post */
+  content: string;
   author: AuthorInfo;
-  publishDate: string; // Or Date object
-  contentHtml: string; // Nội dung bài viết dạng HTML
+  publishedDate: string; // Or Date object
+  readTimeMinutes: number;
+  tags: string[];
+  // Add other relevant fields like featured image URL, etc.
+  // featuredImageUrl?: string;
 }
 
-interface CommentData {
-    id: string;
-    authorName: string;
-    authorAvatar: string;
-    date: string;
-    text: string;
+interface SidebarPost {
+  id: string;
+  title: string;
+  authorName: string;
+  postLink: string; // Link to this post detail
 }
 
-interface RelatedArticle {
-    id: string;
-    title: string;
-    imageUrl: string;
-    excerpt: string;
-    readTime: number;
+// Comment interfaces
+interface CommentAuthor {
+  id: string;
+  name: string;
+  avatarUrl: string;
 }
 
+interface CommentReply {
+  id: string;
+  content: string;
+  author: CommentAuthor;
+  createdAt: string;
+}
+
+interface Comment {
+  id: string;
+  content: string;
+  author: CommentAuthor;
+  createdAt: string;
+  replies?: CommentReply[];
+}
+
+// --- Security Pipe for [innerHTML] ---
+@Pipe({
+  name: 'safeHtml',
+  standalone: true, // Make the pipe standalone
+})
+export class SafeHtmlPipe implements PipeTransform {
+  constructor(private sanitizer: DomSanitizer) {}
+  transform(value: string): SafeHtml {
+    // IMPORTANT: Ensure your backend or editor provides sanitized HTML
+    // or implement more robust sanitization here if needed.
+    return this.sanitizer.bypassSecurityTrustHtml(value);
+  }
+}
 
 @Component({
-  selector: 'app-post-detail', // Đổi selector nếu cần
+  selector: 'app-blog-post-detail', // Changed selector to reflect purpose
   standalone: true,
   imports: [
     CommonModule,
     RouterModule,
-    ReactiveFormsModule, // Thêm ReactiveFormsModule
+    FormsModule,
+    NzGridModule,
     NzAvatarModule,
     NzTypographyModule,
-    NzCardModule,
-    NzDividerModule,
-    NzInputModule,
     NzButtonModule,
     NzIconModule,
-    NzFormModule, // Thêm NzFormModule
-    NzGridModule,
-    NzDropDownModule, // Thêm NzDropDownModule
-    NzEmptyModule
+    NzTagModule,
+    NzCardModule,
+    NzDividerModule,
+    NzListModule,       // Added
+    NzSkeletonModule,   // Added
+    NzCommentModule,    // Added for comments
+    NzEmptyModule,      // Added for empty state
+    NzFormModule,       // Added for form
+    NzInputModule,      // Added for input
+    SafeHtmlPipe,       // Added Pipe
   ],
-  templateUrl: './post-detail.component.html',
-  styleUrls: ['./post-detail.component.css']
+  templateUrl: './post-detail.component.html', // Keep filename or rename
+  styleUrls: ['./post-detail.component.css']   // Keep filename or rename
 })
-export class PostDetailComponent implements OnInit {
+export class PostDetailComponent implements OnInit, OnDestroy { // Renamed class is optional
 
-  post: PostData | null = null;
-  comments: CommentData[] = [];
-  relatedArticles: RelatedArticle[] = [];
+  post: BlogPost | null = null;
+  recommendedPosts: SidebarPost[] = [];
   isLoading = true;
-  commentForm!: FormGroup;
-  isSubmittingComment = false;
+  
+  // Comment related properties
+  comments: Comment[] = [];
+  commentContent: string = '';
+  replyContent: string = '';
+  replyTo: string | null = null;
+  commenterName: string = '';
+  commenterEmail: string = '';
+  isLoggedIn: boolean = false; // Set to true if user is logged in
+  
+  private destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
-    private fb: FormBuilder,
     private message: NzMessageService
-    // Inject PostService, CommentService,...
+    // private postService: PostService // Inject your actual service
   ) { }
 
   ngOnInit(): void {
-    this.initCommentForm();
-
     this.route.paramMap.pipe(
+      takeUntil(this.destroy$),
       switchMap(params => {
-        const postId = params.get('id');
+        const postId = params.get('id'); // Expecting post ID like 'post1'
         if (!postId) {
           console.error('Post ID not found in route');
-          // Redirect or show error
-          return of(null);
+          this.isLoading = false; // Stop loading if no ID
+          // Optionally redirect to a 404 page or post list
+          // this.router.navigate(['/not-found']);
+          return of(null); // Return empty observable
         }
         this.isLoading = true;
-        // Gọi API lấy chi tiết bài viết, comments, related articles
-        return this.fetchPostDetails(postId); // Giả lập API
+        // Replace fetchMockPostData with your actual service call
+        // return this.postService.getPostDetails(postId);
+        return this.fetchMockPostData(postId); // Simulate API call
       })
     ).subscribe(data => {
       if (data) {
         this.post = data.post;
-        this.comments = data.comments;
-        this.relatedArticles = data.related;
+        this.recommendedPosts = data.recommended;
       } else {
-        // Handle error case
+        // Handle case where data loading failed or returned null
+        this.post = null;
+        this.recommendedPosts = [];
       }
       this.isLoading = false;
     });
+    
+    // Load comments for this post
+    this.loadComments();
   }
 
-  initCommentForm(): void {
-      this.commentForm = this.fb.group({
-        commentText: ['', [Validators.required, Validators.minLength(5)]]
-      });
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  // Hàm giả lập API
-  fetchPostDetails(postId: string) {
-    console.log(`Fetching details for post: ${postId}`);
-    // Simulate fetching data
+  // --- Mock Data Fetching - Replace with actual API calls ---
+  fetchMockPostData(postId: string) {
+    console.log(`Fetching data for post: ${postId}`);
+
+    // Simulate finding the post based on ID
     const mockAuthor: AuthorInfo = {
-      name: 'Jese Leos',
-      title: 'Graphic Designer, educator & CEO Flowbite',
-      avatarUrl: 'https://flowbite.com/docs/images/people/profile-picture-2.jpg',
-      profileLink: '/blog/jese-leos'
+        id: 'rejserin',
+        name: 'Rejserin',
+        avatarUrl: 'https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256',
+        profileLink: '/blog/rejserin' // Link to the author profile component
     };
 
-    const mockPost: PostData = {
-      id: postId,
-      title: 'Best practices for successful prototypes',
-      author: mockAuthor,
-      publishDate: 'Feb 8, 2022',
-      contentHtml: `
-        <p>As developers, we are always looking for ways to improve our productivity and streamline our workflows. In this article, we will explore eight modern development tools that can help you achieve just that. These tools are designed to make your life easier, whether you are working on a small project or a large-scale application.</p>
-        <h2>1. Visual Studio Code</h2>
-        <p>Visual Studio Code is a lightweight but powerful source code editor that runs on your desktop and is available for Windows, macOS, and Linux. It comes with built-in support for JavaScript, TypeScript, and Node.js, and has a rich ecosystem of extensions for other languages and frameworks.</p>
-        <h2>2. GitHub Copilot</h2>
-        <p>GitHub Copilot is an AI-powered code completion tool that helps you write code faster and with fewer errors. It can suggest entire lines or blocks of code based on the context of your project, and it learns from the code you write to provide more accurate suggestions over time.</p>
-        <h2>3. Docker</h2>
-        <p>Docker is a platform for developing, shipping, and running applications in containers. Containers are lightweight, portable, and consistent environments that ensure your application runs the same way, regardless of where it is deployed.</p>
-        <h2>4. Postman</h2>
-        <p>Postman is a collaboration platform for API development. It simplifies each step of building an API and streamlines collaboration so you can create better APIs faster. With Postman, you can design, mock, test, and document your APIs all in one place.</p>
-        <h2>5. Figma</h2>
-        <p>Figma is a web-based design tool that allows you to create, share, and collaborate on designs in real-time. It is perfect for UI/UX designers and front-end developers who need to create and iterate on design prototypes quickly and efficiently.</p>
-        <h2>6. Slack</h2>
-        <p>Slack is a messaging app for teams that brings all your communication together in one place. It integrates with a wide range of tools and services, making it easy to stay on top of your work and collaborate with your team.</p>
-        <h2>7. Notion</h2>
-        <p>Notion is an all-in-one workspace where you can write, plan, collaborate, and get organized. It is highly customizable and can be used for a variety of purposes, from note-taking and project management to creating databases and wikis.</p>
-        <h2>8. Trello</h2>
-        <p>Trello is a visual project management tool that uses boards, lists, and cards to help you organize and prioritize your projects. It is simple to use but powerful enough to handle complex workflows, making it a great choice for teams of all sizes.</p>
-        <p>These are just a few of the many tools available to help you boost your productivity as a developer. By incorporating these tools into your workflow, you can save time, reduce errors, and focus on what you do best: writing great code.</p>
-      `
-    };
+    let foundPost: BlogPost | null = null;
 
-     const mockComments: CommentData[] = [
-       { id: 'comment-1', authorName: 'Michael Gough', authorAvatar: 'https://flowbite.com/docs/images/people/profile-picture-2.jpg', date: 'Feb 8, 2022', text: 'Very straight-to-point article. Really worth time reading. Thank you! But tools are just the instruments for the UX designers. The knowledge of the design tools are as important as the creation of the design strategy.' },
-       // Add more mock comments if needed
-     ];
+    if (postId === 'post1') {
+        foundPost = {
+            id: 'post1',
+            title: 'The Psychology Behind Effective Call-to-Actions',
+            author: mockAuthor,
+            publishedDate: 'Apr 8, 2023',
+            readTimeMinutes: 5,
+            // IMPORTANT: This HTML should be SANITIZED server-side or by the editor
+            content: `
+                <p>Understanding human psychology can dramatically improve conversion rates. This post delves into the cognitive biases and motivations that influence user decisions when faced with a Call-to-Action (CTA).</p>
+                <h2>Why Psychology Matters in CTAs</h2>
+                <p>A CTA isn't just a button; it's a prompt for decision. Effective CTAs leverage psychological principles like:</p>
+                <ul>
+                    <li><strong>Urgency & Scarcity:</strong> "Limited time offer!" or "Only 3 left!"</li>
+                    <li><strong>Social Proof:</strong> "Join 10,000+ happy customers."</li>
+                    <li><strong>Authority:</strong> Featuring expert endorsements.</li>
+                    <li><strong>Clarity & Value Proposition:</strong> Clearly stating what the user gets.</li>
+                </ul>
+                <img src="https://via.placeholder.com/600x300.png?text=CTA+Example" alt="Example CTA" style="max-width: 100%; height: auto; margin: 1em 0;">
+                <h2>Crafting Better CTAs</h2>
+                <p>Focus on action-oriented language, contrasting colors, and strategic placement. A/B testing is crucial to find what resonates best with <em>your</em> audience.</p>
+                <blockquote><p>The goal is to make the desired action the easiest and most compelling choice.</p></blockquote>
+                <pre><code class="language-html"><button class="cta-button cta-primary">Get Started Now</button></code></pre>
+                <p>By applying these psychological insights, you can transform your CTAs from simple links into powerful conversion drivers.</p>
+            `,
+            tags: ['Marketing', 'Psychology', 'UX', 'Conversion Rate Optimization'],
+        };
+    } else if (postId === 'post2') {
+         foundPost = {
+            id: 'post2',
+            title: 'Accessibility in Web Design: More Than Just Compliance',
+            author: mockAuthor,
+            publishedDate: 'Mar 22, 2023',
+            readTimeMinutes: 7,
+            content: `
+                <p>Creating truly inclusive digital experiences requires going beyond minimum WCAG standards. It's about empathy and designing for the diverse range of human abilities.</p>
+                <h2>The Core Principles</h2>
+                <p>Accessibility ensures people with disabilities (visual, auditory, motor, cognitive) can perceive, understand, navigate, and interact with the web. Key areas include:</p>
+                <ul>
+                    <li>Semantic HTML for screen readers</li>
+                    <li>Keyboard navigability</li>
+                    <li>Sufficient color contrast</li>
+                    <li>Clear and concise language</li>
+                    <li>Captions and transcripts for media</li>
+                </ul>
+                <h2>Benefits Beyond Compliance</h2>
+                <p>Accessible design improves usability for <em>everyone</em>, enhances SEO, and strengthens brand reputation. It's not just a checklist; it's a commitment to inclusivity.</p>
+                 <img src="https://via.placeholder.com/600x300.png?text=Accessibility+Demo" alt="Accessibility demonstration" style="max-width: 100%; height: auto; margin: 1em 0;">
+                 <p>Start by testing with real users and incorporating accessibility from the beginning of the design process.</p>
+            `,
+            tags: ['Accessibility', 'Web Design', 'Inclusion', 'WCAG', 'Frontend']
+         };
+    }
+    // Add more mock posts as needed...
 
-     const mockRelated: RelatedArticle[] = [
-        { id: 'related-1', title: 'Our first office', imageUrl: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/article/blog-1.png', excerpt: 'Over the past year, Volosoft has undergone many changes! After months of preparation.', readTime: 2 },
-        { id: 'related-2', title: 'Enterprise design tips', imageUrl: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/article/blog-2.png', excerpt: 'Over the past year, Volosoft has undergone many changes! After months of preparation.', readTime: 12 },
-        { id: 'related-3', title: 'We partnered with Google', imageUrl: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/article/blog-3.png', excerpt: 'Over the past year, Volosoft has undergone many changes! After months of preparation.', readTime: 8 },
-        { id: 'related-4', title: 'Our first project with React', imageUrl: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/article/blog-4.png', excerpt: 'Over the past year, Volosoft has undergone many changes! After months of preparation.', readTime: 4 }
-     ];
+    // --- Mock Recommended Posts ---
+    const recommended: SidebarPost[] = [
+      { id: 'post-rec-1', title: 'Understanding Semantic HTML', authorName: 'Web Dev Weekly', postLink: '/post/post-rec-1' },
+      { id: 'post-rec-2', title: 'Color Theory for Designers', authorName: 'Design Hub', postLink: '/post/post-rec-2' },
+      { id: 'post-rec-3', title: 'Introduction to A/B Testing', authorName: 'Marketing Pro', postLink: '/post/post-rec-3' },
+      { id: 'post-rec-4', title: 'Keyboard Navigation Best Practices', authorName: 'Alice Gray', postLink: '/post/post-rec-4' },
+    ];
 
-    return of({
-      post: mockPost,
-      comments: mockComments,
-      related: mockRelated
-    }).pipe(delay(500)); // Simulate network delay
+    // Simulate API delay
+    return of({ post: foundPost, recommended }).pipe(delay(800));
   }
 
-  submitComment(): void {
-      if (this.commentForm.invalid) {
-          this.commentForm.controls['commentText'].markAsDirty();
-          this.commentForm.controls['commentText'].updateValueAndValidity();
-          this.message.error('Please enter your comment.');
-          return;
+  // Comment related methods
+  loadComments(): void {
+    // Here you would normally fetch comments from an API
+    // For now, we'll use mock data
+    setTimeout(() => {
+      this.comments = this.getMockComments();
+    }, 1000);
+  }
+  
+  getMockComments(): Comment[] {
+    return [
+      {
+        id: 'comment1',
+        content: 'Bài viết rất hay và bổ ích. Cảm ơn tác giả đã chia sẻ!',
+        author: {
+          id: 'user1',
+          name: 'Nguyễn Văn A',
+          avatarUrl: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+        },
+        createdAt: '2 giờ trước',
+        replies: [
+          {
+            id: 'reply1',
+            content: 'Cảm ơn bạn đã đọc và chia sẻ phản hồi!',
+            author: {
+              id: 'author1',
+              name: 'Rejserin',
+              avatarUrl: 'https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256'
+            },
+            createdAt: '1 giờ trước'
+          }
+        ]
+      },
+      {
+        id: 'comment2',
+        content: 'Tôi đã áp dụng những ý tưởng này vào dự án của mình và thấy hiệu quả tức thì. Rất đáng để thử!',
+        author: {
+          id: 'user2',
+          name: 'Trần Thị B',
+          avatarUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+        },
+        createdAt: '5 giờ trước',
+        replies: []
       }
-
-      this.isSubmittingComment = true;
-      const commentText = this.commentForm.value.commentText;
-      console.log('Submitting comment:', commentText);
-
-      // --- Gọi API để gửi comment ---
-      // this.commentService.postComment(this.post.id, commentText).subscribe({
-      //    next: (newComment) => {
-      //       this.isSubmittingComment = false;
-      //       this.comments.unshift(newComment); // Thêm comment mới vào đầu danh sách
-      //       this.commentForm.reset();
-      //       this.message.success('Comment posted successfully!');
-      //    },
-      //    error: (error) => {
-      //       this.isSubmittingComment = false;
-      //       this.message.error('Failed to post comment. Please try again.');
-      //       console.error('Comment submission error:', error);
-      //    }
-      // });
-
-      // --- Giả lập API call ---
-       setTimeout(() => {
-          const newComment: CommentData = {
-             id: `comment-${Date.now()}`,
-             authorName: 'Current User', // Lấy tên user hiện tại
-             authorAvatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png', // Avatar user hiện tại
-             date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'}),
-             text: commentText
-          };
-          this.comments.unshift(newComment); // Thêm vào đầu
-          this.commentForm.reset();
-          this.isSubmittingComment = false;
-          this.message.success('Comment posted successfully (Simulated)!');
-       }, 1000);
+    ];
   }
-
-  // TODO: Implement comment edit/delete logic if needed
-  editComment(commentId: string): void { console.log('Edit comment:', commentId); }
-  deleteComment(commentId: string): void { console.log('Delete comment:', commentId); }
-
+  
+  submitComment(): void {
+    if (!this.isCommentValid()) return;
+    
+    // In a real app, you'd send this to your API
+    const newComment: Comment = {
+      id: `comment${this.comments.length + 1}`,
+      content: this.commentContent,
+      author: {
+        id: this.isLoggedIn ? 'currentUser' : 'guest',
+        name: this.isLoggedIn ? 'Người dùng hiện tại' : this.commenterName,
+        avatarUrl: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+      },
+      createdAt: 'Vừa xong',
+      replies: []
+    };
+    
+    this.comments.unshift(newComment);
+    this.message.success('Bình luận của bạn đã được đăng thành công!');
+    this.resetCommentForm();
+  }
+  
+  toggleReply(commentId: string): void {
+    this.replyTo = this.replyTo === commentId ? null : commentId;
+    this.replyContent = '';
+  }
+  
+  submitReply(commentId: string): void {
+    if (!this.replyContent) return;
+    
+    const comment = this.comments.find(c => c.id === commentId);
+    if (!comment) return;
+    
+    if (!comment.replies) comment.replies = [];
+    
+    const newReply: CommentReply = {
+      id: `reply${comment.replies.length + 1}`,
+      content: this.replyContent,
+      author: {
+        id: this.isLoggedIn ? 'currentUser' : 'guest',
+        name: this.isLoggedIn ? 'Người dùng hiện tại' : this.commenterName || 'Khách',
+        avatarUrl: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+      },
+      createdAt: 'Vừa xong'
+    };
+    
+    comment.replies.push(newReply);
+    this.message.success('Trả lời của bạn đã được đăng thành công!');
+    this.replyTo = null;
+    this.replyContent = '';
+  }
+  
+  cancelReply(): void {
+    this.replyTo = null;
+    this.replyContent = '';
+  }
+  
+  isCommentValid(): boolean {
+    if (!this.commentContent) return false;
+    
+    // If not logged in, require name and email
+    if (!this.isLoggedIn) {
+      return !!this.commenterName && !!this.commenterEmail;
+    }
+    
+    return true;
+  }
+  
+  resetCommentForm(): void {
+    this.commentContent = '';
+    if (!this.isLoggedIn) {
+      // Don't reset name and email to improve UX for multiple comments
+    }
+  }
 }

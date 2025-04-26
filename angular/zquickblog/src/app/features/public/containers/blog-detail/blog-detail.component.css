@@ -6,6 +6,7 @@
   --bg-page: #f5f5f5;
   --bg-card: #ffffff;
   --bg-tag: #f3f4f6;
+  --bg-tag-new: #aab6c7;
   --border-color: #e5e7eb;
   --border-color-light: #f3f4f6; /* Nhạt hơn cho sidebar card */
   --link-color: #000000;
@@ -109,15 +110,10 @@
   gap: 0.5rem; /* gap-2 */
 }
 
-.follow-button { /* Nếu dùng nút follow */
-   /* Style tương tự các nút primary khác */
-}
-
 .email-button { /* Style nút email */
   border-color: var(--button-outline-border) !important;
   color: var(--text-primary) !important;
   border-radius: 9999px !important; /* rounded-full */
-  padding: 0.5rem 1rem !important; /* px-4 py-2 */
 }
 .email-button:hover {
   background-color: var(--button-outline-hover-bg) !important;
@@ -130,7 +126,7 @@
 .content-nav-container {
   border-bottom: 1px solid var(--border-color);
   background-color: var(--bg-page); /* Match header/page bg */
-  position: sticky; /* Make tabs sticky below header */
+  /* position: sticky; */
   top: 64px; /* Chiều cao của header (điều chỉnh nếu header khác) */
   z-index: 9; /* Dưới header */
 }
@@ -181,13 +177,8 @@
 @media (min-width: 640px) { .main-content { padding-left: 1.5rem; padding-right: 1.5rem; } }
 @media (min-width: 1024px) { .main-content { padding-left: 2rem; padding-right: 2rem; } }
 
-/* Posts List */
-.posts-list {
-  /* Container for posts */
-}
 .post-item {
   margin-bottom: 3rem; /* mb-12 */
-  padding-bottom: 3rem; /* pb-12 */
   border-bottom: 1px solid var(--border-color);
 }
 .post-item:last-child {
@@ -231,8 +222,7 @@
   margin-bottom: 1rem; /* mb-4 */
 }
 .post-tag-item {
-  background-color: var(--bg-tag) !important; /* bg-white/bg-gray-100 */
-  color: var(--text-secondary) !important;
+  background-color: var(--bg-tag-new) !important; 
   border-radius: 9999px !important;
   border: none !important;
   padding: 0.25rem 0.75rem !important; /* px-3 py-1 */
@@ -262,18 +252,12 @@
 }
 
 /* See More Button */
-.see-more-container {
-  text-align: center;
-}
+
 .see-more-button {
   /* Style tương tự nút Explore More */
   border-color: var(--button-outline-border) !important;
   color: var(--text-primary) !important;
   border-radius: 9999px !important;
-  padding-left: 1.5rem !important;
-  padding-right: 1.5rem !important;
-  padding-top: 0.5rem !important;
-  padding-bottom: 0.5rem !important;
 }
 .see-more-button:hover {
    background-color: var(--button-outline-hover-bg) !important;
@@ -284,8 +268,7 @@
 /* Sidebar */
 .sidebar-sticky-content {
   position: sticky;
-  top: calc(64px + 48px + 2rem); /* Chiều cao header + nav + khoảng cách top mong muốn */
-  /* Điều chỉnh giá trị 'top' dựa trên chiều cao thực tế của header và nav */
+  top: 2rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem; /* mb-6 */

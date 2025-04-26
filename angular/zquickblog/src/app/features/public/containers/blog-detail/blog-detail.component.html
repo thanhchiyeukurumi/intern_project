@@ -12,7 +12,6 @@
             <h1 nz-typography class="profile-name">{{ profile.name }}</h1>
             <p nz-typography nzType="secondary" class="profile-bio">{{ profile.bio }}</p>
             <div class="profile-actions">
-              <!-- <button nz-button nzType="primary" class="follow-button">Follow</button> --> <!-- Nút Follow có thể cần logic phức tạp hơn -->
               <a [href]="'mailto:' + profile.email" *ngIf="profile.email" nz-button nzType="default" class="email-button">Email</a>
             </div>
           </div>
@@ -73,16 +72,12 @@
                     <span nz-icon nzType="message" nzTheme="outline"></span> <!-- Icon comment -->
                     <span class="action-count">{{ post.commentCount }}</span>
                   </button>
-                  <!-- Thêm các action khác như bookmark nếu cần -->
-                  <button nz-button nzType="text" class="action-button" aria-label="Bookmark">
-                      <span nz-icon nzType="book" nzTheme="outline"></span>
-                  </button>
                 </div>
               </div>
             </ng-container>
             <!-- Skeleton Loading cho Posts -->
             <ng-container *ngIf="isLoading">
-                <div class="post-item skeleton-card" *ngFor="let i of [1,2]">
+                <div class="post-item skeleton-card" *ngFor="let i of [1,4]">
                     <div class="skeleton-post-content"></div>
                 </div>
             </ng-container>
@@ -99,76 +94,70 @@
         <!-- Sidebar Column -->
         <div nz-col [nzXs]="0" [nzLg]="8"> <!-- lg:w-1/3, ẩn trên mobile -->
           <div class="sidebar-sticky-content">
-
-            <!-- Writer's Topics Card -->
-            <nz-card *ngIf="authorTopics.length > 0 || isLoading" class="sidebar-card" [nzTitle]="authorTopicsTitle" [nzBordered]="false">
-                <ng-template #authorTopicsTitle>
-                    <h3 class="sidebar-card-title">Topics {{ profile?.name || 'User' }} writes about</h3>
-                </ng-template>
-                <div class="topic-tag-list">
-                  <ng-container *ngIf="!isLoading">
-                    <a *ngFor="let topic of authorTopics" [routerLink]="['/category', topic.slug]">
-                      <nz-tag class="sidebar-topic-tag">{{ topic.name }}</nz-tag>
-                    </a>
-                  </ng-container>
-                  <!-- Skeleton loading -->
-                    <ng-container *ngIf="isLoading">
-                        <nz-tag class="sidebar-topic-tag skeleton-tag" *ngFor="let i of [1,2,3]"></nz-tag>
+              <!-- Writer's Topics Card -->
+              <nz-card *ngIf="authorTopics.length > 0 || isLoading" class="sidebar-card" [nzTitle]="authorTopicsTitle" [nzBordered]="false">
+                  <ng-template #authorTopicsTitle>
+                      <h3 class="sidebar-card-title">Topics {{ profile?.name || 'User' }} writes about</h3>
+                  </ng-template>
+                  <div class="topic-tag-list">
+                    <ng-container *ngIf="!isLoading">
+                      <a *ngFor="let topic of authorTopics" [routerLink]="['/category', topic.slug]">
+                        <nz-tag class="sidebar-topic-tag">{{ topic.name }}</nz-tag>
+                      </a>
                     </ng-container>
-                </div>
-            </nz-card>
+                    <!-- Skeleton loading -->
+                      <ng-container *ngIf="isLoading">
+                          <nz-tag class="sidebar-topic-tag skeleton-tag" *ngFor="let i of [1,2,3]"></nz-tag>
+                      </ng-container>
+                  </div>
+              </nz-card>
 
-            <!-- Recommended Topics Card -->
-            <nz-card *ngIf="recommendedTopics.length > 0 || isLoading" class="sidebar-card" [nzTitle]="recommendedTopicsTitle" [nzBordered]="false">
-                <ng-template #recommendedTopicsTitle>
-                    <h3 class="sidebar-card-title">Recommended topics</h3>
-                </ng-template>
-                <div class="topic-tag-list">
-                  <ng-container *ngIf="!isLoading">
-                    <a *ngFor="let topic of recommendedTopics" [routerLink]="['/category', topic.slug]">
-                      <nz-tag class="sidebar-topic-tag">{{ topic.name }}</nz-tag>
-                    </a>
-                  </ng-container>
-                  <!-- Skeleton loading -->
-                    <ng-container *ngIf="isLoading">
-                        <nz-tag class="sidebar-topic-tag skeleton-tag" *ngFor="let i of [1,2,3,4,5]"></nz-tag>
+              <!-- Recommended Topics Card -->
+              <nz-card *ngIf="recommendedTopics.length > 0 || isLoading" class="sidebar-card" [nzTitle]="recommendedTopicsTitle" [nzBordered]="false">
+                  <ng-template #recommendedTopicsTitle>
+                      <h3 class="sidebar-card-title">Recommended topics</h3>
+                  </ng-template>
+                  <div class="topic-tag-list">
+                    <ng-container *ngIf="!isLoading">
+                      <a *ngFor="let topic of recommendedTopics" [routerLink]="['/category', topic.slug]">
+                        <nz-tag class="sidebar-topic-tag">{{ topic.name }}</nz-tag>
+                      </a>
                     </ng-container>
-                </div>
-            </nz-card>
+                    <!-- Skeleton loading -->
+                      <ng-container *ngIf="isLoading">
+                          <nz-tag class="sidebar-topic-tag skeleton-tag" *ngFor="let i of [1,2,3,4,5]"></nz-tag>
+                      </ng-container>
+                  </div>
+              </nz-card>
 
-            <!-- Other Bloggers Card -->
-            <nz-card *ngIf="otherBloggers.length > 0 || isLoading" class="sidebar-card" [nzTitle]="otherBloggersTitle" [nzBordered]="false">
-                <ng-template #otherBloggersTitle>
-                    <h3 class="sidebar-card-title">Other Bloggers</h3>
-                </ng-template>
-                <div class="other-bloggers-list">
-                  <ng-container *ngIf="!isLoading">
-                    <div *ngFor="let blogger of otherBloggers" class="other-blogger-item">
-                      <div class="blogger-info">
-                        <nz-avatar [nzSize]="96" [nzSrc]="blogger.avatarUrl" nzIcon="user"></nz-avatar>
-                        <div class="blogger-details">
-                          <p class="blogger-name">{{ blogger.name }}</p>
-                          <p nz-typography nzType="secondary" class="blogger-description">{{ blogger.description }}</p>
+              <!-- Other Bloggers Card -->
+              <nz-card *ngIf="otherBloggers.length > 0 || isLoading" class="sidebar-card" [nzTitle]="otherBloggersTitle" [nzBordered]="false">
+                  <ng-template #otherBloggersTitle>
+                      <h3 class="sidebar-card-title">Other Bloggers</h3>
+                  </ng-template>
+                  <div class="other-bloggers-list">
+                    <ng-container *ngIf="!isLoading">
+                      <div *ngFor="let blogger of otherBloggers" class="other-blogger-item">
+                        <div class="blogger-info">
+                          <nz-avatar [nzSize]="64" [nzSrc]="blogger.avatarUrl" nzIcon="user"></nz-avatar>
+                          <div class="blogger-details">
+                            <p class="blogger-name">{{ blogger.name }}</p>
+                            <p nz-typography nzType="secondary" class="blogger-description">{{ blogger.description }}</p>
+                          </div>
                         </div>
+                        <a [routerLink]="blogger.profileLink" nz-button nzType="default" nzSize="small" class="view-blogger-button">View</a>
                       </div>
-                      <a [routerLink]="blogger.profileLink" nz-button nzType="default" nzSize="small" class="view-blogger-button">View</a>
-                    </div>
-                  </ng-container>
-                  <!-- Skeleton loading -->
-                    <ng-container *ngIf="isLoading">
-                        <div class="other-blogger-item skeleton-card" *ngFor="let i of [1,2]">
-                            <div class="skeleton-blogger-content"></div>
-                        </div>
                     </ng-container>
-                </div>
-                <!-- Link "See more suggestions" có thể thêm nếu cần -->
-                <!-- <div class="more-suggestions-link">
-                  <a href="#" class="text-green-600 hover:text-green-700 text-sm">See more suggestions</a>
-                </div> -->
-            </nz-card>
+                    <!-- Skeleton loading -->
+                      <ng-container *ngIf="isLoading">
+                          <div class="other-blogger-item skeleton-card" *ngFor="let i of [1,2]">
+                              <div class="skeleton-blogger-content"></div>
+                          </div>
+                      </ng-container>
+                  </div>
+              </nz-card>
           </div>
         </div>
-
       </div>
     </div>
   </div>

@@ -9,6 +9,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzCardModule } from 'ng-zorro-antd/card'; // Dùng cho sidebar
 import { NzDividerModule } from 'ng-zorro-antd/divider'; // Nếu cần
+import { NzAffixModule } from 'ng-zorro-antd/affix';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
@@ -57,7 +58,8 @@ interface RecommendedBlogger {
     NzIconModule,
     NzTagModule,
     NzCardModule,
-    NzDividerModule
+    NzDividerModule,
+    NzAffixModule
   ],
   templateUrl: './blog-detail.component.html',
   styleUrls: ['./blog-detail.component.css']

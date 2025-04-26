@@ -5,28 +5,16 @@
     flex-direction: column;
   }
   
-  .public-content {
-    flex: 1 0 auto; /* Cho phép content lớn lên và co lại, nhưng không co nhỏ hơn nội dung */
-    /* Thêm padding nếu cần */
-    padding: 24px;
-  }
-  
   /* Header Styles */
   .public-header {
-    background-color: #f5f5f5; /* Tailwind bg-[#f5f5f5] */
-    padding: 0; /* Xóa padding mặc định của nz-header */
-    border-bottom: 1px solid #e5e7eb; /* Tailwind border-gray-200 */
-    position: sticky; /* Giữ header ở trên cùng khi cuộn */
-    top: 0;
-    z-index: 10; /* Đảm bảo header nổi lên trên */
-    height: auto; /* Để chiều cao tự điều chỉnh theo padding */
+    background-color: #f5f5f5; 
+    padding: 0;
   }
   
   .header-container {
-    max-width: 1120px; /* Tailwind max-w-7xl */
+    max-width: 1120px; 
     margin-left: auto;
     margin-right: auto;
-    padding: 1rem 1rem; /* Tailwind py-4 px-4 */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -116,18 +104,8 @@
   
   /* Style cho button "Get started" */
   .get-started-btn {
-    background-color: #000000; /* Tailwind bg-black */
-    color: #ffffff; /* Tailwind text-white */
     border: none;
-    /* padding: 0.5rem 1rem; Tailwind px-4 py-2 */ /* nz-button đã có padding */
-    border-radius: 9999px; /* Tailwind rounded-full */
-    line-height: inherit; /* Đảm bảo text căn giữa */
-  }
-  
-  .get-started-btn:hover,
-  .get-started-btn:focus {
-    background-color: #333333; /* Màu hover tối hơn chút */
-    color: #ffffff;
+    border-radius: 9999px; 
   }
   
   /* Mobile Trigger */
@@ -185,9 +163,7 @@
   /* Footer Styles */
   .public-footer {
     background-color: #f5f5f5; /* Tailwind bg-[#f5f5f5] */
-    padding: 2rem 0; /* Tailwind py-8 */
     border-top: 1px solid #e5e7eb; /* Tailwind border-gray-200 */
-    margin-top: 3rem; /* Tailwind mt-12 */
     flex-shrink: 0; /* Ngăn footer co lại */
     color: #374151; /* Tailwind text-gray-700 */
   }
@@ -226,10 +202,6 @@
       padding-left: 2rem; /* lg:px-8 */
       padding-right: 2rem;
     }
-  }
-  
-  .copyright-text {
-    margin-bottom: 1rem; /* Tailwind mb-4 */
   }
   
   .footer-nav {
