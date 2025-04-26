@@ -5,10 +5,11 @@ import { BehaviorSubject, Observable, catchError, map, of, tap, throwError } fro
 import { User } from '../../shared/models/user.model';
 import { StorageService } from './storage.service';
 import { AUTH_TOKEN_KEY, USER_INFO_KEY } from '../constants/storage-keys';
-
+import { AUTH_API } from '../constants/api-endpoints';
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthService {
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this.isLoggedInSubject.asObservable();
@@ -64,10 +65,9 @@ export class AuthService {
   /**
    * Đăng nhập với tên đăng nhập/email và mật khẩu
    */
-  login(credentials: { username: string; password: string; rememberMe?: boolean }): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
+  login(credentials: { email: string; password: string; rememberMe?: boolean }): Observable<any> {
+    return this.http.post<any>(AUTH_API.LOGIN, credentials).pipe(
       map(response => {
-        // Xử lý response theo định dạng mới
         if (response && response.success && response.data) {
           const { user, token } = response.data;
           
@@ -201,21 +201,6 @@ export class AuthService {
   }
 
   /**
-   * Cập nhật thông tin người dùng
-   */
-  updateUserProfile(userInfo: Partial<User>): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/profile`, userInfo).pipe(
-      tap(updatedUser => {
-        const currentUser = this.currentUserSubject.value;
-        const newUserData = { ...currentUser, ...updatedUser };
-        this.currentUserSubject.next(newUserData as User);
-        this.storageService.setLocalItem(USER_INFO_KEY, newUserData);
-      }),
-      catchError(this.handleError)
-    );
-  }
-
-  /**
    * Xử lý lỗi từ HTTP requests
    */
   private handleError(error: HttpErrorResponse) {
@@ -232,4 +217,27 @@ export class AuthService {
     console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
   }
+
+  refreshToken(): Observable<string> {
+    return this.http.post<any>(`${this.apiUrl}/refresh-token`, {}).pipe(
+      map(response => {
+        const token = response?.data?.token;
+        if (token) {
+          this.saveToken(token);
+        }
+        return token;
+      }),
+      catchError(error => {
+        this.logout();
+        return throwError(() => new Error('Không thể làm mới token'));
+      })
+    );
+  }
+
+
+
 }
+
+
+//refresh token
+

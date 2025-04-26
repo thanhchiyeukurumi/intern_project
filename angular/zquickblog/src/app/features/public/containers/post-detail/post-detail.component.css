@@ -1,26 +1,24 @@
 /* General Page Structure */
 .post-detail-page {
-  background-color: var(--body-background, #fff); /* Optional: Set background */
+  background-color: var(--bg-page);
 }
 
 .main-content-container {
-  max-width: 1200px; /* Adjust max width as needed */
-  margin: 24px auto; /* Center content with top/bottom margin */
-  margin-bottom: 0;
+  max-width: 1200px;
+  margin: 24px auto;
 }
 
 /* Post Content Area (Left Column) */
 .post-content-area {
-  background-color: var(--component-background, #fff);
-  border-radius: 8px; /* Optional: Rounded corners */
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Optional: Subtle shadow */
-  overflow: hidden; /* Ensure padding works with potential background */
-  padding: 24px 32px; /* Inner padding */
+  background-color: var(--component-background);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  padding: 24px;
 }
 
 .post-header {
   margin-bottom: 24px;
-  border-bottom: 1px solid var(--border-color-split, #f0f0f0);
+  border-bottom: 1px solid var(--border-color-split);
   padding-bottom: 24px;
 }
 
@@ -35,15 +33,15 @@
 .post-meta {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* If adding actions on the right */
-  flex-wrap: wrap; /* Allow wrapping on small screens */
+  justify-content: space-between;
+  flex-wrap: wrap;
   gap: 16px;
 }
 
 .author-info {
   display: flex;
   align-items: center;
-  gap: 12px; /* Space between avatar and text */
+  gap: 12px;
 }
 
 .meta-text {
@@ -74,7 +72,7 @@
 .post-body {
   font-size: 1rem; /* Base font size for content */
   line-height: 1.7;
-  color: var(--text-color, rgba(0, 0, 0, 0.85));
+  color: var(--text-color);
 }
 
 .post-body h1,
@@ -160,8 +158,6 @@
 /* Post Footer */
 .post-footer {
   margin-top: 32px;
-  padding-top: 24px;
-  /* border-top: 1px solid var(--border-color-split, #f0f0f0); */ /* Use nz-divider instead */
 }
 
 .post-tags {
@@ -186,9 +182,7 @@
 /* Sidebar (Right Column) */
 .sidebar-sticky-content {
   position: sticky;
-  top: 20px; /* Adjust top offset as needed (e.g., header height + margin) */
-  height: calc(100vh - 40px); /* Example height, adjust as needed */
-  overflow-y: auto; /* Allow scrolling within sidebar if content exceeds height */
+  top: 24px;
 }
 
 .sidebar-card {
@@ -235,13 +229,13 @@
     font-weight: 500;
     margin-bottom: 4px;
     line-height: 1.4;
-    color: var(--text-color, rgba(0, 0, 0, 0.85));
+    color: var(--text-color);
     transition: color 0.3s;
 }
 
 .recommended-post-item .item-author {
     font-size: 0.8rem;
-    color: var(--text-color-secondary, rgba(0, 0, 0, 0.45));
+    color: var(--text-color-secondary);
 }
 
 .no-data-message {
@@ -316,9 +310,7 @@
 /* Responsive Adjustments */
 @media (max-width: 991px) {
   .sidebar-sticky-content {
-    position: static; /* Disable sticky on smaller screens where it's hidden anyway */
-    height: auto;
-    overflow-y: visible;
+    position: static;
   }
   .post-content-area {
       padding: 20px; /* Reduce padding */
@@ -346,7 +338,7 @@
 
 /* Comment Section Styles */
 .comments-section {
-  margin-top: 2rem;
+  margin-top: 32px;
 }
 
 .comments-section h3 {
@@ -360,17 +352,17 @@
 }
 
 .reply-form {
-  margin: 1rem 0;
-  background-color: #f9f9f9;
+  background-color: var(--background-color-light);
+  padding: 16px;
   border-radius: 4px;
+  margin: 16px 0;
 }
 
 .add-comment-form {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background-color: #f9f9f9;
+  margin-top: 24px;
+  padding: 16px;
+  background-color: var(--background-color-light);
   border-radius: 4px;
-  flex: 1 1 auto; 
 }
 
 .text-area-form{

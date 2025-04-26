@@ -1,10 +1,7 @@
-/* Kế thừa các class chung từ register.component.css nếu có file chung */
-/* Hoặc copy/paste các style cần thiết từ register.component.css */
 
-/* -- Copy các style từ register.component.css -- */
 /* Login Header */
 .login-header {
-  background-color: #f5f5f5;
+  background-color: var(--bg-page);
   padding: 2rem 1rem;
 }
 .login-header-container {
@@ -23,11 +20,11 @@
   font-size: 2.25rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: #1f2937;
+  color: var(--text-primary);
 }
 .page-description {
   font-size: 1.25rem;
-  color: #4b5563;
+  color: var(--text-secondary);
 }
 
 /* Form Container */
@@ -45,20 +42,20 @@
 
 /* Form Elements */
 nz-form-label {
-  color: #374151;
+  color: var(--text-secondary);
   font-weight: 500;
   padding: 0;
   line-height: inherit;
 }
 nz-input-group span[nz-icon] {
   cursor: pointer;
-  color: #6b7280;
+  color: var(--text-tertiary);
 }
 nz-input-group span[nz-icon]:hover {
-  color: #374151;
+  color: var(--text-secondary);
 }
 .form-link {
-   color: #000000;
+   color: var(--link-color);
    text-decoration: none; /* Bỏ gạch chân mặc định, chỉ hiện khi hover */
    font-weight: inherit;
    cursor: pointer; /* Thêm con trỏ */
@@ -68,7 +65,7 @@ nz-input-group span[nz-icon]:hover {
     font-weight: 500;
 }
 .form-link:hover {
-   color: #333333;
+   color: var(--link-hover-color);
    text-decoration: underline; /* Thêm gạch chân khi hover */
 }
 
@@ -90,7 +87,7 @@ nz-input-group span[nz-icon]:hover {
 /* Style checkbox "Remember me" */
 .options-container label[nz-checkbox] span:last-child {
   font-size: 0.875rem; /* Tailwind text-sm */
-  color: #374151; /* Tailwind text-gray-700 */
+  color: var(--text-secondary); /* Tailwind text-gray-700 */
   margin-left: 0.5rem; /* Tailwind ml-2 */
   padding: 0; /* Reset padding */
 }
@@ -102,19 +99,16 @@ nz-input-group span[nz-icon]:hover {
 
 /* Login Button */
 .login-button { /* Tương tự register-button */
-  background-color: #000000;
-  color: #ffffff;
+  background-color: var(--button-bg);
+  color: var(--button-text);
   border: none;
   border-radius: 9999px;
   height: auto;
-  line-height: 1.75rem; /* Điều chỉnh nếu cần */
-  padding-top: 0.75rem; /* Ước lượng py-3 */
-  padding-bottom: 0.75rem;
 }
 .login-button:hover,
 .login-button:focus {
-  background-color: #333333;
-  color: #ffffff;
+  background-color: var(--button-hover-bg);
+  color: var(--button-text);
 }
 
 /* Create Account Link */
@@ -123,7 +117,7 @@ nz-input-group span[nz-icon]:hover {
   margin-top: 1.5rem;
 }
 .create-account-link p {
-  color: #374151;
+  color: var(--text-secondary);
   font-size: 0.875rem;
 }
 
@@ -133,22 +127,22 @@ nz-input-group span[nz-icon]:hover {
   margin-bottom: 1.5rem !important;
 }
 :host ::ng-deep .social-divider .ant-divider-inner-text {
-   background-color: #f5f5f5;
-   color: #6b7280;
+   background-color: var(--bg-page);
+   color: var(--text-tertiary);
    font-size: 0.875rem;
 }
 [data-theme="dark"] :host ::ng-deep .social-divider .ant-divider-inner-text {
-    background-color: var(--blogger-bg-tertiary);
+    background-color: var(--background-color-light);
 }
 .social-button {
     width: 100%;
-    border-color: #d1d5db;
-    color: #6b7280;
+    border-color: var(--border-color-input);
+    color: var(--text-tertiary);
 }
 .social-button:hover {
-    background-color: #f9fafb;
-    border-color: #9ca3af;
-    color: #374151;
+    background-color: var(--button-outline-hover-bg);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
 }
 .social-button i {
     font-size: 1.25rem;

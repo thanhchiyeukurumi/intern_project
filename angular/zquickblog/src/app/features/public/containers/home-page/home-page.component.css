@@ -1,26 +1,12 @@
 /* -- Variables (Nên đặt ở file global hoặc layout nếu dùng nhiều) -- */
 :host {
-  --text-primary: #1f2937; /* Gần giống text-gray-900 */
-  --text-secondary: #4b5563; /* Gần giống text-gray-700 */
-  --bg-hero: #f5f5f5; /* Màu nền chung */
-  --button-bg: #000000;
-  --button-text: #ffffff;
-  --button-hover-bg: #333333;
-}
-[data-theme="dark"] :host {
-   /* Ví dụ màu cho dark theme, bạn cần định nghĩa rõ hơn */
-  --text-primary: #f1f5f9;
-  --text-secondary: #cbd5e1;
-  --bg-hero: #1e293b; /* Màu nền tối */
-  --button-bg: #ffffff;
-  --button-text: #000000;
-  --button-hover-bg: #e5e7eb;
+  /* Các biến đã được định nghĩa trong public.style.css */
 }
 
 /* -- Component Styles -- */
 :host {
   display: block; /* Đảm bảo component chiếm không gian */
-  background-color: var(--bg-hero); /* Áp dụng màu nền */
+  background-color: var(--bg-page); /* Áp dụng màu nền */
   color: var(--text-primary); /* Màu chữ mặc định */
 }
 

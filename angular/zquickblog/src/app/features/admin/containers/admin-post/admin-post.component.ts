@@ -87,6 +87,39 @@ export class AdminPostComponent implements OnInit {
         },
         category: 'Design',
         date: 'Jun 13, 2023'
+      },
+      {
+        id: 4,
+        title: '10 Tips for Better JavaScript Code',
+        author: {
+          id: 1,
+          name: 'John Admin',
+          avatar: 'https://randomuser.me/api/portraits/men/1.jpg'
+        },
+        category: 'Technology',
+        date: 'Jul 15, 2023'
+      },
+      {
+        id: 5,
+        title: 'Understanding React Hooks for Beginners',
+        author: {
+          id: 2,
+          name: 'Sarah Johnson',
+          avatar: 'https://randomuser.me/api/portraits/women/25.jpg'
+        },
+        category: 'Development',
+        date: 'Jun 28, 2023'
+      },
+      {
+        id: 6,
+        title: 'The Future of Web Development',
+        author: {
+          id: 3,
+          name: 'Michael Smith',
+          avatar: 'https://randomuser.me/api/portraits/men/32.jpg'
+        },
+        category: 'Design',
+        date: 'Jun 13, 2023'
       }
     ];
   }

@@ -1,30 +1,6 @@
-/* -- Kế thừa Variables từ theme chung hoặc định nghĩa lại -- */
+/* -- Sử dụng biến từ public.style.css -- */
 :host {
-  --text-primary: #1f2937;
-  --text-secondary: #4b5563;
-  --text-tertiary: #6b7280;
-  --bg-page: #f5f5f5;
-  --bg-card: #ffffff;
-  --bg-tag: #f3f4f6; /* bg-gray-100 */
-  --border-color: #e5e7eb;
-  --link-color: #000000;
-  --link-hover-color: #333333;
-  --button-outline-border: #d1d5db;
-  --button-outline-hover-bg: #f9fafb;
-}
-
-[data-theme="dark"] :host {
-  --text-primary: #f1f5f9;
-  --text-secondary: #cbd5e1;
-  --text-tertiary: #94a3b8;
-  --bg-page: #1e293b;
-  --bg-card: #334155;
-  --bg-tag: #4b5563;
-  --border-color: #475569;
-  --link-color: #ffffff;
-  --link-hover-color: #e5e7eb;
-  --button-outline-border: #64748b;
-  --button-outline-hover-bg: #475569;
+  /* Các biến đã được định nghĩa trong public.style.css */
 }
 
 /* -- Component Styles -- */
@@ -223,11 +199,11 @@
 .post-image-placeholder { /* Placeholder styling */
     width: 100%;
     height: 100%;
-    background-color: #e5e7eb; /* Placeholder color */
+    background-color: var(--border-color); /* Placeholder color */
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #9ca3af;
+    color: var(--text-tertiary);
     min-height: 200px;
 }
 
@@ -339,7 +315,7 @@
 .post-image-placeholder-latest { /* Placeholder */
     width: 100%;
     height: 10rem;
-    background-color: #e5e7eb;
+    background-color: var(--border-color);
     border-radius: 0.25rem;
 }
 

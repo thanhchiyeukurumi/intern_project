@@ -1,0 +1,211 @@
+/* Biến màu sắc chung cho ứng dụng */
+:root {
+  /* Màu chủ đạo */
+  --primary-color: #1890ff;
+  --primary-hover: #40a9ff;
+  --primary-active: #096dd9;
+  
+  /* Màu văn bản */
+  --text-color: rgba(0, 0, 0, 0.85);
+  --text-color-secondary: rgba(0, 0, 0, 0.45);
+  --text-color-tertiary: rgba(0, 0, 0, 0.25);
+  --text-primary: #1f2937;
+  --text-secondary: #4b5563;
+  --text-tertiary: #6b7280;
+  
+  /* Màu nền */
+  --body-background: #f0f2f5;
+  --component-background: #fff;
+  --background-color-light: #fafafa;
+  --bg-page: #f5f5f5;
+  --bg-card: #ffffff;
+  --bg-pill: #ffffff;
+  --bg-pill-hover: #f9fafb;
+  --bg-tag: #f3f4f6;
+  --bg-tag-new: #aab6c7;
+  
+  /* Màu viền */
+  --border-color-base: #d9d9d9;
+  --border-color-split: #f0f0f0;
+  --border-color: #e5e7eb;
+  --border-color-input: #d1d5db;
+  --border-color-light: #f3f4f6;
+  --active-border-color: #000000;
+  
+  /* Màu tiêu đề và link */
+  --heading-color: rgba(0, 0, 0, 0.85);
+  --link-color: #000000;
+  --link-hover-color: #333333;
+  
+  /* Màu nút */
+  --button-bg: #000000;
+  --button-text: #ffffff;
+  --button-hover-bg: #333333;
+  --button-outline-border: #d1d5db;
+  --button-outline-hover-bg: #f9fafb;
+  
+  /* Màu icon */
+  --icon-color-green: #059669;
+  --icon-bg-green: #d1fae5;
+  --icon-color-blue: #2563eb;
+  --icon-bg-blue: #dbeafe;
+  --icon-color-purple: #7c3aed;
+  --icon-bg-purple: #ede9fe;
+  --icon-color-yellow: #ca8a04;
+  --icon-bg-yellow: #fef9c3;
+  --icon-color-red: #dc2626;
+  --icon-bg-red: #fee2e2;
+  --icon-color-indigo: #4f46e5;
+  --icon-bg-indigo: #e0e7ff;
+  
+  /* Màu link chuyên biệt */
+  --link-green: #059669;
+  --link-green-hover: #047857;
+  --link-color-green: var(--icon-color-green);
+  --link-color-blue: var(--icon-color-blue);
+  --link-color-purple: var(--icon-color-purple);
+  --link-color-yellow: var(--icon-color-yellow);
+  --link-color-red: var(--icon-color-red);
+  --link-color-indigo: var(--icon-color-indigo);
+  
+  /* Màu cho code */
+  --code-bg: #f5f5f5;
+  
+  /* Màu thành công, cảnh báo, lỗi */
+  --success-color: #52c41a;
+  --warning-color: #faad14;
+  --error-color: #f5222d;
+}
+
+/* Chế độ tối */
+[data-theme="dark"] {
+  --primary-color: #177ddc;
+  --primary-hover: #40a9ff;
+  --primary-active: #096dd9;
+  
+  --text-color: rgba(255, 255, 255, 0.85);
+  --text-color-secondary: rgba(255, 255, 255, 0.45);
+  --text-color-tertiary: rgba(255, 255, 255, 0.25);
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  
+  --body-background: #000;
+  --component-background: #141414;
+  --background-color-light: #1f1f1f;
+  --bg-page: #1e293b;
+  --bg-card: #334155;
+  --bg-pill: #475569;
+  --bg-pill-hover: #525e71;
+  --bg-tag: #4b5563;
+  --bg-tag-new: #64748b;
+  
+  --border-color-base: #434343;
+  --border-color-split: #303030;
+  --border-color: #475569;
+  --border-color-input: #64748b;
+  --border-color-light: #475569;
+  --active-border-color: #ffffff;
+  
+  --heading-color: rgba(255, 255, 255, 0.85);
+  --link-color: #ffffff;
+  --link-hover-color: #e5e7eb;
+  
+  --button-bg: #ffffff;
+  --button-text: #000000;
+  --button-hover-bg: #e5e7eb;
+  --button-outline-border: #64748b;
+  --button-outline-hover-bg: #475569;
+  
+  --icon-color-green: #6ee7b7;
+  --icon-bg-green: #064e3b;
+  --icon-color-blue: #93c5fd;
+  --icon-bg-blue: #1e40af;
+  --icon-color-purple: #c4b5fd;
+  --icon-bg-purple: #5b21b6;
+  --icon-color-yellow: #fcd34d;
+  --icon-bg-yellow: #78350f;
+  --icon-color-red: #fca5a5;
+  --icon-bg-red: #7f1d1d;
+  --icon-color-indigo: #a5b4fc;
+  --icon-bg-indigo: #3730a3;
+  
+  --link-green: #6ee7b7;
+  --link-green-hover: #34d399;
+  --link-color-green: var(--icon-color-green);
+  --link-color-blue: var(--icon-color-blue);
+  --link-color-purple: var(--icon-color-purple);
+  --link-color-yellow: var(--icon-color-yellow);
+  --link-color-red: var(--icon-color-red);
+  --link-color-indigo: var(--icon-color-indigo);
+  
+  --code-bg: #1f1f1f;
+}
+
+/* Lớp tiện ích chung */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+
+.mb-sm { margin-bottom: 8px; }
+.mb-md { margin-bottom: 16px; }
+.mb-lg { margin-bottom: 24px; }
+
+/* Các lớp cho bài viết và nội dung */
+.content-container {
+  max-width: 1200px;
+  margin: 24px auto;
+}
+
+/* Lớp cho bình luận */
+.comment-section {
+  margin-top: 32px;
+}
+
+.comment-input {
+  margin-bottom: 16px;
+}
+
+.comment-action-button {
+  margin-left: 8px;
+}
+
+/* Định dạng nội dung bài viết */
+.rich-content h1, 
+.rich-content h2, 
+.rich-content h3,
+.rich-content h4,
+.rich-content h5,
+.rich-content h6 {
+  font-weight: 600;
+  color: var(--heading-color);
+  margin-top: 1.8em;
+  margin-bottom: 1em;
+}
+
+.rich-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 16px 0;
+}
+
+.rich-content blockquote {
+  margin: 16px 0;
+  padding: 8px 16px;
+  border-left: 4px solid var(--border-color-split);
+  background-color: var(--background-color-light);
+  color: var(--text-color-secondary);
+  font-style: italic;
+}
+
+.rich-content pre, 
+.rich-content code {
+  background-color: var(--code-bg);
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

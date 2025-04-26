@@ -13,7 +13,7 @@
       <!-- Email -->
       <nz-form-item>
         <nz-form-label nzRequired nzFor="email">Email Address</nz-form-label>
-        <nz-form-control nzHasFeedback [nzErrorTip]="emailErrorTpl">
+        <nz-form-control  nzHasFeedback [nzErrorTip]="emailErrorTpl">
           <input nz-input id="email" type="email" formControlName="email" placeholder="Enter your email address" />
           <ng-template #emailErrorTpl let-control>
             <ng-container *ngIf="control.hasError('required')">Email is required!</ng-container>

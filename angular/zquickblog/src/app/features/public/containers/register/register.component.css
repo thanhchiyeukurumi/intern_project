@@ -1,6 +1,6 @@
 /* Register Header */
 .register-header {
-  background-color: #f5f5f5; /* Tailwind bg-[#f5f5f5] */
+  background-color: var(--bg-page); /* Tailwind bg-[#f5f5f5] */
   padding: 2rem 1rem; /* Tailwind py-8 px-4 */
 }
 
@@ -30,12 +30,12 @@
   font-size: 2.25rem; /* Tailwind text-4xl */
   font-weight: 700; /* Tailwind font-bold */
   margin-bottom: 1rem; /* Tailwind mb-4 */
-  color: #1f2937; /* Approx text-gray-900 */
+  color: var(--text-primary); /* Approx text-gray-900 */
 }
 
 .page-description {
   font-size: 1.25rem; /* Tailwind text-xl */
-  color: #4b5563; /* Tailwind text-gray-700 */
+  color: var(--text-secondary); /* Tailwind text-gray-700 */
   /* nzType="secondary" handles color */
 }
 
@@ -67,7 +67,7 @@
 
 /* Form Elements */
 nz-form-label {
-  color: #374151; /* Tailwind text-gray-700 */
+  color: var(--text-secondary); /* Tailwind text-gray-700 */
   font-weight: 500; /* Tailwind font-medium */
   /* margin-bottom: 0.5rem; /* Tailwind mb-2 */ /* nz-form-label handles spacing */
   padding: 0; /* Reset padding */
@@ -77,15 +77,15 @@ nz-form-label {
 /* Style Input suffix icons */
 nz-input-group span[nz-icon] {
   cursor: pointer;
-  color: #6b7280; /* Tailwind text-gray-500 */
+  color: var(--text-tertiary); /* Tailwind text-gray-500 */
 }
 nz-input-group span[nz-icon]:hover {
-  color: #374151; /* Tailwind hover:text-gray-700 */
+  color: var(--text-secondary); /* Tailwind hover:text-gray-700 */
 }
 
 .password-hint {
     font-size: 0.75rem; /* Tailwind text-xs */
-    color: #6b7280; /* Tailwind text-gray-500 */
+    color: var(--text-tertiary); /* Tailwind text-gray-500 */
     margin-top: 0.25rem; /* Tailwind mt-1 */
     /* nz-form-explain already provides spacing */
 }
@@ -103,14 +103,14 @@ nz-checkbox-wrapper {
 nz-checkbox-wrapper span:last-child { /* The text label */
    margin-left: 0.75rem; /* Tailwind ml-3 */
    font-size: 0.875rem; /* Tailwind text-sm */
-   color: #374151; /* Tailwind text-gray-700 */
+   color: var(--text-secondary); /* Tailwind text-gray-700 */
    padding: 0; /* Reset padding */
    line-height: 1.5; /* Adjust line height */
 }
 
 /* Link style within labels/text */
 .form-link {
-   color: #000000; /* Tailwind text-black */
+   color: var(--link-color); /* Tailwind text-black */
    text-decoration: underline; /* Tailwind underline */
    font-weight: inherit; /* Inherit weight unless specified */
 }
@@ -118,11 +118,11 @@ nz-checkbox-wrapper span:last-child { /* The text label */
     font-weight: 500; /* Tailwind font-medium */
 }
 .form-link:hover {
-   color: #333333; /* Slightly lighter black on hover */
+   color: var(--link-hover-color); /* Slightly lighter black on hover */
 }
 
 .terms-error {
-    color: #ef4444; /* Ant Design danger color */
+    color: var(--error-color); /* Ant Design danger color */
     font-size: 0.875rem;
     margin-top: 4px;
 }
@@ -130,8 +130,8 @@ nz-checkbox-wrapper span:last-child { /* The text label */
 
 /* Register Button */
 .register-button {
-  background-color: #000000; /* Tailwind bg-black */
-  color: #ffffff; /* Tailwind text-white */
+  background-color: var(--button-bg); /* Tailwind bg-black */
+  color: var(--button-text); /* Tailwind text-white */
   border: none;
   border-radius: 9999px; /* Tailwind rounded-full */
   /* padding: 0.75rem 0; /* Tailwind py-3 */ /* nz-button handles padding */
@@ -141,8 +141,8 @@ nz-checkbox-wrapper span:last-child { /* The text label */
 
 .register-button:hover,
 .register-button:focus {
-  background-color: #333333; /* Tailwind hover:bg-gray-800 (approx) */
-  color: #ffffff;
+  background-color: var(--button-hover-bg); /* Tailwind hover:bg-gray-800 (approx) */
+  color: var(--button-text);
 }
 
 
@@ -152,7 +152,7 @@ nz-checkbox-wrapper span:last-child { /* The text label */
   margin-top: 1.5rem; /* Add some space */
 }
 .signin-link p {
-  color: #374151; /* Tailwind text-gray-700 */
+  color: var(--text-secondary); /* Tailwind text-gray-700 */
   font-size: 0.875rem; /* Tailwind text-sm */
 }
 
@@ -163,23 +163,23 @@ nz-checkbox-wrapper span:last-child { /* The text label */
 }
 
 :host ::ng-deep .social-divider .ant-divider-inner-text {
-   background-color: #f5f5f5; /* Tailwind bg-[#f5f5f5] */
-   color: #6b7280; /* Tailwind text-gray-500 */
+   background-color: var(--bg-page); /* Tailwind bg-[#f5f5f5] */
+   color: var(--text-tertiary); /* Tailwind text-gray-500 */
    font-size: 0.875rem; /* Tailwind text-sm */
 }
 [data-theme="dark"] :host ::ng-deep .social-divider .ant-divider-inner-text {
-    background-color: var(--blogger-bg-tertiary); /* Match dark card bg */
+    background-color: var(--background-color-light); /* Match dark card bg */
 }
 
 .social-button {
     width: 100%; /* Make button take column width */
-    border-color: #d1d5db; /* Tailwind border-gray-300 */
-    color: #6b7280; /* Tailwind text-gray-500 */
+    border-color: var(--border-color-input); /* Tailwind border-gray-300 */
+    color: var(--text-tertiary); /* Tailwind text-gray-500 */
 }
 .social-button:hover {
-    background-color: #f9fafb; /* Tailwind hover:bg-gray-50 */
-    border-color: #9ca3af;
-    color: #374151;
+    background-color: var(--button-outline-hover-bg); /* Tailwind hover:bg-gray-50 */
+    border-color: var(--border-color);
+    color: var(--text-secondary);
 }
 .social-button i { /* Style icon if needed */
     font-size: 1.25rem;

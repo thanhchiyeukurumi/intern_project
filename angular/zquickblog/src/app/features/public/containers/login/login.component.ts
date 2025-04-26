@@ -1,6 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// **** Thêm FormControl vào import ****
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -14,14 +13,15 @@ import { NzModalModule, NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
-// import { AuthService } from 'src/app/core/services/auth.service'; // Uncomment nếu dùng
+import { AuthService } from '../../../../core/services/auth.service'
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule, // Cần thiết cho cả hai form
+    ReactiveFormsModule,
     RouterModule,
     NzFormModule,
     NzInputModule,
@@ -43,10 +43,8 @@ export class LoginComponent implements OnInit {
   isLoading = false;
   resetPasswordLoading = false;
 
-  // **** Tạo FormControl riêng cho modal ****
   resetEmailControl = new FormControl('', [Validators.required, Validators.email]);
 
-  // Tham chiếu đến modal
   private resetPasswordModalRef: NzModalRef | null = null;
 
   constructor(
@@ -54,7 +52,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private message: NzMessageService,
     private modalService: NzModalService,
-    // private authService: AuthService // Uncomment nếu dùng
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -75,28 +73,26 @@ export class LoginComponent implements OnInit {
     }
 
     if (this.loginForm.invalid) {
-      this.message.error('Please enter valid email and password.');
+      this.message.error('Vui lòng nhập email và mật khẩu hợp lệ.');
       return;
     }
 
     this.isLoading = true;
     const { email, password, rememberMe } = this.loginForm.value;
 
-    console.log('Logging in with:', { email, password, rememberMe });
-
-    // --- Gọi API đăng nhập ở đây ---
-    // this.authService.login({ username: email, password, rememberMe }).subscribe({ ... });
-
-    // --- Giả lập API call ---
-    setTimeout(() => {
-      this.isLoading = false;
-      if (email === 'test@example.com' && password === 'password') {
-        this.message.success('Login successful! (Simulated)');
-        this.router.navigate(['/']); // Chuyển hướng
-      } else {
-        this.message.error('Invalid credentials. (Simulated)');
-      }
-    }, 1500);
+    this.authService.login({ email: email, password, rememberMe })
+      .pipe(
+        finalize(() => this.isLoading = false)
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.message.success('Đăng nhập thành công!');
+          // Chuyển hướng sẽ được quản lý bởi AuthService
+        },
+        error: (error: any) => {
+          this.message.error(error.message || 'Đăng nhập thất bại. Vui lòng kiểm tra thông tin đăng nhập.');
+        }
+      });
   }
 
   togglePasswordVisibility(): void {
@@ -105,23 +101,21 @@ export class LoginComponent implements OnInit {
 
   // Mở Modal Reset Password
   showResetPasswordModal(modalContent: TemplateRef<{}>): void {
-    // **** Reset FormControl khi mở modal ****
     this.resetEmailControl.reset('');
-    this.resetPasswordLoading = false; // Đảm bảo loading state là false
+    this.resetPasswordLoading = false;
 
     this.resetPasswordModalRef = this.modalService.create({
-      nzTitle: 'Reset Password',
+      nzTitle: 'Khôi phục mật khẩu',
       nzContent: modalContent,
-      nzFooter: [ // Footer tùy chỉnh
+      nzFooter: [
         {
-          label: 'Cancel',
+          label: 'Hủy',
           onClick: () => this.resetPasswordModalRef?.destroy()
         },
         {
-          label: 'Send Reset Link',
+          label: 'Gửi liên kết khôi phục',
           type: 'primary',
           loading: this.resetPasswordLoading,
-          // Chỉ gọi sendResetLink khi click, validation sẽ được kiểm tra trong hàm đó
           onClick: () => this.sendResetLink()
         }
       ],
@@ -132,28 +126,36 @@ export class LoginComponent implements OnInit {
 
   // Gửi yêu cầu reset password (trong modal)
   sendResetLink(): void {
-    // **** Validate và lấy giá trị từ FormControl ****
     this.resetEmailControl.markAsDirty();
     this.resetEmailControl.updateValueAndValidity();
 
     if (this.resetEmailControl.invalid) {
-      // Lỗi sẽ tự động hiển thị qua nzErrorTip trong template
-      // Không cần message.error ở đây nữa
-      return; // Không tiếp tục nếu không hợp lệ
+      return;
     }
 
     this.resetPasswordLoading = true;
-    const emailToSend = this.resetEmailControl.value; // Lấy giá trị từ control
-    console.log('Sending reset link to:', emailToSend);
-
-    // --- Gọi API gửi link reset ---
-    // this.authService.forgotPassword(emailToSend).subscribe({ ... });
-
-    // --- Giả lập API call ---
+    const emailToSend = this.resetEmailControl.value;
+    
+    // Giả lập gọi API khôi phục mật khẩu (cần bổ sung endpoint trong AuthService)
     setTimeout(() => {
-        this.resetPasswordLoading = false;
-        this.message.success('Password reset link sent to ' + emailToSend + ' (Simulated)');
-        this.resetPasswordModalRef?.destroy(); // Đóng modal sau khi gửi thành công
+      this.resetPasswordLoading = false;
+      this.message.success('Đã gửi liên kết khôi phục mật khẩu đến ' + emailToSend);
+      this.resetPasswordModalRef?.destroy();
     }, 1000);
+    
+    // TODO: Khi có API reset password, cần thay thế đoạn giả lập bên trên
+    // this.authService.forgotPassword(emailToSend)
+    //   .pipe(
+    //     finalize(() => this.resetPasswordLoading = false)
+    //   )
+    //   .subscribe({
+    //     next: () => {
+    //       this.message.success('Đã gửi liên kết khôi phục mật khẩu đến ' + emailToSend);
+    //       this.resetPasswordModalRef?.destroy();
+    //     },
+    //     error: (error: any) => {
+    //       this.message.error(error.message || 'Không thể gửi liên kết khôi phục mật khẩu.');
+    //     }
+    //   });
   }
 }

@@ -1,40 +1,6 @@
-/* -- Kế thừa Variables từ theme chung -- */
+/* -- Sử dụng biến từ public.style.css -- */
 :host {
-  --text-primary: #1f2937;
-  --text-secondary: #4b5563;
-  --text-tertiary: #6b7280;
-  --bg-page: #f5f5f5;
-  --bg-card: #ffffff;
-  --bg-tag: #f3f4f6;
-  --bg-tag-new: #aab6c7;
-  --border-color: #e5e7eb;
-  --border-color-light: #f3f4f6; /* Nhạt hơn cho sidebar card */
-  --link-color: #000000;
-  --link-hover-color: #333333;
-  --button-outline-border: #d1d5db;
-  --button-outline-hover-bg: #f9fafb;
-  --active-border-color: #000000; /* border-black */
-  /* Màu đặc biệt nếu cần */
-  --link-green: #059669;
-  --link-green-hover: #047857;
-}
-
-[data-theme="dark"] :host {
-  --text-primary: #f1f5f9;
-  --text-secondary: #cbd5e1;
-  --text-tertiary: #94a3b8;
-  --bg-page: #1e293b;
-  --bg-card: #334155;
-  --bg-tag: #4b5563;
-  --border-color: #475569;
-  --border-color-light: #475569; /* Có thể giống border chính trong dark */
-  --link-color: #ffffff;
-  --link-hover-color: #e5e7eb;
-  --button-outline-border: #64748b;
-  --button-outline-hover-bg: #475569;
-  --active-border-color: #ffffff;
-   --link-green: #6ee7b7;
-   --link-green-hover: #34d399;
+  /* Các biến đã được định nghĩa trong public.style.css */
 }
 
 /* -- Component Styles -- */
@@ -309,7 +275,7 @@
   cursor: pointer;
 }
 .sidebar-topic-tag:hover {
-   background-color: #e5e7eb !important; /* hover:bg-gray-200 */
+   background-color: var(--button-outline-hover-bg) !important; /* hover:bg-gray-200 */
    color: var(--text-primary) !important;
 }
 .topic-tag-list a { text-decoration: none; }
