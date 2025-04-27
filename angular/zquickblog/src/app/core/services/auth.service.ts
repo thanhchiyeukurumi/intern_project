@@ -6,6 +6,7 @@ import { User } from '../../shared/models/user.model';
 import { StorageService } from './storage.service';
 import { AUTH_TOKEN_KEY, USER_INFO_KEY } from '../constants/storage-keys';
 import { AUTH_API } from '../constants/api-endpoints';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -52,13 +53,7 @@ export class AuthService {
     // Kiểm tra cấu trúc API mới
     if (user.role && user.role.name) {
       return user.role.name;
-    }
-    
-    // Tương thích ngược với cấu trúc cũ (nếu cần)
-    if (user.roles && user.roles.length > 0) {
-      return user.roles[0];
-    }
-    
+    }  
     return null;
   }
 
@@ -94,8 +89,8 @@ export class AuthService {
   /**
    * Đăng ký tài khoản mới
    */
-  register(userInfo: { username: string; email: string; password: string }): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/register`, userInfo).pipe(
+  register(userInfo: { username: string; fullname: string; email: string; password: string}): Observable<any> {
+    return this.http.post<any>(AUTH_API.REGISTER, userInfo).pipe(
       catchError(this.handleError)
     );
   }

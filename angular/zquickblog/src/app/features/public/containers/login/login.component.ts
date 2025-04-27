@@ -49,7 +49,6 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
     private message: NzMessageService,
     private modalService: NzModalService,
     private authService: AuthService
@@ -67,13 +66,13 @@ export class LoginComponent implements OnInit {
     // Đánh dấu các control là dirty để hiển thị lỗi
     for (const i in this.loginForm.controls) {
       if (this.loginForm.controls.hasOwnProperty(i)) {
-        this.loginForm.controls[i].markAsDirty();
-        this.loginForm.controls[i].updateValueAndValidity();
+        this.loginForm.controls[i].markAsDirty(); // Hiện lỗi ngay nếu có
+        this.loginForm.controls[i].updateValueAndValidity(); // Cập nhật lại validation cho field
       }
     }
 
     if (this.loginForm.invalid) {
-      this.message.error('Vui lòng nhập email và mật khẩu hợp lệ.');
+      this.message.error('Vui lòng nhập email và mật khẩu hợp lệ');
       return;
     }
 
@@ -82,7 +81,7 @@ export class LoginComponent implements OnInit {
 
     this.authService.login({ email: email, password, rememberMe })
       .pipe(
-        finalize(() => this.isLoading = false)
+        finalize(() => this.isLoading = false) // Tắt loading kể cả khi thành công hay lỗi
       )
       .subscribe({
         next: (response: any) => {
@@ -142,20 +141,5 @@ export class LoginComponent implements OnInit {
       this.message.success('Đã gửi liên kết khôi phục mật khẩu đến ' + emailToSend);
       this.resetPasswordModalRef?.destroy();
     }, 1000);
-    
-    // TODO: Khi có API reset password, cần thay thế đoạn giả lập bên trên
-    // this.authService.forgotPassword(emailToSend)
-    //   .pipe(
-    //     finalize(() => this.resetPasswordLoading = false)
-    //   )
-    //   .subscribe({
-    //     next: () => {
-    //       this.message.success('Đã gửi liên kết khôi phục mật khẩu đến ' + emailToSend);
-    //       this.resetPasswordModalRef?.destroy();
-    //     },
-    //     error: (error: any) => {
-    //       this.message.error(error.message || 'Không thể gửi liên kết khôi phục mật khẩu.');
-    //     }
-    //   });
   }
 }

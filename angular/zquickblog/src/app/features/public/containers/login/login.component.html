@@ -1,32 +1,39 @@
 <!-- Login Header -->
 <div class="login-header">
   <div class="login-header-container">
-    <h1 nz-typography class="page-title">Welcome Back</h1>
-    <p nz-typography nzType="secondary" class="page-description">Sign in to access your account.</p>
+    <h1 nz-typography class="page-title">Welcome Back!</h1>
+    <p nz-typography nzType="secondary" class="page-description">Sign in to continue to your account.</p>
   </div>
 </div>
 
 <!-- Login Form Container -->
 <div class="form-container">
-  <nz-card class="login-card">
+  <nz-card class="login-card" [nzBordered]="false"> <!-- Remove border for a cleaner look with shadow -->
     <form nz-form [formGroup]="loginForm" (ngSubmit)="submitForm()">
       <!-- Email -->
-      <nz-form-item>
-        <nz-form-label nzRequired nzFor="email">Email Address</nz-form-label>
-        <nz-form-control  nzHasFeedback [nzErrorTip]="emailErrorTpl">
-          <input nz-input id="email" type="email" formControlName="email" placeholder="Enter your email address" />
+      <nz-form-item nz-row [nzGutter]="8">
+        <nz-form-label nz-col [nzSpan]="8" nzRequired nzFor="email">Email Address</nz-form-label>
+        <nz-form-control nz-col [nzSpan]="16" nzHasFeedback [nzErrorTip]="emailErrorTpl">
+          <nz-input-group nzSize="large" nzPrefixIcon="mail">
+            <input
+              nz-input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="your.email@example.com" />
+          </nz-input-group>
           <ng-template #emailErrorTpl let-control>
-            <ng-container *ngIf="control.hasError('required')">Email is required!</ng-container>
-            <ng-container *ngIf="control.hasError('email')">Invalid email format!</ng-container>
+            <ng-container *ngIf="control.hasError('required')">Please enter your email address.</ng-container>
+            <ng-container *ngIf="control.hasError('email')">Please enter a valid email address.</ng-container>
           </ng-template>
         </nz-form-control>
       </nz-form-item>
 
       <!-- Password -->
-      <nz-form-item>
-        <nz-form-label nzRequired nzFor="password">Password</nz-form-label>
-        <nz-form-control nzHasFeedback [nzErrorTip]="passwordErrorTpl">
-          <nz-input-group [nzSuffix]="suffixTemplatePassword">
+      <nz-form-item nz-row [nzGutter]="8">
+        <nz-form-label nz-col [nzSpan]="8" nzRequired nzFor="password">Password</nz-form-label>
+        <nz-form-control nz-col [nzSpan]="16" nzHasFeedback [nzErrorTip]="passwordErrorTpl">
+          <nz-input-group nzSize="large" [nzSuffix]="suffixTemplatePassword" nzPrefixIcon="lock">
             <input
               [type]="passwordVisible ? 'text' : 'password'"
               nz-input
@@ -35,10 +42,11 @@
               placeholder="Enter your password" />
           </nz-input-group>
           <ng-template #suffixTemplatePassword>
-            <span nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="togglePasswordVisibility()"></span>
+            <span nz-icon class="password-toggle-icon" [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="togglePasswordVisibility()"></span>
           </ng-template>
           <ng-template #passwordErrorTpl let-control>
-            <ng-container *ngIf="control.hasError('required')">Password is required!</ng-container>
+            <ng-container *ngIf="control.hasError('required')">Please enter your password.</ng-container>
+            <!-- Add other password validation messages here if needed (e.g., minlength) -->
           </ng-template>
         </nz-form-control>
       </nz-form-item>
@@ -58,50 +66,58 @@
       <!-- Login Button -->
       <nz-form-item>
         <nz-form-control>
-          <button nz-button nzType="primary" nzBlock class="login-button" type="submit" [nzLoading]="isLoading">
+          <!-- Added nzSize="large" and slightly updated class -->
+          <button nz-button nzType="primary" nzBlock nzSize="large" class="action-button login-button" type="submit" [nzLoading]="isLoading">
             Sign In
           </button>
         </nz-form-control>
       </nz-form-item>
 
       <!-- Create Account Link -->
-      <div class="create-account-link">
+      <div class="switch-form-link">
         <p>
-          Don't have an account? <a routerLink="/auth/register" class="form-link font-medium">Create account</a>
+          Don't have an account? <a routerLink="/auth/register" class="form-link font-medium">Create one now</a>
         </p>
       </div>
-    </form>
 
-    <!-- Social Sign In Divider -->
-    <nz-divider nzText="Or sign in with" nzOrientation="center" class="social-divider"></nz-divider>
+      <!-- Social Sign In Divider (Optional Section) -->
+      <nz-divider nzText="Or continue with" nzOrientation="center" class="social-divider"></nz-divider>
 
-    <!-- Social Sign In Buttons -->
-    <div nz-row [nzGutter]="8" nzJustify="center">
-      <div nz-col>
-        <button nz-button class="social-button">
-          <i nz-icon nzType="google"></i>
-        </button>
+      <!-- Social Sign In Buttons (Optional Section) -->
+      <div nz-row [nzGutter]="16" nzJustify="center" class="social-buttons-container">
+        <div nz-col [nzSpan]="12"> <!-- Adjust span based on how many buttons you have -->
+          <button nz-button nzBlock class="social-button google-button">
+             <i nz-icon nzType="google" nzTheme="outline"></i> Google
+          </button>
+        </div>
+         <div nz-col [nzSpan]="12">
+          <button nz-button nzBlock class="social-button github-button">
+             <i nz-icon nzType="github" nzTheme="outline"></i> GitHub
+          </button>
+        </div>
+        <!-- Add other social buttons here (e.g., Facebook, Apple) -->
       </div>
-      <!-- Add other social buttons here if needed -->
-    </div>
 
+    </form>
   </nz-card>
 </div>
 
-<!-- Template cho nội dung Modal Reset Password -->
+<!-- Template cho nội dung Modal Reset Password (Unchanged functionally, but ensure styling is consistent) -->
 <ng-template #resetPasswordContent>
-  <p nz-typography nzType="secondary" style="margin-bottom: 16px;">Enter the email address associated with your account, and we'll send you a link to reset your password.</p>
-  <!-- **** Sử dụng nz-form-item và formControl **** -->
-  <nz-form-item>
-    <nz-form-label nzRequired>Email Address</nz-form-label>
-    <nz-form-control [nzHasFeedback]="resetEmailControl.dirty" [nzErrorTip]="resetEmailErrorTip"> <!-- Thêm nzHasFeedback nếu muốn icon -->
-        <!-- **** Thay [(ngModel)] bằng [formControl] **** -->
-        <input nz-input type="email" [formControl]="resetEmailControl" placeholder="your.email@example.com" />
-        <!-- **** Sử dụng 'resetEmailControl' để kiểm tra lỗi **** -->
-        <ng-template #resetEmailErrorTip>
-           <ng-container *ngIf="resetEmailControl.hasError('required')">Email is required!</ng-container>
-           <ng-container *ngIf="resetEmailControl.hasError('email')">Invalid email format!</ng-container>
-        </ng-template>
-    </nz-form-control>
-  </nz-form-item>
-</ng-template>
+   <h3 nz-typography>Reset Password</h3>
+   <p nz-typography nzType="secondary" style="margin-bottom: 24px;">Enter the email address associated with your account, and we'll send you instructions to reset your password.</p>
+   <nz-form-item>
+     <nz-form-label nzRequired>Email Address</nz-form-label>
+     <nz-form-control [nzHasFeedback]="resetEmailControl.dirty && resetEmailControl.invalid" [nzErrorTip]="resetEmailErrorTip">
+       <nz-input-group nzPrefixIcon="mail">
+         <input nz-input type="email" [formControl]="resetEmailControl" placeholder="your.email@example.com" />
+       </nz-input-group>
+       <ng-template #resetEmailErrorTip>
+          <ng-container *ngIf="resetEmailControl.hasError('required')">Email is required!</ng-container>
+          <ng-container *ngIf="resetEmailControl.hasError('email')">Invalid email format!</ng-container>
+       </ng-template>
+     </nz-form-control>
+   </nz-form-item>
+   <!-- Add a button inside the modal template to submit the reset request -->
+   <!-- <button nz-button nzType="primary" (click)="handlePasswordResetRequest()" [disabled]="resetEmailControl.invalid">Send Reset Instructions</button> -->
+ </ng-template>

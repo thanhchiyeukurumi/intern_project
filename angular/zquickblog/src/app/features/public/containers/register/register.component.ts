@@ -11,8 +11,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzGridModule } from 'ng-zorro-antd/grid'; // For social buttons layout
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzCardComponent } from 'ng-zorro-antd/card';
-// Import AuthService nếu bạn có service để gọi API đăng ký
-// import { AuthService } from 'src/app/core/services/auth.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 // Custom Validator function để kiểm tra mật khẩu khớp nhau
 export const matchPasswordValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -55,13 +54,14 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private message: NzMessageService,
-    // private authService: AuthService // Inject AuthService
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
       fullName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
+      userName: ['', [Validators.required]],
       password: ['', [
         Validators.required,
         Validators.minLength(8),
@@ -95,30 +95,22 @@ export class RegisterComponent implements OnInit {
     }
 
     this.isLoading = true;
-    const { fullName, email, password, newsletter } = this.registerForm.value;
+    const { fullName, email, password, userName, newsletter } = this.registerForm.value;
 
     console.log('Registering with:', { fullName, email, password, newsletter });
 
-    // --- Gọi API đăng ký ở đây ---
-    // this.authService.register({ username: /* có thể dùng email hoặc thêm trường username */ email, email, password }).subscribe({
-    //   next: (response) => {
-    //     this.isLoading = false;
-    //     this.message.success('Account created successfully! Please check your email for verification.');
-    //     this.router.navigate(['/auth/login']); // Chuyển đến trang đăng nhập
-    //   },
-    //   error: (error) => {
-    //     this.isLoading = false;
-    //     this.message.error(error.message || 'Registration failed. Please try again.');
-    //     console.error('Registration error:', error);
-    //   }
-    // });
-
-    // --- Giả lập API call ---
-    setTimeout(() => {
-      this.isLoading = false;
-      this.message.success('Account created successfully! (Simulated)');
-      this.router.navigate(['/auth/login']);
-    }, 1500);
+    this.authService.register({ username: userName, fullname: fullName, email, password }).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.message.success('Account created successfully! Please check your email for verification.');
+        this.router.navigate(['/auth/login']); // Chuyển đến trang đăng nhập
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.message.error(error.message || 'Registration failed. Please try again.');
+        console.error('Registration error:', error);
+      }
+    });
   }
 
   // Hàm toggle cho password chính
