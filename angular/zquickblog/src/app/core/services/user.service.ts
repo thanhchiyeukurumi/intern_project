@@ -16,7 +16,7 @@ export class UserService {
     search?: string;
     orderBy?: string;
     order?: 'ASC' | 'DESC';
-    includeRelations?: boolean;
+    includeRelations: boolean;
   }): Observable<{ data: User[]; pagination: any }> {
     let httpParams = new HttpParams();
     if (params) {

@@ -1,5 +1,5 @@
 const db = require('models');
-const {User} = db;
+const {User, Role} = db;
 const { Op } = require('sequelize');
 
 class UserService {
@@ -31,6 +31,13 @@ class UserService {
 
             const queryOptions = {
                 where,
+                include: includeRelations? [
+                    {
+                        model: Role,
+                        as: 'role',
+                        attributes: ['id', 'name']
+                    }
+                ]:[],
                 order: [[orderBy, order]],
                 offset,
                 limit,

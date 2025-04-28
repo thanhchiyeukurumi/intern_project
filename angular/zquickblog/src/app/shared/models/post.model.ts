@@ -19,17 +19,17 @@ export interface Post {
   status: string;
   createdAt: string;
   updatedAt: string;
-  categories?: {
+  Categories?: {
     id: number;
     name: string;
   }[];
-  user?: {
+  User?: {
     id: number;
     username: string;
     email: string;
     avatar?: string;
   };
-  language?: {
+  Language?: {
     id: number;
     name: string;
     locale: string;
