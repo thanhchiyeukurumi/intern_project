@@ -38,7 +38,6 @@ import { NzMessageService } from 'ng-zorro-antd/message'; // Import MessageServi
     NzModalModule
   ],
   providers: [
-      DatePipe 
   ],
   templateUrl: './admin-post.component.html',
   styleUrls: ['./admin-post.component.css']

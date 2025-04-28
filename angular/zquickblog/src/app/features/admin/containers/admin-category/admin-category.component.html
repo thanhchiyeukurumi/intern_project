@@ -48,7 +48,6 @@
         <th [nzWidth]="'50px'" [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
         <th>Name</th>
         <th>Parent</th>
-        <th>Count</th>
         <th [nzAlign]="'right'">Actions</th>
       </tr>
     </thead>
@@ -57,7 +56,6 @@
         <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
         <td>{{ data.name }}</td>
         <td>{{ data.parent || '-' }}</td>
-        <td>{{ data.count || 0 }}</td>
         <td [nzAlign]="'right'" class="action-buttons">
           <button nz-button nzType="link" class="edit-button">
             <i nz-icon nzType="edit"></i>

@@ -184,14 +184,6 @@ export class AuthService {
       return user.role.name === expectedRole;
     }
     
-    // Tương thích ngược với cấu trúc cũ
-    if (user.roles && user.roles.length > 0) {
-      if (Array.isArray(expectedRole)) {
-        return expectedRole.some(role => user.roles?.includes(role));
-      }
-      return user.roles.includes(expectedRole);
-    }
-    
     return false;
   }
 

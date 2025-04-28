@@ -5,15 +5,22 @@
         <h2 class="card-title">All Users</h2>
         <p class="subtitle">Manage users, add, edit or delete</p>
       </div>
+      <!-- Nút Add User - Tạm thời giữ nguyên, sẽ cần logic sau -->
       <button nz-button nzType="primary">
-        <i nz-icon nzType="plus"></i> Add User
+        <i nz-icon nzType="plus"></i> <span>Add User</span>
       </button>
     </div>
 
     <div class="filter-section">
       <div class="search-container">
         <nz-input-group [nzPrefix]="prefixIconSearch">
-          <input type="text" nz-input placeholder="Search users..." [(ngModel)]="searchValue" />
+          <input
+            type="text"
+            nz-input
+            placeholder="Search users..."
+            [(ngModel)]="searchValue"
+            (ngModelChange)="searchAndFilter()"
+            (keyup.enter)="searchAndFilter()" />
         </nz-input-group>
         <ng-template #prefixIconSearch>
           <i nz-icon nzType="search"></i>
@@ -22,62 +29,88 @@
 
       <div class="role-filter">
         <span class="filter-label">Role:</span>
-        <nz-select class="filter-select" nzPlaceHolder="All Roles" [(ngModel)]="selectedRole">
-          <nz-option nzValue="null" nzLabel="All Roles"></nz-option>
+        <nz-select
+          class="filter-select"
+          nzPlaceHolder="All Roles"
+          [(ngModel)]="selectedRole"
+          (ngModelChange)="searchAndFilter()">
+          <nz-option nzValue="" nzLabel="All Roles"></nz-option> <!-- nzValue rỗng cho "All" -->
+          <!-- TODO: Fetch danh sách roles từ API nếu cần -->
           <nz-option nzValue="admin" nzLabel="Admin"></nz-option>
           <nz-option nzValue="editor" nzLabel="Editor"></nz-option>
-          <nz-option nzValue="subscriber" nzLabel="Subscriber"></nz-option>
+          <nz-option nzValue="blogger" nzLabel="Blogger"></nz-option> <!-- Thêm Blogger role nếu có -->
+          <nz-option nzValue="user" nzLabel="User"></nz-option>     <!-- Thêm User role nếu có -->
         </nz-select>
       </div>
     </div>
   </div>
 
-  <nz-table 
-    #basicTable 
-    [nzData]="listOfData"
-    [nzShowPagination]="false" 
+  <nz-table
+    #basicTable
+    [nzData]="displayData"      
+    [nzLoading]="loading"       
+    [nzShowPagination]="false"  
     class="users-table">
     <thead>
       <tr>
-        <th [nzWidth]="'50px'" [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
-        <th>Name</th>
-        <th>Email</th>
+        <th [nzWidth]="'50px'"
+            [nzChecked]="checked"
+            [nzIndeterminate]="indeterminate"
+            (nzCheckedChange)="onAllChecked($event)"></th>
+        <th [nzWidth]="'300px'">Name</th> 
+        <th [nzWidth]="'200px'">Username</th>
+        <th [nzWidth]="'400px'">Email</th>
         <th>Role</th>
         <th [nzAlign]="'right'">Actions</th>
       </tr>
     </thead>
-    <tbody>
-      <tr *ngFor="let data of basicTable.data">
+    <tbody *ngIf="displayData.length > 0">
+      <tr *ngFor="let data of displayData;"> <!-- Thêm trackBy -->
+        <!-- <td>{{ data | json }}</td> -->
         <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
         <td>
           <div class="user-cell">
-            <nz-avatar [nzSrc]="data.avatar"></nz-avatar>
-            <span class="user-name">{{ data.name }}</span>
+            <!-- **** Sửa: Lấy avatar từ data.avatar **** -->
+            <nz-avatar [nzSrc]="getAuthorAvatar(data.avatar)"></nz-avatar>
+            <!-- **** Sửa: Lấy username từ data.username **** -->
+
+             <span class="user-fullname text-sm text-gray-500 ml-2">{{ data.fullname }}</span> <!-- Hiển thị fullname (tùy chọn) -->
           </div>
         </td>
+        <td><span class="user-name">{{ data.username || 'Unknown' }}</span> </td>
         <td>{{ data.email }}</td>
         <td>
-          <nz-tag [nzColor]="getRoleColor(data.role)">{{ data.role }}</nz-tag>
+          <!-- **** Sửa: Lấy role name từ data.role?.name **** -->
+          <nz-tag [nzColor]="getRoleColor(data.role?.name)">{{ data.role?.name || 'N/A' }}</nz-tag>
         </td>
         <td [nzAlign]="'right'" class="action-buttons">
-          <button nz-button nzType="link" class="edit-button">
-            <i nz-icon nzType="edit"></i>
-          </button>
-          <button nz-button nzType="link" class="delete-button">
+          <!-- Nút Edit - Tạm giữ, sẽ cần logic sau -->
+           <button nz-button nzType="link" class="edit-button">
+             <i nz-icon nzType="edit"></i>
+           </button>
+          <!-- Nút Delete - Gắn sự kiện click -->
+          <button nz-button nzType="link" class="delete-button" (click)="confirmDeleteUser(data)">
             <i nz-icon nzType="delete"></i>
           </button>
         </td>
       </tr>
     </tbody>
+    <!-- NzEmpty sẽ hiển thị khi displayData rỗng và loading false -->
+    <nz-empty *ngIf="!loading && displayData.length === 0" nzNotFoundContent="No users found"></nz-empty>
   </nz-table>
 
-  <div class="pagination-container">
-    <div class="pagination-info">
-      Showing <strong>1</strong> to <strong>10</strong> of <strong>20</strong> results
-    </div>
-    <div class="pagination-buttons">
-      <button nz-button nzType="default">Previous</button>
-      <button nz-button nzType="primary">Next</button>
-    </div>
+  <!-- Pagination Container -->
+  <!-- Chỉ hiển thị pagination nếu total > 0 -->
+  <div class="pagination-container" *ngIf="total > 0">
+    <div class="pagination-info" [innerHTML]="getPaginationInfo()"></div> <!-- Sử dụng getPaginationInfo() tương tự Post -->
+    <nz-pagination
+      [(nzPageIndex)]="pageIndex"
+      [(nzPageSize)]="pageSize"
+      [nzTotal]="total"
+      nzShowSizeChanger
+      (nzPageIndexChange)="onPageIndexChange($event)"
+      (nzPageSizeChange)="onPageSizeChange($event)"
+      [nzPageSizeOptions]="[5, 10, 20, 50, 100]"> <!-- Options phổ biến cho user list -->
+    </nz-pagination>
   </div>
 </nz-card>

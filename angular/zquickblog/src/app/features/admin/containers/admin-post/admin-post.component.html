@@ -47,7 +47,7 @@
       </div>
     </div>
   </div>
-
+  <!-- Table Container -->
   <nz-table
     #basicTable
     [nzData]="displayData"
@@ -62,8 +62,8 @@
             [nzIndeterminate]="indeterminate"
             (nzCheckedChange)="onAllChecked($event)"></th>
         <th [nzWidth]="'320px'">Post</th>
-        <th>Author</th>
-        <th>Category</th> 
+        <th [nzWidth]="'320px'">Author</th>
+        <th [nzWidth]="'320px'">Category</th> 
         <th>Date</th>
         <th [nzAlign]="'right'">Actions</th>
       </tr>
