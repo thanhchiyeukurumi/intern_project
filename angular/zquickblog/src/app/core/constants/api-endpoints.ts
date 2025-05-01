@@ -47,6 +47,7 @@ export const POST_API = {
   GET_ME: `${API_BASE}/posts/me`,
   GET_COMMENTS: (postId: string | number) => `${API_BASE}/posts/${postId}/comments`,
   ADD_COMMENT: (postId: string | number) => `${API_BASE}/posts/${postId}/comments`,
+  GET_FROM_ORIGINAL: (originalPostId: number | string) => `${API_BASE}/posts/original/${originalPostId}`,
 };
 
 // Đường dẫn API cho bình luận

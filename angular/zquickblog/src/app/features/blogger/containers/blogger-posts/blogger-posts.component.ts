@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common'; // **** Thêm DatePipe ****
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router'; // **** Thêm Router ****
+import { RouterModule, Router } from '@angular/router';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -17,31 +17,30 @@ import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-import { NzPaginationModule } from 'ng-zorro-antd/pagination'; // **** Thêm NzPaginationModule ****
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 
-// **** Định nghĩa lại Interfaces cục bộ cho khớp Mock Data ****
-interface PostLanguageVariant {
-  id: number;
-  title: string;
-  status: 'published' | 'draft' | 'pending';
-  language: string;
-  languageCode: string;
-  publishedAt: string | null;
-  views: number;
-  comments: number; // Giữ lại nếu mock data có
-}
+// **** Cập nhật đường dẫn Import cho các Service và Models ****
+import { PostService } from '../../../../core/services/post.service';
+import { LanguageService } from '../../../../core/services/language.service';
+import { AuthService } from '../../../../core/services/auth.service'; // **** Import AuthService ****
 
-interface Post {
-  id: number;
-  title: string;
-  status: 'published' | 'draft' | 'pending';
-  publishedAt: string | null;
-  author: string; // Mock data dùng author string
-  category: string[]; // Mock data dùng mảng string
-  views: number;
-  comments: number; // Giữ lại nếu mock data có
-  expand: boolean; // Giữ lại để quản lý expand
-  languageVariants?: PostLanguageVariant[]; // Mock data dùng tên này
+// Import các Models cần thiết (Sử dụng các interfaces từ file shared models bạn cung cấp)
+import { Post } from '../../../../shared/models/post.model';
+import { Language } from '../../../../shared/models/language.model';
+import { Category } from '../../../../shared/models/category.model';
+import { User } from '../../../../shared/models/user.model'; // Import User để dùng interface
+
+import { finalize } from 'rxjs/operators'; // Import finalize để xử lý loading
+import { HttpErrorResponse } from '@angular/common/http'; // Import HttpErrorResponse để xử lý lỗi API
+
+// **** Định nghĩa Interface để quản lý trạng thái frontend ****
+// Mở rộng interface Post từ shared models
+interface PostWithTranslations extends Post {
+  expand: boolean; // Để quản lý trạng thái expand row
+  translationsLoaded: boolean; // Cờ kiểm tra đã tải translations chưa
+  loadingTranslations: boolean; // Cờ kiểm tra đang tải translations không
+  // translations property đã có trong Post model, nhưng có thể cần đảm bảo kiểu dữ liệu đúng
+  // translations?: Post[]; // Đã có trong Post model, không cần khai báo lại trừ khi ghi đè kiểu
 }
 
 
@@ -68,179 +67,435 @@ interface Post {
     NzCardModule,
     NzDividerModule,
     NzModalModule,
-    DatePipe, // **** Thêm DatePipe ****
-    NzPaginationModule // **** Thêm NzPaginationModule ****
+    DatePipe,
+    NzPaginationModule
   ],
   providers: [
-      DatePipe // **** Cung cấp DatePipe ****
+      DatePipe // Cung cấp DatePipe
   ]
 })
 export class BloggerPostsComponent implements OnInit {
   searchText = '';
-  filterStatus = 'all';
-  loading = false;
+  filterLanguageId: number | string | null = null; // Filter language ID
 
-  // Định nghĩa cột (cần khớp với cấu trúc hiển thị)
+  loading = false; // Loading cho bảng chính
+  displayPosts: PostWithTranslations[] = []; // Danh sách bài viết gốc hiển thị
+
+  // Định nghĩa cột (chỉ để tính colspan)
   listOfColumns = [
-    { title: 'Title' }, // Bỏ compare nếu không cần sort client-side nữa
+    { title: 'Title' },
     { title: 'Status' },
     { title: 'Published' },
-    { title: 'Language' }, // Thêm cột ngôn ngữ
+    { title: 'Language' },
     { title: 'Category' },
     { title: 'Views' },
-    // { title: 'Comments' }, // Bỏ cột Comments
     { title: 'Actions' }
   ];
 
-  languageOptions = [
-    { code: 'en', name: 'English' }, { code: 'vi', name: 'Vietnamese' },
-    { code: 'fr', name: 'French' }, { code: 'de', name: 'German' },
-    { code: 'es', name: 'Spanish' }, { code: 'ja', name: 'Japanese' },
-    { code: 'zh', name: 'Chinese' }
-  ];
+  languageOptions: Language[] = []; // Dữ liệu ngôn ngữ từ service
 
-  posts: Post[] = []; // Dữ liệu gốc (từ mock data)
-  displayPosts: Post[] = []; // Dữ liệu hiển thị sau khi filter và phân trang
-
-  // **** Thêm lại thuộc tính phân trang ****
   pageIndex = 1;
-  pageSize = 10; // Số lượng item mỗi trang
+  pageSize = 10;
   total = 0;
+
+  // **** KHÔNG CẦN BIẾN RIÊNG currentUserId NỮA ****
+  // private currentUserId: number | null = null;
 
   constructor(
     private message: NzMessageService,
     private modalService: NzModalService,
-    // private postService: PostService, // <-- Xóa PostService
+    private postService: PostService, // Inject PostService
+    private languageService: LanguageService, // Inject LanguageService
+    private authService: AuthService, // **** Inject AuthService ****
     private datePipe: DatePipe,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.loadMockData(); // Gọi hàm load mock data
+    // **** LẤY USER ID TỪ AUTH SERVICE ****
+    const currentUser = this.authService.getCurrentUser();
+
+    if (!currentUser || !currentUser.id) {
+       // Xử lý trường hợp người dùng chưa đăng nhập hoặc không có ID
+       this.message.error("You must be logged in to view your posts.");
+       // Redirect về trang login hoặc hiển thị thông báo khác
+       // this.router.navigate(['/login']);
+       return; // Ngừng fetch nếu không có user ID
+    }
+
+    this.fetchLanguages(); // Tải danh sách ngôn ngữ
+    this.fetchPosts(); // Tải danh sách bài viết gốc của user
   }
 
-  // **** Hàm load mock data ****
-  loadMockData(): void {
-      this.loading = true;
-      // Giả lập độ trễ
-      setTimeout(() => {
-         this.posts = [ // <-- Gán dữ liệu mẫu vào đây
-            {
-              id: 1, title: 'Getting Started with Angular', status: 'published', publishedAt: 'Apr 15, 2025',
-              author: 'Hoang Thanh', category: ['Angular', 'Web Development'], views: 1256, comments: 24, expand: false,
-              languageVariants: [
-                { id: 101, title: 'Bắt đầu với Angular', status: 'published', language: 'Vietnamese', languageCode: 'vi', publishedAt: 'Apr 16, 2025', views: 450, comments: 8 },
-                { id: 102, title: 'Commencer avec Angular', status: 'draft', language: 'French', languageCode: 'fr', publishedAt: null, views: 0, comments: 0 }
-              ]
-            },
-            {
-              id: 2, title: 'Understanding RxJS Operators', status: 'published', publishedAt: 'Apr 10, 2025',
-              author: 'Hoang Thanh', category: ['RxJS', 'JavaScript'], views: 843, comments: 15, expand: false,
-              languageVariants: [ { id: 201, title: 'Hiểu về các toán tử RxJS', status: 'published', language: 'Vietnamese', languageCode: 'vi', publishedAt: 'Apr 11, 2025', views: 320, comments: 5 } ]
-            },
-             { id: 3, title: 'Advanced TypeScript Features', status: 'draft', publishedAt: null, author: 'Hoang Thanh', category: ['TypeScript', 'Programming'], views: 0, comments: 0, expand: false, languageVariants: [] },
-             { id: 4, title: 'Angular Performance Optimization Tips', status: 'pending', publishedAt: null, author: 'Hoang Thanh', category: ['Angular', 'Performance'], views: 0, comments: 0, expand: false, languageVariants: [] },
-             {
-              id: 5, title: 'Building Responsive Layouts with CSS Grid', status: 'published', publishedAt: 'Mar 28, 2025',
-              author: 'Hoang Thanh', category: ['CSS', 'Web Development'], views: 975, comments: 12, expand: false,
-              languageVariants: [
-                { id: 501, title: 'Xây dựng bố cục thích ứng với CSS Grid', status: 'published', language: 'Vietnamese', languageCode: 'vi', publishedAt: 'Mar 29, 2025', views: 240, comments: 4 },
-                { id: 502, title: 'CSS Gridでレスポンシブレイアウトを構築する', status: 'published', language: 'Japanese', languageCode: 'ja', publishedAt: 'Mar 30, 2025', views: 185, comments: 3 }
-              ]
-            },
-             // Thêm dữ liệu để test phân trang
-            { id: 6, title: 'Another Angular Post', status: 'published', publishedAt: 'May 01, 2025', author: 'Jane Doe', category: ['Angular'], views: 500, comments: 5, expand: false, languageVariants: [] },
-            { id: 7, title: 'CSS Tricks You Should Know', status: 'draft', publishedAt: null, author: 'Hoang Thanh', category: ['CSS'], views: 0, comments: 0, expand: false, languageVariants: [] },
-            { id: 8, title: 'Introduction to Unit Testing', status: 'published', publishedAt: 'May 10, 2025', author: 'John Smith', category: ['Testing', 'JavaScript'], views: 720, comments: 10, expand: false, languageVariants: [] },
-            { id: 9, title: 'E-commerce Website Design', status: 'pending', publishedAt: null, author: 'Jane Doe', category: ['Design', 'Web Development'], views: 0, comments: 0, expand: false, languageVariants: [] },
-            { id: 10, title: 'State Management Solutions', status: 'published', publishedAt: 'May 15, 2025', author: 'Hoang Thanh', category: ['Angular', 'React'], views: 650, comments: 18, expand: false, languageVariants: [] },
-            { id: 11, title: 'Final Post for Pagination', status: 'published', publishedAt: 'May 20, 2025', author: 'Test User', category: ['Testing'], views: 100, comments: 1, expand: false, languageVariants: [] },
-         ];
-         // Khởi tạo expand
-         this.posts.forEach(post => post.expand = false);
-         this.filterAndPaginatePosts(); // Gọi hàm filter và phân trang
+  // ============================================
+  // **Hàm lấy danh sách ngôn ngữ**
+  // ============================================
+  /**
+   * Lấy danh sách ngôn ngữ từ API để populate filter và dropdown
+   */
+  fetchLanguages(): void {
+     this.languageService.getAll({ orderBy: 'name', order: 'ASC' }).subscribe({
+         next: (res) => {
+             this.languageOptions = res.data || [];
+             // console.log("Fetched Languages:", this.languageOptions); // Log để kiểm tra
+         },
+         error: (err) => {
+             console.error("Error fetching languages:", err);
+             // Có thể hiển thị thông báo lỗi nếu cần thiết
+         }
+     });
+  }
+
+  // ============================================
+  // **Hàm lấy danh sách bài viết gốc**
+  // ============================================
+  /**
+   * Lấy danh sách bài viết gốc (original_post_id is null) của user hiện tại từ API
+   */
+  fetchPosts(): void {
+    // **** Lấy user ID trực tiếp từ AuthService trước khi gọi API ****
+    const currentUser = this.authService.getCurrentUser();
+     if (!currentUser?.id) {
+         // Nếu không có user ID (trường hợp logout sau khi component đã load), thoát hàm
+         console.warn("User logged out, stopping fetchPosts.");
+         this.displayPosts = []; // Xóa dữ liệu cũ
+         this.total = 0;
          this.loading = false;
-      }, 500); // Giả lập delay 0.5s
-  }
-
-  // **** Hàm kết hợp filter và phân trang client-side ****
-  filterAndPaginatePosts(): void {
-    let filtered = [...this.posts]; // Bắt đầu với toàn bộ dữ liệu gốc
-
-    // Filter by status
-    if (this.filterStatus !== 'all') {
-      filtered = filtered.filter(post => post.status === this.filterStatus);
-    }
-
-    // Filter by search text
-    if (this.searchText) {
-      const searchLower = this.searchText.toLowerCase();
-      filtered = filtered.filter(post =>
-        post.title.toLowerCase().includes(searchLower) ||
-        (post.author || '').toLowerCase().includes(searchLower) || // Tìm theo author string
-        (post.category || []).some(cat => cat.toLowerCase().includes(searchLower)) // Tìm theo category array
-      );
-    }
-
-    // Cập nhật tổng số sau khi lọc
-    this.total = filtered.length;
-
-    // Phân trang dữ liệu đã lọc
-    const startIndex = (this.pageIndex - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    this.displayPosts = filtered.slice(startIndex, endIndex);
-  }
-
-  onSearch(): void {
-    this.pageIndex = 1; // Reset về trang 1 khi search
-    this.filterAndPaginatePosts();
-  }
-
-  onStatusFilterChange(): void {
-    this.pageIndex = 1; // Reset về trang 1 khi filter
-    this.filterAndPaginatePosts();
-  }
-
-  // **** Thêm hàm xử lý sự kiện phân trang ****
-  onPageIndexChange(index: number): void {
-      this.pageIndex = index;
-      this.filterAndPaginatePosts(); // Chỉ cần tính toán lại displayData
-  }
-
-  onPageSizeChange(size: number): void {
-      this.pageSize = size;
-      this.pageIndex = 1; // Reset về trang 1
-      this.filterAndPaginatePosts(); // Tính toán lại displayData
-  }
-  // **** Kết thúc hàm xử lý phân trang ****
+         this.message.warning("Your session has expired. Please log in again.");
+         // this.router.navigate(['/login']); // Tùy chọn: redirect
+         return;
+     }
 
 
-  deletePost(id: number): void {
-    this.modalService.confirm({
-      nzTitle: 'Delete Post',
-      nzContent: 'Are you sure you want to delete this post and all its translations?',
-      nzOkText: 'Yes', nzOkType: 'primary', nzOkDanger: true, nzCancelText: 'No',
-      nzOnOk: () => {
-        // **** Xóa trực tiếp trên mảng posts ****
-        this.posts = this.posts.filter(post => post.id !== id);
-        this.filterAndPaginatePosts(); // Cập nhật lại displayPosts và total
-        this.message.success('Post deleted successfully');
+    this.loading = true; // Bật loading cho bảng chính
+    this.postService.getAll({
+      page: this.pageIndex,
+      limit: this.pageSize,
+      search: this.searchText || undefined, // Gửi searchText nếu có giá trị
+      languageId: this.filterLanguageId || undefined, // Gửi filterLanguageId nếu có
+      userId: currentUser.id, // **** SỬ DỤNG USER ID TỪ AUTH SERVICE ****
+      originalPost: true, // **** CHỈ LẤY BÀI VIẾT GỐC ****
+      includeRelations: true, // Bao gồm User, Language, Categories
+      orderBy: 'createdAt', // Sắp xếp theo thời gian tạo mặc định
+      order: 'DESC'
+    }).pipe(
+      finalize(() => this.loading = false) // Tắt loading khi request hoàn thành
+    )
+    .subscribe({
+      next: (res) => {
+        // Map dữ liệu nhận được để thêm các thuộc tính quản lý trạng thái frontend
+        this.displayPosts = (res.data || []).map(post => ({
+          ...post,
+          expand: false, // Mặc định đóng
+          // translations: undefined, // Đã có trong Post model, nhưng ban đầu có thể là [] hoặc null từ backend
+          translationsLoaded: false, // Ban đầu chưa tải translations
+          loadingTranslations: false // Ban đầu không loading translations
+        }));
+        this.total = res.pagination?.total || 0;
+        //console.log("Fetched Posts:", this.displayPosts); // Log dữ liệu để debug
+      },
+      error: (err: HttpErrorResponse) => { // Bắt lỗi cụ thể
+        console.error("Error fetching posts:", err);
+         // Kiểm tra status code 401 (Unauthorized) để xử lý session hết hạn
+         if (err.status === 401) {
+             this.message.error("Your session has expired. Please log in again.");
+             // this.authService.logout(); // Tự động logout nếu 401 (Tùy logic app)
+             // this.router.navigate(['/login']); // Tùy chọn: redirect
+         } else {
+             const errorMessage = err.error?.message || 'Failed to load posts. Please try again.';
+             this.message.error(errorMessage);
+         }
+        this.displayPosts = []; // Reset dữ liệu nếu lỗi
+        this.total = 0;
       }
     });
   }
 
-  publishPost(id: number): void {
-    const postIndex = this.posts.findIndex(p => p.id === id);
-    if (postIndex > -1 && this.posts[postIndex].status !== 'published') {
-      // **** Cập nhật trực tiếp trên mảng posts ****
-      this.posts[postIndex].status = 'published';
-      this.posts[postIndex].publishedAt = this.datePipe.transform(new Date(), 'MMM d, y'); // Format date
-      this.filterAndPaginatePosts(); // Cập nhật lại displayPosts
-      this.message.success('Post published successfully');
-    }
+  // ============================================
+  // **Xử lý phân trang**
+  // ============================================
+  /**
+   * Xử lý khi chuyển trang
+   * @param index Số trang mới
+   */
+  onPageIndexChange(index: number): void {
+    this.pageIndex = index;
+    this.fetchPosts(); // Gọi lại fetchPosts với trang mới
   }
 
-  // Hàm getStatusColor giữ nguyên
+  /**
+   * Xử lý khi thay đổi số lượng item/trang
+   * @param size Số lượng mới
+   */
+  onPageSizeChange(size: number): void {
+    this.pageSize = size;
+    this.pageIndex = 1; // Reset về trang 1
+    this.fetchPosts(); // Gọi lại fetchPosts với size mới
+  }
+
+  // ============================================
+  // **Tìm kiếm và lọc**
+  // ============================================
+  /**
+   * Xử lý tìm kiếm khi người dùng nhập hoặc nhấn Enter
+   */
+  onSearch(): void {
+    this.pageIndex = 1; // Reset về trang 1 khi tìm kiếm
+    this.fetchPosts(); // Gọi lại fetchPosts với search text mới
+  }
+
+  /**
+   * Xử lý khi thay đổi filter ngôn ngữ
+   */
+  onLanguageFilterChange(): void {
+      this.pageIndex = 1; // Reset về trang 1 khi lọc
+      this.fetchPosts(); // Gọi lại fetchPosts với language filter mới
+  }
+
+  // ============================================
+  // **Xử lý Expand Row (Translations)**
+  // ============================================
+  /**
+   * Toggle trạng thái expand của row và tải translations nếu chưa có
+   * @param post Bài viết gốc (có thêm trạng thái frontend)
+   */
+  toggleExpand(post: PostWithTranslations): void {
+      post.expand = !post.expand; // Toggle trạng thái expand
+
+      // Nếu mở rộng VÀ translations chưa được tải VÀ hiện tại không đang tải
+      if (post.expand && !post.translationsLoaded && !post.loadingTranslations) {
+          post.loadingTranslations = true; // Bắt đầu loading cho row này
+          this.postService.getPostsFromOriginal(post.id, { includeRelations: true }) // Gọi API lấy translations cho bài gốc này
+             .pipe(
+                 finalize(() => {
+                     post.loadingTranslations = false; // Tắt loading khi request hoàn thành
+                 })
+             )
+              .subscribe({
+                  next: (res) => {
+                      // Gán dữ liệu translations. Đảm bảo post.translations là mảng.
+                      post.translations = res.data || [];
+                      post.translationsLoaded = true; // Đánh dấu đã tải xong
+                       // console.log(`Loaded translations for post ${post.id}:`, post.translations); // Debug
+                  },
+                  error: (err: HttpErrorResponse) => { // Bắt lỗi cụ thể
+                      console.error(`Error loading translations for post ${post.id}:`, err);
+                       const errorMessage = err.error?.message || `Failed to load translations for "${post.title}".`;
+                      this.message.error(errorMessage);
+                      post.translations = []; // Gán mảng rỗng nếu lỗi
+                      post.translationsLoaded = true; // Vẫn đánh dấu đã tải (dù lỗi) để không cố tải lại
+                       // Xử lý lỗi 401 nếu cần
+                       if (err.status === 401) {
+                          // this.authService.logout(); // Tùy chọn: logout
+                          // this.router.navigate(['/login']); // Tùy chọn: redirect
+                       }
+                  }
+              });
+      }
+       // Tùy chọn: Nếu đóng expand, có thể reset translations để giải phóng bộ nhớ nếu translations rất lớn
+       // if (!post.expand && post.translationsLoaded) {
+       //      post.translations = undefined; // Xóa dữ liệu translations
+       //      post.translationsLoaded = false; // Reset trạng thái tải
+       // }
+  }
+
+
+  // ============================================
+  // **Hành động với Bài viết Gốc**
+  // ============================================
+  /**
+   * Xóa bài viết gốc (bao gồm các bản dịch liên quan ở backend)
+   * @param id ID bài viết gốc cần xóa
+   */
+  deletePost(id: number): void {
+    // Modal xác nhận đã được xử lý trong template HTML với nz-popconfirm
+    // Logic trong (nzOnConfirm) sẽ gọi hàm này
+
+    this.loading = true; // Bật loading cho cả bảng trong khi xóa
+    this.postService.delete(id) // Gọi service xóa bài viết
+      .pipe(finalize(() => this.loading = false)) // Tắt loading khi hoàn thành
+      .subscribe({
+        next: () => {
+          this.message.success('Post and its translations deleted successfully');
+          // Sau khi xóa thành công, tải lại danh sách bài viết gốc để cập nhật bảng
+          this.fetchPosts();
+        },
+        error: (err: HttpErrorResponse) => { // Bắt lỗi cụ thể
+          console.error("Error deleting post:", err);
+           const errorMessage = err.error?.message || 'Failed to delete post. Please try again.';
+           this.message.error(errorMessage);
+           // Xử lý lỗi 401, 403, 404 nếu cần
+           if (err.status === 401 || err.status === 403) {
+               // Not authorized
+           } else if (err.status === 404) {
+               // Not found
+           }
+        }
+      });
+  }
+
+  /**
+   * Publish bài viết gốc
+   * @param id ID bài viết gốc cần publish
+   */
+  publishPost(id: number): void {
+     this.loading = true; // Bật loading
+     this.postService.update(id, { status: 'published' }) // Gọi service update status
+        .pipe(finalize(() => this.loading = false))
+        .subscribe({
+            next: (updatedPost) => {
+                this.message.success('Post published successfully');
+                // Cập nhật trạng thái bài viết gốc trong displayPosts local để hiển thị ngay sự thay đổi
+                const postIndex = this.displayPosts.findIndex(p => p.id === updatedPost.id);
+                if (postIndex > -1) {
+                    // Cập nhật object trong mảng với dữ liệu mới nhận được
+                    // Sử dụng Object.assign hoặc spread operator để giữ nguyên các thuộc tính frontend (expand, ...)
+                    Object.assign(this.displayPosts[postIndex], updatedPost);
+                    // this.displayPosts[postIndex] = { ...this.displayPosts[postIndex], ...updatedPost }; // Cách khác
+                }
+                // Không cần fetchPosts() lại toàn bộ danh sách nếu chỉ cập nhật trạng thái local thành công
+            },
+            error: (err: HttpErrorResponse) => { // Bắt lỗi cụ thể
+                console.error("Error publishing post:", err);
+                const errorMessage = err.error?.message || 'Failed to publish post. Please try again.';
+                this.message.error(errorMessage);
+                 // Xử lý lỗi 401, 403, 404 nếu cần
+            }
+        });
+  }
+
+   /**
+    * Điều hướng đến trang tạo bài viết mới để thêm bản dịch cho bài viết gốc
+    * @param originalPostId ID bài viết gốc
+    */
+   addLanguageVariant(originalPostId: number): void {
+      // Điều hướng đến route tạo bài viết mới và truyền originalPostId qua query params
+      // Trang tạo bài viết sẽ nhận query param này để đặt giá trị cho original_post_id
+      this.router.navigate(['/blogger/posts/create'], {
+          queryParams: {
+              originalPostId: originalPostId
+              // Có thể truyền thêm thông tin khác nếu cần, ví dụ: originalPostTitle
+              // originalPostTitle: this.displayPosts.find(p => p.id === originalPostId)?.title
+          }
+      });
+   }
+
+
+  // ============================================
+  // **Hành động với Bản dịch (Translations)**
+  // ============================================
+  /**
+   * Xóa bản dịch
+   * @param originalPostId ID bài viết gốc (để tìm bài gốc local và cập nhật translations)
+   * @param translationId ID bản dịch cần xóa
+   */
+  deleteLanguageVariant(originalPostId: number, translationId: number): void {
+      // Modal xác nhận đã được xử lý trong template HTML với nz-popconfirm
+
+      // Tìm bài viết gốc trong displayPosts
+      const originalPost = this.displayPosts.find(p => p.id === originalPostId);
+
+      // **** THÊM KIỂM TRA Ở ĐÂY ****
+      if (!originalPost) {
+          console.error(`Original post ${originalPostId} not found in displayPosts for translation ${translationId}`);
+          this.message.error("Original post not found. Cannot delete translation."); // Thông báo lỗi cho người dùng
+          return; // Dừng thực thi nếu không tìm thấy bài viết gốc
+      }
+      // **** KẾT THÚC KIỂM TRA ****
+
+
+      originalPost.loadingTranslations = true; // Bật loading spinner cho nhóm translations
+
+      this.postService.delete(translationId) // Gọi service xóa bản dịch
+         .pipe(finalize(() => {
+             // **** KẾT THÚC LOADING NẰM TRONG FINALIZE ****
+             // Sau khi hoàn thành request (thành công hoặc lỗi), tắt loading
+             originalPost.loadingTranslations = false;
+         }))
+          .subscribe({
+              next: () => {
+                  this.message.success('Translation deleted successfully');
+                  // Cập nhật danh sách translations cho bài viết gốc đó local
+                  if (originalPost.translations) { // Vẫn cần kiểm tra originalPost.translations vì nó có thể là undefined/null ban đầu
+                      originalPost.translations = originalPost.translations.filter(t => t.id !== translationId);
+                      // Nếu danh sách translations trở nên trống sau khi xóa
+                      if (originalPost.translations.length === 0) {
+                          originalPost.translationsLoaded = false; // Đặt lại trạng thái tải
+                          originalPost.expand = false; // Tự động đóng row expand nếu không còn bản dịch nào
+                      }
+                  }
+              },
+              error: (err: HttpErrorResponse) => { // Bắt lỗi cụ thể
+                  console.error("Error deleting translation:", err);
+                  const errorMessage = err.error?.message || 'Failed to delete translation. Please try again.';
+                  this.message.error(errorMessage);
+                  // Xử lý lỗi 401, 403, 404 nếu cần
+              }
+          });
+  }
+
+  /**
+   * Publish bản dịch
+   * @param originalPostId ID bài viết gốc (không dùng trong service call, chỉ để tìm bài gốc local)
+   * @param translationId ID bản dịch cần publish
+   */
+  publishLanguageVariant(originalPostId: number, translationId: number): void {
+       // Tìm bài viết gốc và bản dịch local để cập nhật trạng thái hiển thị
+       const originalPost = this.displayPosts.find(p => p.id === originalPostId);
+       const variantToUpdate = originalPost?.translations?.find(v => v.id === translationId); // Sử dụng Optional Chaining
+
+       // **** THÊM KIỂM TRA Ở ĐÂY ****
+       // Kiểm tra xem cả bài viết gốc và bản dịch có tồn tại không
+       if (!originalPost || !variantToUpdate) {
+            console.error(`Original post ${originalPostId} or translation ${translationId} not found in displayPosts`);
+            this.message.error('Translation not found.'); // Thông báo lỗi cho người dùng
+            return; // Dừng thực thi nếu không tìm thấy
+       }
+       // **** KẾT THÚC KIỂM TRA ****
+
+
+       originalPost.loadingTranslations = true; // Bật loading spinner cho nhóm translations
+
+       this.postService.update(translationId, { status: 'published' }) // Gọi service update status cho bản dịch
+          .pipe(finalize(() => {
+               // **** KẾT THÚC LOADING NẰM TRONG FINALIZE ****
+               // Sau khi hoàn thành request (thành công hoặc lỗi), tắt loading
+               originalPost.loadingTranslations = false;
+          }))
+           .subscribe({
+               next: (updatedVariant) => {
+                   this.message.success('Translation published successfully');
+                   // Cập nhật trạng thái bản dịch trong mảng translations local
+                   // variantToUpdate giờ chắc chắn tồn tại do kiểm tra ở đầu hàm
+                   // originalPost cũng chắc chắn tồn tại
+                   if (originalPost.translations) { // Vẫn cần kiểm tra translations mảng
+                       const variantIndex = originalPost.translations.findIndex(v => v.id === updatedVariant.id);
+                       if (variantIndex > -1) {
+                           // Cập nhật object trong mảng translations với dữ liệu mới nhận được
+                           Object.assign(originalPost.translations[variantIndex], updatedVariant);
+                           // originalPost.translations[variantIndex] = { ...originalPost.translations[variantIndex], ...updatedVariant }; // Cách khác
+                       }
+                   }
+               },
+               error: (err: HttpErrorResponse) => { // Bắt lỗi cụ thể
+                   console.error("Error publishing translation:", err);
+                   const errorMessage = err.error?.message || 'Failed to publish translation. Please try lại.';
+                   this.message.error(errorMessage);
+                    // Xử lý lỗi 401, 403, 404 nếu cần
+               }
+           });
+   }
+
+
+  // ============================================
+  // **Hàm hỗ trợ hiển thị (Giữ nguyên hoặc cập nhật nhẹ)**
+  // ============================================
+
+  /**
+   * Lấy màu cho status
+   * @param status Trạng thái bài viết
+   * @returns Màu sắc
+   */
   getStatusColor(status: string | undefined): string {
     switch (status) {
       case 'published': return 'success';
@@ -250,124 +505,43 @@ export class BloggerPostsComponent implements OnInit {
     }
   }
 
-  // Methods for handling language variants (translations)
-  deleteLanguageVariant(originalPostId: number, translationId: number): void {
-     this.modalService.confirm({
-      nzTitle: 'Delete Translation',
-      nzContent: 'Are you sure you want to delete this translation?',
-      nzOkText: 'Yes', nzOkType: 'primary', nzOkDanger: true, nzCancelText: 'No',
-      nzOnOk: () => {
-        // **** Xóa trực tiếp trên mảng posts ****
-        const post = this.posts.find(p => p.id === originalPostId);
-        if (post && post.languageVariants) {
-            post.languageVariants = post.languageVariants.filter(t => t.id !== translationId);
-            this.filterAndPaginatePosts(); // Cập nhật lại displayPosts
-        }
-        this.message.success('Translation deleted successfully');
-      }
-    });
-  }
-
-  publishLanguageVariant(originalPostId: number, translationId: number): void {
-    const post = this.posts.find(p => p.id === originalPostId);
-    const variant = post?.languageVariants?.find(t => t.id === translationId);
-
-    if (variant && variant.status !== 'published') {
-       // **** Cập nhật trực tiếp trên mảng posts ****
-       variant.status = 'published';
-       variant.publishedAt = this.datePipe.transform(new Date(), 'MMM d, y');
-       this.filterAndPaginatePosts(); // Cập nhật lại displayPosts
-       this.message.success('Translation published successfully');
-    }
-  }
-
-   addLanguageVariant(originalPostId: number): void {
-      const post = this.posts.find(p => p.id === originalPostId);
-      if (!post) return;
-
-      const existingLanguages = new Set<string | undefined>();
-      // Cần thêm ngôn ngữ của bài gốc vào Set nếu có
-      // Giả sử bạn có thông tin ngôn ngữ bài gốc trong post.languageCode
-      // existingLanguages.add(post.languageCode);
-      post.languageVariants?.forEach(t => existingLanguages.add(t.languageCode));
-
-      const availableLanguages = this.languageOptions.filter(lang => !existingLanguages.has(lang.code));
-
-      if (availableLanguages.length === 0) {
-          this.message.warning('All available languages already have variants for this post');
-          return;
-      }
-
-      // ---- Logic hiển thị modal để chọn ngôn ngữ ----
-      let selectedLangCode = '';
-      const modalRef = this.modalService.create<{ selectedLangCode: string }, string>({ // Định kiểu dữ liệu cho modal
-          nzTitle: 'Add New Translation',
-          nzContent: `
-              <div>
-                  <p>Select a language for the new translation:</p>
-                  <nz-select [(ngModel)]="selectedLangCode" style="width: 100%;">
-                      <nz-option *ngFor="let lang of availableLanguages" [nzValue]="lang.code" [nzLabel]="lang.name"></nz-option>
-                  </nz-select>
-              </div>
-          `,
-          // Cần truyền availableLanguages vào component nếu dùng component tùy chỉnh
-          nzOnOk: () => {
-              if (selectedLangCode) {
-                  const selectedLang = this.languageOptions.find(l => l.code === selectedLangCode);
-                  console.log(`Simulating adding translation for: ${selectedLang?.name}`);
-                  // **** Thêm variant mới vào mock data ****
-                   if (post.languageVariants) {
-                       const newVariantId = Math.max(0, ...this.posts.flatMap(p => p.languageVariants?.map(v => v.id) || [0])) + 1;
-                       post.languageVariants.push({
-                         id: newVariantId,
-                         title: `${post.title} (${selectedLang?.name})`,
-                         status: 'draft',
-                         language: selectedLang?.name || 'Unknown',
-                         languageCode: selectedLang?.code || 'unknown',
-                         publishedAt: null,
-                         views: 0,
-                         comments: 0
-                       });
-                       post.expand = true; // Mở rộng để thấy variant mới
-                       this.filterAndPaginatePosts(); // Cập nhật displayData
-                       this.message.success(`Language variant for ${selectedLang?.name} added (simulation)`);
-                   }
-                  // **** Có thể điều hướng hoặc không tùy logic ****
-                  // this.router.navigate(['/blogger/posts/create'], { queryParams: { originalPostId: originalPostId, langCode: selectedLangCode } });
-              } else {
-                  this.message.error('Please select a language.');
-                  return false; // Ngăn modal đóng
-              }
-              return true; // Cho phép đóng modal
-          }
-      });
-
-      // Xử lý việc lấy giá trị từ nz-select trong modal
-      // Do modal không phải là một phần của Angular form, ta cần lấy giá trị trực tiếp
-      // hoặc tạo một component riêng cho nội dung modal.
-      // Cách đơn giản là truy cập DOM (không khuyến khích) hoặc dùng biến tạm như trên.
-      // Để lấy giá trị từ ngModel trong modal:
-      modalRef.afterOpen.subscribe(() => {
-         // Tìm cách bind giá trị select vào biến selectedLangCode
-         // Có thể cần dùng ViewChild nếu nội dung modal là component riêng
-         // Hoặc dùng [(ngModel)] như trên nếu modalService hỗ trợ two-way binding cho content string (ít khả năng)
-         // -> Cách điều hướng sau khi chọn có lẽ đơn giản hơn.
-      });
-
+   /**
+    * Lấy màu cho category (sử dụng lại từ AdminPostComponent)
+    * @param categoryName Tên category
+    * @returns Màu sắc
+    */
+   getCategoryColor(categoryName: string | undefined): string {
+     switch (categoryName) {
+       case 'Công nghệ': return 'blue';
+       case 'Technology': return 'blue';
+       case 'Development': return 'green';
+       case 'Phần mềm': return 'geekblue';
+       case 'Design': return 'purple';
+       case 'Trí tuệ nhân tạo': return 'cyan';
+       // Thêm các category khác nếu cần
+       default: return 'default';
+     }
    }
 
-
-   // Helper để lấy avatar
+   /**
+    * Lấy avatar tác giả (sử dụng lại từ AdminPostComponent)
+    * @param avatarUrl Đường dẫn avatar
+    * @returns Đường dẫn avatar hoặc placeholder
+    */
    getAuthorAvatar(avatarUrl: string | null | undefined): string {
        return avatarUrl || 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'; // Placeholder
    }
 
-    // **** Hàm lấy thông tin phân trang ****
-    getPaginationInfo(): string {
-      if (this.total === 0) return 'Showing 0 posts';
-      const startIndex = (this.pageIndex - 1) * this.pageSize + 1;
-      const endIndex = Math.min(startIndex + this.pageSize - 1, this.total);
-      const displayStartIndex = Math.min(startIndex, this.total);
-      return `Showing <strong>${displayStartIndex}</strong> to <strong>${endIndex}</strong> of <strong>${this.total}</strong> posts`;
-    }
+  /**
+   * Lấy thông tin phân trang dạng text (sử dụng lại từ AdminPostComponent)
+   * @returns Chuỗi mô tả phân trang
+   */
+  getPaginationInfo(): string {
+    if (this.total === 0) return 'Showing 0 posts';
+    const startIndex = (this.pageIndex - 1) * this.pageSize + 1;
+    const endIndex = Math.min(startIndex + this.pageSize - 1, this.total);
+     const displayStartIndex = Math.min(startIndex, this.total); // Trường hợp total = 0
+    return `Showing <strong>${displayStartIndex}</strong> to <strong>${endIndex}</strong> of <strong>${this.total}</strong> posts`;
+  }
+
 }

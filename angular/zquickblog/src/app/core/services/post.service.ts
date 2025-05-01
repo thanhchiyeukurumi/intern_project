@@ -19,6 +19,8 @@ export class PostService {
     orderBy?: string;
     order?: 'ASC' | 'DESC';
     includeRelations?: boolean;
+    userId?: number;
+    originalPost?: boolean;
   }): Observable<{ data: Post[]; pagination: any }> {
     let httpParams = new HttpParams();
     if (params) {
@@ -108,4 +110,44 @@ export class PostService {
     }
     return this.http.get<{ data: Post[]; pagination: any }>(POST_API.GET_BY_USER(userId), { params: httpParams });
   }
+
+   // ============================================
+  // LẤY DANH SÁCH BÀI VIẾT TỪ BÀI GỐC - getPostsFromOriginal
+  // ============================================
+  /**
+   * Lấy danh sách các bài viết được dịch/phát triển từ một bài viết gốc
+   * @param originalPostId - ID của bài viết gốc
+   * @param params - Tùy chọn phân trang và lọc (page, limit, orderBy, order, includeRelations)
+   * @returns Observable - Danh sách bài viết và thông tin phân trang
+   */
+  getPostsFromOriginal(originalPostId: number | string, params?: {
+    page?: number;
+    limit?: number;
+    orderBy?: string;
+    order?: 'ASC' | 'DESC';
+    includeRelations?: boolean;
+    // Không cần fromOriginalPostId hay originalPost ở đây vì backend service đã xử lý từ route
+  }): Observable<{ data: Post[]; pagination: any }> {
+    let httpParams = new HttpParams();
+    if (params) {
+      (Object.keys(params) as (keyof typeof params)[]).forEach(key => {
+        const value = params[key];
+        if (value !== undefined && value !== null) {
+           // Backend controller getPostsFromOriginal mong đợi includeRelations là chuỗi 'true' hoặc 'false'
+           if (key === 'includeRelations' && typeof value === 'boolean') {
+               httpParams = httpParams.set(key, value.toString());
+           } else {
+               httpParams = httpParams.set(key, value as any);
+           }
+        }
+      });
+    }
+
+    // Sử dụng endpoint mới và truyền originalPostId vào URL
+    const url = POST_API.GET_FROM_ORIGINAL(originalPostId);
+
+    // Thực hiện request GET với URL và các query params
+    return this.http.get<{ data: Post[]; pagination: any }>(url, { params: httpParams });
+  }
+
 }

@@ -10,7 +10,7 @@ export interface PostDto {
   original_post_id: number | null;
   expand: boolean;
   translations?: Post[]; 
-  originalPost?: Post; 
+  originalPost: Post; 
 }
 
 export interface Post {
@@ -26,7 +26,7 @@ export interface Post {
   original_post_id: number | null;
   expand: boolean ;
   translations?: Post[]; 
-  originalPost?: Post; 
+  originalPost: Post; 
   createdAt: string;
   updatedAt: string;
   Categories?: {
