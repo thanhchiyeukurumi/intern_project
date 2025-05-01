@@ -26,8 +26,7 @@
         </ng-template>
       </div>
 
-      <!-- Các Filter khác (Category, Language - Bỏ Filter Status nếu backend service không hỗ trợ) -->
-      <!-- Ví dụ thêm Language Filter nếu backend service getAllPosts hỗ trợ languageId -->
+      <!-- Các Filter khác (Category, Language) -->
        <div class="filters">
          <nz-select
            class="filter-select"
@@ -68,24 +67,24 @@
       <ng-container *ngFor="let post of postsTable.data">
         <!-- Parent Row (Bài viết gốc) -->
         <tr>
-          <!-- Nút Expand: chỉ hiện nếu post có translations đã load hoặc đang load -->
+          <!-- Nút Expand: Cột này luôn hiển thị. Nút hiển thị dựa vào [nzExpand]. -->
+          <!-- Loại bỏ *ngIf và spinner riêng cho row -->
           <td
             [nzExpand]="post.expand"
-            (nzExpandChange)="toggleExpand(post)"
-            *ngIf="post.translationsLoaded || (post.translations && post.translations.length > 0)">
-             <!-- Spinner khi đang load translations -->
-             <i *ngIf="post.loadingTranslations" nz-icon nzType="loading"></i>
+            (nzExpandChange)="toggleExpand(post)">
+             <!-- LOẠI BỎ SPINNER RIÊNG CHO ROW Ở ĐÂY -->
+             <!-- <i *ngIf="..." nz-icon nzType="loading"></i> -->
           </td>
-          <!-- Ô trống nếu không có bản dịch -->
-           <td *ngIf="!post.translationsLoaded && (!post.translations || post.translations.length === 0)"></td>
+          <!-- LOẠI BỎ Ô TRỐNG KHI KHÔNG CÓ BẢN DỊCH -->
+           <!-- <td *ngIf="..."></td> -->
 
           <!-- Title & Translations count -->
           <td>
-            <!-- Link đến trang edit bài gốc -->
             <a [routerLink]="['/blogger/posts/edit', post.id]" class="post-title">{{ post.title }}</a>
             <!-- Hiển thị số lượng bản dịch đã tải về -->
-             <!-- Chỉ hiển thị tag nếu translations đã tải và có bản dịch -->
-            <nz-tag *ngIf="post.translationsLoaded && post.translations && post.translations.length > 0"
+            <!-- Chỉ hiển thị tag nếu translations đã tải và có bản dịch -->
+            <!-- translations !== undefined kiểm tra xem đã có request tải translations chưa -->
+            <nz-tag *ngIf="post.translations !== undefined && post.translations.length > 0"
                   nzColor="blue" class="translation-count-tag">
                   {{ post.translations.length }} translation{{ post.translations.length > 1 ? 's' : '' }}
             </nz-tag>
@@ -96,7 +95,6 @@
           </td>
           <!-- Published Date -->
           <td>
-            <!-- Hiển thị ngày tạo nếu status là published, ngược lại hiển thị '-' -->
              <ng-container *ngIf="post.status === 'published'">
                 {{ post.createdAt ? (post.createdAt | date:'MMM d, y') : 'N/A' }}
              </ng-container>
@@ -106,14 +104,12 @@
           </td>
           <!-- Language -->
           <td>
-              <!-- Hiển thị ngôn ngữ bài gốc từ quan hệ Language -->
               <nz-tag *ngIf="post.Language">{{ post.Language.name }}</nz-tag>
               <span *ngIf="!post.Language">-</span>
           </td>
           <!-- Category -->
           <td>
             <div class="category-tags">
-              <!-- Lặp qua mảng Categories -->
               <ng-container *ngIf="post.Categories && post.Categories.length > 0">
                 <nz-tag *ngFor="let cat of post.Categories" [nzColor]="getCategoryColor(cat.name)">{{ cat.name }}</nz-tag>
               </ng-container>
@@ -126,24 +122,18 @@
           </td>
           <!-- Actions -->
           <td [nzAlign]="'right'" class="action-buttons">
-             <!-- Edit Original -->
-            <a nz-button nzType="link" nzSize="small" [routerLink]="['/blogger/posts/edit', post.id]" nzTooltipTitle="Edit Original" nzTooltipPlacement="top" nz-tooltip>
+             <a nz-button nzType="link" nzSize="small" [routerLink]="['/blogger/posts/edit', post.id]" nzTooltipTitle="Edit Original" nzTooltipPlacement="top" nz-tooltip>
               <span nz-icon nzType="edit"></span>
             </a>
 
-             <!-- Publish Original (chỉ hiện nếu chưa published) -->
-             <!-- Cần kiểm tra role/quyền để chỉ cho phép publish bài viết của mình -->
             <button *ngIf="post.status !== 'published'" nz-button nzType="link" nzSize="small" (click)="publishPost(post.id)" nzTooltipTitle="Publish Original" nzTooltipPlacement="top" nz-tooltip>
               <span nz-icon nzType="check-circle"></span>
             </button>
 
-            <!-- View Original -->
             <a nz-button nzType="link" nzSize="small" [routerLink]="['/post', post.slug]" target="_blank" nzTooltipTitle="View Original" nzTooltipPlacement="top" nz-tooltip>
               <span nz-icon nzType="eye"></span>
             </a>
 
-            <!-- Delete Original & Translations -->
-            <!-- Cần kiểm tra role/quyền để chỉ cho phép owner/admin xóa -->
             <button nz-button nzType="link" nzSize="small" nzDanger
                     nz-popconfirm nzPopconfirmTitle="Delete this post and ALL its translations?"
                     (nzOnConfirm)="deletePost(post.id)"
@@ -151,8 +141,6 @@
               <span nz-icon nzType="delete"></span>
             </button>
 
-             <!-- Add Translation -->
-             <!-- Cần kiểm tra role/quyền để chỉ cho phép owner/admin thêm bản dịch -->
             <button nz-button nzType="link" nzSize="small" (click)="addLanguageVariant(post.id)" nzTooltipTitle="Add Translation" nzTooltipPlacement="top" nz-tooltip>
               <span nz-icon nzType="translation"></span>
             </button>
@@ -160,12 +148,13 @@
         </tr>
 
         <!-- Expanded Child Row (Translations) -->
-        <!-- Chỉ hiện hàng này nếu post.expand là true và translations đã tải -->
-        <tr [nzExpand]="post.expand" class="nz-expanded-row" *ngIf="post.expand && post.translationsLoaded">
+        <!-- Hiển thị hàng này dựa vào trạng thái post.expand -->
+        <!-- Loại bỏ *ngIf="... && post.translationsLoaded" -->
+        <tr [nzExpand]="post.expand" class="nz-expanded-row">
           <!-- Dùng colspan bằng số lượng cột của bảng chính + cột expand -->
           <td [attr.colspan]="listOfColumns.length + 1">
             <div class="language-variants-container">
-              <!-- Hiển thị bảng con chỉ khi có bản dịch -->
+              <!-- Hiển thị bảng con chỉ khi có bản dịch (translations tồn tại và không rỗng) -->
               <nz-table
                 #innerTable
                 *ngIf="post.translations && post.translations.length > 0"
@@ -176,20 +165,16 @@
                 class="inner-translation-table">
                 <thead>
                   <tr>
-                    <!-- Cột trống để căn chỉnh với cột expand của bảng gốc -->
                      <th nzWidth="40px"></th>
-                    <th nzWidth="30%">Title</th> <!-- Cần khớp chiều rộng với bảng cha -->
+                    <th nzWidth="30%">Title</th>
                     <th>Status</th>
                     <th>Published Date</th>
                     <th>Views</th>
-                    <!-- Actions -->
-                    <th [nzAlign]="'right'">Actions</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- Lặp qua post.translations -->
                   <tr *ngFor="let variant of innerTable.data">
-                     <!-- Cột ngôn ngữ - Không dùng cột riêng như bảng cha, nhúng vào cột title -->
                     <td>
                        <nz-tag *ngIf="variant.Language">{{ variant.Language.name }}</nz-tag>
                        <span *ngIf="!variant.Language">-</span>
@@ -199,7 +184,6 @@
                       <nz-tag [nzColor]="getStatusColor(variant.status)">{{ variant.status | titlecase }}</nz-tag>
                     </td>
                      <td>
-                         <!-- Hiển thị ngày tạo nếu status là published -->
                          <ng-container *ngIf="variant.status === 'published'">
                             {{ variant.createdAt ? (variant.createdAt | date:'MMM d, y') : 'N/A' }}
                          </ng-container>
@@ -210,26 +194,19 @@
                     <td>
                       <span nz-icon nzType="eye"></span> {{ variant.views || 0 }}
                     </td>
-                    <!-- Actions -->
                     <td [nzAlign]="'right'" class="action-buttons">
-                      <!-- Edit Translation -->
                       <a nz-button nzType="link" nzSize="small" [routerLink]="['/blogger/posts/edit', variant.id]" nzTooltipTitle="Edit Translation" nzTooltipPlacement="top" nz-tooltip>
                         <span nz-icon nzType="edit"></span>
                       </a>
 
-                      <!-- Publish Translation (chỉ hiện nếu chưa published) -->
-                       <!-- Cần kiểm tra role/quyền -->
                       <button *ngIf="variant.status !== 'published'" nz-button nzType="link" nzSize="small" (click)="publishLanguageVariant(post.id, variant.id)" nzTooltipTitle="Publish Translation" nzTooltipPlacement="top" nz-tooltip>
                         <span nz-icon nzType="check-circle"></span>
                       </button>
 
-                      <!-- View Translation -->
                       <a nz-button nzType="link" nzSize="small" [routerLink]="['/post', variant.slug]" target="_blank" nzTooltipTitle="View Translation" nzTooltipPlacement="top" nz-tooltip>
                         <span nz-icon nzType="eye"></span>
                       </a>
 
-                      <!-- Delete Translation -->
-                       <!-- Cần kiểm tra role/quyền -->
                       <button nz-button nzType="link" nzSize="small" nzDanger
                               nz-popconfirm nzPopconfirmTitle="Delete this translation?"
                               (nzOnConfirm)="deleteLanguageVariant(post.id, variant.id)"
@@ -242,13 +219,22 @@
               </nz-table>
 
               <!-- Empty State for No Language Variants -->
-              <div class="empty-language-variants" *ngIf="post.translationsLoaded && (!post.translations || post.translations.length === 0)">
+              <!-- Hiển thị nếu translations đã được tải VÀ rỗng -->
+              <!-- translations !== undefined kiểm tra xem đã có request tải chưa -->
+              <div class="empty-language-variants" *ngIf="post.translations !== undefined && post.translations.length === 0">
                 <span nz-icon nzType="global" nzTheme="outline"></span>
                 <p>No translations for this post yet.</p>
                 <button nz-button nzType="link" (click)="addLanguageVariant(post.id)">
                   <span nz-icon nzType="plus"></span> Add Translation
                 </button>
               </div>
+
+              <!-- THÊM LOADING STATE CHO EXPANDED ROW -->
+              <!-- Hiển thị spinner nếu post.translations còn là undefined (nghĩa là đang chờ tải) -->
+              <div class="loading-translations" *ngIf="post.expand && post.translations === undefined">
+                  <i nz-icon nzType="loading"></i> Loading translations...
+              </div>
+
             </div>
           </td>
         </tr>
@@ -273,3 +259,12 @@
   </div>
 
 </nz-card>
+
+<style>
+/* Optional: Add some basic styling for the loading state */
+.loading-translations {
+    text-align: center;
+    padding: 20px;
+    color: #999;
+}
+</style>

@@ -1,3 +1,4 @@
+/* Styles for the main header area - keep existing styles */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -22,79 +23,283 @@
   width: 250px;
 }
 
-.page-header .action-area .status-filter {
-  width: 120px;
+.page-header .action-area .filter-select { /* Use .filter-select for generic select */
+  width: 150px; /* Adjust width as needed */
 }
 
+/* Remove the old status-filter width if using .filter-select */
+/* .page-header .action-area .status-filter {
+  width: 120px;
+} */
+
+
+/* Styles for the main table - .blogger-posts-table */
+.blogger-posts-table {
+  /* Optional: Refine table borders and spacing */
+  /* nz-table already provides good defaults, adjust if needed */
+}
+
+/* Style for table header cells */
+.blogger-posts-table thead > tr > th {
+  /* Example: Make header text slightly bolder or change color */
+  /* font-weight: 600; */
+  /* color: rgba(0, 0, 0, 0.85); */
+}
+
+/* Style for table body rows */
+.blogger-posts-table tbody > tr {
+  /* Add subtle hover effect */
+  transition: background-color 0.3s ease;
+}
+
+.blogger-posts-table tbody > tr:hover {
+  background-color: #f5f5f5; /* Light gray on hover */
+}
+
+/* Style for the expand icon cell (first cell) */
+/* Use Ant Design's generated class or :first-child */
+.blogger-posts-table tbody td:first-child.ant-table-cell {
+   padding-left: 8px; /* Adjust padding to align expand icon */
+   padding-right: 0;
+   width: 40px; /* Ensure consistent width */
+   text-align: center; /* Center the expand icon */
+}
+
+/* Style for other data cells in the main table */
+.blogger-posts-table tbody td.ant-table-cell {
+  padding: 12px 8px; /* Adjust vertical and horizontal padding */
+  vertical-align: top; /* Align content to the top */
+}
+
+
+/* Styles for the post title and tags */
 .post-title {
   font-weight: 500;
-  display: flex;
+  display: inline-flex; /* Use inline-flex to keep link and tags together */
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+  color: #1890ff; /* Default Ant Design link color */
+  transition: color 0.3s ease;
 }
 
-.post-date,
-.post-views {
-  font-size: 12px;
-  color: rgba(0, 0, 0, 0.45);
-  margin-top: 4px;
+.post-title:hover {
+    color: #40a9ff; /* Lighter blue on hover */
 }
 
-.views-column {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: rgba(0, 0, 0, 0.65);
+.translation-count-tag {
+    font-size: 11px; /* Smaller font size for tag */
+    padding: 0 5px; /* Adjust tag padding */
+    height: 18px; /* Adjust tag height */
+    line-height: 18px; /* Adjust line height */
 }
 
-.visible-mobile {
-  display: none;
-}
 
+/* Keep category tags style */
 .category-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
 }
 
-.empty-state {
+.category-tags nz-tag {
+    font-size: 11px; /* Smaller font size for category tags */
+    padding: 0 5px;
+    height: 18px;
+    line-height: 18px;
+}
+
+
+/* Style for the views column content */
+.views-column { /* Assuming you might add this class to the td */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+/* Style for action buttons container */
+.action-buttons {
+  display: flex;
+  gap: 4px; /* Small gap between action buttons */
+  justify-content: flex-end; /* Align buttons to the right */
+  align-items: center;
+}
+
+.action-buttons nz-button {
+    padding: 0 6px; /* Adjust button padding */
+}
+
+/* Style for the expanded row content cell (the one with colspan) */
+.blogger-posts-table .ant-table-expanded-row > td.ant-table-cell {
+    background-color: #fafafa; /* Subtle background color for expanded row */
+    padding: 16px; /* Add padding inside the expanded cell */
+    border-bottom: 1px solid #f0f0f0; /* Add a border bottom */
+}
+
+
+/* Styles for the container within the expanded row */
+.language-variants-container {
+  /* flexbox or grid could be used here for layout if needed, but for now padding is sufficient */
+  /* display: flex; */
+  /* flex-direction: column; */
+  gap: 16px; /* Gap between inner table and empty state/loading */
+}
+
+/* Styles for the nested translations table */
+.inner-translation-table {
+  width: 100%; /* Ensure inner table takes full width */
+  border: 1px solid #f0f0f0; /* Add a border */
+  border-radius: 2px; /* Optional: rounded corners */
+  overflow: hidden; /* Ensure border-radius works with table content */
+}
+
+.inner-translation-table thead > tr > th {
+   background-color: #f5f5f5; /* Different background for inner table header */
+   padding: 8px; /* Adjust inner table header padding */
+   font-weight: 500;
+}
+
+.inner-translation-table tbody > tr > td.ant-table-cell {
+   padding: 8px; /* Adjust inner table cell padding */
+   vertical-align: middle; /* Center content vertically */
+}
+
+/* Style for the first cell in the inner table (language tag) */
+.inner-translation-table tbody td:first-child.ant-table-cell {
+    padding-left: 12px; /* Adjust padding */
+    padding-right: 8px;
+    width: 40px; /* Keep width consistent with outer table expand column */
+    text-align: center;
+}
+
+.inner-translation-table tbody nz-tag {
+    font-size: 11px; /* Consistent tag size in inner table */
+    padding: 0 5px;
+    height: 18px;
+    line-height: 18px;
+}
+
+
+/* Styles for the empty state message in the expanded row */
+.empty-language-variants {
   text-align: center;
+  padding: 20px;
+  color: rgba(0, 0, 0, 0.45);
+  border: 1px dashed #f0f0f0; /* Add a dashed border */
+  border-radius: 2px;
+  background-color: #fafafa;
+  margin-top: 16px; /* Space above if inner table not shown */
+}
+
+.empty-language-variants [nz-icon] {
+  font-size: 32px; /* Smaller icon than main empty state */
+  margin-bottom: 8px;
+}
+
+.empty-language-variants p {
+  font-size: 14px; /* Smaller font size */
+  margin-bottom: 12px;
+}
+
+/* Style for the loading state message in the expanded row */
+.loading-translations {
+    text-align: center;
+    padding: 20px;
+    color: #999; /* Grayish color */
+    font-style: italic;
+    margin-top: 16px; /* Space above if inner table not shown */
+}
+
+.loading-translations [nz-icon] {
+    margin-right: 8px; /* Space between icon and text */
+}
+
+
+/* Keep main empty state style */
+nz-empty {
   padding: 40px 0;
   color: rgba(0, 0, 0, 0.45);
 }
 
-.empty-state [nz-icon] {
-  font-size: 48px;
-  margin-bottom: 16px;
+nz-empty .ant-empty-image [nz-icon] { /* Target the icon specifically */
+   font-size: 48px;
+   margin-bottom: 16px;
 }
 
-.empty-state p {
-  font-size: 16px;
-  margin: 0;
+nz-empty .ant-empty-description { /* Target the description text */
+   font-size: 16px;
+   margin: 0;
 }
 
-/* Hide columns on mobile */
+
+/* Styles for pagination area */
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px; /* Space above pagination */
+  flex-wrap: wrap;
+  gap: 16px; /* Gap between info and pagination controls */
+}
+
+.pagination-info strong {
+    color: rgba(0, 0, 0, 0.85); /* Darker color for numbers */
+}
+
+
+/* Keep mobile responsive styles */
 @media (max-width: 767px) {
   .hide-mobile {
     display: none;
   }
-  
+
   .visible-mobile {
     display: block;
   }
-  
+
   .page-header .action-area {
     flex-direction: column;
     align-items: stretch;
     width: 100%;
   }
-  
-  .page-header .action-area .search-box {
+
+  .page-header .action-area .search-box,
+  .page-header .action-area .filter-select { /* Apply to both filter selects */
     width: 100%;
   }
-  
-  .page-header .action-area .status-filter {
-    width: 100%;
-  }
+
+   /* Adjust table cell padding on mobile */
+   .blogger-posts-table tbody td.ant-table-cell {
+       padding: 8px 4px;
+   }
+
+   /* Adjust expand icon cell padding on mobile */
+   .blogger-posts-table tbody td:first-child.ant-table-cell {
+        padding-left: 4px;
+   }
+
+   /* Adjust action buttons gap on mobile */
+   .action-buttons {
+       gap: 2px;
+   }
+    .action-buttons nz-button {
+        padding: 0 4px;
+    }
+
+    /* Adjust expanded cell padding on mobile */
+    .blogger-posts-table .ant-table-expanded-row > td.ant-table-cell {
+       padding: 12px 8px;
+    }
+
+    /* Adjust inner table cell padding on mobile */
+    .inner-translation-table tbody > tr > td.ant-table-cell {
+       padding: 6px 4px;
+    }
+
+     /* Adjust inner table first cell padding on mobile */
+    .inner-translation-table tbody td:first-child.ant-table-cell {
+        padding-left: 8px;
+    }
+
 }

@@ -98,7 +98,7 @@ export class PostService {
     orderBy?: string;
     order?: 'ASC' | 'DESC';
     includeRelations?: boolean;
-    originalPost?: string | boolean;
+        originalPost?: string | boolean;
   }): Observable<{ data: Post[]; pagination: any }> {
     let httpParams = new HttpParams();
     if (params) {
