@@ -11,11 +11,12 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-import { NzMessageService } from 'ng-zorro-antd/message'; // Import MessageService
-import { CategoryService } from '../../../../core/services/category.service'; // Đảm bảo đường dẫn đúng
-import { Category } from '../../../../shared/models/category.model'; // Đảm bảo đường dẫn đúng, sử dụng interface đã sửa
+import { NzMessageService } from 'ng-zorro-antd/message'; 
+import { CategoryService } from '../../../../core/services/category.service'; 
+import { Category } from '../../../../shared/models/category.model'; 
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+
 @Component({
   selector: 'app-admin-category',
   standalone: true,
@@ -41,26 +42,20 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
   styleUrl: './admin-category.component.css' // Đảm bảo styleUrl đúng
 })
 export class AdminCategoryComponent implements OnInit {
-  // ============================================
-  // **Biến trạng thái và thuộc tính**
-  // ============================================
   isFormVisible = false;
   categoryName = '';
-  parentCategory: number | null = null; // Lưu parent category là ID number hoặc null
-  // displayData sẽ dùng cho bảng
+  parentCategory: number | null = null;
   displayData: Category[] = [];
-  // listOfParentCategories có thể dùng cho select parent
   listOfParentCategories: Category[] = [];
   checked = false;
   indeterminate = false;
   setOfCheckedId = new Set<number>();
 
-  // Biến phân trang (nếu API getAllCategories có paging)
   pageIndex = 1;
-  pageSize = 10; // Mặc định 10 item/trang
+  pageSize = 5; 
   total = 0;
   loading = false;
-  searchValue = ''; // Thêm biến search
+  searchValue = ''; 
 
   // ============================================
   // **Constructor**
@@ -76,8 +71,6 @@ export class AdminCategoryComponent implements OnInit {
   // ============================================
   ngOnInit(): void {
     this.fetchCategories();
-    // Bạn có thể fetch danh sách category cho select parent ngay tại đây hoặc khi form hiển thị
-    // this.fetchParentCategories();
   }
 
   // ============================================
@@ -120,8 +113,6 @@ export class AdminCategoryComponent implements OnInit {
     * Lấy danh sách category (thường là dạng phẳng, không paging) cho select parent
     */
    fetchParentCategories(): void {
-       // Nếu API getAll không có paging và trả về tất cả, có thể dùng nó và lưu vào biến khác
-       // Hoặc nếu có API riêng getAllFlat()
        this.categoryService.getAll({limit: 1000}).subscribe({ // Lấy tất cả hoặc số lượng đủ lớn
            next: (res) => {
                // Lọc bỏ category đang chỉnh sửa nếu đây là form update

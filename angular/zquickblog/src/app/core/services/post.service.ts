@@ -90,8 +90,12 @@ export class PostService {
   getByUser(userId: number | string, params?: {
     page?: number;
     limit?: number;
+    search?: string;
+    categoryId?: string | number;
+    languageId?: string | number;
     orderBy?: string;
     order?: 'ASC' | 'DESC';
+    includeRelations?: boolean;
   }): Observable<{ data: Post[]; pagination: any }> {
     let httpParams = new HttpParams();
     if (params) {

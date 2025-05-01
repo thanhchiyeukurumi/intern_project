@@ -164,7 +164,8 @@ class PostController {
         page: req.query.page || 1,
         limit: req.query.limit || 10,
         orderBy: req.query.orderBy || 'created_at',
-        order: req.query.order || 'DESC'
+        order: req.query.order || 'DESC',
+        originalPost: req.query.originalPost || false,
       };
       
       const result = await postService.getPostsByUser(userId, options);
@@ -199,6 +200,57 @@ class PostController {
       return ok(res, result);
     } catch (err) {
       if (err.statusCode == 404) { return notFound(res, err.message); }
+      return error(res, err.message);
+    }
+  }
+
+
+
+
+   // ============================================
+  // LẤY DANH SÁCH BÀI VIẾT TỪ BÀI GỐC - getPostsFromOriginal
+  // ============================================
+  /**
+   * GET /posts/original/:originalPostId
+   * @desc    Lấy danh sách các bài viết được dịch/phát triển từ một bài viết gốc
+   * @access  Public
+   * @param   {number} originalPostId - ID của bài viết gốc
+   * @query   {number} page           - Trang hiện tại
+   * @query   {number} limit          - Số bài viết trên mỗi trang
+   * @query   {string} orderBy        - Trường sắp xếp
+   * @query   {string} order          - Hướng sắp xếp
+   * @query   {boolean} includeRelations - Có bao gồm các quan hệ không
+   */
+  async getPostsFromOriginal(req, res) {
+    try {
+      const originalPostId = parseInt(req.params.originalPostId, 10); // Lấy ID từ params
+
+      // Kiểm tra xem originalPostId có hợp lệ không
+      if (isNaN(originalPostId)) {
+         return customError(res, 400, 'ID bài viết gốc không hợp lệ');
+      }
+
+      const options = {
+        page: req.query.page || 1,
+        limit: req.query.limit || 10,
+        orderBy: req.query.orderBy || 'createdAt',
+        order: req.query.order || 'DESC',
+        includeRelations: req.query.includeRelations === 'true', // Chú ý: query params là string
+        fromOriginalPostId: originalPostId,
+        originalPost: false // Đảm bảo không bị xung đột với logic chỉ lấy bài gốc trong service
+      };
+      const result = await postService.getAllPosts(options);
+
+
+      // Kết quả trả về sẽ là danh sách các bài viết có original_post_id = originalPostId
+      // Nếu không có bài nào, result.data sẽ là mảng rỗng và result.pagination.total = 0
+      // Trường hợp không tìm thấy bài viết gốc có ID đó, service getAllPosts sẽ trả về danh sách rỗng,
+      // nên không cần check 404 cho bài gốc ở đây.
+
+      return ok(res, result);
+    } catch (err) {
+      console.error("Error in getPostsFromOriginal:", err); // Log lỗi
+      // Xử lý các loại lỗi khác nếu cần
       return error(res, err.message);
     }
   }

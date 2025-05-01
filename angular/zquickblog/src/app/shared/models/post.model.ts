@@ -6,6 +6,11 @@ export interface PostDto {
   categories: (string | number)[];
   language_id?: number;
   status?: string;
+  views: number;
+  original_post_id: number | null;
+  expand: boolean;
+  translations?: Post[]; 
+  originalPost?: Post; 
 }
 
 export interface Post {
@@ -17,6 +22,11 @@ export interface Post {
   user_id: number;
   language_id: number;
   status: string;
+  views: number;
+  original_post_id: number | null;
+  expand: boolean ;
+  translations?: Post[]; 
+  originalPost?: Post; 
   createdAt: string;
   updatedAt: string;
   Categories?: {
