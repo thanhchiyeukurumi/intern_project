@@ -22,7 +22,7 @@ class PostService {
       const includeRelations = options.includeRelations || false;
       const orderBy = options.orderBy || 'createdAt';
       const order = options.order || 'DESC';
-      const originalPostOnly = options.originalPost || false;
+      const originalPost = options.originalPost || false;
       const fromOriginalPostId = parseInt(options.fromOriginalPostId, 10) || null;
       
       // Tinh toan offset: so luong bai viet can bo qua
@@ -47,7 +47,7 @@ class PostService {
         where.user_id = userId;
       }
       
-       if (originalPostOnly) { // Nếu yêu cầu chỉ lấy bài gốc
+       if (originalPost) { // Nếu yêu cầu chỉ lấy bài gốc
         where.original_post_id = null;
       } else if (fromOriginalPostId) { // Nếu yêu cầu lấy các bài từ một bài gốc cụ thể
         where.original_post_id = fromOriginalPostId;

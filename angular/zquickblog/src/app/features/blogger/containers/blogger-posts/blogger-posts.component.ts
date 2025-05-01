@@ -174,7 +174,7 @@ export class BloggerPostsComponent implements OnInit {
       search: this.searchText || undefined, // Gửi searchText nếu có giá trị
       languageId: this.filterLanguageId || undefined, // Gửi filterLanguageId nếu có
       userId: currentUser.id, // **** SỬ DỤNG USER ID TỪ AUTH SERVICE ****
-      originalPost: true, // **** CHỈ LẤY BÀI VIẾT GỐC ****
+      originalPost: 'true', // **** CHỈ LẤY BÀI VIẾT GỐC ****
       includeRelations: true, // Bao gồm User, Language, Categories
       orderBy: 'createdAt', // Sắp xếp theo thời gian tạo mặc định
       order: 'DESC'
@@ -292,11 +292,6 @@ export class BloggerPostsComponent implements OnInit {
                   }
               });
       }
-       // Tùy chọn: Nếu đóng expand, có thể reset translations để giải phóng bộ nhớ nếu translations rất lớn
-       // if (!post.expand && post.translationsLoaded) {
-       //      post.translations = undefined; // Xóa dữ liệu translations
-       //      post.translationsLoaded = false; // Reset trạng thái tải
-       // }
   }
 
 

@@ -27,7 +27,8 @@ class PostController {
         languageId: req.query.language,
         orderBy: req.query.orderBy || 'createdAt',
         order: req.query.order || 'DESC',
-        includeRelations: req.query.includeRelations || false
+        includeRelations: req.query.includeRelations || false,
+        originalPost: req.query.originalPost === 'true'
       };
       
       const result = await postService.getAllPosts(options);
@@ -165,7 +166,7 @@ class PostController {
         limit: req.query.limit || 10,
         orderBy: req.query.orderBy || 'created_at',
         order: req.query.order || 'DESC',
-        originalPost: req.query.originalPost || false,
+        originalPost: req.query.originalPost === 'true',
       };
       
       const result = await postService.getPostsByUser(userId, options);
@@ -237,7 +238,7 @@ class PostController {
         order: req.query.order || 'DESC',
         includeRelations: req.query.includeRelations === 'true', // Chú ý: query params là string
         fromOriginalPostId: originalPostId,
-        originalPost: false // Đảm bảo không bị xung đột với logic chỉ lấy bài gốc trong service
+        originalPost: req.query.originalPost === 'true' // Đảm bảo không bị xung đột với logic chỉ lấy bài gốc trong service
       };
       const result = await postService.getAllPosts(options);
 
