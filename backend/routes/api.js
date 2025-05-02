@@ -169,10 +169,11 @@ router.group("/posts", (router) => {
  * GET     /comments/me            - Lấy bình luận của người dùng hiện tại
  */ 
 router.group("/comments", (router) => {
+  router.get("/me", auth.authenticateJWT, commentController.getCommentsByUserId);
   router.get("/:id", commentController.getCommentById);
   router.put("/:id", auth.authenticateJWT, role.isOwner(), validate(updateCommentValidation), commentController.updateComment);
   router.delete("/:id", auth.authenticateJWT, role.isAdminOrCommentOwner(), commentController.deleteComment);
-  router.get("/me", auth.authenticateJWT, commentController.getCommentsByUserId);
+
 });
 
 /**

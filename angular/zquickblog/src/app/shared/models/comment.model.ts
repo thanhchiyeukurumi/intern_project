@@ -11,6 +11,7 @@ export interface Comment {
   parent_id?: number;
   created_at: string;
   updated_at: string;
+  createdAt: string;
   user?: {
     id: number;
     username: string;

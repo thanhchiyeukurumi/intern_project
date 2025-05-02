@@ -155,6 +155,28 @@ class CommentController {
       return error(res, err.message);
     }
   }
+
+  //comments get /me
+  async getMyComments(req, res) {
+    try {
+      const userId = req.user.id;
+  
+      const options = {
+        page: req.query.page || 1,
+        limit: req.query.limit || 10,
+        orderBy: req.query.orderBy || 'created_at',
+        order: req.query.order || 'DESC'
+      };
+  
+      const result = await commentService.getCommentsByUserId(userId, options);
+      return ok(res, result);
+    } catch (err) {
+      if (err.statusCode == 404) return notFound(res, err.message);
+      return error(res, err.message);
+    }
+  }
+  
+
 }
 
 module.exports = new CommentController(); 

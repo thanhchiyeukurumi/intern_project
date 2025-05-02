@@ -246,17 +246,18 @@ class CommentService {
         throw error;
       }
       
-      const {
-        page = 1,
-        limit = 10,
-        orderBy = 'created_at',
-        order = 'DESC'
-      } = options;
+      const page = parseInt(options.page, 10) || 1;
+      const limit = parseInt(options.limit, 10) || 1;
+      const orderBy = options.orderBy || 'created_at';
+      const order = options.order || 'DESC';
 
       const offset = (page - 1) * limit;
-      
-      const { count, rows } = await Comment.findAndCountAll({
-        where: { user_id: userId },
+      const where = {
+        user_id: userId,
+      };
+
+      const queryOptions = {
+        where,
         include: [
           {
             model: Post,
@@ -265,15 +266,17 @@ class CommentService {
         ],
         order: [[orderBy, order]],
         limit,
-        offset
-      });
-      
+        offset,
+        distinct: true,
+      }
+
+      const { count, rows } = await Comment.findAndCountAll(queryOptions);
       return {
         data: rows,
         pagination: {
           total: count,
-          page: parseInt(page),
-          limit: parseInt(limit),
+          page,
+          limit,
           totalPages: Math.ceil(count / limit)
         }
       };
