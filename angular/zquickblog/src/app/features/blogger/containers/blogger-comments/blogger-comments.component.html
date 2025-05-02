@@ -11,17 +11,13 @@
     <ng-template #suffixIconSearch>
       <span nz-icon nzType="search"></span>
     </ng-template>
-
-    <!-- TODO: Filter theo status (nếu cần và API hỗ trợ) -->
-     <!-- <nz-select [(ngModel)]="filterStatus" (ngModelChange)="onStatusFilterChange()" class="status-filter" nzPlaceHolder="Filter by Status"> ... </nz-select> -->
-
   </div>
 </div>
 
 <nz-card ngSkipHydration> <!-- ngSkipHydration trên card chính -->
   <div class="comments-list">
     <!-- Lặp qua displayComments để hiển thị từng bình luận -->
-    <div class="comment-card" *ngFor="let comment of displayComments; track comment.id">
+    <div class="comment-card" *ngFor="let comment of displayComments">
       <div class="comment-header">
         <div class="author-info">
           <!-- Sử dụng hàm hỗ trợ để lấy avatar tác giả comment -->
