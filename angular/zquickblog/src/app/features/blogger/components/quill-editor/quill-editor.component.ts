@@ -1,4 +1,5 @@
-import { Component, forwardRef, ElementRef, ViewChild, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
+// quill-editor.component.ts
+import { Component, forwardRef, ElementRef, ViewChild, AfterViewInit, Input, Output, EventEmitter, inject } from '@angular/core'; // Thêm inject
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -9,7 +10,12 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Pipe, PipeTransform } from '@angular/core';
-import { QuillModule } from 'ngx-quill';
+// Bỏ QuillModule vì chúng ta đang tự khởi tạo Quill
+// import { QuillModule } from 'ngx-quill';
+
+// --- IMPORT CHO UPLOAD SERVICE ---
+import { UploadService, QuillUploadResponse } from '../../../../core/services/upload.service'; // <-- ĐIỀU CHỈNH ĐƯỜNG DẪN CHO ĐÚNG
+import { NzMessageService } from 'ng-zorro-antd/message'; // <-- Thêm NzMessageService
 
 // SafeHtml Pipe - định nghĩa trực tiếp để tránh lỗi import
 @Pipe({
@@ -39,14 +45,15 @@ export class SafeHtmlPipe implements PipeTransform {
     NzTabsModule,
     NzEmptyModule,
     SafeHtmlPipe,
-    QuillModule
+    // QuillModule // Bỏ đi nếu tự khởi tạo
   ],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => QuillEditorComponent),
       multi: true
-    }
+    },
+    // Không cần provider UploadService ở đây vì nó là root-provided
   ]
 })
 export class QuillEditorComponent implements ControlValueAccessor, AfterViewInit {
@@ -55,11 +62,12 @@ export class QuillEditorComponent implements ControlValueAccessor, AfterViewInit
   @Input() readOnly = false;
   @Input() minHeight = '300px';
   @Output() editorCreated = new EventEmitter<any>();
-  @Output() contentChanged = new EventEmitter<string>();
+  @Output() contentChanged = new EventEmitter<{ html: string, delta: any }>(); // <-- Sửa để trả về cả HTML và Delta
 
-  editor: any;
-  quillModule: any;
-  content: string = '';
+  editor: any; // Instance của Quill
+  quillModule: any; // Module Quill đã import
+  content: string = ''; // HTML content
+  deltaContent: any = null; // Delta content
   disabled: boolean = false;
   onChange: any = () => {};
   onTouched: any = () => {};
@@ -67,8 +75,16 @@ export class QuillEditorComponent implements ControlValueAccessor, AfterViewInit
   previewContent: string = '';
   isLoading = false;
 
+  // --- INJECT SERVICES ---
+  private uploadService = inject(UploadService);
+  private message = inject(NzMessageService);
+  // Hoặc dùng constructor injection nếu bạn thích
+  // constructor(
+  //   private uploadService: UploadService,
+  //   private message: NzMessageService
+  // ) {}
+
   ngAfterViewInit() {
-    // Sử dụng setTimeout để đảm bảo DOM đã sẵn sàng
     setTimeout(() => {
       this.initializeQuill();
     }, 0);
@@ -81,77 +97,85 @@ export class QuillEditorComponent implements ControlValueAccessor, AfterViewInit
 
     try {
       this.isLoading = true;
-      // Dynamic import của Quill
       const module = await import('quill');
       this.quillModule = module.default;
 
-      // Define toolbar options
       const toolbarOptions = [
         ['bold', 'italic', 'underline'],
-        ['blockquote'],
+        ['blockquote', 'code-block'], // Thêm code-block
         [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
         [{ 'indent': '-1'}, { 'indent': '+1' }],
         [{ 'align': ['', 'center', 'right', 'justify'] }],
         [{ 'color': [] }, { 'background': [] }],
-        [{ 'font': ['Georgia, serif', 'Arial, sans-serif', 'Courier New, monospace'] }],
+        [{ 'font': ['Georgia, serif', 'Arial, sans-serif', 'Courier New, monospace'] }], // Mặc định
         [{ 'size': ['small', false, 'large', 'huge'] }],
-        ['link', 'image'],
+        ['link', 'image', 'video'], // Thêm video
         ['clean']
       ];
-      
-      // Tạo định dạng và đăng ký custom formats
+
       this.setupCustomFormats();
 
-      // Initialize Quill
       this.editor = new this.quillModule(this.editorElement.nativeElement, {
         modules: {
           toolbar: {
             container: toolbarOptions,
             handlers: {
-              image: this.imageHandler.bind(this)
+              image: () => this.imageHandler() // GỌI ĐÚNG imageHandler
             }
-          }
+          },
+          // Bạn có thể thêm các module khác như image-resize, video-resize,...
+          // import ImageResize from 'quill-image-resize-module';
+          // Quill.register('modules/imageResize', ImageResize);
+          // imageResize: {}
         },
         placeholder: this.placeholder,
         readOnly: this.readOnly,
         theme: 'snow',
-        formats: ['bold', 'italic', 'underline', 'blockquote', 'header', 
-                  'list', 'bullet', 'indent', 'align', 'color', 'background', 
-                  'font', 'size', 'link', 'image'],
+        // formats được Quill tự động quản lý dựa trên toolbar và module
         scrollingContainer: 'html'
       });
 
-      // Set content if available
-      if (this.content) {
+      if (this.content) { // Nếu có HTML content ban đầu
         this.editor.clipboard.dangerouslyPasteHTML(this.content);
+        this.previewContent = this.content;
+        this.deltaContent = this.editor.getContents(); // Cập nhật delta
+      } else if (this.deltaContent) { // Hoặc nếu có Delta content ban đầu
+        this.editor.setContents(this.deltaContent);
+        this.content = this.editor.root.innerHTML;
         this.previewContent = this.content;
       }
 
-      // Thiết lập CSS mặc định cho editor
-      const editorElement = this.editorElement.nativeElement.querySelector('.ql-editor');
-      if (editorElement) {
-        editorElement.style.minHeight = this.minHeight;
-        editorElement.style.fontFamily = "'Georgia', serif";
-        editorElement.style.fontSize = '18px';
-        editorElement.style.lineHeight = '1.8';
+
+      const editorDomElement = this.editorElement.nativeElement.querySelector('.ql-editor');
+      if (editorDomElement) {
+        editorDomElement.style.minHeight = this.minHeight;
+        editorDomElement.style.fontFamily = "'Georgia', serif";
+        editorDomElement.style.fontSize = '18px';
+        editorDomElement.style.lineHeight = '1.8';
       }
-      
-      // Listen to changes in editor
-      this.editor.on('text-change', () => {
-        if (this.editorElement?.nativeElement) {
-          const html = this.editorElement.nativeElement.querySelector('.ql-editor').innerHTML;
-          this.onChange(html);
-          this.contentChanged.emit(html);
+
+      this.editor.on('text-change', (delta: any, oldDelta: any, source: string) => {
+        if (source === 'user') { // Chỉ trigger khi người dùng thay đổi
+          const html = this.editor.root.innerHTML;
+          const currentDelta = this.editor.getContents();
+
+          this.content = html;
+          this.deltaContent = currentDelta;
           this.previewContent = html;
+
+          // Gửi cả HTML và Delta. Ưu tiên gửi Delta lên form.
+          this.onChange(currentDelta); // <-- TRUYỀN DELTA CHO FORM CONTROL
+          this.contentChanged.emit({ html: html, delta: currentDelta });
         }
       });
 
-      this.editor.on('selection-change', () => {
-        this.onTouched();
+      this.editor.on('selection-change', (range: any, oldRange: any, source: string) => {
+        if (source === 'user') {
+          this.onTouched();
+        }
       });
 
-      // Emit the created editor
       this.editorCreated.emit(this.editor);
       this.isLoading = false;
     } catch (error) {
@@ -161,22 +185,19 @@ export class QuillEditorComponent implements ControlValueAccessor, AfterViewInit
   }
 
   private setupCustomFormats() {
+    // ... (Giữ nguyên phần setupCustomFormats của bạn)
     if (!this.quillModule) return;
-    
     try {
-      // Tạo Font Style
       const fontStyleAttributor = this.quillModule.import('attributors/style/font');
       fontStyleAttributor.whitelist = ['Georgia, serif', 'Arial, sans-serif', 'Courier New, monospace'];
       this.quillModule.register(fontStyleAttributor, true);
 
-      // Tạo class mới cho Quill
       const Block = this.quillModule.import('blots/block');
       class ArticleBlock extends Block {}
       ArticleBlock['tagName'] = 'DIV';
       ArticleBlock['className'] = 'article-text';
       this.quillModule.register(ArticleBlock);
 
-      // Class cho caption
       class CaptionBlock extends Block {}
       CaptionBlock['tagName'] = 'DIV';
       CaptionBlock['className'] = 'image-caption';
@@ -188,7 +209,7 @@ export class QuillEditorComponent implements ControlValueAccessor, AfterViewInit
 
   imageHandler() {
     if (typeof document === 'undefined') return;
-    
+
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
     input.setAttribute('accept', 'image/*');
@@ -197,43 +218,69 @@ export class QuillEditorComponent implements ControlValueAccessor, AfterViewInit
     input.onchange = () => {
       const file = input.files ? input.files[0] : null;
       if (file) {
-        // Đây là nơi bạn sẽ tải lên hình ảnh và nhận URL
-        this.uploadImage(file);
+        this.uploadImageToServer(file); // <-- GỌI HÀM UPLOAD LÊN SERVER
       }
     };
   }
 
-  uploadImage(file: File) {
-    if (typeof window === 'undefined' || !this.editor) return;
-    
-    // Giả lập quá trình tải lên - trong ứng dụng thực tế, bạn sẽ gửi file đến server
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const range = this.editor.getSelection(true);
-      this.editor.insertEmbed(range.index, 'image', reader.result);
-      this.editor.setSelection(range.index + 1);
-    };
-    reader.readAsDataURL(file);
-  }
-
-  // Chuyển đổi tab
-  changeTab(index: number) {
-    this.activeTab = index;
+  private uploadImageToServer(file: File) {
+    if (!this.editor) return;
+  
+    // Hiển thị loading hoặc placeholder cho ảnh đang tải
+    const range = this.editor.getSelection(true); // Lấy vị trí con trỏ hiện tại
+  
+    this.uploadService.uploadEditorImage(file, 'post-content-image')
+      .subscribe({
+        next: (response: QuillUploadResponse) => {
+          if ('success' in response && response.success === 1) {
+            // TypeScript now knows response is QuillUploadSuccessResponse
+            this.editor.deleteText(range.index, 1); // Xóa placeholder nếu có
+            this.editor.insertEmbed(range.index, 'image', response.file.url);
+            this.editor.setSelection(range.index + 1, this.quillModule.sources.SILENT);
+            this.message.success('Tải ảnh lên thành công!');
+          } else {
+            // TypeScript now knows response is an error response
+            console.error('Lỗi upload từ server:', (response as QuillUploadResponse).error);
+            this.message.error(`Lỗi tải ảnh: ${(response as QuillUploadResponse).error || 'Không rõ nguyên nhân'}`);
+          }
+        },
+        error: (err) => {
+          console.error('Lỗi HTTP khi upload ảnh:', err);
+          this.message.error(`Lỗi kết nối khi tải ảnh: ${err.message || 'Không thể kết nối tới server'}`);
+        }
+      });
   }
 
   // ControlValueAccessor methods
-  writeValue(value: string): void {
-    this.content = value || '';
-    this.previewContent = value || '';
-    
-    if (typeof window !== 'undefined' && this.editor) {
-      if (value) {
-        this.editor.clipboard.dangerouslyPasteHTML(value);
-      } else {
-        this.editor.setText('');
+  writeValue(value: any): void { // <-- Sửa kiểu thành any để nhận Delta hoặc HTML
+    if (typeof window === 'undefined') {
+      if (typeof value === 'string') this.content = value || '';
+      else this.deltaContent = value;
+      return;
+    }
+
+    if (this.editor) {
+      if (value && typeof value === 'object' && value.ops) { // Nếu là Delta
+        this.deltaContent = value;
+        this.editor.setContents(value);
+        this.content = this.editor.root.innerHTML;
+      } else if (typeof value === 'string') { // Nếu là HTML
+        this.content = value || '';
+        this.editor.clipboard.dangerouslyPasteHTML(value || '');
+        this.deltaContent = this.editor.getContents();
+      } else { // Nếu rỗng hoặc không xác định
+        this.content = '';
+        this.deltaContent = null; // Hoặc một Delta rỗng { ops: [{ insert: '\n' }] }
+        this.editor.setContents([{ insert: '\n' }]); // Xóa nội dung
       }
+      this.previewContent = this.content;
+    } else {
+      // Nếu editor chưa khởi tạo, lưu giá trị để dùng sau
+      if (typeof value === 'string') this.content = value || '';
+      else this.deltaContent = value;
     }
   }
+
 
   registerOnChange(fn: any): void {
     this.onChange = fn;
@@ -251,19 +298,18 @@ export class QuillEditorComponent implements ControlValueAccessor, AfterViewInit
   }
 
   // Public methods for interacting with the editor
-  setContent(content: string) {
-    this.writeValue(content);
-  }
-
-  getContent(): string {
-    return typeof window !== 'undefined' && this.editor ? this.editor.root.innerHTML : '';
+  getContent(): { html: string, delta: any } {
+    if (typeof window !== 'undefined' && this.editor) {
+      return {
+        html: this.editor.root.innerHTML,
+        delta: this.editor.getContents()
+      };
+    }
+    return { html: this.content, delta: this.deltaContent };
   }
 
   clear() {
-    if (typeof window !== 'undefined' && this.editor) {
-      this.editor.setText('');
-      this.previewContent = '';
-    }
+    this.writeValue(null); // Hoặc truyền Delta rỗng
   }
 
   focus() {
@@ -271,4 +317,9 @@ export class QuillEditorComponent implements ControlValueAccessor, AfterViewInit
       this.editor.focus();
     }
   }
-} 
+
+  // Chuyển đổi tab
+  changeTab(index: number) {
+    this.activeTab = index;
+  }
+}

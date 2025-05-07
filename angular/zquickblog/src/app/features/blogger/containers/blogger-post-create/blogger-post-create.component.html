@@ -17,7 +17,6 @@
             formControlName="content" 
             [placeholder]="'Bắt đầu viết nội dung bài viết của bạn...'" 
             [minHeight]="'500px'"
-            (contentChanged)="handleContentChange($event)"
             (editorCreated)="handleEditorCreated($event)">
           </app-quill-editor>
         </nz-form-control>
@@ -84,4 +83,4 @@
       </div>
     </nz-card>
   </form>
-</div> 
+</div>

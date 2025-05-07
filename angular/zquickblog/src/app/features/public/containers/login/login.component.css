@@ -1,5 +1,3 @@
-/* Assume CSS Variables are defined globally (e.g., :root or theme file) */* Add dark theme variables if needed */
-
 
 /* General Body Style (Optional - Apply to body or a wrapper) */
 body { /* Or a specific wrapper component */
@@ -183,10 +181,6 @@ body { /* Or a specific wrapper component */
    font-size: 0.8125rem; /* Slightly smaller text for divider */
 }
 
-/* Social Login Buttons */
-.social-buttons-container {
-    /* No extra styles needed here unless specific layout adjustments are required */
-}
 .social-button {
     display: flex;
     align-items: center;
