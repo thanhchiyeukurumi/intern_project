@@ -1,6 +1,6 @@
 export interface PostDto {
   title: string;
-  content: string;
+  content: any;
   slug?: string;
   excerpt?: string;
   categories: (string | number)[];
@@ -18,7 +18,7 @@ export interface PostDto {
 export interface Post {
   id: number;
   title: string;
-  content: string;
+  content: any;
   slug: string;
   excerpt?: string;
   user_id: number;
@@ -47,4 +47,9 @@ export interface Post {
     name: string;
     locale: string;
   };
+}
+
+// Interface mới cho trạng thái hiển thị, kế thừa từ Post model của bạn
+export interface PostForDisplay extends Post {
+  loadingTranslations: boolean; // Chỉ thêm cờ này
 }

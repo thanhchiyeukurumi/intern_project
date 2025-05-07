@@ -29,9 +29,8 @@ import { switchMap, of } from 'rxjs'; // Import 'of'
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule, // Để dùng routerLink
+    RouterModule, 
     NzCardModule,
-    // NzTableModule, // Loại bỏ import nếu không dùng bảng
     NzDividerModule,
     NzButtonModule,
     NzIconModule,
@@ -45,7 +44,6 @@ import { switchMap, of } from 'rxjs'; // Import 'of'
     NzModalModule,
     DatePipe // Import DatePipe ở đây nếu dùng trong template
   ],
-  // providers: [...] // Provider service ở app.config.ts
 })
 export class BloggerCommentsComponent implements OnInit {
   // ============================================
