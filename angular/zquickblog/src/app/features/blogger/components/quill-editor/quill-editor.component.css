@@ -112,3 +112,26 @@
   height: auto;
   margin: 1em 0;
 }
+
+
+/* --- Styling for HTML Code Tab --- */
+:host ::ng-deep .html-code-container {
+  padding: 20px;
+  background-color: #f8f9fa; /* Màu nền sáng cho code block */
+  border: 1px solid #e0e0e0; /* Giống preview-container */
+  border-radius: 8px; /* Giống preview-container */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08); /* Giống preview-container */
+  margin-top: 20px; /* Nếu tabs còn hiện */
+  max-height: 500px; /* Giới hạn chiều cao và cho phép scroll */
+  overflow: auto; /* Cho phép scroll nếu code dài */
+}
+
+:host ::ng-deep .html-code-output {
+  font-family: 'Fira Code', 'Courier New', monospace; /* Font monospace cho code */
+  font-size: 14px; /* Kích thước font phù hợp cho code */
+  line-height: 1.6;
+  color: #333;
+  white-space: pre-wrap; /* Cho phép xuống dòng tự động nếu dòng quá dài */
+  word-wrap: break-word; /* Ngắt từ nếu cần */
+  margin: 0; /* Bỏ margin mặc định của <pre> */
+} 

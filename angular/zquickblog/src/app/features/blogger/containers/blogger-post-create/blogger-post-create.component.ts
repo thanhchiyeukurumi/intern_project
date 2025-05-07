@@ -13,6 +13,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { QuillEditorComponent } from '../../components/quill-editor/quill-editor.component';
 import { PostService } from '../../../../core/services/post.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { Category } from '../../../../shared/models/category.model';
 import { PostDto } from '../../../../shared/models/post.model';
 
 @Component({

@@ -1,16 +1,35 @@
 <div class="quill-editor-container">
-  <nz-tabset class="article-tabs" (nzSelectedIndexChange)="changeTab($event)">
+  <nz-tabset class="article-tabs" [(nzSelectedIndex)]="activeTab" (nzSelectedIndexChange)="changeTab($event)">
     <nz-tab nzTitle="Soạn thảo">
       <div *ngIf="isLoading" class="loading-container">
         <span>Đang tải trình soạn thảo...</span>
       </div>
-      <div #editor class="editor-area"></div>
+      <!-- Div để Quill khởi tạo -->
+      <div #editor class="editor-area" [hidden]="isLoading"></div>
     </nz-tab>
+
     <nz-tab nzTitle="Xem trước">
-      <div class="preview-container" *ngIf="previewContent">
+      <div class="preview-container" *ngIf="previewContent && !isLoading">
+        <!-- Sử dụng previewContent vì nó được cập nhật cùng lúc với content -->
         <div class="article-preview" [innerHTML]="previewContent | safeHtml"></div>
       </div>
-      <nz-empty *ngIf="!previewContent" nzNotFoundContent="Chưa có nội dung để xem trước"></nz-empty>
+      <nz-empty *ngIf="!previewContent && !isLoading" nzNotFoundContent="Chưa có nội dung để xem trước"></nz-empty>
+      <div *ngIf="isLoading" class="loading-container">
+        <span>Đang tải...</span>
+      </div>
+    </nz-tab>
+
+    <!-- TAB MỚI ĐỂ HIỂN THỊ HTML -->
+    <nz-tab nzTitle="Mã HTML">
+      <div class="html-code-container" *ngIf="content && !isLoading">
+        <!-- Sử dụng thẻ <pre> để hiển thị mã HTML với định dạng -->
+        <!-- Sử dụng content vì nó là chuỗi HTML thô -->
+        <pre class="html-code-output">{{ content }}</pre>
+      </div>
+      <nz-empty *ngIf="!content && !isLoading" nzNotFoundContent="Chưa có mã HTML để hiển thị"></nz-empty>
+      <div *ngIf="isLoading" class="loading-container">
+        <span>Đang tải...</span>
+      </div>
     </nz-tab>
   </nz-tabset>
-</div> 
+</div>
