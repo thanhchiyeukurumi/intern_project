@@ -117,6 +117,46 @@
   color: #858796;
 }
 
+/* Bộ lọc khoảng thời gian */
+.date-range-filter {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  background-color: #f9f9f9;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.05);
+}
+
+.filter-label {
+  margin-right: 16px;
+  font-weight: 500;
+  color: #484848;
+}
+
+:host ::ng-deep .ant-radio-button-wrapper {
+  min-width: 80px;
+  text-align: center;
+}
+
+/* Thông báo lỗi */
+.error-card {
+  margin-bottom: 24px;
+  background-color: #fff8f8;
+  border-left: 4px solid #e74a3b;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  color: #e74a3b;
+}
+
+.error-message i {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
 /* Chart Card */
 .chart-card {
   border-radius: 8px;
@@ -155,6 +195,24 @@
   
   .pie-chart-container {
     height: 300px;
+  }
+  
+  .date-range-filter {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .filter-label {
+    margin-bottom: 10px;
+  }
+  
+  :host ::ng-deep .ant-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  :host ::ng-deep .ant-radio-button-wrapper {
+    margin-bottom: 8px;
   }
 }
 

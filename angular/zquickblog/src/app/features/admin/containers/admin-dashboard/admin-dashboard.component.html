@@ -74,9 +74,27 @@
       </div>
     </div>
 
+    <!-- Bộ lọc khoảng thời gian -->
+    <div class="date-range-filter">
+      <div class="filter-label">Chọn khoảng thời gian:</div>
+      <nz-radio-group [(ngModel)]="selectedDateRange" (ngModelChange)="onDateRangeChange()">
+        <label nz-radio-button [nzValue]="option.value" *ngFor="let option of dateRangeOptions">
+          {{option.label}}
+        </label>
+      </nz-radio-group>
+    </div>
+
+    <!-- Thông báo lỗi -->
+    <nz-card *ngIf="hasError" class="error-card">
+      <div class="error-message">
+        <i nz-icon nzType="warning" nzTheme="fill"></i>
+        <span>{{errorMessage}}</span>
+      </div>
+    </nz-card>
+
     <!-- Line Chart: Posts by Month -->
-    <nz-card class="chart-card">
-      <h3 class="chart-title">Số bài viết trong các tháng</h3>
+    <nz-card class="chart-card" [nzLoading]="isLoading">
+      <h3 class="chart-title">Số bài viết theo thời gian</h3>
       <div class="chart-container">
         <canvas baseChart
           [data]="postsChartData"
@@ -87,8 +105,8 @@
     </nz-card>
 
     <!-- Line Chart: Users by Month -->
-    <nz-card class="chart-card">
-      <h3 class="chart-title">Người dùng đăng ký mới theo tháng</h3>
+    <nz-card class="chart-card" [nzLoading]="isLoading">
+      <h3 class="chart-title">Người dùng đăng ký mới theo thời gian</h3>
       <div class="chart-container">
         <canvas baseChart
           [data]="usersChartData"
@@ -99,7 +117,7 @@
     </nz-card>
 
     <!-- Pie Chart: Posts by Category -->
-    <nz-card class="chart-card">
+    <nz-card class="chart-card" [nzLoading]="isLoading">
       <h3 class="chart-title">Phân bố bài viết theo danh mục</h3>
       <div class="chart-container pie-chart-container">
         <canvas baseChart
