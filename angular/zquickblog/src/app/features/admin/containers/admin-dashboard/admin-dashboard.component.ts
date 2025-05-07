@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzGridModule } from 'ng-zorro-antd/grid';
@@ -31,6 +31,9 @@ import { catchError, finalize } from 'rxjs/operators';
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements OnInit {
+  // Thêm ViewChild cho biểu đồ pie
+  @ViewChild('categoryChart') categoryChart?: BaseChartDirective;
+  
   // Biến chọn ngày
   selectedDateRange: number = 30; // Mặc định 30 ngày
   dateRangeOptions = [
@@ -149,8 +152,20 @@ export class AdminDashboardComponent implements OnInit {
     plugins: {
       legend: {
         position: 'right',
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        titleFont: { size: 14 },
+        bodyFont: { size: 14 },
+        callbacks: {
+          label: (context) => {
+            const label = context.label || '';
+            const value = context.raw as number;
+            return `${label}: ${value} bài viết`;
+          }
+        }
       }
-    }
+    },
   };
   
   constructor(
@@ -180,13 +195,19 @@ export class AdminDashboardComponent implements OnInit {
       groupBy = 'week';
     }
     
+    const startDate = this.getStartDateFromRange(this.selectedDateRange);
     const params = {
-      startDate: this.getStartDateFromRange(this.selectedDateRange),
+      startDate: startDate,
       groupBy: groupBy
     };
     console.log('Calling API with params:', params);
 
-    this.postService.getPostStats(params).pipe(
+    // Sử dụng forkJoin để gọi đồng thời các API
+    forkJoin({
+      posts: this.postService.getPostStats(params),
+      users: this.userService.getUserStats(params),
+      comments: this.commentService.getCommentStats(params)
+    }).pipe(
       catchError(error => {
         console.error('Error loading dashboard stats:', error);
         this.hasError = true;
@@ -197,46 +218,99 @@ export class AdminDashboardComponent implements OnInit {
         this.isLoading = false;
       })
     ).subscribe(response => {
-      console.log('API response:', response);
-      // Kiểm tra response và response.data
-      if (response && response.data) {
-        const data = response.data; // Truy cập data từ response
-
-        // Cập nhật thống kê tổng quát
-        this.totalPosts = data.total || 0;
-        this.postGrowth = data.growth || 0;
-        this.totalViews = data.views?.total || 0;
-        this.viewGrowth = data.views?.growth || 0;
-        
-        // Cập nhật dữ liệu biểu đồ bài viết theo thời gian
-        const timeLabels = data.timeData?.map((item: {date: string; count: number}) => 
-          this.formatDateLabel(item.date, groupBy)) || [];
-        const postCounts = data.timeData?.map((item: {date: string; count: number}) => 
-          item.count) || [];
-        
-        this.postsChartData.labels = timeLabels;
-        this.postsChartData.datasets[0].data = postCounts;
-        console.log('Updated postsChartData:', this.postsChartData);
-        
-        // Cập nhật dữ liệu biểu đồ người dùng theo thời gian (giả lập)
-        this.usersChartData.labels = timeLabels;
-        this.usersChartData.datasets[0].data = this.generateMockUserData(timeLabels.length);
-        console.log('Updated usersChartData:', this.usersChartData);
-        
-        // Cập nhật dữ liệu biểu đồ phân bố bài viết theo danh mục
-        if (data.categories && data.categories.length > 0) {
-          this.categoryChartData.labels = data.categories.map((cat: {id: number; name: string; count: string}) => cat.name);
-          this.categoryChartData.datasets[0].data = data.categories.map((cat: {id: number; name: string; count: string}) => 
-            parseInt(cat.count, 10)); // Chuyển count từ chuỗi sang số
-        } else {
-          this.generateMockCategoryData();
-        }
-        console.log('Updated categoryChartData:', this.categoryChartData);
-      } else {
-        console.log('Invalid or no data received, loading mock data');
+      console.log('API responses:', response);
+      
+      if (!response) {
         this.loadMockData();
+        return;
       }
+
+      // Xử lý dữ liệu bài viết
+      if (response.posts && response.posts.data) {
+        this.processPostData(response.posts.data, groupBy);
+      }
+
+      // Xử lý dữ liệu người dùng
+      if (response.users && response.users.data) {
+        this.processUserData(response.users.data, groupBy);
+      } else {
+        // Nếu không có dữ liệu người dùng, sử dụng dữ liệu giả
+        this.usersChartData.labels = this.postsChartData.labels || [];
+        this.usersChartData.datasets[0].data = this.generateMockUserData(this.postsChartData.labels?.length || 0);
+        this.totalUsers = 100;
+        this.userGrowth = 5.3;
+      }
+
+      // Xử lý dữ liệu bình luận
+      if (response.comments && response.comments.data) {
+        this.processCommentData(response.comments.data);
+      } else {
+        // Nếu không có dữ liệu bình luận, sử dụng dữ liệu giả
+        this.totalComments = Math.round(this.totalPosts * 2.5);
+        this.commentGrowth = 8.1;
+      }
+
+      // Cập nhật biểu đồ danh mục
+      if (response.posts && response.posts.data && response.posts.data.categories && response.posts.data.categories.length > 0) {
+        this.categoryChartData.labels = response.posts.data.categories.map((cat: {id: number; name: string; count: string}) => cat.name);
+        this.categoryChartData.datasets[0].data = response.posts.data.categories.map((cat: {id: number; name: string; count: string}) => 
+          parseInt(cat.count, 10));
+      } else {
+        this.generateMockCategoryData();
+      }
+      
+      console.log('Updated categoryChartData:', this.categoryChartData);
+      
+      // Đảm bảo cập nhật biểu đồ sau khi thay đổi dữ liệu
+      setTimeout(() => {
+        if (this.categoryChart) {
+          this.categoryChart.update();
+        }
+      });
     });
+  }
+  
+  // Xử lý dữ liệu bài viết
+  private processPostData(data: any, groupBy: 'day' | 'week' | 'month'): void {
+    // Cập nhật thống kê tổng quát
+    this.totalPosts = data.total || 0;
+    this.postGrowth = data.growth || 0;
+    this.totalViews = data.views?.total || 0;
+    this.viewGrowth = data.views?.growth || 0;
+    
+    // Cập nhật dữ liệu biểu đồ bài viết theo thời gian
+    const timeLabels = data.timeData?.map((item: {date: string; count: number}) => 
+      this.formatDateLabel(item.date, groupBy)) || [];
+    const postCounts = data.timeData?.map((item: {date: string; count: number}) => 
+      item.count) || [];
+    
+    this.postsChartData.labels = timeLabels;
+    this.postsChartData.datasets[0].data = postCounts;
+    console.log('Updated postsChartData:', this.postsChartData);
+  }
+  
+  // Xử lý dữ liệu người dùng
+  private processUserData(data: any, groupBy: 'day' | 'week' | 'month'): void {
+    // Cập nhật thống kê tổng quát
+    this.totalUsers = data.total || 0;
+    this.userGrowth = data.growth || 0;
+    
+    // Cập nhật dữ liệu biểu đồ người dùng theo thời gian
+    const timeLabels = data.timeData?.map((item: {date: string; count: number}) => 
+      this.formatDateLabel(item.date, groupBy)) || [];
+    const userCounts = data.timeData?.map((item: {date: string; count: number}) => 
+      item.count) || [];
+    
+    this.usersChartData.labels = timeLabels;
+    this.usersChartData.datasets[0].data = userCounts;
+    console.log('Updated usersChartData:', this.usersChartData);
+  }
+  
+  // Xử lý dữ liệu bình luận
+  private processCommentData(data: any): void {
+    // Cập nhật thống kê tổng quát
+    this.totalComments = data.total || 0;
+    this.commentGrowth = data.growth || 0;
   }
   
   // Định dạng nhãn ngày/tháng cho biểu đồ
@@ -375,3 +449,4 @@ export class AdminDashboardComponent implements OnInit {
     return date.toISOString().split('T')[0]; // Định dạng YYYY-MM-DD
   }
 }
+//TODO: Xoá con mẹ nó cái phần biểu đồ của categoryChart đi

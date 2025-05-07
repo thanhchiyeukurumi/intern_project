@@ -120,7 +120,7 @@
     <nz-card class="chart-card" [nzLoading]="isLoading">
       <h3 class="chart-title">Phân bố bài viết theo danh mục</h3>
       <div class="chart-container pie-chart-container">
-        <canvas baseChart
+        <canvas baseChart #categoryChart
           [data]="categoryChartData"
           [options]="categoryChartOptions"
           [type]="'pie'">
