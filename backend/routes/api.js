@@ -119,6 +119,9 @@ router.group("/user", (router) => {
   router.put("/:id", auth.authenticateJWT, role.isAdminOrOwner(), userController.updateUser);
   router.delete("/:id", auth.authenticateJWT, role.isAdminOrOwner(), userController.deleteUser);
   router.get("/:userId/comments", commentController.getCommentsByUserId);
+  router.get("/stats/date-range", auth.authenticateJWT, role.hasRole(["admin"]), userController.getUsersByDateRange);
+  router.get("/stats/dashboard", auth.authenticateJWT, role.hasRole(["admin"]), userController.getUserStats);
+  router.get("/stats/top-contributors", auth.authenticateJWT, role.hasRole(["admin"]), userController.getTopContributors);
 });
 
 /**
@@ -153,6 +156,8 @@ router.group("/posts", (router) => {
   router.get("/me", auth.authenticateJWT, postController.getPostsByUser);
   router.get("/:postId/comments", commentController.getCommentsByPostId);
   router.post("/:postId/comments", auth.authenticateJWT, validate(createCommentValidation), commentController.createComment);
+  router.get('/stats/date-range', postController.getPostsByDateRange);
+  router.get('/stats/dashboard', auth.authenticateJWT, postController.getPostStats);
 });
 
 /**
@@ -173,7 +178,8 @@ router.group("/comments", (router) => {
   router.get("/:id", commentController.getCommentById);
   router.put("/:id", auth.authenticateJWT, role.isOwner(), validate(updateCommentValidation), commentController.updateComment);
   router.delete("/:id", auth.authenticateJWT, role.isAdminOrCommentOwner(), commentController.deleteComment);
-
+  router.get("/stats/date-range", auth.authenticateJWT, role.hasRole(["admin"]), commentController.getCommentsByDateRange);
+  router.get("/stats/dashboard", auth.authenticateJWT, role.hasRole(["admin"]), commentController.getCommentStats);
 });
 
 /**

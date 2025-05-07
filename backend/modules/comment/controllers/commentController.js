@@ -175,8 +175,58 @@ class CommentController {
       return error(res, err.message);
     }
   }
-  
 
+  // ============================================
+  // LẤY THỐNG KÊ BÌNH LUẬN THEO KHOẢNG THỜI GIAN - getCommentsByDateRange
+  // ============================================
+  /**
+   * GET /comments/stats/date-range
+   * @desc    Lấy thống kê bình luận theo khoảng thời gian
+   * @access  Admin
+   */
+  async getCommentsByDateRange(req, res) {
+    try {
+      const options = {
+        startDate: req.query.startDate || null,
+        endDate: req.query.endDate || null,
+        groupBy: req.query.groupBy || 'day',
+        postId: req.query.postId || null,
+        userId: req.query.userId || null
+      };
+      
+      const result = await commentService.getCommentsByDateRange(options);
+      return ok(res, result);
+    } catch (err) {
+      console.error('Error in getCommentsByDateRange controller:', err);
+      return error(res, err.message);
+    }
+  }
+
+  // ============================================
+  // LẤY THỐNG KÊ BÌNH LUẬN - getCommentStats
+  // ============================================
+  /**
+   * GET /comments/stats/dashboard
+   * @desc    Lấy thống kê tổng hợp về bình luận
+   * @access  Admin
+   */
+  async getCommentStats(req, res) {
+    try {
+      const options = {
+        startDate: req.query.startDate || null,
+        endDate: req.query.endDate || null,
+        groupBy: req.query.groupBy || 'day',
+        postId: req.query.postId || null,
+        userId: req.query.userId || null
+      };
+      
+      const result = await commentService.getCommentStats(options);
+      return ok(res, result);
+    } catch (err) {
+      console.error('Error in getCommentStats controller:', err);
+      return error(res, err.message);
+    }
+  }
 }
 
 module.exports = new CommentController(); 

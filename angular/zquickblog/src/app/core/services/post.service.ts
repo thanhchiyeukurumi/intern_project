@@ -151,4 +151,59 @@ export class PostService {
     return this.http.get<{ data: Post[]; pagination: any }>(url, { params: httpParams });
   }
 
+  // ============================================
+  // LẤY THỐNG KÊ BÀI VIẾT THEO KHOẢNG THỜI GIAN - getPostsByDateRange
+  // ============================================
+  /**
+   * Lấy thống kê bài viết theo khoảng thời gian
+   * @param options - Các tùy chọn để lọc và nhóm dữ liệu
+   * @returns Observable - Dữ liệu thống kê bài viết theo thời gian
+   */
+  getPostsByDateRange(options: {
+    startDate?: string; 
+    endDate?: string;
+    groupBy?: 'day' | 'week' | 'month';
+    languageId?: string | number;
+    categoryId?: string | number;
+    userId?: string | number;
+    includeTotal?: boolean;
+  }): Observable<any> {
+    let httpParams = new HttpParams();
+    
+    if (options) {
+      Object.entries(options).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          httpParams = httpParams.set(key, value.toString());
+        }
+      });
+    }
+    
+    return this.http.get(POST_API.STATS_DATE_RANGE, { params: httpParams });
+  }
+
+  // ============================================
+  // LẤY THỐNG KÊ BÀI VIẾT - getPostStats
+  // ============================================
+  /**
+   * Lấy thống kê tổng hợp về bài viết
+   * @param options - Các tùy chọn thống kê
+   * @returns Observable - Dữ liệu thống kê bài viết
+   */
+  getPostStats(options: {
+    startDate?: string;
+    endDate?: string;
+    groupBy?: 'day' | 'week' | 'month';
+  }): Observable<any> {
+    let httpParams = new HttpParams();
+    
+    if (options) {
+      Object.entries(options).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          httpParams = httpParams.set(key, value.toString());
+        }
+      });
+    }
+    
+    return this.http.get(POST_API.STATS_DASHBOARD, { params: httpParams });
+  }
 }

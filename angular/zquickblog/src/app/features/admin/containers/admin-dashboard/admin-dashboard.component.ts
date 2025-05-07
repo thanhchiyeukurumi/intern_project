@@ -122,10 +122,10 @@ export class AdminDashboardComponent implements OnInit {
   
   // Cấu hình biểu đồ pie cho phân bố bài viết theo danh mục
   public categoryChartData: ChartConfiguration<'pie'>['data'] = {
-    labels: ['Công nghệ', 'Kinh doanh', 'Đời sống', 'Du lịch', 'Khác'],
+    labels: [],
     datasets: [
       {
-        data: [30, 25, 20, 15, 10],
+        data: [],
         backgroundColor: [
           'rgba(75, 192, 192, 0.6)',
           'rgba(54, 162, 235, 0.6)',
@@ -172,78 +172,96 @@ export class AdminDashboardComponent implements OnInit {
     this.isLoading = true;
     this.hasError = false;
     
-    // Lấy ngày hiện tại
-    const today = new Date();
+    // Xác định groupBy dựa trên khoảng thời gian đã chọn
+    let groupBy: 'day' | 'week' | 'month' = 'day';
+    if (this.selectedDateRange > 90) {
+      groupBy = 'month';
+    } else if (this.selectedDateRange > 30) {
+      groupBy = 'week';
+    }
     
-    // Tính ngày bắt đầu dựa trên khoảng thời gian đã chọn
-    const startDate = new Date(today);
-    startDate.setDate(today.getDate() - this.selectedDateRange);
-    
-    // Tham số API có thể được thêm vào sau khi API hỗ trợ khoảng thời gian
-    const params = { 
-      startDate: startDate.toISOString(),
-      endDate: today.toISOString()
+    const params = {
+      startDate: this.getStartDateFromRange(this.selectedDateRange),
+      groupBy: groupBy
     };
-    
-    // Sử dụng forkJoin để gọi đồng thời nhiều API
-    forkJoin({
-      posts: this.postService.getAll({ limit: 1000, page: 1 }).pipe(
-        catchError(error => {
-          console.error('Error loading posts:', error);
-          return of({ data: [], pagination: { totalItems: 0 } });
-        })
-      ),
-      users: this.userService.getAll({ limit: 1, page: 1, includeRelations: true }).pipe(
-        catchError(error => {
-          console.error('Error loading users:', error);
-          return of({ data: [], pagination: { totalItems: 0 } });
-        })
-      )
-    }).pipe(
-      finalize(() => {
-        this.isLoading = false;
-        this.generateChartData();
-      })
-    ).subscribe({
-      next: (results) => {
-        if (results.posts && results.posts.pagination) {
-          this.totalPosts = results.posts.pagination.totalItems || 0;
-          // Tính toán sự tăng trưởng dựa trên dữ liệu nếu có
-          this.postGrowth = 12.0; 
-        }
-        
-        if (results.users && results.users.pagination) {
-          this.totalUsers = results.users.pagination.totalItems || 0;
-          this.userGrowth = 5.3;
-        }
-        
-        // Trong thực tế, sẽ cần thêm API để lấy comment stats và view stats
-        // Hiện tại, sử dụng dữ liệu giả lập
-        this.calculateMockStatsData();
-      },
-      error: (error) => {
+    console.log('Calling API with params:', params);
+
+    this.postService.getPostStats(params).pipe(
+      catchError(error => {
+        console.error('Error loading dashboard stats:', error);
         this.hasError = true;
         this.errorMessage = 'Không thể tải dữ liệu bảng điều khiển. Vui lòng thử lại sau.';
-        console.error('Error loading dashboard data:', error);
+        return of(null);
+      }),
+      finalize(() => {
+        this.isLoading = false;
+      })
+    ).subscribe(response => {
+      console.log('API response:', response);
+      // Kiểm tra response và response.data
+      if (response && response.data) {
+        const data = response.data; // Truy cập data từ response
+
+        // Cập nhật thống kê tổng quát
+        this.totalPosts = data.total || 0;
+        this.postGrowth = data.growth || 0;
+        this.totalViews = data.views?.total || 0;
+        this.viewGrowth = data.views?.growth || 0;
+        
+        // Cập nhật dữ liệu biểu đồ bài viết theo thời gian
+        const timeLabels = data.timeData?.map((item: {date: string; count: number}) => 
+          this.formatDateLabel(item.date, groupBy)) || [];
+        const postCounts = data.timeData?.map((item: {date: string; count: number}) => 
+          item.count) || [];
+        
+        this.postsChartData.labels = timeLabels;
+        this.postsChartData.datasets[0].data = postCounts;
+        console.log('Updated postsChartData:', this.postsChartData);
+        
+        // Cập nhật dữ liệu biểu đồ người dùng theo thời gian (giả lập)
+        this.usersChartData.labels = timeLabels;
+        this.usersChartData.datasets[0].data = this.generateMockUserData(timeLabels.length);
+        console.log('Updated usersChartData:', this.usersChartData);
+        
+        // Cập nhật dữ liệu biểu đồ phân bố bài viết theo danh mục
+        if (data.categories && data.categories.length > 0) {
+          this.categoryChartData.labels = data.categories.map((cat: {id: number; name: string; count: string}) => cat.name);
+          this.categoryChartData.datasets[0].data = data.categories.map((cat: {id: number; name: string; count: string}) => 
+            parseInt(cat.count, 10)); // Chuyển count từ chuỗi sang số
+        } else {
+          this.generateMockCategoryData();
+        }
+        console.log('Updated categoryChartData:', this.categoryChartData);
+      } else {
+        console.log('Invalid or no data received, loading mock data');
+        this.loadMockData();
       }
     });
   }
   
-  // Tính toán dữ liệu mẫu cho comment và view
-  calculateMockStatsData(): void {
-    // Mẫu dữ liệu cho comments dựa trên totalPosts
-    this.totalComments = Math.round(this.totalPosts * 2.5);
-    this.commentGrowth = 8.1;
+  // Định dạng nhãn ngày/tháng cho biểu đồ
+  private formatDateLabel(dateStr: string, groupBy: 'day' | 'week' | 'month'): string {
+    if (!dateStr) return '';
     
-    // Mẫu dữ liệu cho views dựa trên totalPosts và totalUsers
-    this.totalViews = Math.round((this.totalPosts * 50) + (this.totalUsers * 10));
-    this.viewGrowth = 15.6;
+    const parts = dateStr.split('-');
+    
+    switch (groupBy) {
+      case 'month':
+        // Format: Tháng MM/YYYY
+        return `Tháng ${parts[1]}/${parts[0]}`;
+      case 'week':
+        // Format: Tuần W, YYYY
+        return `Tuần ${parts[1]}, ${parts[0]}`;
+      default: // day
+        // Format: DD/MM
+        return `${parts[2]}/${parts[1]}`;
+    }
   }
   
-  // Tạo dữ liệu cho biểu đồ dựa trên khoảng thời gian đã chọn
-  generateChartData(): void {
+  // Tạo dữ liệu mẫu trong trường hợp không có dữ liệu thực
+  private loadMockData(): void {
     // 1. Tính toán nhãn ngày/tháng dựa trên khoảng thời gian đã chọn
-    const labels = this.generateDateLabels();
+    const labels = this.generateMockDateLabels();
     
     // 2. Tạo dữ liệu mẫu cho biểu đồ bài viết
     const postData = this.generateMockPostData(labels.length);
@@ -257,10 +275,31 @@ export class AdminDashboardComponent implements OnInit {
     
     this.usersChartData.labels = labels;
     this.usersChartData.datasets[0].data = userData;
+    
+    // 5. Tạo dữ liệu mẫu cho biểu đồ danh mục
+    this.generateMockCategoryData();
+    
+    // 6. Cập nhật số liệu tổng quát
+    this.totalPosts = postData.reduce((sum, value) => sum + value, 0);
+    this.totalUsers = 100;
+    this.totalComments = Math.round(this.totalPosts * 2.5);
+    this.totalViews = Math.round(this.totalPosts * 50);
+    
+    // 7. Cập nhật tỷ lệ tăng trưởng
+    this.postGrowth = 12.0;
+    this.userGrowth = 5.3;
+    this.commentGrowth = 8.1;
+    this.viewGrowth = 15.6;
+  }
+  
+  // Tạo dữ liệu phân loại danh mục
+  private generateMockCategoryData(): void {
+    this.categoryChartData.labels = ['Công nghệ', 'Kinh doanh', 'Đời sống', 'Du lịch', 'Khác'];
+    this.categoryChartData.datasets[0].data = [30, 25, 20, 15, 10];
   }
   
   // Tạo nhãn ngày/tháng dựa trên khoảng thời gian đã chọn
-  generateDateLabels(): string[] {
+  private generateMockDateLabels(): string[] {
     const labels: string[] = [];
     const today = new Date();
     
@@ -300,10 +339,10 @@ export class AdminDashboardComponent implements OnInit {
   }
   
   // Tạo dữ liệu mẫu cho biểu đồ bài viết
-  generateMockPostData(numPoints: number): number[] {
+  private generateMockPostData(numPoints: number): number[] {
     // Dựa trên tổng số bài viết, tạo dữ liệu phân bổ
     const postData: number[] = [];
-    const baseValue = Math.max(1, Math.floor(this.totalPosts / numPoints / 2));
+    const baseValue = Math.max(1, Math.floor(30 / numPoints / 2));
     
     for (let i = 0; i < numPoints; i++) {
       // Tạo xu hướng tăng dần
@@ -315,10 +354,10 @@ export class AdminDashboardComponent implements OnInit {
   }
   
   // Tạo dữ liệu mẫu cho biểu đồ người dùng
-  generateMockUserData(numPoints: number): number[] {
+  private generateMockUserData(numPoints: number): number[] {
     // Dựa trên tổng số người dùng, tạo dữ liệu phân bổ
     const userData: number[] = [];
-    const baseValue = Math.max(1, Math.floor(this.totalUsers / numPoints / 3));
+    const baseValue = Math.max(1, Math.floor(100 / numPoints / 3));
     
     for (let i = 0; i < numPoints; i++) {
       // Tạo xu hướng tăng dần với một số dao động
@@ -327,5 +366,12 @@ export class AdminDashboardComponent implements OnInit {
     }
     
     return userData;
+  }
+  
+  // Thêm phương thức mới để tính toán startDate từ khoảng thời gian
+  private getStartDateFromRange(days: number): string {
+    const date = new Date();
+    date.setDate(date.getDate() - days);
+    return date.toISOString().split('T')[0]; // Định dạng YYYY-MM-DD
   }
 }

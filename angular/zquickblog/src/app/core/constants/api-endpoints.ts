@@ -35,6 +35,9 @@
     BASE: `${API_BASE}/user`,
     GET_BY_ID: (id: string | number) => `${API_BASE}/user/${id}`,
     GET_COMMENTS_BY_USER: (userId: string | number) => `${API_BASE}/user/${userId}/comments`,
+    STATS_DATE_RANGE: `${API_BASE}/user/stats/date-range`,
+    STATS_DASHBOARD: `${API_BASE}/user/stats/dashboard`,
+    STATS_TOP_CONTRIBUTORS: `${API_BASE}/user/stats/top-contributors`
   };
 
   // Đường dẫn API cho bài viết
@@ -48,6 +51,8 @@
     GET_COMMENTS: (postId: string | number) => `${API_BASE}/posts/${postId}/comments`,
     ADD_COMMENT: (postId: string | number) => `${API_BASE}/posts/${postId}/comments`,
     GET_FROM_ORIGINAL: (originalPostId: number | string) => `${API_BASE}/posts/original/${originalPostId}`,
+    STATS_DATE_RANGE: `${API_BASE}/posts/stats/date-range`,
+    STATS_DASHBOARD: `${API_BASE}/posts/stats/dashboard`
   };
 
   // Đường dẫn API cho bình luận
@@ -57,6 +62,8 @@
     UPDATE: (id: string | number) => `${API_BASE}/comments/${id}`,
     DELETE: (id: string | number) => `${API_BASE}/comments/${id}`,
     GET_ME: `${API_BASE}/comments/me`,
+    STATS_DATE_RANGE: `${API_BASE}/comments/stats/date-range`,
+    STATS_DASHBOARD: `${API_BASE}/comments/stats/dashboard`
   };
 
   // Đường dẫn API cho tải lên tệp

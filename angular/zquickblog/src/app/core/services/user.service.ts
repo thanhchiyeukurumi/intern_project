@@ -45,4 +45,82 @@ export class UserService {
   delete(id: number | string): Observable<any> {
     return this.http.delete<any>(USER_API.GET_BY_ID(id));
   }
+
+  // ============================================
+  // LẤY THỐNG KÊ NGƯỜI DÙNG THEO KHOẢNG THỜI GIAN - getUsersByDateRange
+  // ============================================
+  /**
+   * Lấy thống kê người dùng theo khoảng thời gian
+   * @param options - Các tùy chọn để lọc và nhóm dữ liệu
+   * @returns Observable - Dữ liệu thống kê người dùng theo thời gian
+   */
+  getUsersByDateRange(options: {
+    startDate?: string; 
+    endDate?: string;
+    groupBy?: 'day' | 'week' | 'month';
+  }): Observable<any> {
+    let httpParams = new HttpParams();
+    
+    if (options) {
+      Object.entries(options).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          httpParams = httpParams.set(key, value.toString());
+        }
+      });
+    }
+    
+    return this.http.get(USER_API.STATS_DATE_RANGE, { params: httpParams });
+  }
+
+  // ============================================
+  // LẤY THỐNG KÊ NGƯỜI DÙNG - getUserStats
+  // ============================================
+  /**
+   * Lấy thống kê tổng hợp về người dùng
+   * @param options - Các tùy chọn để lọc
+   * @returns Observable - Thống kê tổng hợp về người dùng
+   */
+  getUserStats(options: {
+    startDate?: string;
+    endDate?: string;
+    groupBy?: 'day' | 'week' | 'month';
+  }): Observable<any> {
+    let httpParams = new HttpParams();
+    
+    if (options) {
+      Object.entries(options).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          httpParams = httpParams.set(key, value.toString());
+        }
+      });
+    }
+    
+    return this.http.get(USER_API.STATS_DASHBOARD, { params: httpParams });
+  }
+
+  // ============================================
+  // LẤY TOP NGƯỜI DÙNG ĐÓNG GÓP - getTopContributors
+  // ============================================
+  /**
+   * Lấy danh sách top người dùng đóng góp nhiều bài viết nhất
+   * @param options - Các tùy chọn để lọc
+   * @returns Observable - Danh sách top người dùng đóng góp
+   */
+  getTopContributors(options: {
+    startDate?: string;
+    endDate?: string;
+    limit?: number;
+  }): Observable<any> {
+    let httpParams = new HttpParams();
+    
+    if (options) {
+      Object.entries(options).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          httpParams = httpParams.set(key, value.toString());
+        }
+      });
+    }
+    
+    return this.http.get(USER_API.STATS_TOP_CONTRIBUTORS, { params: httpParams });
+  }
 }

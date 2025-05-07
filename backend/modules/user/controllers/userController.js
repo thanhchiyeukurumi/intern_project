@@ -107,6 +107,78 @@ class UserController {
             return error(res, err.message);
         }
     }      
+
+    // ============================================
+    // LẤY THỐNG KÊ NGƯỜI DÙNG THEO KHOẢNG THỜI GIAN - getUsersByDateRange
+    // ============================================
+    /**
+     * GET /user/stats/date-range
+     * @desc    Lấy thống kê người dùng theo khoảng thời gian
+     * @access  Admin
+     */
+    async getUsersByDateRange(req, res) {
+        try {
+            const options = {
+                startDate: req.query.startDate || null,
+                endDate: req.query.endDate || null,
+                groupBy: req.query.groupBy || 'day'
+            };
+            
+            const result = await userService.getUsersByDateRange(options);
+            return ok(res, result);
+        } catch (err) {
+            console.error('Error in getUsersByDateRange controller:', err);
+            return error(res, err.message);
+        }
+    }
+
+    // ============================================
+    // LẤY THỐNG KÊ NGƯỜI DÙNG - getUserStats
+    // ============================================
+    /**
+     * GET /user/stats/dashboard
+     * @desc    Lấy thống kê tổng hợp về người dùng
+     * @access  Admin
+     */
+    async getUserStats(req, res) {
+        try {
+            const options = {
+                startDate: req.query.startDate || null,
+                endDate: req.query.endDate || null,
+                groupBy: req.query.groupBy || 'day'
+            };
+            
+            const result = await userService.getUserStats(options);
+            return ok(res, result);
+        } catch (err) {
+            console.error('Error in getUserStats controller:', err);
+            return error(res, err.message);
+        }
+    }
+
+    // ============================================
+    // LẤY THỐNG KÊ TOP NGƯỜI DÙNG ĐÓNG GÓP - getTopContributors
+    // ============================================
+    /**
+     * GET /user/stats/top-contributors
+     * @desc    Lấy danh sách top người dùng đóng góp
+     * @access  Admin
+     */
+    async getTopContributors(req, res) {
+        try {
+            const options = {
+                startDate: req.query.startDate || null,
+                endDate: req.query.endDate || null,
+                limit: req.query.limit || 5
+            };
+            
+            const result = await userService.getTopContributors(options);
+            return ok(res, result);
+        } catch (err) {
+            console.error('Error in getTopContributors controller:', err);
+            return error(res, err.message);
+        }
+    }
 }
     
 module.exports = new UserController();

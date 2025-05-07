@@ -205,10 +205,7 @@ class PostController {
     }
   }
 
-
-
-
-   // ============================================
+  // ============================================
   // LẤY DANH SÁCH BÀI VIẾT TỪ BÀI GỐC - getPostsFromOriginal
   // ============================================
   /**
@@ -252,6 +249,64 @@ class PostController {
     } catch (err) {
       console.error("Error in getPostsFromOriginal:", err); // Log lỗi
       // Xử lý các loại lỗi khác nếu cần
+      return error(res, err.message);
+    }
+  }
+
+  // ============================================
+  // LẤY THỐNG KÊ BÀI VIẾT THEO KHOẢNG THỜI GIAN - getPostsByDateRange
+  // ============================================
+  /**
+   * GET /posts/stats/date-range
+   * @desc    Lấy thống kê bài viết theo khoảng thời gian
+   * @access  Public
+   * @query   {string} startDate      - Ngày bắt đầu (ISO format)
+   * @query   {string} endDate        - Ngày kết thúc (ISO format)
+   * @query   {string} groupBy        - Cách nhóm dữ liệu (day/week/month)
+   * @query   {number} languageId     - ID ngôn ngữ để lọc (optional)
+   * @query   {number} categoryId     - ID danh mục để lọc (optional)
+   * @query   {number} userId         - ID người dùng để lọc (optional)
+   * @query   {boolean} includeTotal  - Có bao gồm tổng số không (optional)
+   */
+  async getPostsByDateRange(req, res) {
+    try {
+      const options = {
+        startDate: req.query.startDate,
+        endDate: req.query.endDate,
+        groupBy: req.query.groupBy || 'day',
+        languageId: req.query.languageId,
+        categoryId: req.query.categoryId,
+        userId: req.query.userId,
+        includeTotal: req.query.includeTotal === 'true'
+      };
+      
+      const result = await postService.getPostsByDateRange(options);
+      return ok(res, result);
+    } catch (err) {
+      console.error('Error in getPostsByDateRange controller:', err);
+      return error(res, err.message);
+    }
+  }
+
+  // ============================================
+  // LẤY THỐNG KÊ TỔNG HỢP CHO DASHBOARD - getPostStats
+  // ============================================
+  /**
+   * GET /posts/stats/dashboard
+   * @desc    Lấy thống kê tổng hợp về bài viết
+   * @access  Admin
+   */
+  async getPostStats(req, res) {
+    try {
+      const options = {
+        startDate: req.query.startDate || null,
+        endDate: req.query.endDate || null,
+        groupBy: req.query.groupBy || 'day'
+      };
+      
+      const stats = await postService.getPostStats(options);
+      return ok(res, stats);
+    } catch (err) {
       return error(res, err.message);
     }
   }

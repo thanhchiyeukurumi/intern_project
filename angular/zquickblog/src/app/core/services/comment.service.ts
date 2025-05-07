@@ -61,4 +61,60 @@ export class CommentService {
   delete(id: number | string): Observable<any> {
     return this.http.delete<any>(COMMENT_API.DELETE(id));
   }
+
+  // ============================================
+  // LẤY THỐNG KÊ BÌNH LUẬN THEO KHOẢNG THỜI GIAN - getCommentsByDateRange
+  // ============================================
+  /**
+   * Lấy thống kê bình luận theo khoảng thời gian
+   * @param options - Các tùy chọn để lọc và nhóm dữ liệu
+   * @returns Observable - Dữ liệu thống kê bình luận theo thời gian
+   */
+  getCommentsByDateRange(options: {
+    startDate?: string; 
+    endDate?: string;
+    groupBy?: 'day' | 'week' | 'month';
+    postId?: string | number;
+    userId?: string | number;
+  }): Observable<any> {
+    let httpParams = new HttpParams();
+    
+    if (options) {
+      Object.entries(options).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          httpParams = httpParams.set(key, value.toString());
+        }
+      });
+    }
+    
+    return this.http.get(COMMENT_API.STATS_DATE_RANGE, { params: httpParams });
+  }
+
+  // ============================================
+  // LẤY THỐNG KÊ BÌNH LUẬN - getCommentStats
+  // ============================================
+  /**
+   * Lấy thống kê tổng hợp về bình luận
+   * @param options - Các tùy chọn để lọc và nhóm dữ liệu
+   * @returns Observable - Thống kê tổng hợp về bình luận
+   */
+  getCommentStats(options: {
+    startDate?: string; 
+    endDate?: string;
+    groupBy?: 'day' | 'week' | 'month';
+    postId?: string | number;
+    userId?: string | number;
+  }): Observable<any> {
+    let httpParams = new HttpParams();
+    
+    if (options) {
+      Object.entries(options).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          httpParams = httpParams.set(key, value.toString());
+        }
+      });
+    }
+    
+    return this.http.get(COMMENT_API.STATS_DASHBOARD, { params: httpParams });
+  }
 }

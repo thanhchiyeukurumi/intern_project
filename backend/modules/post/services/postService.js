@@ -350,6 +350,247 @@ class PostService {
       throw error;
     }
   }
+
+  // ============================================
+  // LẤY THỐNG KÊ BÀI VIẾT THEO KHOẢNG THỜI GIAN - getPostsByDateRange
+  // ============================================
+  /**
+   * Lấy thống kê bài viết theo khoảng thời gian
+   * @param {Object} options - Các tùy chọn để lọc và nhóm dữ liệu
+   * @returns {Object} - Dữ liệu thống kê bài viết theo thời gian
+   */
+  async getPostsByDateRange(options = {}) {
+    try {
+      const startDate = options.startDate ? new Date(options.startDate) : new Date(new Date().setDate(new Date().getDate() - 30));
+      const endDate = options.endDate ? new Date(options.endDate) : new Date();
+      const groupByInterval = options.groupBy || 'day'; // 'day', 'week', 'month'
+      const languageId = parseInt(options.languageId, 10) || null;
+      const categoryId = parseInt(options.categoryId, 10) || null;
+      const userId = parseInt(options.userId, 10) || null;
+
+      // Điều kiện cơ bản: trong khoảng thời gian
+      let where = {
+        createdAt: {
+          [Op.between]: [startDate, endDate]
+        }
+      };
+
+      // Thêm điều kiện lọc nếu có
+      if (languageId) {
+        where.language_id = languageId;
+      }
+
+      if (userId) {
+        where.user_id = userId;
+      }
+
+      // Xác định trường group by dựa trên interval
+      let dateFormat;
+      switch (groupByInterval) {
+        case 'week':
+          // Format: YYYY-WW (Năm-Tuần)
+          dateFormat = Sequelize.fn('DATE_FORMAT', Sequelize.col('created_at'), '%Y-%u');
+          break;
+        case 'month':
+          // Format: YYYY-MM (Năm-Tháng)
+          dateFormat = Sequelize.fn('DATE_FORMAT', Sequelize.col('created_at'), '%Y-%m');
+          break;
+        default: // day
+          // Format: YYYY-MM-DD (Năm-Tháng-Ngày)
+          dateFormat = Sequelize.fn('DATE_FORMAT', Sequelize.col('created_at'), '%Y-%m-%d');
+          break;
+      }
+
+      // Tạo query cơ bản
+      let queryOptions = {
+        attributes: [
+          [dateFormat, 'date'],
+          [Sequelize.fn('COUNT', Sequelize.col('id')), 'count']
+        ],
+        where,
+        group: ['date'],
+        raw: true,
+        order: [[Sequelize.col('date'), 'ASC']]
+      };
+
+      // Nếu có categoryId, cần join với bảng PostCategory
+      if (categoryId) {
+        queryOptions.include = [
+          {
+            model: Category,
+            attributes: [],
+            where: { id: categoryId },
+            through: { attributes: [] }
+          }
+        ];
+      }
+
+      // Thực hiện truy vấn
+      const results = await Post.findAll(queryOptions);
+
+      // Điều chỉnh kết quả để bao gồm cả những ngày không có bài viết
+      const statsMap = new Map();
+      results.forEach(item => {
+        statsMap.set(item.date, Number(item.count));
+      });
+
+      const stats = [];
+      let currentDate = new Date(startDate);
+
+      while (currentDate <= endDate) {
+        let dateKey;
+        switch (groupByInterval) {
+          case 'week':
+            // Lấy số tuần trong năm
+            const weekNumber = getWeekNumber(currentDate);
+            dateKey = `${currentDate.getFullYear()}-${weekNumber.toString().padStart(2, '0')}`;
+            // Tăng thêm 1 tuần
+            currentDate.setDate(currentDate.getDate() + 7);
+            break;
+          case 'month':
+            dateKey = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}`;
+            // Tăng thêm 1 tháng
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            break;
+          default: // day
+            dateKey = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
+            // Tăng thêm 1 ngày
+            currentDate.setDate(currentDate.getDate() + 1);
+            break;
+        }
+
+        stats.push({
+          date: dateKey,
+          count: statsMap.get(dateKey) || 0
+        });
+      }
+
+      // Nếu người dùng yêu cầu tổng số
+      if (options.includeTotal) {
+        // Đếm tổng số bài viết trong khoảng thời gian
+        const { count } = await Post.findAndCountAll({
+          where,
+          distinct: true,
+          include: categoryId ? [
+            {
+              model: Category,
+              attributes: [],
+              where: { id: categoryId },
+              through: { attributes: [] }
+            }
+          ] : []
+        });
+
+        return {
+          total: count,
+          stats
+        };
+      }
+
+      return stats;
+    } catch (error) {
+      console.error('Error in getPostsByDateRange:', error);
+      throw error;
+    }
+  }
+
+  // ============================================
+  // LẤY THỐNG KÊ BÀI VIẾT - getPostStats
+  // ============================================
+  /**
+   * Lấy dữ liệu thống kê bài viết
+   * @param {Object} options - Các tùy chọn thống kê
+   * @returns {Object} - Dữ liệu thống kê bài viết
+   */
+  async getPostStats(options = {}) {
+    try {
+      const startDate = options.startDate ? new Date(options.startDate) : new Date(new Date().setDate(new Date().getDate() - 30));
+      const endDate = options.endDate ? new Date(options.endDate) : new Date();
+      
+      // Lấy dữ liệu thống kê bài viết theo thời gian
+      const postStats = await this.getPostsByDateRange({
+        ...options,
+        includeTotal: true
+      });
+      
+      // Phân bố bài viết theo danh mục - sử dụng SQL trực tiếp thay vì ORM
+      const categoryDistribution = await db.sequelize.query(`
+        SELECT c.id, c.name, COUNT(pc.post_id) as count 
+        FROM categories c 
+        JOIN post_categories pc ON c.id = pc.category_id 
+        JOIN posts p ON pc.post_id = p.id 
+        WHERE p.created_at BETWEEN :startDate AND :endDate 
+        GROUP BY c.id, c.name 
+        ORDER BY count DESC 
+        LIMIT 5
+      `, {
+        replacements: { startDate, endDate },
+        type: Sequelize.QueryTypes.SELECT
+      });
+      
+      // Phân bố bài viết theo ngôn ngữ - sử dụng SQL trực tiếp
+      const languageDistribution = await db.sequelize.query(`
+        SELECT l.id, l.name, COUNT(p.id) as count 
+        FROM languages l 
+        JOIN posts p ON l.id = p.language_id 
+        WHERE p.created_at BETWEEN :startDate AND :endDate 
+        GROUP BY l.id, l.name
+      `, {
+        replacements: { startDate, endDate },
+        type: Sequelize.QueryTypes.SELECT
+      });
+      
+      // Tính toán tổng số lượt xem trong khoảng thời gian
+      const viewsCount = await Post.sum('views', {
+        where: {
+          createdAt: {
+            [Op.between]: [startDate, endDate]
+          }
+        }
+      });
+      
+      // Tính toán tăng trưởng so với khoảng thời gian trước đó
+      const timeRange = endDate.getTime() - startDate.getTime();
+      const previousStartDate = new Date(startDate.getTime() - timeRange);
+      
+      // Tính số bài viết trong khoảng thời gian trước đó
+      const previousPostsCount = await Post.count({
+        where: {
+          createdAt: {
+            [Op.between]: [previousStartDate, startDate]
+          }
+        },
+        distinct: true
+      });
+      
+      // Tính tỷ lệ tăng trưởng
+      const postGrowth = previousPostsCount > 0 
+        ? ((postStats.total - previousPostsCount) / previousPostsCount) * 100 
+        : 100;
+      
+      return {
+        total: postStats.total,
+        growth: parseFloat(postGrowth.toFixed(2)),
+        timeData: postStats.stats,
+        categories: categoryDistribution,
+        languages: languageDistribution,
+        views: {
+          total: viewsCount || 0,
+          growth: 0 // Có thể triển khai tương tự như postGrowth
+        }
+      };
+    } catch (error) {
+      console.error('Error in getPostStats:', error);
+      throw error;
+    }
+  }
+}
+
+// Hàm helper để lấy số tuần trong năm
+function getWeekNumber(date) {
+  const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+  const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+  return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
 }
 
 module.exports = new PostService(); 
