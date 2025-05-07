@@ -63,9 +63,6 @@
           <td
             [nzExpand]="post.expand"
             (click)="toggleExpand(post)"> <!-- Gọi toggleExpand thay vì nzExpandChange -->
-             <!-- Icon sẽ tự động thay đổi dựa trên [nzExpand] nếu dùng component nz-table-expand-icon -->
-             <!-- Hoặc tự quản lý icon xoay như đã làm ở TS -->
-             <i nz-icon nzType="caret-right" [nzRotate]="post.expand ? 90 : 0"></i>
           </td>
 
           <!-- Title & Translations count -->
