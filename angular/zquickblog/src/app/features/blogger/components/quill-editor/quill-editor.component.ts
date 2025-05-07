@@ -124,7 +124,7 @@ export class QuillEditorComponent implements ControlValueAccessor, AfterViewInit
       if (editorDomElement) {
         editorDomElement.style.minHeight = this.minHeight;
         editorDomElement.style.fontFamily = "'Roboto', 'Noto Sans', sans-serif";
-        editorDomElement.style.fontSize = '22px';
+        editorDomElement.style.fontSize = '16px'; // Giảm từ 22px xuống 16px
         editorDomElement.style.lineHeight = '1.6';
         editorDomElement.style.textAlign = 'left';
       }
@@ -138,7 +138,7 @@ export class QuillEditorComponent implements ControlValueAccessor, AfterViewInit
           this.deltaContent = currentDelta;
           this.previewContent = html;
 
-          this.onChange(currentDelta);
+          this.onChange(html); // Gửi HTML thay vì Delta
           this.contentChanged.emit({ html: html, delta: currentDelta });
         }
       });
@@ -149,12 +149,39 @@ export class QuillEditorComponent implements ControlValueAccessor, AfterViewInit
         }
       });
 
+      // Xử lý dán hình ảnh
+      this.editor.clipboard.addMatcher(Node.ELEMENT_NODE, (node: Node, delta: any) => {
+        if ((node as HTMLElement).tagName === 'IMG' && (node as HTMLImageElement).src.startsWith('data:image/')) {
+          const file = this.dataUrlToFile((node as HTMLImageElement).src);
+          if (file) {
+            this.uploadImageToServer(file);
+          }
+          return { ops: [] }; // Ngăn chèn base64
+        }
+        return delta;
+      });
+
       this.editorCreated.emit(this.editor);
       this.isLoading = false;
     } catch (error) {
       console.error('Lỗi khi khởi tạo Quill Editor:', error);
       this.isLoading = false;
     }
+  }
+
+  private dataUrlToFile(dataUrl: string): File | null {
+    if (!dataUrl.startsWith('data:image/')) return null;
+
+    const arr = dataUrl.split(',');
+    const mime = arr[0].match(/:(.*?);/)?.[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    const filename = `pasted-image-${Date.now()}.png`;
+    return new File([u8arr], filename, { type: mime });
   }
 
   private setupCustomFormats() {
@@ -237,6 +264,7 @@ export class QuillEditorComponent implements ControlValueAccessor, AfterViewInit
         this.editor.setContents([{ insert: '\n' }]);
       }
       this.previewContent = this.content;
+      this.onChange(this.content); // Gửi HTML
     } else {
       if (typeof value === 'string') this.content = value || '';
       else this.deltaContent = value;

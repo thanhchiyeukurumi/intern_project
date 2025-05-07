@@ -6,13 +6,13 @@ export interface PostDto {
   categories: (string | number)[];
   language_id?: number;
   status?: string;
-  views: number;
+  views?: number;
   original_post_id: number | null;
-  expand: boolean;
+  expand?: boolean;
   translations?: Post[]; 
   originalPost?: Post; 
   description?: string; 
-  user_id: number; // Include user_id
+  user_id?: number; // Include user_id (backend sẽ tự lấy từ token)
 }
 
 export interface Post {

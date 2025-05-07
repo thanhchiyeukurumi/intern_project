@@ -1,7 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -13,8 +13,13 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { QuillEditorComponent } from '../../components/quill-editor/quill-editor.component';
 import { PostService } from '../../../../core/services/post.service';
 import { AuthService } from '../../../../core/services/auth.service';
-import { Category } from '../../../../shared/models/category.model';
+import { CategoryService } from '../../../../core/services/category.service';
+import { LanguageService } from '../../../../core/services/language.service';
 import { PostDto } from '../../../../shared/models/post.model';
+import { Category } from '../../../../shared/models/category.model';
+import { Language } from '../../../../shared/models/language.model';
+import { User } from '../../../../shared/models/user.model';
+import { Subscription, finalize } from 'rxjs';
 
 @Component({
   selector: 'app-blogger-post-create',
@@ -34,75 +39,108 @@ import { PostDto } from '../../../../shared/models/post.model';
     QuillEditorComponent
   ]
 })
-export class BloggerPostCreateComponent implements OnInit {
+export class BloggerPostCreateComponent implements OnInit, OnDestroy {
   postForm!: FormGroup;
   isSubmitting = false;
-  categories: { label: string, value: string | number }[] = [
-    { label: 'Công nghệ', value: '1' },
-    { label: 'Du lịch', value: '2' },
-    { label: 'Ẩm thực', value: '3' },
-    { label: 'Sức khỏe', value: '4' },
-    { label: 'Giáo dục', value: '5' }
-  ];
+  categoriesForSelect: { label: string, value: string | number }[] = [];
+  languagesForSelect: { label: string, value: string | number }[] = [];
+  private currentUser: User | null = null;
+  private subscriptions = new Subscription();
+  private originalPostIdFromQuery: number | null = null;
+  @ViewChild(QuillEditorComponent) quillEditor!: QuillEditorComponent; // Truy cập QuillEditorComponent
 
   private fb = inject(FormBuilder);
   private message = inject(NzMessageService);
   private postService = inject(PostService);
   private router = inject(Router);
   private authService = inject(AuthService);
-  private currentUser: any = null;
+  private categoryService = inject(CategoryService);
+  private languageService = inject(LanguageService);
+  private activatedRoute = inject(ActivatedRoute);
 
   ngOnInit(): void {
-    // Get current user
-    this.authService.currentUser$.subscribe({
+    const authSub = this.authService.currentUser$.subscribe({
       next: (user) => {
         this.currentUser = user;
         if (!user || !user.id) {
           this.message.warning('Vui lòng đăng nhập để tạo bài viết.');
           this.router.navigate(['/login']);
+        } else {
+          const queryParamSub = this.activatedRoute.queryParamMap.subscribe(params => {
+            const id = params.get('originalPostId');
+            this.originalPostIdFromQuery = id ? +id : null;
+            this.initForm();
+          });
+          this.subscriptions.add(queryParamSub);
         }
       },
-      error: (err) => {
-        console.error('Error fetching current user:', err);
-        this.message.error('Không thể xác thực người dùng. Vui lòng đăng nhập lại.');
-        this.router.navigate(['/login']);
-      }
+      error: (err) => this.handleAuthError(err)
     });
+    this.subscriptions.add(authSub);
 
-    this.initForm();
     this.loadCategories();
+    this.loadLanguages();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  private handleAuthError(err: any): void {
+    console.error('Error fetching current user:', err);
+    this.message.error('Không thể xác thực người dùng. Vui lòng đăng nhập lại.');
+    this.router.navigate(['/login']);
   }
 
   initForm(): void {
     this.postForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
-      content: [null, Validators.required], // Delta object
-      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]], // Maps to excerpt
+      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
+      content: ['', Validators.required], // Lưu chuỗi HTML
+      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
       categories: [[], [Validators.required, Validators.minLength(1)]],
-      language_id: [null, Validators.required], // Required by backend
-      tags: [''],
-      original_post_id: [null]
+      language_id: [null, Validators.required],
+      original_post_id: [this.originalPostIdFromQuery]
     });
+
+    if (this.originalPostIdFromQuery) {
+      this.message.info(`Đang tạo bản dịch cho bài viết gốc ID: ${this.originalPostIdFromQuery}. Một số trường có thể được điền sẵn hoặc khóa.`);
+    }
   }
 
   loadCategories(): void {
-    // Placeholder for API call
-    // this.categoryService.getAll({ limit: 100 }).subscribe({
-    //   next: (response) => {
-    //     this.categories = response.data.map((cat: Category) => ({
-    //       label: cat.name,
-    //       value: cat.id
-    //     }));
-    //   },
-    //   error: (err) => {
-    //     console.error('Error loading categories:', err);
-    //     this.message.error('Không thể tải danh sách danh mục.');
-    //   }
-    // });
+    const catSub = this.categoryService.getAll({ limit: 100, orderBy: 'name', order: 'ASC' }).subscribe({
+      next: (response) => {
+        this.categoriesForSelect = (response.data || []).map((cat: Category) => ({
+          label: cat.name,
+          value: cat.id
+        }));
+      },
+      error: (err) => {
+        console.error('Error loading categories:', err);
+        this.message.error('Không thể tải danh sách danh mục.');
+      }
+    });
+    this.subscriptions.add(catSub);
+  }
+
+  loadLanguages(): void {
+    const langSub = this.languageService.getAll({ orderBy: 'name', order: 'ASC' }).subscribe({
+      next: (response) => {
+        this.languagesForSelect = (response.data || []).map((lang: Language) => ({
+          label: lang.name,
+          value: lang.id
+        }));
+      },
+      error: (err) => {
+        console.error('Error loading languages:', err);
+        this.message.error('Không thể tải danh sách ngôn ngữ.');
+      }
+    });
+    this.subscriptions.add(langSub);
   }
 
   handleEditorCreated(editor: any): void {
-    console.log('Editor created:', editor);
+    // console.log('Editor created:', editor);
   }
 
   submitPost(): void {
@@ -119,50 +157,43 @@ export class BloggerPostCreateComponent implements OnInit {
     }
 
     if (!this.currentUser || !this.currentUser.id) {
-      this.message.error('Vui lòng đăng nhập để tạo bài viết.');
+      this.message.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
       this.router.navigate(['/login']);
       return;
     }
 
     this.isSubmitting = true;
 
-    const formData: PostDto = {
-      title: this.postForm.value.title,
-      content: JSON.stringify(this.postForm.value.content), // Serialize Delta to JSON string
-      description: this.postForm.value.description,
-      categories: this.postForm.value.categories, // Backend expects 'categories'
-      language_id: this.postForm.value.language_id,
-      original_post_id: this.postForm.value.original_post_id,
-      user_id: this.currentUser.id, // Include user_id
-      views: 0, // Default value
-      expand: false, // Default value
-      slug: undefined, // Let backend generate
-      translations: undefined,
-      originalPost: undefined
+    // Lấy chuỗi HTML từ QuillEditorComponent
+    const contentHtml = this.quillEditor.getContent().html || '';
+
+    const formValues = this.postForm.value;
+    const postData: PostDto = {
+      title: formValues.title,
+      content: contentHtml, // Gửi chuỗi HTML
+      description: formValues.description,
+      categories: formValues.categories,
+      language_id: formValues.language_id,
+      original_post_id: formValues.original_post_id || null,
+      status: 'draft'
     };
 
-    console.log('Submitting post data:', formData);
+    console.log('Submitting Post DTO:', postData);
 
-    this.postService.create(formData)
+    this.postService.create(postData)
+      .pipe(finalize(() => this.isSubmitting = false))
       .subscribe({
         next: (response) => {
-          this.message.success('Bài viết đã được tạo thành công!');
-          this.isSubmitting = false;
+          this.message.success(`Bài viết "${response.title}" đã được tạo thành công!`);
           this.postForm.reset({
-            title: '',
-            content: null,
-            description: '',
-            categories: [],
-            language_id: null,
-            tags: '',
-            original_post_id: null
+            original_post_id: this.originalPostIdFromQuery
           });
-          this.router.navigate(['/']);
+          this.router.navigate(['/blogger/posts']);
         },
         error: (err) => {
           console.error('Lỗi khi tạo bài viết:', err);
-          this.message.error(`Lỗi: ${err.error?.message || err.message || 'Không thể tạo bài viết.'}`);
-          this.isSubmitting = false;
+          const backendError = err.error?.message || err.error?.error;
+          this.message.error(`Lỗi: ${backendError || err.message || 'Không thể tạo bài viết.'}`);
         }
       });
   }

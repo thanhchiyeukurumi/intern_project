@@ -1,22 +1,31 @@
 <div class="post-create-container">
-  <h1 class="page-title">Tạo bài viết mới</h1>
+  <h1 class="page-title">
+    {{ postForm.get('original_post_id')?.value ? 'Tạo bản dịch/biến thể mới' : 'Tạo bài viết mới' }}
+  </h1>
 
   <form [formGroup]="postForm" (ngSubmit)="submitPost()">
     <nz-card>
+      <!-- Tiêu đề -->
       <nz-form-item>
         <nz-form-label [nzSpan]="24" nzRequired>Tiêu đề</nz-form-label>
-        <nz-form-control [nzSpan]="24" nzErrorTip="Vui lòng nhập tiêu đề bài viết">
+        <nz-form-control [nzSpan]="24" [nzErrorTip]="titleErrorTpl">
           <input nz-input formControlName="title" placeholder="Nhập tiêu đề bài viết" />
         </nz-form-control>
+        <ng-template #titleErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')">Vui lòng nhập tiêu đề.</ng-container>
+          <ng-container *ngIf="control.hasError('minlength')">Tiêu đề phải có ít nhất 5 ký tự.</ng-container>
+          <ng-container *ngIf="control.hasError('maxlength')">Tiêu đề không được vượt quá 200 ký tự.</ng-container>
+        </ng-template>
       </nz-form-item>
 
+      <!-- Nội dung -->
       <nz-form-item>
         <nz-form-label [nzSpan]="24" nzRequired>Nội dung</nz-form-label>
         <nz-form-control [nzSpan]="24" nzErrorTip="Vui lòng nhập nội dung bài viết">
-          <app-quill-editor 
-            formControlName="content" 
-            [placeholder]="'Bắt đầu viết nội dung bài viết của bạn...'" 
-            [minHeight]="'500px'"
+          <app-quill-editor
+            formControlName="content"
+            [placeholder]="'Bắt đầu viết nội dung của bạn...'"
+            [minHeight]="'400px'"
             (editorCreated)="handleEditorCreated($event)">
           </app-quill-editor>
         </nz-form-control>
@@ -25,60 +34,81 @@
       <nz-divider></nz-divider>
 
       <div nz-row [nzGutter]="16">
-        <div nz-col [nzSpan]="12">
+        <!-- Danh mục -->
+        <div nz-col [nzMd]="12" [nzSm]="24">
           <nz-form-item>
-            <nz-form-label [nzSpan]="24" nzRequired>Danh mục</nz-form-label>
-            <nz-form-control [nzSpan]="24" nzErrorTip="Vui lòng chọn ít nhất một danh mục">
-              <nz-select 
-                formControlName="categories" 
-                nzMode="multiple" 
+            <nz-form-label [nzSm]="24" [nzMd]="24" nzRequired>Danh mục</nz-form-label>
+            <nz-form-control [nzSm]="24" [nzMd]="24" nzErrorTip="Vui lòng chọn ít nhất một danh mục">
+              <nz-select
+                formControlName="categories"
+                nzMode="multiple"
                 nzPlaceHolder="Chọn danh mục">
-                <nz-option 
-                  *ngFor="let category of categories" 
-                  [nzLabel]="category.label" 
+                <nz-option
+                  *ngFor="let category of categoriesForSelect"
+                  [nzLabel]="category.label"
                   [nzValue]="category.value">
                 </nz-option>
               </nz-select>
             </nz-form-control>
           </nz-form-item>
         </div>
-        <div nz-col [nzSpan]="12">
+
+        <!-- Ngôn ngữ -->
+        <div nz-col [nzMd]="12" [nzSm]="24">
           <nz-form-item>
-            <nz-form-label [nzSpan]="24">Thẻ</nz-form-label>
-            <nz-form-control [nzSpan]="24">
-              <input nz-input formControlName="tags" placeholder="Nhập thẻ, phân cách bằng dấu phẩy" />
+            <nz-form-label [nzSm]="24" [nzMd]="24" nzRequired>Ngôn ngữ</nz-form-label>
+            <nz-form-control [nzSm]="24" [nzMd]="24" nzErrorTip="Vui lòng chọn ngôn ngữ">
+              <nz-select
+                formControlName="language_id"
+                nzPlaceHolder="Chọn ngôn ngữ cho bài viết">
+                <nz-option
+                  *ngFor="let lang of languagesForSelect"
+                  [nzLabel]="lang.label"
+                  [nzValue]="lang.value">
+                </nz-option>
+              </nz-select>
             </nz-form-control>
           </nz-form-item>
         </div>
       </div>
 
+      <!-- Tóm tắt (Excerpt/Description) -->
       <nz-form-item>
-        <nz-form-label [nzSpan]="24">Ảnh bìa</nz-form-label>
-        <nz-form-control [nzSpan]="24">
-          <input nz-input formControlName="featuredImage" placeholder="URL hình ảnh hoặc chọn từ thư viện" />
-        </nz-form-control>
-      </nz-form-item>
-
-      <nz-form-item>
-        <nz-form-label [nzSpan]="24">Tóm tắt</nz-form-label>
-        <nz-form-control [nzSpan]="24">
-          <textarea 
-            nz-input 
-            formControlName="excerpt" 
-            placeholder="Nhập tóm tắt ngắn cho bài viết" 
-            [nzAutosize]="{ minRows: 3, maxRows: 5 }">
+        <nz-form-label [nzSpan]="24" nzRequired>Mô tả / Tóm tắt</nz-form-label>
+        <nz-form-control [nzSpan]="24" [nzErrorTip]="descriptionErrorTpl">
+          <textarea
+            nz-input
+            formControlName="description"
+            placeholder="Nhập mô tả ngắn hoặc tóm tắt cho bài viết (sẽ hiển thị trong danh sách bài viết và SEO)"
+            [nzAutosize]="{ minRows: 3, maxRows: 6 }">
           </textarea>
         </nz-form-control>
+        <ng-template #descriptionErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">Vui lòng nhập mô tả/tóm tắt.</ng-container>
+            <ng-container *ngIf="control.hasError('minlength')">Mô tả phải có ít nhất 10 ký tự.</ng-container>
+            <ng-container *ngIf="control.hasError('maxlength')">Mô tả không được vượt quá 500 ký tự.</ng-container>
+        </ng-template>
       </nz-form-item>
 
+      <!-- Original Post ID (ẩn nếu không phải tạo bản dịch) -->
+       <nz-form-item *ngIf="postForm.get('original_post_id')?.value">
+         <nz-form-label [nzSpan]="24">Bài viết gốc ID</nz-form-label>
+         <nz-form-control [nzSpan]="24">
+           <input nz-input formControlName="original_post_id" readonly />
+         </nz-form-control>
+       </nz-form-item>
+
+
       <div class="action-buttons">
-        <button nz-button nzType="default" type="button">Lưu nháp</button>
-        <button 
-          nz-button 
-          nzType="primary" 
-          type="submit" 
+        <!-- <button nz-button nzType="default" type="button" (click)="router.navigate(['/blogger/posts'])" [disabled]="isSubmitting">
+          Hủy bỏ
+        </button> -->
+        <button
+          nz-button
+          nzType="primary"
+          type="submit"
           [nzLoading]="isSubmitting">
-          Đăng bài
+          {{ isSubmitting ? 'Đang xử lý...' : (postForm.get('original_post_id')?.value ? 'Tạo bản dịch' : 'Tạo bài viết') }}
         </button>
       </div>
     </nz-card>
