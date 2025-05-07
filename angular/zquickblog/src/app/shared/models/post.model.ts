@@ -32,7 +32,7 @@ export interface Post {
   description?: string; 
   createdAt: string;
   updatedAt: string;
-  Categories?: {
+  Categories: {
     id: number;
     name: string;
   }[];

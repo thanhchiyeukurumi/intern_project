@@ -210,6 +210,13 @@ export class AdminPostComponent implements OnInit {
       case 'Phần mềm': return 'geekblue';
       case 'Design': return 'purple';
       case 'Trí tuệ nhân tạo': return 'cyan'; // Ví dụ
+      case 'Âm nhạc': return 'red';
+      case 'Đại học': return 'gold';
+      case 'Giải trí': return 'orange';
+      case 'Giáo dục': return 'lime';
+      case 'Giáo dục phổ thông': return 'cyan';
+      case 'Phần cứng': return 'purple';
+      case 'Phim ảnh': return 'orange';
       default: return 'default';
     }
   }

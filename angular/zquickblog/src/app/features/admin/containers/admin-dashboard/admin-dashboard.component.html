@@ -9,10 +9,10 @@
               <i nz-icon nzType="file-text"></i>
             </div>
           </div>
-          <nz-statistic [nzValue]="124" [nzTitle]="'Total Posts'"></nz-statistic>
+          <nz-statistic [nzValue]="totalPosts" [nzTitle]="'Total Posts'"></nz-statistic>
           <div class="trend-info">
             <span class="trend-up">
-              <i nz-icon nzType="arrow-up"></i> 12% 
+              <i nz-icon nzType="arrow-up"></i> {{postGrowth}}% 
             </span>
             <span class="trend-period">since last month</span>
           </div>
@@ -26,10 +26,10 @@
               <i nz-icon nzType="user"></i>
             </div>
           </div>
-          <nz-statistic [nzValue]="752" [nzTitle]="'Total Users'"></nz-statistic>
+          <nz-statistic [nzValue]="totalUsers" [nzTitle]="'Total Users'"></nz-statistic>
           <div class="trend-info">
             <span class="trend-up">
-              <i nz-icon nzType="arrow-up"></i> 5.3% 
+              <i nz-icon nzType="arrow-up"></i> {{userGrowth}}% 
             </span>
             <span class="trend-period">since last month</span>
           </div>
@@ -43,10 +43,10 @@
               <i nz-icon nzType="comment"></i>
             </div>
           </div>
-          <nz-statistic [nzValue]="328" [nzTitle]="'Comments'"></nz-statistic>
+          <nz-statistic [nzValue]="totalComments" [nzTitle]="'Comments'"></nz-statistic>
           <div class="trend-info">
             <span class="trend-up">
-              <i nz-icon nzType="arrow-up"></i> 8.1% 
+              <i nz-icon nzType="arrow-up"></i> {{commentGrowth}}% 
             </span>
             <span class="trend-period">since last month</span>
           </div>
@@ -60,13 +60,13 @@
               <i nz-icon nzType="eye"></i>
             </div>
           </div>
-          <nz-statistic [nzValue]="25400" [nzValueTemplate]="valueTemplate" [nzTitle]="'Total Views'"></nz-statistic>
+          <nz-statistic [nzValue]="totalViews" [nzValueTemplate]="valueTemplate" [nzTitle]="'Total Views'"></nz-statistic>
           <ng-template #valueTemplate>
-            <span>25.4K</span>
+            <span>{{totalViews | number}}</span>
           </ng-template>
           <div class="trend-info">
             <span class="trend-up">
-              <i nz-icon nzType="arrow-up"></i> 15.6% 
+              <i nz-icon nzType="arrow-up"></i> {{viewGrowth}}% 
             </span>
             <span class="trend-period">since last month</span>
           </div>
@@ -74,11 +74,39 @@
       </div>
     </div>
 
-    <!-- Chart Card -->
+    <!-- Line Chart: Posts by Month -->
     <nz-card class="chart-card">
-      <h3 class="chart-title">Total Posts In Last Month</h3>
+      <h3 class="chart-title">Số bài viết trong các tháng</h3>
       <div class="chart-container">
-        <img src="https://www.chartjs.org/docs/latest/assets/img/usage-1.be7a12cd.png" alt="Traffic Chart" class="chart-image">
+        <canvas baseChart
+          [data]="postsChartData"
+          [options]="postsChartOptions"
+          [type]="'line'">
+        </canvas>
+      </div>
+    </nz-card>
+
+    <!-- Line Chart: Users by Month -->
+    <nz-card class="chart-card">
+      <h3 class="chart-title">Người dùng đăng ký mới theo tháng</h3>
+      <div class="chart-container">
+        <canvas baseChart
+          [data]="usersChartData"
+          [options]="usersChartOptions"
+          [type]="'line'">
+        </canvas>
+      </div>
+    </nz-card>
+
+    <!-- Pie Chart: Posts by Category -->
+    <nz-card class="chart-card">
+      <h3 class="chart-title">Phân bố bài viết theo danh mục</h3>
+      <div class="chart-container pie-chart-container">
+        <canvas baseChart
+          [data]="categoryChartData"
+          [options]="categoryChartOptions"
+          [type]="'pie'">
+        </canvas>
       </div>
     </nz-card>
   </div>

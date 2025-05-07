@@ -4,6 +4,7 @@
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
+  padding: 0;
 }
 
 .stats-row {
@@ -12,42 +13,71 @@
 
 /* Stats Cards */
 .stats-card {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease;
+  height: 100%;
   margin-bottom: 16px;
 }
 
+.stats-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Biến thể màu sắc cho các thẻ thống kê */
+.primary-card {
+  border-left: 4px solid #4e73df;
+}
+
+.success-card {
+  border-left: 4px solid #1cc88a;
+}
+
+.warning-card {
+  border-left: 4px solid #f6c23e;
+}
+
+.error-card {
+  border-left: 4px solid #e74a3b;
+}
+
+/* Container biểu tượng */
 .stats-icon-container {
   display: flex;
-  margin-bottom: 12px;
+  justify-content: flex-end;
+  margin-bottom: 10px;
 }
 
 .stats-icon {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  width: 48px;
-  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
+  font-size: 18px;
+  opacity: 0.8;
 }
 
 .stats-icon.primary {
-  background-color: var(--admin-icon-bg-primary);
-  color: var(--admin-icon-color-primary);
+  background-color: rgba(78, 115, 223, 0.15);
+  color: #4e73df;
 }
 
 .stats-icon.success {
-  background-color: var(--admin-success-bg);
-  color: var(--admin-success);
+  background-color: rgba(28, 200, 138, 0.15);
+  color: #1cc88a;
 }
 
 .stats-icon.warning {
-  background-color: var(--admin-warning-bg);
-  color: var(--admin-warning);
+  background-color: rgba(246, 194, 62, 0.15);
+  color: #f6c23e;
 }
 
 .stats-icon.error {
-  background-color: var(--admin-error-bg);
-  color: var(--admin-error);
+  background-color: rgba(231, 74, 59, 0.15);
+  color: #e74a3b;
 }
 
 :host ::ng-deep .ant-statistic-title {
@@ -61,43 +91,53 @@
   color: var(--admin-text-primary);
 }
 
+/* Thông tin xu hướng */
 .trend-info {
-  margin-top: 12px;
-  font-size: 0.875rem;
+  margin-top: 10px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
 }
 
 .trend-up {
-  color: var(--admin-success);
-  font-weight: 500;
-  margin-right: 4px;
+  color: #1cc88a;
+  margin-right: 6px;
+  display: flex;
+  align-items: center;
 }
 
 .trend-down {
-  color: var(--admin-error);
-  font-weight: 500;
-  margin-right: 4px;
+  color: #e74a3b;
+  margin-right: 6px;
+  display: flex;
+  align-items: center;
 }
 
 .trend-period {
-  color: var(--admin-text-secondary);
+  color: #858796;
 }
 
 /* Chart Card */
 .chart-card {
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
   margin-bottom: 24px;
 }
 
 .chart-title {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--admin-text-primary);
+  font-size: 18px;
+  font-weight: 500;
   margin-bottom: 16px;
 }
 
 .chart-container {
-  height: 320px;
+  height: 300px;
+  position: relative;
+}
+
+.pie-chart-container {
+  height: 400px;
   display: flex;
-  align-items: center;
   justify-content: center;
 }
 
@@ -105,6 +145,17 @@
   max-width: 100%;
   max-height: 280px;
   object-fit: contain;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .chart-container {
+    height: 250px;
+  }
+  
+  .pie-chart-container {
+    height: 300px;
+  }
 }
 
 /* Dark theme overrides handled by CSS variables */
