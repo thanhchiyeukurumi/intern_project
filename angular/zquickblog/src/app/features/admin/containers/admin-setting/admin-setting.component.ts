@@ -9,12 +9,11 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { ThemeService } from '../../../../core/services/theme.service';
-
-interface Language {
-  id: number;
-  name: string;
-  code: string;
-}
+import { LanguageService } from '../../../../core/services/language.service';
+import { Language } from '../../../../shared/models/language.model';
+import { finalize } from 'rxjs/operators';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 @Component({
   selector: 'app-admin-setting',
@@ -28,7 +27,8 @@ interface Language {
     NzSelectModule,
     NzButtonModule,
     NzInputModule,
-    NzIconModule
+    NzIconModule,
+    NzSpinModule
   ],
   templateUrl: './admin-setting.component.html',
   styleUrl: './admin-setting.component.css'
@@ -40,15 +40,16 @@ export class AdminSettingComponent implements OnInit {
   newLanguage = '';
   newLanguageCode = '';
   languages: Language[] = [];
+  isLoading = false;
   
-  constructor(private themeService: ThemeService) {}
+  constructor(
+    private themeService: ThemeService,
+    private languageService: LanguageService,
+    private message: NzMessageService
+  ) {}
 
   ngOnInit(): void {
-    this.languages = [
-      { id: 1, name: 'English', code: 'en' },
-      { id: 2, name: 'Spanish', code: 'es' },
-      { id: 3, name: 'French', code: 'fr' }
-    ];
+    this.loadLanguages();
     
     // Initialize dark mode state from ThemeService
     this.darkModeEnabled = this.themeService.isDarkMode();
@@ -59,21 +60,75 @@ export class AdminSettingComponent implements OnInit {
     });
   }
   
+  loadLanguages(): void {
+    this.isLoading = true;
+    this.languageService.getAll()
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          this.languages = response.data;
+        },
+        error: (err) => {
+          console.error('Lỗi khi tải ngôn ngữ:', err);
+          this.message.error('Không thể tải danh sách ngôn ngữ. Vui lòng thử lại sau.');
+        }
+      });
+  }
+  
   addLanguage(): void {
     if (this.newLanguage && this.newLanguageCode) {
-      const newId = Math.max(0, ...this.languages.map(l => l.id)) + 1;
-      this.languages.push({
-        id: newId,
+      this.isLoading = true;
+      
+      const newLanguageData = {
         name: this.newLanguage,
-        code: this.newLanguageCode
-      });
-      this.newLanguage = '';
-      this.newLanguageCode = '';
+        locale: this.newLanguageCode,
+        is_active: true
+      };
+      
+      this.languageService.create(newLanguageData)
+        .pipe(
+          finalize(() => {
+            this.isLoading = false;
+          })
+        )
+        .subscribe({
+          next: (createdLanguage) => {
+            this.languages.push(createdLanguage);
+            this.message.success('Thêm ngôn ngữ mới thành công');
+            this.newLanguage = '';
+            this.newLanguageCode = '';
+          },
+          error: (err) => {
+            console.error('Lỗi khi thêm ngôn ngữ:', err);
+            this.message.error('Không thể thêm ngôn ngữ mới. Vui lòng thử lại sau.');
+          }
+        });
     }
   }
   
   removeLanguage(id: number): void {
-    this.languages = this.languages.filter(lang => lang.id !== id);
+    this.isLoading = true;
+    
+    this.languageService.delete(id)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.languages = this.languages.filter(lang => lang.id !== id);
+          this.message.success('Xóa ngôn ngữ thành công');
+        },
+        error: (err) => {
+          console.error('Lỗi khi xóa ngôn ngữ:', err);
+          this.message.error('Không thể xóa ngôn ngữ. Vui lòng thử lại sau.');
+        }
+      });
   }
 
   toggleDarkMode(): void {

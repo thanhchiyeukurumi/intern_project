@@ -57,23 +57,26 @@
           </ng-template>
           
           <nz-input-group [nzPrefix]="prefixCode" class="language-code-input">
-            <input type="text" nz-input placeholder="Code (e.g. en)" [(ngModel)]="newLanguageCode" />
+            <input type="text" nz-input placeholder="Locale (e.g. en-US)" [(ngModel)]="newLanguageCode" />
           </nz-input-group>
           <ng-template #prefixCode>
             <i nz-icon nzType="code"></i>
           </ng-template>
-          <button nz-button nzType="primary" (click)="addLanguage()">
+          <button nz-button nzType="primary" (click)="addLanguage()" [nzLoading]="isLoading">
             <i nz-icon nzType="plus"></i> Add
           </button>
         </div>
 
         <!-- <nz-divider></nz-divider> -->
         
-        <div class="language-list">
+        <div class="language-list" *ngIf="!isLoading; else loadingTpl">
           <div class="language-item" *ngFor="let language of languages">
             <div class="language-info">
               <span class="language-name">{{ language.name }}</span>
-              <span class="language-code">{{ language.code }}</span>
+              <span class="language-code">{{ language.locale }}</span>
+              <span class="language-status" *ngIf="language.is_active" title="Active">
+                <i nz-icon nzType="check-circle" nzTheme="outline"></i>
+              </span>
             </div>
             <div class="language-actions">
               <button nz-button nzType="text" nzDanger (click)="removeLanguage(language.id)">
@@ -86,6 +89,12 @@
             No languages added yet
           </div>
         </div>
+        
+        <ng-template #loadingTpl>
+          <div class="loading-container">
+            <nz-spin nzTip="Loading languages..."></nz-spin>
+          </div>
+        </ng-template>
       </div>
     </nz-tab>
     
