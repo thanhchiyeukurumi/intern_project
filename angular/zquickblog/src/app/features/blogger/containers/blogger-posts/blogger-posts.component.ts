@@ -69,16 +69,16 @@ export class BloggerPostsComponent implements OnInit, OnDestroy {
   private fetchTrigger = new Subject<void>(); // Subject để trigger fetch
 
   // Định nghĩa cột (chỉ để tính colspan trong template)
-   listOfColumns = [
+  listOfColumns = [
      { title: 'Expand' },
      { title: 'Title' },
-     { title: 'Status' },
-     { title: 'Published' },
+    { title: 'Status' },
+    { title: 'Published' },
      { title: 'Language' },
-     { title: 'Category' },
-     { title: 'Views' },
-     { title: 'Actions' }
-   ];
+    { title: 'Category' },
+    { title: 'Views' },
+    { title: 'Actions' }
+  ];
 
   private message = inject(NzMessageService);
   private modalService = inject(NzModalService);
@@ -188,13 +188,13 @@ export class BloggerPostsComponent implements OnInit, OnDestroy {
 
   onPageIndexChange(index: number): void {
     if (index === this.pageIndex) return;
-    this.pageIndex = index;
+      this.pageIndex = index;
     this.fetchPosts();
   }
 
   onPageSizeChange(size: number): void {
     if (size === this.pageSize) return;
-    this.pageSize = size;
+      this.pageSize = size;
     this.pageIndex = 1;
     this.fetchPosts();
   }
@@ -394,10 +394,10 @@ export class BloggerPostsComponent implements OnInit, OnDestroy {
        return user?.avatar || 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png';
    }
 
-  getPaginationInfo(): string {
+    getPaginationInfo(): string {
     if (this.total === 0) return 'Không có bài viết nào.';
-    const startIndex = (this.pageIndex - 1) * this.pageSize + 1;
-    const endIndex = Math.min(startIndex + this.pageSize - 1, this.total);
+      const startIndex = (this.pageIndex - 1) * this.pageSize + 1;
+      const endIndex = Math.min(startIndex + this.pageSize - 1, this.total);
     return `Hiển thị <strong>${startIndex}</strong> đến <strong>${endIndex}</strong> trong tổng số <strong>${this.total}</strong> bài viết`;
-  }
+    }
 }

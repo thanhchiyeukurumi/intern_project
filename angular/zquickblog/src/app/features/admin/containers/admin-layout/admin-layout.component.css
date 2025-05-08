@@ -15,10 +15,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #e0e7ff;
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 :host ::ng-deep .ant-menu-dark {
@@ -41,13 +42,16 @@
 
 /* Header */
 .admin-header {
-  background-color: var(--admin-bg-tertiary);
-  padding: 0;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  align-items: center;
+  padding: 0 24px;
+  background-color: var(--admin-bg-primary);
+  border-bottom: 1px solid var(--admin-border);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
   height: 64px;
+  position: relative;
+  z-index: 10;
 }
 
 .header-left {
@@ -55,35 +59,51 @@
   align-items: center;
 }
 
-.trigger-icon {
-  font-size: 18px;
-  line-height: 64px;
-  padding: 0 24px;
-  cursor: pointer;
-  transition: color 0.3s;
-  color: var(--admin-text-secondary);
-}
-
-.trigger-icon:hover {
-  color: var(--admin-primary-active);
-}
-
 .admin-header-title {
-  font-size: 1.25rem;
-  font-weight: 600;
   margin: 0;
+  padding-left: 16px;
+  font-size: 18px;
+  font-weight: 600;
   color: var(--admin-text-primary);
 }
 
+.trigger-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--admin-text-secondary);
+  transition: color 0.3s;
+}
+
+.trigger-icon:hover {
+  color: var(--admin-primary);
+}
+
 .header-right {
-  padding-right: 24px;
   display: flex;
   align-items: center;
 }
 
+.header-right a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--admin-text-primary);
+  cursor: pointer;
+  padding: 0 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.header-right a:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
 .admin-profile-name {
   margin-left: 8px;
-  color: var(--admin-text-secondary);
+  font-weight: 500;
 }
 
 /* Content */

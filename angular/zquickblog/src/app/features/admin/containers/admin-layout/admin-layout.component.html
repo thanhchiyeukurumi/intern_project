@@ -26,7 +26,7 @@
         <i nz-icon nzType="setting"></i>
         <span>Settings</span>
       </li>
-      <li nz-menu-item class="logout-item">
+      <li nz-menu-item class="logout-item" (click)="logout()">
         <i nz-icon nzType="logout"></i>
         <span>Logout</span>
       </li>
@@ -44,15 +44,20 @@
       </div>
 
       <div class="header-right">
-        <a nz-dropdown [nzDropdownMenu]="menu">
-          <nz-avatar nzSrc="https://randomuser.me/api/portraits/men/75.jpg"></nz-avatar>
-          <span class="admin-profile-name">John Doe</span>
+        <a nz-dropdown [nzDropdownMenu]="menu" [nzTrigger]="'click'">
+          <nz-avatar [nzSrc]="getUserAvatar()"></nz-avatar>
+          <span class="admin-profile-name">{{ getUserDisplayName() }}</span>
+          <i nz-icon nzType="down"></i>
         </a>
         <nz-dropdown-menu #menu="nzDropdownMenu">
           <ul nz-menu>
-            <li nz-menu-item routerLink="/admin/settings">Settings</li>
+            <li nz-menu-item routerLink="/admin/settings">
+              <i nz-icon nzType="setting"></i> Settings
+            </li>
             <li nz-menu-divider></li>
-            <li nz-menu-item>Logout</li>
+            <li nz-menu-item (click)="logout()">
+              <i nz-icon nzType="logout"></i> Logout
+            </li>
           </ul>
         </nz-dropdown-menu>
       </div>
