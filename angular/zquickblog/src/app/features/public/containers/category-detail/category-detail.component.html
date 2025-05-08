@@ -1,213 +1,158 @@
-<!-- Category Header -->
-<div class="category-header">
-  <div class="category-header-container">
-    <div class="category-header-content">
-      <ng-container *ngIf="category">
-        <h1 nz-typography class="category-title">{{ category.name }}</h1>
-        <p nz-typography nzType="secondary" class="category-description">{{ category.description }}</p>
-      </ng-container>
-      <!-- Skeleton loading cho header -->
-      <ng-container *ngIf="isLoading">
-         <div class="skeleton-title"></div>
-         <div class="skeleton-text"></div>
-      </ng-container>
-    </div>
-
-    <!-- Category Stats -->
-    <div class="category-stats" *ngIf="category && !isLoading">
-      <div class="stat-item">
-        <span nz-icon nzType="profile" nzTheme="outline" class="stat-icon"></span> <!-- Thay icon nếu cần -->
-        <span class="stat-text">{{ formatStoryCount(category.storyCount) }} stories</span>
-      </div>
-      <!-- Thêm các stats khác nếu có -->
-    </div>
-     <div class="category-stats" *ngIf="isLoading">
-        <div class="skeleton-stats"></div>
-     </div>
+<!-- Container chính -->
+<div class="category-page">
+  <!-- Hiển thị skeleton loader khi đang tải -->
+  <div *ngIf="isLoading" class="category-loading">
+    <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 4 }"></nz-skeleton>
+    <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 3 }"></nz-skeleton>
+    <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 3 }"></nz-skeleton>
   </div>
-</div>
 
-<!-- Main Content -->
-<div class="main-content">
-  <div class="main-content-container">
-
-    <!-- Random/Featured Article Section -->
-    <div class="random-post-section" *ngIf="featuredPost || isLoading">
-      <h2 nz-typography class="section-title">Random Post</h2>
-      <!-- Featured Post Card -->
-      <nz-card *ngIf="featuredPost && !isLoading" class="featured-post-card" [nzBordered]="false">
-        <div nz-row [nzGutter]="0"> <!-- Không có khoảng cách giữa các cột trong card -->
-          <!-- Content Column -->
-          <div nz-col [nzXs]="24" [nzMd]="16"> <!-- md:w-2/3 -->
-            <div class="post-content-featured">
-              <div class="author-info">
-                <nz-avatar [nzSrc]="featuredPost.author.avatarUrl" nzIcon="user" class="author-avatar"></nz-avatar>
-                <span class="author-name">{{ featuredPost.author.name }}</span>
-              </div>
-              <h3 class="post-title-featured">
-                <a [routerLink]="['/post', featuredPost.id]">{{ featuredPost.title }}</a>
-              </h3>
-              <p nz-typography nzType="secondary" class="post-excerpt-featured">{{ featuredPost.excerpt }}</p>
-              <div class="post-meta-featured">
-                <div class="post-details">
-                  <span class="post-date">{{ featuredPost.date }} <ng-container *ngIf="featuredPost.readTime">· {{ featuredPost.readTime }} min read</ng-container></span>
-                  <span class="separator" *ngIf="featuredPost.tag">·</span>
-                  <nz-tag *ngIf="featuredPost.tag" class="post-tag">{{ featuredPost.tag }}</nz-tag>
-                </div>
-                <div class="post-actions">
-                  <button nz-button nzType="text" nzShape="circle" class="bookmark-button" aria-label="Bookmark">
-                    <span nz-icon nzType="book" nzTheme="outline"></span> <!-- Thay icon nếu cần -->
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Image Column -->
-          <div nz-col [nzXs]="0" [nzMd]="8"> <!-- md:w-1/3, ẩn trên mobile -->
-            <div class="post-image-container-featured">
-              <img [src]="featuredPost.imageUrl" [alt]="featuredPost.title" class="post-image-featured" *ngIf="featuredPost.imageUrl">
-              <!-- Placeholder nếu không có ảnh -->
-              <div class="post-image-placeholder" *ngIf="!featuredPost.imageUrl"></div>
-            </div>
-          </div>
+  <!-- Hiển thị nội dung khi đã tải xong -->
+  <ng-container *ngIf="!isLoading && category">
+    <!-- Header của danh mục -->
+    <div class="category-header">
+      <div class="container">
+        <h1 class="category-title">{{ category.name }}</h1>
+        <p class="category-description" *ngIf="category.description">{{ category.description }}</p>
+        <div class="category-meta">
+          <span class="story-count" *ngIf="category.storyCount">
+            {{ formatStoryCount(category.storyCount) }} bài viết
+          </span>
         </div>
-      </nz-card>
-      <!-- Skeleton loading cho featured post -->
-       <nz-card *ngIf="isLoading" class="featured-post-card skeleton-card" [nzBordered]="false">
-          <div nz-row [nzGutter]="0">
-             <div nz-col [nzXs]="24" [nzMd]="16"><div class="skeleton-featured-content"></div></div>
-             <div nz-col [nzXs]="0" [nzMd]="8"><div class="skeleton-featured-image"></div></div>
-          </div>
-       </nz-card>
-    </div>
-
-    <!-- Trending Articles Section -->
-    <div class="trending-section" *ngIf="trendingPosts.length > 0 || isLoading">
-      <h2 nz-typography class="section-title">Trending in {{ category?.name || 'Category' }}</h2>
-      <div nz-row [nzGutter]="[32, 32]" class="trending-grid">
-        <!-- Trending Post Cards -->
-        <ng-container *ngIf="!isLoading">
-          <div nz-col [nzXs]="24" [nzSm]="12" [nzLg]="8" *ngFor="let post of trendingPosts">
-            <div class="trending-post-card">
-              <div class="author-info">
-                <nz-avatar [nzSize]="36" [nzSrc]="post.author.avatarUrl" nzIcon="user" class="author-avatar"></nz-avatar>
-                <span class="author-name">{{ post.author.name }}</span>
-              </div>
-              <h3 class="post-title-trending">
-                <a [routerLink]="['/post', post.id]">{{ post.title }}</a>
-              </h3>
-              <p nz-typography nzType="secondary" class="post-excerpt-trending">{{ post.excerpt }}</p>
-              <div class="post-meta-trending">
-                <span class="post-date">{{ post.date }} <ng-container *ngIf="post.readTime">· {{ post.readTime }} min read</ng-container></span>
-                <ng-container *ngIf="post.tag">
-                  <span class="separator">·</span>
-                  <nz-tag class="post-tag">{{ post.tag }}</nz-tag>
-                </ng-container>
-              </div>
-            </div>
-          </div>
-        </ng-container>
-         <!-- Skeleton loading cho trending -->
-         <ng-container *ngIf="isLoading">
-             <div nz-col [nzXs]="24" [nzSm]="12" [nzLg]="8" *ngFor="let i of [1,2,3]">
-                 <div class="trending-post-card skeleton-card">
-                    <div class="skeleton-trending-content"></div>
-                 </div>
-             </div>
-         </ng-container>
       </div>
     </div>
 
-    <!-- Latest Articles Section -->
-    <div class="latest-section" *ngIf="latestPosts.length > 0 || isLoading">
-      <h2 nz-typography class="section-title">Latest in {{ category?.name || 'Category' }}</h2>
-      <div class="latest-posts-list">
-        <!-- Latest Post Items -->
-         <ng-container *ngIf="!isLoading">
-           <div class="latest-post-item" *ngFor="let post of latestPosts">
-             <div class="latest-post-content">
-               <div class="author-info">
-                 <nz-avatar [nzSize]="32" [nzSrc]="post.author.avatarUrl" nzIcon="user" class="author-avatar"></nz-avatar>
-                 <span class="author-name">{{ post.author.name }}</span>
-               </div>
-               <h3 class="post-title-latest">
-                 <a [routerLink]="['/post', post.id]">{{ post.title }}</a>
-               </h3>
-               <p nz-typography nzType="secondary" class="post-excerpt-latest">{{ post.excerpt }}</p>
-               <div class="post-meta-latest">
-                 <span class="post-date">{{ post.date }} <ng-container *ngIf="post.readTime">· {{ post.readTime }} min read</ng-container></span>
-                 <ng-container *ngIf="post.tag">
-                    <span class="separator">·</span>
-                    <nz-tag class="post-tag">{{ post.tag }}</nz-tag>
-                  </ng-container>
-               </div>
-             </div>
-             <div class="latest-post-image-container">
-                <img [src]="post.imageUrl" [alt]="post.title" class="post-image-latest" *ngIf="post.imageUrl">
-                 <!-- Placeholder nếu không có ảnh -->
-                 <div class="post-image-placeholder-latest" *ngIf="!post.imageUrl"></div>
-             </div>
-           </div>
-         </ng-container>
-          <!-- Skeleton loading cho latest -->
-          <ng-container *ngIf="isLoading">
-              <div class="latest-post-item skeleton-card" *ngFor="let i of [1,2,3,4]">
-                  <div class="latest-post-content"><div class="skeleton-latest-content"></div></div>
-                  <div class="latest-post-image-container"><div class="skeleton-latest-image"></div></div>
-              </div>
-          </ng-container>
-      </div>
-
-      <!-- Load More Button -->
-      <div class="load-more-container" *ngIf="latestPosts.length > 0"> <!-- Chỉ hiện nút khi đã có bài -->
-        <button nz-button nzType="default" class="load-more-button" (click)="loadMoreLatestPosts()">
-          Show more
-        </button>
-      </div>
-    </div>
-
-    <!-- Writers Section -->
-    <div class="writers-section" *ngIf="writers.length > 0 || isLoading">
-        <h2 nz-typography class="section-title">Writers write this topicView</h2>
-        <div nz-row [nzGutter]="[24, 24]" class="writers-grid">
-             <ng-container *ngIf="!isLoading">
-               <div nz-col [nzXs]="24" [nzSm]="12" [nzLg]="6" *ngFor="let writer of writers">
-                 <nz-card class="writer-card" nzHoverable>
-                   <div class="writer-info">
-                     <nz-avatar [nzSize]="80" [nzSrc]="writer.avatarUrl" nzIcon="user" class="writer-avatar"></nz-avatar>
-                     <h3 nz-typography class="writer-name">{{ writer.name }}</h3>
-                     <p nz-typography nzType="secondary" class="writer-bio">{{ writer.bio }}</p>
-                     <a [routerLink]="writer.profileLink" nz-button nzType="default" class="view-writer-button">View</a>
-                   </div>
-                 </nz-card>
-               </div>
-             </ng-container>
-              <!-- Skeleton loading cho writers -->
-              <ng-container *ngIf="isLoading">
-                  <div nz-col [nzXs]="24" [nzSm]="12" [nzLg]="6" *ngFor="let i of [1,2,3,4]">
-                      <nz-card class="writer-card skeleton-card">
-                          <div class="skeleton-writer-content"></div>
-                      </nz-card>
+    <!-- Grid layout cho nội dung -->
+    <div class="container">
+      <div nz-row [nzGutter]="[24, 24]">
+        <!-- Cột trái: Bài viết nổi bật + Xu hướng -->
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="16" [nzLg]="16">
+          
+          <!-- Bài viết nổi bật -->
+          <section class="featured-post-section" *ngIf="featuredPost">
+            <h2 class="section-title">Bài viết nổi bật</h2>
+            <div class="featured-post-card">
+              <nz-card [nzCover]="featuredPostCover">
+                <ng-template #featuredPostCover>
+                  <div class="post-cover">
+                    <img alt="{{ featuredPost.title }}" class="post-cover-image" src="assets/images/post-placeholder.jpg" />
                   </div>
-              </ng-container>
+                </ng-template>
+                
+                <div class="post-meta-top">
+                  <span class="post-tag" *ngIf="featuredPost.Categories && featuredPost.Categories.length > 0">
+                    {{ featuredPost.Categories[0].name }}
+                  </span>
+                  <span class="post-date">{{ formatDate(featuredPost.createdAt) }}</span>
+                  <span class="post-read-time">{{ estimateReadTime(featuredPost.content) }} phút đọc</span>
+                </div>
+                
+                <h3 class="post-title featured-post-title">
+                  <a [routerLink]="['/post', featuredPost.id]">{{ featuredPost.title }}</a>
+                </h3>
+                
+                <p class="post-excerpt">{{ featuredPost.excerpt || featuredPost.description }}</p>
+                
+                <div class="post-author">
+                  <nz-avatar [nzSize]="32" nzIcon="user" [nzSrc]="featuredPost.User?.avatar || 'assets/images/default-avatar.png'"></nz-avatar>
+                  <span class="author-name">{{ featuredPost.User?.username || 'Tác giả ẩn danh' }}</span>
+                </div>
+              </nz-card>
+            </div>
+          </section>
+          
+          <!-- Bài viết xu hướng -->
+          <section class="trending-posts-section" *ngIf="trendingPosts.length > 0">
+            <h2 class="section-title">Xu hướng</h2>
+            <div class="trending-posts-list">
+              <div class="trending-post-item" *ngFor="let post of trendingPosts">
+                <div class="post-meta-top">
+                  <span class="post-tag" *ngIf="post.Categories && post.Categories.length > 0">
+                    {{ post.Categories[0].name }}
+                  </span>
+                  <span class="post-date">{{ formatDate(post.createdAt) }}</span>
+                  <span class="post-read-time">{{ estimateReadTime(post.content) }} phút đọc</span>
+                </div>
+                
+                <h3 class="post-title trending-post-title">
+                  <a [routerLink]="['/post', post.id]">{{ post.title }}</a>
+                </h3>
+                
+                <p class="post-excerpt">{{ post.excerpt || post.description }}</p>
+                
+                <div class="post-author">
+                  <nz-avatar [nzSize]="32" nzIcon="user" [nzSrc]="post.User?.avatar || 'assets/images/default-avatar.png'"></nz-avatar>
+                  <span class="author-name">{{ post.User?.username || 'Tác giả ẩn danh' }}</span>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Bài viết mới nhất -->
+          <section class="latest-posts-section" *ngIf="latestPosts.length > 0">
+            <h2 class="section-title">Mới nhất</h2>
+            <div class="latest-posts-grid" nz-row [nzGutter]="[16, 16]">
+              <div nz-col [nzXs]="24" [nzSm]="12" *ngFor="let post of latestPosts" class="latest-post-col">
+                <nz-card class="latest-post-card" [nzCover]="latestPostCover">
+                  <ng-template #latestPostCover>
+                    <div class="post-cover">
+                      <img alt="{{ post.title }}" class="post-cover-image" src="assets/images/post-placeholder.jpg" />
+                    </div>
+                  </ng-template>
+                  
+                  <div class="post-meta-top">
+                    <span class="post-tag" *ngIf="post.Categories && post.Categories.length > 0">
+                      {{ post.Categories[0].name }}
+                    </span>
+                    <span class="post-date">{{ formatDate(post.createdAt) }}</span>
+                  </div>
+                  
+                  <h3 class="post-title latest-post-title">
+                    <a [routerLink]="['/post', post.id]">{{ post.title }}</a>
+                  </h3>
+                  
+                  <div class="post-author">
+                    <nz-avatar [nzSize]="24" nzIcon="user" [nzSrc]="post.User?.avatar || 'assets/images/default-avatar.png'"></nz-avatar>
+                    <span class="author-name">{{ post.User?.username || 'Tác giả ẩn danh' }}</span>
+                  </div>
+                </nz-card>
+              </div>
+            </div>
+            
+            <!-- Nút "Xem thêm" cho bài viết mới nhất -->
+            <div class="load-more-container">
+              <button nz-button nzType="default" class="load-more-button" (click)="loadMoreLatestPosts()">
+                <span nz-icon nzType="plus"></span>
+                Xem thêm bài viết
+              </button>
+            </div>
+          </section>
         </div>
-    </div>
-
-    <!-- Related Topics Section -->
-    <div class="related-topics-section" *ngIf="relatedTopics.length > 0 || isLoading">
-        <h2 nz-typography class="section-title">Related Topics</h2>
-        <div class="topics-list">
-             <ng-container *ngIf="!isLoading">
-               <a *ngFor="let topic of relatedTopics" [routerLink]="['/category', topic.slug]" class="topic-pill">
-                 {{ topic.name }}
-               </a>
-             </ng-container>
-              <!-- Skeleton loading cho related topics -->
-              <ng-container *ngIf="isLoading">
-                  <div class="topic-pill skeleton-pill" *ngFor="let i of [1,2,3,4,5]"></div>
-              </ng-container>
+        
+        <!-- Cột phải: Sidebar với Related Topics và các thẻ khác -->
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8">
+          <div class="category-sidebar">
+            
+            <!-- Related Topics -->
+            <section class="related-topics-section" *ngIf="relatedTopics.length > 0">
+              <h2 class="section-title">Chủ đề liên quan</h2>
+              <div class="related-topics-tags">
+                <a *ngFor="let topic of relatedTopics" class="topic-tag" [routerLink]="['/categories', topic.slug]">
+                  {{ topic.name }}
+                </a>
+              </div>
+            </section>
+            
+          </div>
         </div>
+      </div>
     </div>
-
+  </ng-container>
+  
+  <!-- Hiển thị khi không tìm thấy danh mục -->
+  <div *ngIf="!isLoading && !category" class="category-not-found">
+    <h2>Không tìm thấy danh mục</h2>
+    <p>Danh mục bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.</p>
+    <button nz-button nzType="primary" routerLink="/categories">Xem tất cả danh mục</button>
   </div>
 </div>
