@@ -7,6 +7,13 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar'; // Cho avatar tác giả
 import { NzTypographyModule } from 'ng-zorro-antd/typography'; // Cho styling text
 import { NzTagModule } from 'ng-zorro-antd/tag'; // Cho recommended topics
 import { NzButtonModule } from 'ng-zorro-antd/button'; // Cho nút "Explore More"
+import { finalize } from 'rxjs/operators';
+
+// Import các service
+import { PostService } from '../../../../core/services/post.service';
+import { CategoryService } from '../../../../core/services/category.service';
+import { Post } from '../../../../shared/models/post.model';
+import { Category } from '../../../../shared/models/category.model';
 
 // Interface (tùy chọn) để định nghĩa cấu trúc dữ liệu
 interface PostPreview {
@@ -16,6 +23,12 @@ interface PostPreview {
   description: string;
   date: string;
   commentCount: number;
+}
+
+interface RandomPost {
+  id: number;
+  title: string;
+  url: string;
 }
 
 interface Topic {
@@ -40,68 +53,144 @@ interface Topic {
   styleUrls: ['./home-detail.component.css']
 })
 export class HomeDetailComponent implements OnInit {
+  posts: PostPreview[] = [];
+  randomPosts: RandomPost[] = [];
+  recommendedTopics: Topic[] = [];
+  
+  // Biến cho phân trang và tải dữ liệu
+  currentPage: number = 1;
+  pageSize: number = 5;
+  loading: boolean = false;
+  hasMorePosts: boolean = true;
 
-  // Dữ liệu mẫu (trong ứng dụng thực tế sẽ lấy từ API)
-  posts: PostPreview[] = [
-    {
-      id: 1,
-      title: 'I Wrote On LinkedIn for 100 Days. Now I Never Worry About Finding a Job.',
-      authorAvatar: 'https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256',
-      description: 'Everyone is hiring.',
-      date: 'Sep 22, 2024',
-      commentCount: 964
-    },
-    {
-      id: 2,
-      title: 'A Unified Machine Learning Framework for Time Series Forecasting',
-      authorAvatar: 'https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256',
-      description: 'Harness Diverse Algorithms to Improve Predictive Accuracy from Transactional Data',
-      date: '1d ago',
-      commentCount: 1
-    },
-    {
-      id: 3,
-      title: 'System Design For Beginners: Everything You Need in One Article',
-      authorAvatar: 'https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256',
-      description: 'One shot solution for any System Design Interview.',
-      date: 'Dec 21, 2024',
-      commentCount: 74
-    }
-  ];
-
-  randomPosts = [
-    { id: 4, title: 'Growing the Twitter Culture', url: '/post/4' },
-    { id: 5, title: 'At sea with the Black Knight', url: '/post/5' },
-    { id: 6, title: 'Finding My Photo Mojo', url: '/post/6' }
-  ];
-
-  recommendedTopics: Topic[] = [
-    { name: 'Technology', slug: 'technology' },
-    { name: 'Writing', slug: 'writing' },
-    { name: 'Relationships', slug: 'relationships' },
-    { name: 'Machine Learning', slug: 'machine-learning' },
-    { name: 'Productivity', slug: 'productivity' },
-    { name: 'Cryptocurrency', slug: 'cryptocurrency' }
-  ];
-
-  constructor() { }
+  constructor(
+    private postService: PostService,
+    private categoryService: CategoryService
+  ) { }
 
   ngOnInit(): void {
-    // Logic khởi tạo nếu cần
+    this.loadPosts();
+    this.loadRandomPosts();
+    this.loadCategories();
   }
 
-  loadMorePosts(): void {
-    // Logic để tải thêm bài viết (ví dụ: gọi API)
-    console.log('Loading more posts...');
-    // Thêm dữ liệu mẫu để demo
-    this.posts.push({
-      id: this.posts.length + 1,
-      title: `More Post ${this.posts.length + 1}`,
-      authorAvatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-      description: 'This is another post loaded dynamically.',
-      date: 'Just now',
-      commentCount: 0
+  // Tải bài viết chính
+  loadPosts(): void {
+    this.loading = true;
+    this.postService.getAll({
+      page: this.currentPage,
+      limit: this.pageSize,
+      orderBy: 'createdAt',
+      order: 'DESC',
+      includeRelations: true
+    })
+    .pipe(
+      finalize(() => this.loading = false)
+    )
+    .subscribe({
+      next: (response) => {
+        const newPosts = response.data.map(post => this.mapPostToPreview(post));
+        this.posts = [...this.posts, ...newPosts];
+        
+        // Kiểm tra xem còn bài viết để tải không
+        if (response.data.length < this.pageSize) {
+          this.hasMorePosts = false;
+        }
+      },
+      error: (error) => {
+        console.error('Error loading posts:', error);
+      }
     });
   }
 
+  // Tải bài viết ngẫu nhiên (ở đây dùng bài viết mới nhất)
+  loadRandomPosts(): void {
+    this.postService.getAll({
+      page: 1,
+      limit: 3,
+      orderBy: 'createdAt',
+      order: 'DESC'
+    })
+    .subscribe({
+      next: (response) => {
+        this.randomPosts = response.data.map(post => ({
+          id: post.id,
+          title: post.title,
+          url: `/post/${post.id}`
+        }));
+      },
+      error: (error) => {
+        console.error('Error loading random posts:', error);
+      }
+    });
+  }
+
+  // Tải danh mục cho recommended topics
+  loadCategories(): void {
+    this.categoryService.getAll({
+      limit: 6,
+      orderBy: 'name',
+      order: 'ASC'
+    })
+    .subscribe({
+      next: (response) => {
+        this.recommendedTopics = response.data.map((category: Category) => ({
+          name: category.name,
+          slug: category.slug || category.id.toString()
+        }));
+      },
+      error: (error) => {
+        console.error('Error loading categories:', error);
+      }
+    });
+  }
+
+  // Tải thêm bài viết
+  loadMorePosts(): void {
+    if (this.loading || !this.hasMorePosts) return;
+    
+    this.currentPage++;
+    this.loadPosts();
+  }
+
+  // Hàm hỗ trợ chuyển đổi Post từ API sang PostPreview
+  private mapPostToPreview(post: Post): PostPreview {
+    // Lấy avatar của tác giả hoặc dùng avatar mặc định
+    const authorAvatar = post.User?.avatar || 'https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256';
+    
+    // Format ngày tháng
+    const createdAt = new Date(post.createdAt);
+    const formattedDate = this.formatDate(createdAt);
+    
+    return {
+      id: post.id,
+      title: post.title,
+      authorAvatar: authorAvatar,
+      description: post.description || post.excerpt || 'No description available',
+      date: formattedDate,
+      commentCount: 0 // Giả sử không có thông tin comment
+    };
+  }
+
+  // Hàm định dạng ngày tháng đơn giản
+  private formatDate(date: Date): string {
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays <= 1) {
+      return 'Today';
+    } else if (diffDays <= 2) {
+      return 'Yesterday';
+    } else if (diffDays <= 7) {
+      return `${diffDays}d ago`;
+    } else {
+      // Format: 'Sep 22, 2024'
+      return date.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric', 
+        year: 'numeric' 
+      });
+    }
+  }
 }

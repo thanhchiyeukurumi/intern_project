@@ -12,6 +12,7 @@ import { AllCategoriesComponent } from './containers/all-categories/all-categori
 import { CategoryDetailComponent } from './containers/category-detail/category-detail.component';
 import { LoginComponent } from './containers/login/login.component';
 import { RegisterComponent } from './containers/register/register.component';
+import { HomeDetailComponent } from './containers/home-detail/home-detail.component';
 
 // --- Lưu ý: Bạn cần đảm bảo các component trên đã được tạo và là standalone ---
 // Ví dụ: HomePageComponent phải có standalone: true trong decorator @Component
@@ -28,8 +29,8 @@ const routes: Routes = [
         component: HomePageComponent
       },
       {
-        path: 'blog/:id', // Path: '/blog/abc'
-        component: BlogDetailComponent
+        path: 'all',
+        component: HomeDetailComponent
       },
       {
         path: 'post/:id', // Path: '/post/123'
@@ -59,11 +60,6 @@ const routes: Routes = [
           }
         ]
       },
-       // --- Cân nhắc thêm route cho HomeDetail nếu cần ---
-      // {
-      //   path: 'homedetail', // Hoặc một path khác
-      //   component: HomeDetailComponent // Import HomeDetailComponent
-      // }
     ]
   },
   // --- Cân nhắc: Nếu login/register KHÔNG nên có header/footer chung ---
