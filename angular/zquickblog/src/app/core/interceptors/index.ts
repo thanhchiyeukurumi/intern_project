@@ -9,7 +9,6 @@ export const httpInterceptorProviders = [
   provideHttpClient(
     withInterceptors([
       authInterceptor,
-      // Thêm các interceptor khác ở đây
     ])
   )
 ];

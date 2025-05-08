@@ -1,4 +1,4 @@
-import { HttpInterceptorFn, HttpErrorResponse, HttpRequest, HttpHandlerFn } from '@angular/common/http';
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { catchError, switchMap, throwError } from 'rxjs';
@@ -64,8 +64,3 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     })
   );
 };
-
-// Cần cung cấp Interceptor này trong app.config.ts
-// import { provideHttpClient, withInterceptors } from '@angular/common/http';
-// ... trong providers của appConfig ...
-// provideHttpClient(withInterceptors([authInterceptor]))

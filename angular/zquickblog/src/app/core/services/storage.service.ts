@@ -6,8 +6,13 @@ import { Injectable } from '@angular/core';
 export class StorageService {
   constructor() {}
 
+  // ============================================
+  // LƯU GIÁ TRỊ VÀO LOCALSTORAGE - setLocalItem
+  // ============================================
   /**
    * Lưu giá trị vào localStorage
+   * @param key - Khóa lưu trữ
+   * @param value - Giá trị cần lưu
    */
   setLocalItem(key: string, value: any): void {
     try {
@@ -18,8 +23,13 @@ export class StorageService {
     }
   }
 
+  // ============================================
+  // LẤY GIÁ TRỊ TỪ LOCALSTORAGE - getLocalItem
+  // ============================================
   /**
    * Lấy giá trị từ localStorage
+   * @param key - Khóa lưu trữ
+   * @returns Giá trị đã lưu trữ hoặc null nếu không tồn tại
    */
   getLocalItem<T>(key: string): T | null {
     try {
@@ -37,15 +47,24 @@ export class StorageService {
     }
   }
 
+  // ============================================
+  // XÓA ITEM KHỎI LOCALSTORAGE - removeLocalItem
+  // ============================================
   /**
    * Xóa item khỏi localStorage
+   * @param key - Khóa lưu trữ
+   * @returns void
    */
   removeLocalItem(key: string): void {
     localStorage.removeItem(key);
   }
 
+  // ============================================
+  // XÓA TẤT CẢ DỮ LIỆU KHỎI LOCALSTORAGE - clearLocalStorage
+  // ============================================
   /**
    * Xóa tất cả dữ liệu khỏi localStorage
+   * @returns void
    */
   clearLocalStorage(): void {
     localStorage.clear();

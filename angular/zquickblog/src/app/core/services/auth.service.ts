@@ -17,8 +17,6 @@ export class AuthService {
   
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
-
-  private apiUrl = '/api/auth'; // API base URL cho xác thực
   
   constructor(
     private http: HttpClient,
@@ -29,36 +27,51 @@ export class AuthService {
     this.loadUserFromToken();
   }
 
+  // ============================================
+  // KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP - isLoggedIn
+  // ============================================
   /**
-   * Lấy trạng thái đăng nhập hiện tại, trả về true nếu đã đăng nhập, ngược lại trả về false
+   * Kiểm tra trạng thái đăng nhập
+   * @returns boolean - Trạng thái đăng nhập
    */
   isLoggedIn(): boolean {
     return this.isLoggedInSubject.value;
   }
 
+  // ============================================
+  // LẤY THÔNG TIN NGƯỜI DÙNG HIỆN TẠI - getCurrentUser
+  // ============================================
   /**
    * Lấy thông tin người dùng hiện tại
+   * @returns User | null - Thông tin người dùng hiện tại hoặc null nếu chưa đăng nhập
    */
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
 
+  // ============================================
+  // LẤY VAI TRÒ CỦA NGƯỜI DÙNG HIỆN TẠI - getRole
+  // ============================================
   /**
    * Lấy role của người dùng hiện tại
+   * @returns string | null - Role của người dùng hiện tại hoặc null nếu chưa đăng nhập
    */
   getRole(): string | null {
     const user = this.currentUserSubject.value;
     if (!user) return null;
-    
-    // Kiểm tra cấu trúc API mới
     if (user.role && user.role.name) {
       return user.role.name;
     }  
     return null;
   }
 
+  // ============================================
+  // ĐĂNG NHẬP - login
+  // ============================================
   /**
    * Đăng nhập với tên đăng nhập/email và mật khẩu
+   * @param credentials - Thông tin đăng nhập
+   * @returns Observable - Dữ liệu đăng nhập
    */
   login(credentials: { email: string; password: string; rememberMe?: boolean }): Observable<any> {
     return this.http.post<any>(AUTH_API.LOGIN, credentials).pipe(
@@ -86,8 +99,13 @@ export class AuthService {
     );
   }
 
+  // ============================================
+  // ĐĂNG KÝ - register
+  // ============================================
   /**
    * Đăng ký tài khoản mới
+   * @param userInfo - Thông tin đăng ký
+   * @returns Observable - Dữ liệu đăng ký
    */
   register(userInfo: { username: string; fullname: string; email: string; password: string}): Observable<any> {
     return this.http.post<any>(AUTH_API.REGISTER, userInfo).pipe(
@@ -95,12 +113,15 @@ export class AuthService {
     );
   }
 
+  // ============================================
+  // ĐĂNG XUẤT - logout
+  // ============================================
   /**
    * Đăng xuất khỏi hệ thống
    */
   logout(): void {
     // Tùy chọn: gửi request đến server để vô hiệu hóa token
-    this.http.post(`${this.apiUrl}/logout`, {}).pipe(
+    this.http.post(`${AUTH_API.LOGOUT}`, {}).pipe(
       catchError(() => of(null))
     ).subscribe();
     
@@ -111,6 +132,9 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
+  // ============================================
+  // LƯU TOKEN XÁC THỰC - saveToken
+  // ============================================
   /**
    * Lưu token xác thực
    */
@@ -118,6 +142,9 @@ export class AuthService {
     this.storageService.setLocalItem(AUTH_TOKEN_KEY, token);
   }
 
+  // ============================================
+  // LẤY TOKEN XÁC THỰC - getToken
+  // ============================================
   /**
    * Lấy token xác thực từ storage
    */
@@ -125,6 +152,9 @@ export class AuthService {
     return this.storageService.getLocalItem<string>(AUTH_TOKEN_KEY);
   }
 
+  // ============================================
+  // XÓA TOKEN XÁC THỰC - removeToken
+  // ============================================
   /**
    * Xóa token xác thực
    */
@@ -132,8 +162,13 @@ export class AuthService {
     this.storageService.removeLocalItem(AUTH_TOKEN_KEY);
   }
 
+  // ============================================
+  // GIẢI MÃ TOKEN HOẶC GỌI API ĐỂ LẤY THÔNG TIN NGƯỜI DÙNG - loadUserFromToken
+  // ============================================
   /**
-   * Giải mã token hoặc gọi API để lấy thông tin người dùng
+   * Giải mã token hoặc gọi API để lấy thông tin người dùng.
+   * Nhung ma hien tai dang luu thong tin nguoi dung trong localstorage nen khong biet co can thiet hay khong
+   * @returns void
    */
   loadUserFromToken(): void {
     const token = this.getToken();
@@ -146,14 +181,13 @@ export class AuthService {
     }
     
     if (cachedUser) {
-      // Sử dụng thông tin người dùng từ cache
       this.currentUserSubject.next(cachedUser);
       this.isLoggedInSubject.next(true);
       return;
     }
     
     // Gọi API để lấy thông tin người dùng dựa trên token
-    this.http.get<User>(`${this.apiUrl}/profile`).pipe(
+    this.http.get<User>(`${AUTH_API.ME}`).pipe(
       tap(user => {
         this.currentUserSubject.next(user);
         this.storageService.setLocalItem(USER_INFO_KEY, user);
@@ -169,6 +203,9 @@ export class AuthService {
     ).subscribe();
   }
 
+  // ============================================
+  // KIỂM TRA VAI TRÒ CỦA NGƯỜI DÙNG - hasRole
+  // ============================================
   /**
    * Kiểm tra xem người dùng có vai trò (role) được yêu cầu hay không
    */
@@ -187,8 +224,13 @@ export class AuthService {
     return false;
   }
 
+  // ============================================
+  // XỬ LÝ LỖI TỪ HTTP REQUESTS - handleError
+  // ============================================
   /**
    * Xử lý lỗi từ HTTP requests
+   * @param error - Lỗi từ HTTP requests
+   * @returns Observable - Lỗi từ HTTP requests
    */
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Đã xảy ra lỗi không xác định';
@@ -205,8 +247,15 @@ export class AuthService {
     return throwError(() => new Error(errorMessage));
   }
 
+  // ============================================
+  // LÀM MỚI TOKEN - refreshToken
+  // ============================================
+  /**
+   * Làm mới token
+   * @returns Observable - Dữ liệu token mới
+   */
   refreshToken(): Observable<string> {
-    return this.http.post<any>(`${this.apiUrl}/refresh-token`, {}).pipe(
+    return this.http.post<any>(`${AUTH_API.REFRESH_TOKEN}`, {}).pipe(
       map(response => {
         const token = response?.data?.token;
         if (token) {
@@ -220,11 +269,4 @@ export class AuthService {
       })
     );
   }
-
-
-
 }
-
-
-//refresh token
-

@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UPLOAD_API } from '../constants/api-endpoints'; // Điều chỉnh đường dẫn nếu cần
 
-// --- Định nghĩa các kiểu dữ liệu trả về dựa trên backend của bạn ---
 
 /**
  * Thông tin file chung sau khi upload lên Cloudinary (hoặc local).
@@ -71,6 +70,9 @@ export class UploadService {
 
   constructor(private http: HttpClient) {}
 
+  // ============================================
+  // UPLOAD MỘT FILE ẢNH - uploadSingleImage
+  // ============================================
   /**
    * Upload một file ảnh (ví dụ: avatar, thumbnail).
    * @param file File cần upload.
@@ -88,6 +90,9 @@ export class UploadService {
     return this.http.post<ApiResponse<UploadedFileResponse>>(UPLOAD_API.UPLOAD_IMAGE, formData);
   }
 
+  // ============================================
+  // UPLOAD NHIỀU FILE ẢNH - uploadMultipleImages
+  // ============================================
   /**
    * Upload nhiều file ảnh.
    * @param files Mảng các File cần upload.
@@ -105,6 +110,9 @@ export class UploadService {
     return this.http.post<ApiResponse<UploadedFileResponse[]>>(UPLOAD_API.UPLOAD_IMAGES, formData);
   }
 
+  // ============================================
+  // UPLOAD FILE ẢNH TỪ TRÌNH SOẠN THẢO QUILJS - uploadEditorImage
+  // ============================================
   /**
    * Upload file ảnh từ trình soạn thảo QuillJS.
    * @param file File cần upload.
@@ -121,7 +129,10 @@ export class UploadService {
     return this.http.post<QuillUploadResponse>(UPLOAD_API.UPLOAD_EDITOR, formData);
   }
 
-  /**
+  // ============================================
+  // XÓA MỘT FILE ĐÃ UPLOAD - deleteFile
+  // ============================================
+    /**
    * Xóa một file đã upload dựa vào publicId của nó (thường là từ Cloudinary).
    * @param publicId Public ID của file cần xóa.
    * @returns Observable chứa kết quả xóa.
@@ -129,18 +140,4 @@ export class UploadService {
   deleteFile(publicId: string): Observable<ApiResponse<DeleteFileResult>> {
     return this.http.delete<ApiResponse<DeleteFileResult>>(UPLOAD_API.DELETE_FILE(publicId));
   }
-
-  // ----- Các phương thức upload lên LOCAL (nếu bạn có endpoint riêng cho chúng) -----
-  // Backend của bạn đã có `uploadMiddleware.uploadSingleImageLocal` etc.
-  // Nếu bạn tạo các route API sử dụng chúng, bạn có thể thêm các method tương ứng ở đây.
-  // Ví dụ:
-  // uploadSingleImageLocal(file: File, type?: string): Observable<ApiResponse<UploadedFileResponse>> {
-  //   const formData = new FormData();
-  //   formData.append('image', file, file.name);
-  //   if (type) {
-  //     formData.append('type', type);
-  //   }
-  //   // Giả sử bạn có endpoint '/uploads/local/image'
-  //   return this.http.post<ApiResponse<UploadedFileResponse>>(`${UPLOAD_API.BASE}/local/image`, formData);
-  // }
 }

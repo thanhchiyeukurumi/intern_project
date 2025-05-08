@@ -10,6 +10,14 @@ import { Post, PostDto } from '../../shared/models/post.model';
 export class PostService {
   constructor(private http: HttpClient) {}
 
+  // ============================================
+  // LẤY TẤT CẢ BÀI VIẾT - getAll
+  // ============================================
+  /**
+   * Lấy danh sách bài viết với các tùy chọn phân trang và lọc
+   * @param params - Các tùy chọn để lọc và phân trang
+   * @returns Observable - Dữ liệu bài viết và thông tin phân trang
+   */ 
   getAll(params?: {
     page?: number;
     limit?: number;
@@ -34,22 +42,63 @@ export class PostService {
     return this.http.get<{ data: Post[]; pagination: any }>(POST_API.BASE, { params: httpParams });
   }
 
+  // ============================================
+  // LẤY BÀI VIẾT THEO ID - getById
+  // ============================================
+  /**
+   * Lấy thông tin bài viết theo ID
+   * @param id - ID của bài viết
+   * @returns Observable - Dữ liệu bài viết
+   */ 
   getById(id: number | string): Observable<Post> {
     return this.http.get<Post>(POST_API.GET_BY_ID(id));
   }
 
+  // ============================================
+  // TẠO BÀI VIẾT - create
+  // ============================================
+  /**
+   * Tạo bài viết mới
+   * @param data - Dữ liệu bài viết 
+   * @returns Observable - Dữ liệu bài viết đã tạo  
+   */ 
   create(data: PostDto): Observable<Post> {
     return this.http.post<Post>(POST_API.BASE, data);
   }
 
+  // ============================================
+  // CẬP NHẬT BÀI VIẾT - update
+  // ============================================
+  /**
+   * Cập nhật thông tin bài viết
+   * @param id - ID của bài viết  
+   * @param data - Dữ liệu bài viết   
+   * @returns Observable - Dữ liệu bài viết đã cập nhật  
+   */ 
   update(id: number | string, data: Partial<PostDto>): Observable<Post> {
     return this.http.put<Post>(POST_API.GET_BY_ID(id), data);
   }
 
+  // ============================================
+  // XÓA BÀI VIẾT - delete
+  // ============================================
+  /**
+   * Xóa bài viết
+   * @param id - ID của bài viết  
+   * @returns Observable - Dữ liệu bài viết đã xóa    
+   */ 
   delete(id: number | string): Observable<any> {
     return this.http.delete<any>(POST_API.GET_BY_ID(id));
   }
 
+  // ============================================
+  // TÌM KIẾM BÀI VIẾT - search
+  // ============================================
+  /**
+   * Tìm kiếm bài viết với các tùy chọn phân trang và lọc
+   * @param params - Các tùy chọn để lọc và phân trang
+   * @returns Observable - Dữ liệu bài viết và thông tin phân trang
+   */ 
   search(params?: {
     page?: number;
     limit?: number;
@@ -71,6 +120,15 @@ export class PostService {
     return this.http.get<{ data: Post[]; pagination: any }>(POST_API.SEARCH, { params: httpParams });
   }
 
+  // ============================================
+  // LẤY BÀI VIẾT THEO DANH MỤC - getByCategory
+  // ============================================
+  /**
+   * Lấy danh sách bài viết theo danh mục với các tùy chọn phân trang và lọc
+   * @param categoryId - ID của danh mục  
+   * @param params - Các tùy chọn để lọc và phân trang
+   * @returns Observable - Dữ liệu bài viết và thông tin phân trang
+   */ 
   getByCategory(categoryId: number | string, params?: {
     page?: number;
     limit?: number;
@@ -89,6 +147,15 @@ export class PostService {
     return this.http.get<{ data: Post[]; pagination: any }>(POST_API.GET_BY_CATEGORY(categoryId), { params: httpParams });
   }
 
+  // ============================================
+  // LẤY BÀI VIẾT THEO NGƯỜI DÙNG - getByUser
+  // ============================================
+  /**
+   * Lấy danh sách bài viết theo người dùng với các tùy chọn phân trang và lọc
+   * @param userId - ID của người dùng  
+   * @param params - Các tùy chọn để lọc và phân trang
+   * @returns Observable - Dữ liệu bài viết và thông tin phân trang
+   */ 
   getByUser(userId: number | string, params?: {
     page?: number;
     limit?: number;
@@ -143,11 +210,7 @@ export class PostService {
         }
       });
     }
-
-    // Sử dụng endpoint mới và truyền originalPostId vào URL
     const url = POST_API.GET_FROM_ORIGINAL(originalPostId);
-
-    // Thực hiện request GET với URL và các query params
     return this.http.get<{ data: Post[]; pagination: any }>(url, { params: httpParams });
   }
 
