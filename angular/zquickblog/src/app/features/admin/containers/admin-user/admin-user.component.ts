@@ -17,8 +17,11 @@ import { NzMessageService } from 'ng-zorro-antd/message'; // Import MessageServi
 import { UserService } from '../../../../core/services/user.service'; // Đảm bảo đường dẫn đúng
 import { User } from '../../../../shared/models/user.model'; // Đảm bảo đường dẫn đúng
 
-// Interface User đã sửa (sử dụng interface đã fix ở trên)
-// import { User } from '../../../../shared/models/user.model';
+// Interface cho Role để quản lý danh sách roles
+interface Role {
+  id: number;
+  name: string;
+}
 
 @Component({
   selector: 'app-admin-user',
@@ -45,12 +48,39 @@ import { User } from '../../../../shared/models/user.model'; // Đảm bảo đ�
   styleUrls: ['./admin-user.component.css']
 })
 export class AdminUserComponent implements OnInit {
+  // ============================================ 
+  // **Biến trạng thái và thuộc tính**
+  // ============================================
   searchValue = '';
   selectedRole: string | null = null;
   displayData: User[] = []; // Đổi tên biến dữ liệu hiển thị thành displayData cho nhất quán
   checked = false;
   indeterminate = false;
   setOfCheckedId = new Set<number>();
+
+  // Biến cho form thêm/sửa user
+  isFormVisible = false;
+  formTitle = 'Add New User';
+  submitButtonText = 'Add User';
+  editMode = false;
+  editingUserId: number | null = null;
+
+  // Các trường dữ liệu form
+  username = '';
+  fullname = '';
+  email = '';
+  password = '';
+  confirmPassword = '';
+  selectedRoleId: number | null = null;
+  avatar = '';
+  description = '';
+
+  // Danh sách roles để hiển thị trong form và filter
+  roles: Role[] = [
+    { id: 1, name: 'admin' },
+    { id: 2, name: 'blogger' },
+    { id: 3, name: 'user' }
+  ];
 
   // Thêm biến phân trang
   pageIndex = 1;
@@ -69,6 +99,163 @@ export class AdminUserComponent implements OnInit {
   }
 
   // ============================================
+  // **Form Thêm/Sửa User**
+  // ============================================
+  showForm(): void {
+    this.isFormVisible = true;
+    this.editMode = false;
+    this.editingUserId = null;
+    this.formTitle = 'Add New User';
+    this.submitButtonText = 'Add User';
+    this.resetForm(); // Reset form khi hiển thị
+  }
+
+  // Hàm mới để hiển thị form chỉnh sửa
+  showEditForm(user: User): void {
+    this.isFormVisible = true;
+    this.editMode = true;
+    this.editingUserId = user.id;
+    this.formTitle = 'Edit User';
+    this.submitButtonText = 'Update User';
+    
+    // Điền thông tin vào form
+    this.username = user.username;
+    this.fullname = user.fullname || '';
+    this.email = user.email;
+    this.selectedRoleId = user.role_id;
+    this.avatar = user.avatar || '';
+    this.description = user.description || '';
+    
+    // Mật khẩu để trống khi edit
+    this.password = '';
+    this.confirmPassword = '';
+  }
+
+  hideForm(): void {
+    this.isFormVisible = false;
+    this.resetForm();
+    this.editMode = false;
+    this.editingUserId = null;
+  }
+
+  resetForm(): void {
+    this.username = '';
+    this.fullname = '';
+    this.email = '';
+    this.password = '';
+    this.confirmPassword = '';
+    this.selectedRoleId = null;
+    this.avatar = '';
+    this.description = '';
+  }
+
+  addUser(): void {
+    // Kiểm tra các trường bắt buộc
+    if (!this.username.trim()) {
+      this.message.warning('Vui lòng nhập tên người dùng.');
+      return;
+    }
+
+    if (!this.email.trim()) {
+      this.message.warning('Vui lòng nhập email.');
+      return;
+    }
+
+    // Kiểm tra mật khẩu khi thêm mới
+    if (!this.editMode && !this.password) {
+      this.message.warning('Vui lòng nhập mật khẩu.');
+      return;
+    }
+
+    // Kiểm tra mật khẩu xác nhận
+    if (this.password && this.password !== this.confirmPassword) {
+      this.message.warning('Mật khẩu xác nhận không khớp.');
+      return;
+    }
+
+    this.loading = true;
+
+    // Dữ liệu người dùng
+    const userData: any = {
+      username: this.username.trim(),
+      fullname: this.fullname.trim(),
+      email: this.email.trim(),
+      role_id: this.selectedRoleId
+    };
+
+    // Chỉ thêm mật khẩu nếu có
+    if (this.password) {
+      userData.password = this.password;
+    }
+
+    // Thêm avatar nếu có
+    if (this.avatar.trim()) {
+      userData.avatar = this.avatar.trim();
+    }
+
+    // Thêm description nếu có
+    if (this.description.trim()) {
+      userData.description = this.description.trim();
+    }
+
+    if (this.editMode && this.editingUserId) {
+      // Cập nhật người dùng
+      this.userService.update(this.editingUserId, userData).subscribe({
+        next: (updatedUser) => {
+          console.log('User updated:', updatedUser);
+          this.message.success('Người dùng đã được cập nhật thành công.');
+          this.hideForm();
+          
+          // Cập nhật local state
+          const index = this.displayData.findIndex(item => item.id === this.editingUserId);
+          if (index !== -1) {
+            this.displayData[index] = {...this.displayData[index], ...updatedUser};
+          } else {
+            this.fetchUsers();
+          }
+          
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error("Error updating user:", err);
+          this.loading = false;
+          const errorMessage = err?.error?.message || err?.message || 'Không thể cập nhật người dùng.';
+          this.message.error(errorMessage);
+        }
+      });
+    } else {
+      // Tạo người dùng mới
+      this.userService.create(userData).subscribe({
+        next: (createdUser) => {
+          console.log('User created:', createdUser);
+          this.message.success('Người dùng đã được tạo thành công.');
+          this.hideForm();
+          
+          // Cập nhật danh sách
+          if (this.pageIndex === 1) {
+            if (createdUser) {
+              this.displayData = [createdUser, ...this.displayData];
+              this.total++;
+              this.refreshCheckedStatus();
+            }
+          } else {
+            this.pageIndex = 1;
+            this.fetchUsers();
+          }
+          
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error("Error creating user:", err);
+          this.loading = false;
+          const errorMessage = err?.error?.message || err?.message || 'Không thể tạo người dùng.';
+          this.message.error(errorMessage);
+        }
+      });
+    }
+  }
+
+  // ============================================
   // **Hàm lấy danh sách người dùng**
   // ============================================
   fetchUsers(): void {
@@ -76,12 +263,29 @@ export class AdminUserComponent implements OnInit {
     this.setOfCheckedId.clear(); // Clear selected items khi fetch mới
     this.refreshCheckedStatus();
 
-    this.userService.getAll({
+    const params: any = {
       page: this.pageIndex,
       limit: this.pageSize,
-      search: this.searchValue || undefined,
       includeRelations: true,
-    }).subscribe({
+    };
+
+    // Thêm tham số tìm kiếm nếu có
+    if (this.searchValue && this.searchValue.trim() !== '') {
+      params.search = this.searchValue.trim();
+    }
+    
+    // Thêm tham số lọc theo role nếu có
+    if (this.selectedRole) {
+      // Tìm role_id tương ứng với role name
+      const selectedRoleObj = this.roles.find(role => role.name === this.selectedRole);
+      if (selectedRoleObj) {
+        params.role_id = selectedRoleObj.id;
+      }
+    }
+
+    console.log('API params:', params);
+
+    this.userService.getAll(params).subscribe({
       next: (res) => {
         this.displayData = res.data || [];
         this.total = res.pagination?.total || 0;
@@ -116,8 +320,21 @@ export class AdminUserComponent implements OnInit {
   // **Tìm kiếm và lọc**
   // ============================================
   searchAndFilter(): void {
+    console.log('Filter values:', {
+      search: this.searchValue,
+      role: this.selectedRole
+    });
+    
     this.pageIndex = 1; // Reset về trang 1 khi tìm kiếm/lọc mới
     this.fetchUsers(); // Fetch dữ liệu với tham số mới
+  }
+
+  // Hàm reset filters
+  resetFilters(): void {
+    this.searchValue = '';
+    this.selectedRole = null;
+    this.pageIndex = 1;
+    this.fetchUsers();
   }
 
   // ============================================
@@ -159,6 +376,13 @@ export class AdminUserComponent implements OnInit {
       case 'user': return 'green';
       default: return 'default';
     }
+  }
+
+  // Lấy tên role từ roleId
+  getRoleName(roleId: number | null | undefined): string {
+    if (!roleId) return 'N/A';
+    const role = this.roles.find(r => r.id === roleId);
+    return role ? role.name : 'Unknown';
   }
 
    // Hàm getAuthorAvatar tương tự Post Component (dùng cho avatar user)
@@ -213,8 +437,17 @@ export class AdminUserComponent implements OnInit {
   }
 
   deleteUserFromList(userId: number): void {
+      // Lọc ra user có ID cần xóa
       this.displayData = this.displayData.filter(item => item.id !== userId);
-      this.fetchUsers(); // Fetch lại dữ liệu để cập nhật bảng và paging
+      
+      // Tính toán lại số lượng
+      this.total = Math.max(0, this.total - 1);
+      
+      // Chỉ gọi lại nếu trang hiện tại trống
+      if (this.displayData.length === 0 && this.pageIndex > 1) {
+        this.pageIndex--;
+        this.fetchUsers();
+      }
 
       this.setOfCheckedId.delete(userId);
       this.refreshCheckedStatus();

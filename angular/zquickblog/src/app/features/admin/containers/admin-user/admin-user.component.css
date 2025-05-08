@@ -26,6 +26,46 @@
   margin: 0;
 }
 
+/* Form Styles */
+.form-container {
+  margin-bottom: 24px;
+}
+
+.form-card {
+  background-color: var(--admin-bg-secondary);
+  border: 1px solid var(--admin-border);
+}
+
+.form-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--admin-text-primary);
+}
+
+.form-row {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--admin-text-secondary);
+  font-weight: 500;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+/* Filter section */
 .filter-section {
   display: flex;
   flex-wrap: wrap;
@@ -39,32 +79,48 @@
   min-width: 200px;
 }
 
-.role-filter {
+.filters {
   display: flex;
+  gap: 12px;
   align-items: center;
-  gap: 8px;
-}
-
-.filter-label {
-  color: var(--admin-text-secondary);
-  font-size: 0.875rem;
 }
 
 .filter-select {
   min-width: 150px;
 }
 
+.reset-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--admin-text-secondary);
+  border-color: var(--admin-border);
+  transition: all 0.3s;
+}
+
+.reset-button:hover {
+  color: var(--admin-delete);
+  border-color: var(--admin-delete);
+}
+
+/* User display */
 .user-cell {
   display: flex;
   align-items: center;
 }
 
-.user-name {
+.user-fullname {
   margin-left: 12px;
   color: var(--admin-text-primary);
   font-weight: 500;
 }
 
+.user-name {
+  font-weight: 500;
+  color: var(--admin-text-primary);
+}
+
+/* Action buttons */
 .action-buttons {
   white-space: nowrap;
 }
@@ -85,6 +141,7 @@
   color: var(--admin-delete-hover);
 }
 
+/* Pagination */
 .pagination-container {
   display: flex;
   justify-content: space-between;

@@ -23,7 +23,8 @@ class UserController {
                 search: req.query.search,
                 orderBy: req.query.orderBy || 'createdAt',
                 order: req.query.order || 'DESC',
-                includeRelations: req.query.includeRelations || false
+                includeRelations: req.query.includeRelations || false,
+                role_id: req.query.role_id
               };
 
             const result = await userService.getAllUsers(options);

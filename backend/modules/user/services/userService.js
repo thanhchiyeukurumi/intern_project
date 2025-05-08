@@ -19,6 +19,7 @@ class UserService {
             const orderBy = options.orderBy || 'createdAt';
             const order = options.order || 'DESC';
             const includeRelations = options.includeRelations || false;
+            const roleId = options.role_id ? parseInt(options.role_id, 10) : null;
             
             const offset = (page - 1) * limit;
             const where = {};
@@ -27,6 +28,10 @@ class UserService {
                 where[Op.or] = [
                     { username: { [Op.like]: `%${search}%` } }
                 ]; 
+            }
+
+            if (roleId) {
+                where.role_id = roleId;
             }
 
             const queryOptions = {
