@@ -23,6 +23,8 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: BloggerDashboardComponent },
+      
+      // Quản lý bài viết
       { path: 'posts', component: BloggerPostsComponent },
       { 
         path: 'posts/create', 
@@ -30,14 +32,18 @@ const routes: Routes = [
         canActivate: [browserOnlyGuard]
       },
       { 
-        path: 'posts/edit/:id', 
+        path: 'posts/:id/edit', 
         component: BloggerPostCreateComponent,
         canActivate: [browserOnlyGuard]
       },
+      
+      // Quản lý nội dung khác
       { path: 'comments', component: BloggerCommentsComponent },
-      { path: 'settings', component: BloggerSettingsComponent },
       { path: 'media', component: BloggerMediaComponent },
+      
+      // Thông tin cá nhân và cài đặt
       { path: 'profile', component: BloggerProfileComponent },
+      { path: 'settings', component: BloggerSettingsComponent }
     ]
   }
 ];

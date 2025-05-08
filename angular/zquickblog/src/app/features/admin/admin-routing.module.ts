@@ -13,10 +13,16 @@ const routes: Routes = [
     component: AdminLayoutComponent,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      
+      // Trang tổng quan
       { path: 'dashboard', component: AdminDashboardComponent },
+      
+      // Quản lý nội dung
       { path: 'posts', component: AdminPostComponent },
-      { path: 'users', component: AdminUserComponent },
       { path: 'categories', component: AdminCategoryComponent },
+      
+      // Quản lý người dùng và cài đặt
+      { path: 'users', component: AdminUserComponent },
       { path: 'settings', component: AdminSettingComponent },
     ]
   }

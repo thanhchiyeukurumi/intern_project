@@ -10,12 +10,12 @@ export const routes: Routes = [
     loadChildren: () => import('./features/blogger/blogger.module').then(m => m.BloggerModule)
   },
   {
-    path: 'public',
+    path: '',
     loadChildren: () => import('./features/public/public.module').then(m => m.PublicModule) 
   },
   {
-    path: '',
-    redirectTo: 'admin',
+    path: '**',
+    redirectTo: '',
     pathMatch: 'full'
   }
 ];
