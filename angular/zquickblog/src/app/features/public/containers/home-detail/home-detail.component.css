@@ -10,6 +10,13 @@
     --button-bg: #000000;
     --button-text: #ffffff;
     --button-hover-bg: #333333;
+    --primary-color: #1890ff;
+    --success-color: #52c41a;
+    --warning-color: #faad14;
+    --error-color: #f5222d;
+    --info-color: #1890ff;
+    --skeleton-bg: #f2f2f2;
+    --skeleton-highlight: #e6e6e6;
   }
   
   [data-theme="dark"] :host {
@@ -23,6 +30,13 @@
     --button-bg: #ffffff;
     --button-text: #000000;
     --button-hover-bg: #e5e7eb;
+    --primary-color: #177ddc;
+    --success-color: #49aa19;
+    --warning-color: #d89614;
+    --error-color: #d32029;
+    --info-color: #177ddc;
+    --skeleton-bg: #333333;
+    --skeleton-highlight: #444444;
   }
   
   /* -- Component Styles -- */
@@ -36,6 +50,7 @@
     margin-left: auto;
     margin-right: auto;
     padding: 2rem 1rem; /* Tailwind py-8 px-4 */
+    position: relative; /* For back-to-top button */
   }
   
   @media (min-width: 640px) { /* sm */
@@ -51,6 +66,141 @@
     }
   }
   
+  /* Search and Filter Bar */
+  .search-filter-bar {
+    margin-bottom: 1.5rem;
+    background-color: var(--bg-card);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    align-items: center;
+  }
+  
+  .filter-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-right: 0.5rem;
+  }
+  
+  .empty-tag {
+    background-color: var(--tag-bg) !important;
+    color: var(--text-secondary) !important;
+  }
+  
+  /* Featured Post Styles */
+  .featured-post-card {
+    margin-bottom: 2rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+  }
+  
+  .featured-post-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  }
+  
+  .featured-post-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  @media (min-width: 768px) {
+    .featured-post-content {
+      flex-direction: row;
+      gap: 1.5rem;
+    }
+  }
+  
+  .featured-image-container {
+    flex: 0 0 100%;
+    max-height: 200px;
+    overflow: hidden;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+  }
+  
+  @media (min-width: 768px) {
+    .featured-image-container {
+      flex: 0 0 40%;
+      max-height: none;
+      margin-bottom: 0;
+    }
+  }
+  
+  .featured-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+  }
+  
+  .featured-post-card:hover .featured-image {
+    transform: scale(1.05);
+  }
+  
+  .featured-details {
+    flex: 1;
+  }
+  
+  .featured-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 0.75rem 0;
+    line-height: 1.3;
+  }
+  
+  .featured-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+  
+  .featured-title a:hover {
+    text-decoration: underline;
+  }
+  
+  .featured-author {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .author-name {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+  
+  .featured-description {
+    margin-bottom: 1rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  
+  .featured-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+  }
+  
   /* Main Posts Area */
   .main-posts-list {
     display: flex;
@@ -62,20 +212,48 @@
     background-color: var(--bg-card);
     border-radius: 0.5rem; /* Tailwind rounded-lg */
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* Tailwind shadow */
-    /* nz-card đã có padding, nhưng có thể ghi đè nếu cần */
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden; /* Ensure ribbon doesn't overflow */
+  }
+  
+  .post-preview-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Animation for cards */
+  .animate-card {
+    animation: fadeInUp 0.5s ease-out forwards;
+    opacity: 0;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
   /* Ghi đè padding mặc định của nz-card-body nếu cần */
   :host ::ng-deep .post-preview-card .ant-card-body {
-     padding: 1.5rem; /* Tailwind p-6 */
+    padding: 1.5rem; /* Tailwind p-6 */
   }
   
+  .author-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
   
   .post-header {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     margin-bottom: 1rem; /* Tailwind mb-4 */
-    gap: 1rem; /* Khoảng cách giữa avatar và title */
+    gap: 0.75rem; /* Khoảng cách giữa avatar và title */
   }
   
   .author-avatar {
@@ -92,8 +270,10 @@
   .post-title a {
     color: inherit; /* Kế thừa màu từ h3 */
     text-decoration: none;
+    transition: color 0.2s;
   }
   .post-title a:hover {
+    color: var(--primary-color);
     text-decoration: underline;
   }
   
@@ -101,6 +281,10 @@
     /* color: var(--text-secondary); /* nzType="secondary" xử lý việc này */
     margin-bottom: 1rem; /* Tailwind mb-4 */
     line-height: 1.6;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
   }
   
   .post-footer {
@@ -109,9 +293,87 @@
     align-items: center;
   }
   
+  .post-meta-left {
+    display: flex;
+    gap: 1rem;
+  }
+  
   .post-meta {
     color: var(--text-tertiary); /* Tailwind text-gray-500 */
     font-size: 0.875rem; /* ~14px */
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  
+  .post-meta [nz-icon] {
+    font-size: 0.875rem;
+  }
+  
+  .read-more-link a {
+    color: var(--primary-color);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    transition: gap 0.2s;
+  }
+  
+  .read-more-link a:hover {
+    gap: 0.5rem;
+  }
+  
+  /* Skeleton Styles */
+  .skeleton-card {
+    min-height: 200px;
+  }
+  
+  .skeleton-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .skeleton-header {
+    height: 2rem;
+    background-color: var(--skeleton-bg);
+    border-radius: 0.25rem;
+    width: 70%;
+  }
+  
+  .skeleton-body {
+    height: 5rem;
+    background-color: var(--skeleton-bg);
+    border-radius: 0.25rem;
+  }
+  
+  .skeleton-footer {
+    height: 1rem;
+    background-color: var(--skeleton-bg);
+    border-radius: 0.25rem;
+    width: 40%;
+  }
+  
+  /* No Posts Message */
+  .no-posts-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--text-tertiary);
+    background-color: var(--bg-card);
+    border-radius: 0.5rem;
+  }
+  
+  /* End of Posts */
+  .end-of-posts {
+    margin-top: 1rem;
+    text-align: center;
   }
   
   /* More Posts Button */
@@ -131,6 +393,7 @@
     padding-bottom: 0.75rem !important;
     height: auto !important;
     line-height: 1.5rem !important;
+    transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s !important;
   }
   
   .explore-button:hover,
@@ -138,6 +401,8 @@
     background-color: var(--button-hover-bg) !important;
     border-color: var(--button-hover-bg) !important;
     color: var(--button-text) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
   
   /* Right Sidebar */
@@ -154,14 +419,35 @@
   }
   
   .sidebar-section {
-    /* Style chung cho các section trong sidebar */
+    background-color: var(--bg-card);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  .mobile-search {
+    display: none;
+  }
+  
+  @media (max-width: 768px) {
+    .mobile-search {
+      display: block;
+    }
   }
   
   .sidebar-title {
     font-size: 1.25rem; /* Tailwind text-xl */
     font-weight: 700; /* Tailwind font-bold */
-    margin-bottom: 0.75rem; /* Gần giống mb-2 */
+    margin-bottom: 1rem; /* Gần giống mb-2 */
     color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .section-icon {
+    color: var(--primary-color);
+    font-size: 1.125rem;
   }
   
   /* Random Posts List */
@@ -171,18 +457,72 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem; /* Tailwind space-y-2 */
+    gap: 1rem; /* Increased from 0.5rem */
+  }
+  
+  .sidebar-list-item {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.75rem;
+    transition: transform 0.2s;
+  }
+  
+  .sidebar-list-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  
+  .sidebar-list-item:hover {
+    transform: translateX(5px);
+  }
+  
+  /* Animation for sidebar items */
+  .animate-item {
+    animation: fadeInRight 0.5s ease-out forwards;
+    opacity: 0;
+  }
+  
+  @keyframes fadeInRight {
+    from {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .post-thumbnail {
+    flex-shrink: 0;
+    border-radius: 0.25rem;
+    overflow: hidden;
+  }
+  
+  .post-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .post-date {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
   }
   
   .sidebar-link {
-    color: var(--text-secondary); /* Tailwind text-gray-700 */
+    color: var(--text-primary); /* Darker than before */
     text-decoration: none;
     transition: color 0.3s;
+    font-weight: 500;
+    line-height: 1.3;
+    font-size: 0.9375rem;
   }
   
   .sidebar-link:hover {
-    color: var(--text-primary); /* Tailwind hover:text-gray-900 */
-    text-decoration: underline;
+    color: var(--primary-color); /* Tailwind hover:text-gray-900 */
   }
   
   /* Recommended Topics */
@@ -200,15 +540,88 @@
     /* padding: 0.25rem 0.75rem; /* Tailwind px-3 py-1 */ /* nz-tag có padding riêng */
     font-size: 0.875rem;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
+    transition: all 0.3s;
   }
   
   .topic-tag:hover {
-     background-color: var(--button-outline-hover-bg) !important; /* Màu xám đậm hơn khi hover */
-     color: var(--text-primary) !important;
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    transform: translateY(-2px);
   }
   
   /* Link bao ngoài tag nếu dùng */
   .topic-tags a {
-     text-decoration: none;
+    text-decoration: none;
+  }
+  
+  /* Newsletter Section */
+  .newsletter-section {
+    background-color: var(--bg-card);
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--primary-color);
+  }
+  
+  .newsletter-description {
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+  }
+  
+  .newsletter-form {
+    margin-top: 1rem;
+  }
+  
+  /* Back to Top Button */
+  .back-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 3rem;
+    height: 3rem;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s, background-color 0.3s;
+    z-index: 10;
+  }
+  
+  .back-to-top:hover {
+    background-color: var(--button-bg);
+    transform: translateY(-5px);
+  }
+  
+  .back-to-top [nz-icon] {
+    font-size: 1.25rem;
+  }
+  
+  /* Badge styles */
+  .featured-post-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    z-index: 1;
+    border-bottom-left-radius: 0.5rem;
+  }
+  
+  .new-post-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: var(--success-color);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    z-index: 1;
+    border-bottom-left-radius: 0.5rem;
   }

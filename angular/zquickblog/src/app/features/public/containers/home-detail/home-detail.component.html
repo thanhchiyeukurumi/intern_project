@@ -3,12 +3,86 @@
   
       <!-- Main Posts Area (chiếm 2/3 trên LG) -->
       <div nz-col [nzXs]="24" [nzLg]="16"> <!-- lg:col-span-2 -->
+        <!-- Thêm thanh tìm kiếm/lọc ở đầu -->
+        <div class="search-filter-bar">
+          <nz-input-group [nzSuffix]="suffixIconSearch">
+            <input type="text" nz-input [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Tìm kiếm bài viết..." />
+          </nz-input-group>
+          <ng-template #suffixIconSearch>
+            <span nz-icon nzType="search"></span>
+          </ng-template>
+          <div class="filter-tags">
+            <span class="filter-label">Lọc theo:</span>
+            <nz-tag *ngFor="let filter of activeFilters; let i = index" 
+                   [nzColor]="primaryColor"
+                   nzMode="closeable"
+                   (nzOnClose)="removeFilter(i)">
+              {{ filter.name }}
+            </nz-tag>
+            <nz-tag *ngIf="activeFilters.length === 0" class="empty-tag">
+              Tất cả
+            </nz-tag>
+          </div>
+        </div>
+  
+        <!-- Featured Post Nổi bật ở đầu -->
+        <nz-card *ngIf="featuredPost" class="featured-post-card">
+          <div class="featured-post-badge">Nổi bật</div>
+          <div class="featured-post-content">
+            <!-- <div class="featured-image-container">
+              <img class="featured-image" [src]="featuredPost.image || 'assets/images/placeholder.jpg'" [alt]="featuredPost.title">
+            </div> -->
+            <div class="featured-details">
+              <h2 class="featured-title">
+                <a [routerLink]="['/post', featuredPost.id]">{{ featuredPost.title }}</a>
+              </h2>
+              <div class="featured-author">
+                <nz-avatar [nzSize]="36" [nzSrc]="featuredPost.authorAvatar" nzIcon="user"></nz-avatar>
+                <span class="author-name">{{ featuredPost.authorName || 'Anonymous' }}</span>
+              </div>
+              <p nz-typography nzType="secondary" class="featured-description">
+                {{ featuredPost.description }}
+              </p>
+              <div class="featured-meta">
+                <span class="meta-item">
+                  <span nz-icon nzType="calendar" nzTheme="outline"></span>
+                  {{ featuredPost.date }}
+                </span>
+                <span class="meta-item">
+                  <span nz-icon nzType="message" nzTheme="outline"></span>
+                  {{ featuredPost.commentCount }} bình luận
+                </span>
+                <span class="meta-item">
+                  <span nz-icon nzType="eye" nzTheme="outline"></span>
+                  {{ featuredPost.views }} lượt xem
+                </span>
+              </div>
+            </div>
+          </div>
+        </nz-card>
+  
+        <!-- Danh sách bài viết chính -->
         <div class="main-posts-list">
+          <!-- Skeleton loading khi đang tải -->
+          <nz-card *ngIf="loading && posts.length === 0" class="post-preview-card skeleton-card" [nzLoading]="true">
+            <div class="skeleton-content">
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-footer"></div>
+            </div>
+          </nz-card>
+  
           <!-- Lặp qua danh sách bài viết -->
-          <nz-card *ngFor="let post of posts" class="post-preview-card">
+          <nz-card *ngFor="let post of posts; let i = index" 
+                  class="post-preview-card"
+                  [class.animate-card]="true" 
+                  [style.animation-delay]="i * 0.1 + 's'">
+            <div class="new-post-badge" *ngIf="isNewPost(post)">Mới</div>
             <div class="post-header">
-              <nz-avatar [nzSize]="40" [nzSrc]="post.authorAvatar" nzIcon="user" class="author-avatar"></nz-avatar>
-              <!-- Sử dụng thẻ h2 hoặc h3 cho tiêu đề -->
+              <div class="author-info">
+                <nz-avatar [nzSize]="40" [nzSrc]="post.authorAvatar" nzIcon="user" class="author-avatar"></nz-avatar>
+                <span class="author-name" *ngIf="post.authorName">{{ post.authorName }}</span>
+              </div>
               <h3 class="post-title">
                 <a [routerLink]="['/post', post.id]">{{ post.title }}</a>
               </h3>
@@ -17,16 +91,48 @@
               {{ post.description }}
             </p>
             <div class="post-footer">
-              <span class="post-meta">{{ post.date }}</span>
-              <span class="post-meta">{{ post.commentCount }} comment{{ post.commentCount !== 1 ? 's' : '' }}</span>
+              <div class="post-meta-left">
+                <span class="post-meta">
+                  <span nz-icon nzType="calendar" nzTheme="outline"></span>
+                  {{ post.date }}
+                </span>
+                <span class="post-meta">
+                  <span nz-icon nzType="message" nzTheme="outline"></span>
+                  {{ post.commentCount }} bình luận
+                </span>
+              </div>
+              <span class="read-more-link">
+                <a [routerLink]="['/post', post.id]">Đọc tiếp <span nz-icon nzType="arrow-right" nzTheme="outline"></span></a>
+              </span>
             </div>
           </nz-card>
   
+          <!-- Skeleton loading khi tải thêm -->
+          <nz-card *ngIf="loading && posts.length > 0" class="post-preview-card skeleton-card" [nzLoading]="true">
+            <div class="skeleton-content">
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-footer"></div>
+            </div>
+          </nz-card>
+  
+          <!-- Không tìm thấy bài viết -->
+          <div *ngIf="!loading && posts.length === 0" class="no-posts-message">
+            <span nz-icon nzType="inbox" nzTheme="outline" style="font-size: 48px"></span>
+            <p>Không tìm thấy bài viết nào</p>
+            <button nz-button nzType="primary" (click)="resetFilters()">Xem tất cả bài viết</button>
+          </div>
+  
           <!-- More Posts Button -->
-          <div class="more-posts-action">
-            <button nz-button class="explore-button" (click)="loadMorePosts()">
-              Explore More Posts
+          <div *ngIf="hasMorePosts && posts.length > 0" class="more-posts-action">
+            <button nz-button class="explore-button" [nzLoading]="loading" (click)="loadMorePosts()">
+              Xem thêm bài viết
             </button>
+          </div>
+  
+          <!-- End of posts message -->
+          <div *ngIf="!hasMorePosts && posts.length > 0" class="end-of-posts">
+            <nz-divider nzText="Đã xem hết bài viết"></nz-divider>
           </div>
         </div>
       </div>
@@ -34,31 +140,76 @@
       <!-- Right Sidebar (chiếm 1/3 trên LG, ẩn trên màn hình nhỏ) -->
       <div nz-col [nzXs]="0" [nzLg]="8" class="right-sidebar"> <!-- lg:col-span-1, hidden on xs -->
         <div class="sidebar-sticky-content">
+          <!-- Thêm search bar cho mobile -->
+          <div class="sidebar-section mobile-search">
+            <nz-input-group [nzSuffix]="suffixIconSearch2">
+              <input type="text" nz-input placeholder="Tìm kiếm..." />
+            </nz-input-group>
+            <ng-template #suffixIconSearch2>
+              <span nz-icon nzType="search"></span>
+            </ng-template>
+          </div>
+  
           <!-- Random Posts -->
           <div class="sidebar-section">
-            <h2 nz-typography class="sidebar-title">Random Posts</h2>
+            <h2 nz-typography class="sidebar-title">
+              <span nz-icon nzType="fire" nzTheme="fill" class="section-icon"></span>
+              Bài viết nổi bật
+            </h2>
             <ul class="sidebar-list">
-              <li *ngFor="let randomPost of randomPosts">
-                <a [routerLink]="randomPost.url" class="sidebar-link">{{ randomPost.title }}</a>
+              <li *ngFor="let randomPost of randomPosts; let i = index" 
+                  class="sidebar-list-item"
+                  [class.animate-item]="true"
+                  [style.animation-delay]="i * 0.1 + 's'">
+                <nz-avatar *ngIf="randomPost.image" shape="square" [nzSize]="50" [nzSrc]="randomPost.image" class="post-thumbnail"></nz-avatar>
+                <div class="post-info">
+                  <a [routerLink]="randomPost.url" class="sidebar-link">{{ randomPost.title }}</a>
+                  <span class="post-date">{{ randomPost.date || 'Gần đây' }}</span>
+                </div>
               </li>
             </ul>
           </div>
   
           <!-- Recommended Topics -->
           <div class="sidebar-section">
-            <h2 nz-typography class="sidebar-title">Recommended topics</h2>
+            <h2 nz-typography class="sidebar-title">
+              <span nz-icon nzType="tag" nzTheme="fill" class="section-icon"></span>
+              Chủ đề đề xuất
+            </h2>
             <div class="topic-tags">
               <a *ngFor="let topic of recommendedTopics"
-                 [routerLink]="['/category', topic.slug]">
+                 [routerLink]="['/category', topic.slug]"
+                 (click)="addFilter(topic)">
                 <nz-tag class="topic-tag">{{ topic.name }}</nz-tag>
               </a>
-              <!-- Hoặc dùng button nếu không phải link
-              <nz-tag *ngFor="let topic of recommendedTopics" nzMode="checkable" class="topic-tag">{{ topic.name }}</nz-tag>
-              -->
+            </div>
+          </div>
+  
+          <!-- Theo dõi qua email -->
+          <div class="sidebar-section newsletter-section">
+            <h2 nz-typography class="sidebar-title">
+              <span nz-icon nzType="mail" nzTheme="fill" class="section-icon"></span>
+              Đăng ký nhận bài viết mới
+            </h2>
+            <p class="newsletter-description">Nhận thông báo khi có bài viết mới</p>
+            <div class="newsletter-form">
+              <nz-input-group [nzSuffix]="suffixButton">
+                <input type="email" nz-input placeholder="Email của bạn" [(ngModel)]="emailSubscribe" />
+              </nz-input-group>
+              <ng-template #suffixButton>
+                <button nz-button nzType="primary" (click)="subscribeNewsletter()">
+                  <span nz-icon nzType="send"></span>
+                </button>
+              </ng-template>
             </div>
           </div>
         </div>
       </div>
   
     </div>
+  </div>
+
+  <!-- Back to top button -->
+  <div class="back-to-top" *ngIf="showBackToTop" (click)="scrollToTop()">
+    <span nz-icon nzType="arrow-up" nzTheme="outline"></span>
   </div>
