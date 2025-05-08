@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Pipe, PipeTransform, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, Pipe, PipeTransform, HostListener, ViewEncapsulation } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -111,7 +111,8 @@ export class SafeHtmlPipe implements PipeTransform {
     SafeHtmlPipe,
   ],
   templateUrl: './post-detail.component.html',
-  styleUrls: ['./post-detail.component.css']
+  styleUrls: ['./post-detail.component.css'],
+  encapsulation: ViewEncapsulation.None //fix loi anh
 })
 export class PostDetailComponent implements OnInit, OnDestroy {
   // Dữ liệu bài viết
@@ -196,6 +197,22 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+
+  //fix anh
+  // Sau phần ngOnDestroy, thêm hàm:
+ngAfterViewChecked() {
+  // Tìm tất cả hình ảnh trong nội dung bài viết
+  if (document) {
+    const images = document.querySelectorAll('.post-body img');
+    if (images.length > 0) {
+      images.forEach(img => {
+        img.setAttribute('style', 'max-width: 100%; height: auto; display: block; margin: 1rem auto; border-radius: 0.5rem;');
+      });
+    }
+  }
+}
+
 
   // Theo dõi scroll để hiển thị nút back-to-top
   @HostListener('window:scroll', [])

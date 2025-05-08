@@ -99,7 +99,7 @@ export class AllCategoriesComponent implements OnInit {
   isLoadingMore = false;
   currentPage = 1;
   totalPages = 1;
-  categoriesPerPage = 6;
+  categoriesPerPage = 9999;
   hasMoreCategories = false;
   allCategories: Category[] = [];
 

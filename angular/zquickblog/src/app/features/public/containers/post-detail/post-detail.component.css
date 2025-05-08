@@ -53,6 +53,8 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   padding: 2rem;
   margin-bottom: 2rem;
+  border: 1px solid #177ddc;
+  /* overflow: hidden; */
 }
 
 /* Header bài viết */
@@ -171,13 +173,15 @@
 
 .post-body p {
   margin-bottom: 1.5rem;
+  color: #177ddc;
 }
 
 .post-body img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 0.5rem;
-  margin: 1.5rem 0;
+  max-width: 100%; /* QUAN TRỌNG: Giới hạn chiều rộng tối đa bằng container */
+  height: auto;     /* QUAN TRỌNG: Để trình duyệt tự tính chiều cao theo tỷ lệ */
+  display: block;   /* Giúp loại bỏ khoảng trắng dưới ảnh và căn giữa dễ hơn */
+  margin: 1.5rem auto; /* Tăng margin trên dưới và căn giữa ảnh */
+  border-radius: 0.5rem; /* Giữ bo góc */
 }
 
 .post-body a {

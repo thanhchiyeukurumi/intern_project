@@ -18,6 +18,12 @@ export interface Comment {
     email: string;
     avatar?: string;
   };
+  User?:{
+    id: number;
+    username: string;
+    email: string;
+    avatar?: string;
+  };
   post?: {
     id: number;
     title: string;

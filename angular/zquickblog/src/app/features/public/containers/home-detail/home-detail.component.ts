@@ -80,7 +80,7 @@ interface Filter {
     NzTagModule,
     NzButtonModule,
     NzIconModule,
-    NzDividerModule,
+    NzDividerModule,  
     NzInputModule,
     NzEmptyModule,
     NzSkeletonModule,

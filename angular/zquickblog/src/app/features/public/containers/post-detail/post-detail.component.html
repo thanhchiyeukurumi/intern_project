@@ -91,7 +91,7 @@
                 <div class="add-comment-form" [class.login-required]="!isLoggedIn">
                   <div *ngIf="!isLoggedIn" class="login-prompt">
                     <p>Vui lòng đăng nhập để bình luận</p>
-                    <a routerLink="/auth/login" nz-button nzType="primary">Đăng nhập</a>
+                    <a routerLink="/login" nz-button nzType="primary">Đăng nhập</a>
                   </div>
                   
                   <nz-form-item *ngIf="isLoggedIn">
@@ -123,7 +123,7 @@
                     <div class="comments-list">
                       <nz-comment 
                         *ngFor="let comment of comments; let i = index"
-                        [nzAuthor]="comment.user?.username || 'Người dùng ẩn danh'"
+                        [nzAuthor]="comment.User?.username || 'Người dùng ẩn danh'"
                         [nzDatetime]="formatCommentDate(comment.created_at || comment.createdAt)"
                         [class.animate-comment]="true"
                         [style.animation-delay]="i * 0.1 + 's'">
