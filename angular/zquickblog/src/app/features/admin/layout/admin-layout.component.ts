@@ -6,7 +6,7 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
-import { ThemeService } from '../../../../core/services/theme.service';
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-admin-layout',

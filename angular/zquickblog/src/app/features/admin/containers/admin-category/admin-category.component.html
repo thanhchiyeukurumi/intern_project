@@ -1,4 +1,5 @@
 <nz-card ngSkipHydration>
+  <!-- Category Header -->
   <div class="header-container">
     <div class="title-section">
       <div>
@@ -13,7 +14,7 @@
     <!-- Category Form -->
     <div *ngIf="isFormVisible" class="form-container">
       <nz-card class="form-card">
-        <h3 class="form-title">Add New Category</h3>
+        <h3 class="form-title">{{ formTitle }}</h3>
 
         <div class="form-row">
           <label class="form-label">Category Name</label>
@@ -33,11 +34,12 @@
 
         <div class="form-actions">
           <button nz-button nzType="default" (click)="hideForm()">Cancel</button>
-          <button nz-button nzType="primary" (click)="addCategory()">Add Category</button>
+          <button nz-button nzType="primary" (click)="addCategory()">{{ submitButtonText }}</button>
         </div>
       </nz-card>
     </div>
 
+    <!-- Category Table -->
     <nz-table
       #basicTable
       [nzData]="displayData"      
@@ -47,25 +49,21 @@
       <thead>
         <tr>
           <th [nzWidth]="'50px'" [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
-          <th>Name</th>
-          <th>Parent</th>
-          <!-- Xóa cột Count nếu API không trả về -->
-          <!-- <th>Count</th> -->
+          <th [nzWidth]="'500px'">Name</th>
+          <th [nzWidth]="'500px'">Parent</th>
           <th [nzAlign]="'right'">Actions</th>
         </tr>
       </thead>
-      <!-- Sử dụng *ngIf hoặc template nzTbody như đã thảo luận cho Hydration -->
+
        <tbody *ngIf="displayData.length > 0">
         <tr *ngFor="let data of displayData"> <!-- Thêm trackBy -->
           <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
           <td>{{ data.name }}</td>
-          <!-- Lấy tên parent category từ parent_id bằng hàm hỗ trợ -->
           <td>{{ getParentCategoryName(data.parent_id) }}</td>
-          <!-- Xóa cột Count -->
-          <!-- <td>{{ data.count || 0 }}</td> -->
+
           <td [nzAlign]="'right'" class="action-buttons">
-            <!-- Nút Edit - Tạm giữ -->
-            <button nz-button nzType="link" class="edit-button">
+            <!-- Nút Edit - Kết nối với showEditForm -->
+            <button nz-button nzType="link" class="edit-button" (click)="showEditForm(data)">
               <i nz-icon nzType="edit"></i>
             </button>
             <!-- Nút Delete - Gắn sự kiện click -->
