@@ -13,6 +13,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider'; // Có thể cần cho 
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { finalize } from 'rxjs/operators';
 
 // Thêm CategoryService và Category model
 import { CategoryService } from '../../../../core/services/category.service';
@@ -95,6 +96,12 @@ export class AllCategoriesComponent implements OnInit {
   ];
 
   isLoading = false;
+  isLoadingMore = false;
+  currentPage = 1;
+  totalPages = 1;
+  categoriesPerPage = 6;
+  hasMoreCategories = false;
+  allCategories: Category[] = [];
 
   constructor(
     private categoryService: CategoryService,
@@ -110,25 +117,82 @@ export class AllCategoriesComponent implements OnInit {
   loadCategories(): void {
     this.isLoading = true;
     this.categoryService.getAll({
-      limit: 20, // Giới hạn số lượng danh mục
       orderBy: 'name',
-      order: 'ASC'
-    }).subscribe({
+      order: 'ASC',
+      limit: this.categoriesPerPage, // Thêm limit
+      page: this.currentPage // Thêm page để hỗ trợ phân trang
+    })
+    .pipe(
+      finalize(() => this.isLoading = false)
+    )
+    .subscribe({
       next: (response) => {
         if (response.data && response.data.length) {
+          // Lưu tất cả danh mục
+          this.allCategories = response.data;
+          
           // Lấy danh mục cho thanh pills
           this.createPopularTopicPills(response.data);
           
-          // Lấy danh mục cho featured topics
-          this.createFeaturedTopics(response.data);
+          // Tính toán tổng số trang
+          this.totalPages = Math.ceil(response.data.length / this.categoriesPerPage);
+          this.hasMoreCategories = this.currentPage < this.totalPages;
+          
+          // Lấy danh mục cho featured topics (chỉ trang đầu tiên)
+          this.createFeaturedTopics(response.data.slice(0, this.categoriesPerPage));
         }
-        this.isLoading = false;
       },
       error: (error) => {
         console.error('Lỗi khi tải danh mục:', error);
         this.messageService.error('Không thể tải danh mục. Vui lòng thử lại sau.');
-        this.isLoading = false;
       }
+    });
+  }
+
+  // Tải thêm danh mục khi bấm nút "Khám phá thêm chủ đề"
+  loadMoreCategories(): void {
+    if (this.isLoadingMore || !this.hasMoreCategories) return;
+    
+    this.isLoadingMore = true;
+    this.currentPage++;
+    
+    // Tính vị trí bắt đầu và kết thúc cho trang tiếp theo
+    const startIndex = (this.currentPage - 1) * this.categoriesPerPage;
+    const endIndex = Math.min(startIndex + this.categoriesPerPage, this.allCategories.length);
+    
+    // Lấy danh mục cho trang tiếp theo
+    const nextPageCategories = this.allCategories.slice(startIndex, endIndex);
+    
+    // Tạo và thêm vào danh sách featured topics hiện tại
+    const newTopics = nextPageCategories.map((category, index) => {
+      const styleIndex = (startIndex + index) % TOPIC_STYLES.length;
+      const style = TOPIC_STYLES[styleIndex];
+      
+      return {
+        id: category.id,
+        title: category.name,
+        iconClass: style.iconClass,
+        iconBgColor: style.iconBgColor,
+        iconColor: style.iconColor,
+        description: category.description || `Nội dung về chủ đề ${category.name}.`,
+        exploreLink: `/categories/${category.id}`,
+        exploreLinkColor: style.exploreLinkColor,
+        popularArticles: [] // Sẽ được cập nhật bởi hàm loadArticlesForCategory
+      };
+    });
+    
+    // Thêm vào danh sách hiện tại
+    this.featuredTopics = [...this.featuredTopics, ...newTopics];
+    
+    // Cập nhật biến hasMoreCategories
+    this.hasMoreCategories = this.currentPage < this.totalPages;
+    
+    // Tải bài viết cho các danh mục mới
+    const loadArticlesPromises = newTopics.map(topic => this.loadArticlesForCategory(topic));
+    
+    // Sau khi tải tất cả các bài viết, cập nhật trạng thái loading
+    Promise.all(loadArticlesPromises).finally(() => {
+      this.isLoadingMore = false;
     });
   }
 
@@ -144,7 +208,7 @@ export class AllCategoriesComponent implements OnInit {
   // Tạo danh sách Featured Topics từ dữ liệu thực
   createFeaturedTopics(categories: Category[]): void {
     // Xử lý từng danh mục để tạo featured topics
-    this.featuredTopics = categories.slice(0, 6).map((category, index) => {
+    this.featuredTopics = categories.map((category, index) => {
       // Lấy style từ mảng TOPIC_STYLES theo index
       const style = TOPIC_STYLES[index % TOPIC_STYLES.length];
       
@@ -168,32 +232,36 @@ export class AllCategoriesComponent implements OnInit {
   }
 
   // Tải bài viết phổ biến cho mỗi danh mục
-  loadArticlesForCategory(topic: FeaturedTopic): void {
-    this.postService.getByCategory(topic.id, {
-      limit: 3,
-      orderBy: 'views',
-      order: 'DESC'
-    }).subscribe({
-      next: (response) => {
-        if (response.data && response.data.length) {
-          // Cập nhật bài viết phổ biến cho danh mục
-          topic.popularArticles = response.data.slice(0, 3).map(post => ({
-            title: post.title,
-            url: `/post/${post.slug || post.id}`
-          }));
-        } else {
-          // Nếu không có bài viết, hiển thị thông báo mặc định
+  loadArticlesForCategory(topic: FeaturedTopic): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.postService.getByCategory(topic.id, {
+        limit: 3,
+        orderBy: 'views',
+        order: 'DESC'
+      }).subscribe({
+        next: (response) => {
+          if (response.data && response.data.length) {
+            // Cập nhật bài viết phổ biến cho danh mục
+            topic.popularArticles = response.data.slice(0, 3).map(post => ({
+              title: post.title,
+              url: `/post/${post.slug || post.id}`
+            }));
+          } else {
+            // Nếu không có bài viết, hiển thị thông báo mặc định
+            topic.popularArticles = [
+              { title: 'Chưa có bài viết nào.', url: '#' }
+            ];
+          }
+          resolve();
+        },
+        error: () => {
+          // Nếu có lỗi, hiển thị thông báo mặc định
           topic.popularArticles = [
             { title: 'Chưa có bài viết nào.', url: '#' }
           ];
+          resolve();
         }
-      },
-      error: () => {
-        // Nếu có lỗi, hiển thị thông báo mặc định
-        topic.popularArticles = [
-          { title: 'Chưa có bài viết nào.', url: '#' }
-        ];
-      }
+      });
     });
   }
 
@@ -206,20 +274,23 @@ export class AllCategoriesComponent implements OnInit {
     this.categoryService.getAll({
       search: this.searchText,
       limit: 20
-    }).subscribe({
+    })
+    .pipe(
+      finalize(() => this.isLoading = false)
+    )
+    .subscribe({
       next: (response) => {
         if (response.data && response.data.length) {
           this.createFeaturedTopics(response.data);
           this.messageService.success(`Tìm thấy ${response.data.length} chủ đề.`);
+          this.hasMoreCategories = false; // Không hiển thị nút "Xem thêm" khi tìm kiếm
         } else {
           this.featuredTopics = [];
           this.messageService.info('Không tìm thấy chủ đề nào phù hợp.');
         }
-        this.isLoading = false;
       },
       error: () => {
         this.messageService.error('Đã xảy ra lỗi khi tìm kiếm.');
-        this.isLoading = false;
       }
     });
   }

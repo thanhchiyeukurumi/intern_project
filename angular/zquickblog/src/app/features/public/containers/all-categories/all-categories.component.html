@@ -78,10 +78,15 @@
       </div>
   
       <!-- More Topics Button -->
-      <div *ngIf="!isLoading && featuredTopics.length > 0" class="more-topics-container">
-        <button nz-button class="explore-more-button">
+      <div *ngIf="!isLoading && featuredTopics.length > 0 && hasMoreCategories" class="more-topics-container">
+        <button nz-button class="explore-more-button" (click)="loadMoreCategories()" [nzLoading]="isLoadingMore">
           Khám Phá Thêm Chủ Đề
         </button>
+      </div>
+      
+      <!-- End of categories message -->
+      <div *ngIf="!isLoading && !hasMoreCategories && featuredTopics.length > categoriesPerPage" class="end-of-categories">
+        <nz-divider nzText="Đã xem hết tất cả chủ đề"></nz-divider>
       </div>
     </div>
   </div>
