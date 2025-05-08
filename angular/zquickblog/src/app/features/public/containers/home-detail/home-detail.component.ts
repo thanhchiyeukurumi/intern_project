@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { takeUntil, finalize, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { takeUntil, finalize, debounceTime, distinctUntilChanged, catchError } from 'rxjs/operators';
 
 // NG-ZORRO Modules
 import { NzGridModule } from 'ng-zorro-antd/grid';
@@ -17,6 +17,8 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 // Import các service
 import { PostService } from '../../../../core/services/post.service';
@@ -36,6 +38,11 @@ interface PostPreview {
   views?: number;
   image?: string;
   createdAt?: Date;
+  categories?: {
+    id: number;
+    name: string;
+    slug: string;
+  }[];
 }
 
 interface RandomPost {
@@ -75,7 +82,9 @@ interface Filter {
     NzIconModule,
     NzDividerModule,
     NzInputModule,
-    NzEmptyModule
+    NzEmptyModule,
+    NzSkeletonModule,
+    NzSpinModule
   ],
   templateUrl: './home-detail.component.html',
   styleUrls: ['./home-detail.component.css']
@@ -91,6 +100,9 @@ export class HomeDetailComponent implements OnInit, OnDestroy {
   currentPage: number = 1;
   pageSize: number = 5;
   loading: boolean = false;
+  loadingFeatured: boolean = false;
+  loadingRandomPosts: boolean = false;
+  loadingCategories: boolean = false;
   hasMorePosts: boolean = true;
   
   // Biến cho search và filter
@@ -240,6 +252,11 @@ export class HomeDetailComponent implements OnInit, OnDestroy {
     this.postService.getAll(params)
     .pipe(
       finalize(() => this.loading = false),
+      catchError(error => {
+        this.messageService.error('Không thể tải bài viết. Vui lòng thử lại sau.');
+        console.error('Error loading posts:', error);
+        return [];
+      }),
       takeUntil(this.destroy$)
     )
     .subscribe({
@@ -261,6 +278,7 @@ export class HomeDetailComponent implements OnInit, OnDestroy {
 
   // Tải bài viết featured (bài viết nổi bật nhất)
   loadFeaturedPost(): void {
+    this.loadingFeatured = true;
     this.postService.getAll({
       page: 1,
       limit: 1,
@@ -268,12 +286,21 @@ export class HomeDetailComponent implements OnInit, OnDestroy {
       order: 'DESC',
       includeRelations: true
     })
-    .pipe(takeUntil(this.destroy$))
+    .pipe(
+      finalize(() => this.loadingFeatured = false),
+      catchError(error => {
+        console.error('Error loading featured post:', error);
+        return [];
+      }),
+      takeUntil(this.destroy$)
+    )
     .subscribe({
       next: (response) => {
         if (response.data.length > 0) {
           const post = response.data[0];
           this.featuredPost = this.mapPostToPreview(post);
+          
+          // Sử dụng excerpt làm hình ảnh hoặc một hình ảnh mặc định
           this.featuredPost.image = post.excerpt || 'assets/images/featured-placeholder.jpg';
           this.featuredPost.views = post.views;
         }
@@ -286,13 +313,21 @@ export class HomeDetailComponent implements OnInit, OnDestroy {
 
   // Tải bài viết ngẫu nhiên (ở đây dùng bài viết mới nhất)
   loadRandomPosts(): void {
+    this.loadingRandomPosts = true;
     this.postService.getAll({
       page: 1,
       limit: 5,
       orderBy: 'createdAt',
       order: 'DESC'
     })
-    .pipe(takeUntil(this.destroy$))
+    .pipe(
+      finalize(() => this.loadingRandomPosts = false),
+      catchError(error => {
+        console.error('Error loading random posts:', error);
+        return [];
+      }),
+      takeUntil(this.destroy$)
+    )
     .subscribe({
       next: (response) => {
         this.randomPosts = response.data.map(post => ({
@@ -311,12 +346,20 @@ export class HomeDetailComponent implements OnInit, OnDestroy {
 
   // Tải danh mục cho recommended topics
   loadCategories(): void {
+    this.loadingCategories = true;
     this.categoryService.getAll({
       limit: 8,
       orderBy: 'name',
       order: 'ASC'
     })
-    .pipe(takeUntil(this.destroy$))
+    .pipe(
+      finalize(() => this.loadingCategories = false),
+      catchError(error => {
+        console.error('Error loading categories:', error);
+        return [];
+      }),
+      takeUntil(this.destroy$)
+    )
     .subscribe({
       next: (response) => {
         this.recommendedTopics = response.data.map((category: Category) => ({
@@ -381,7 +424,12 @@ export class HomeDetailComponent implements OnInit, OnDestroy {
       date: formattedDate,
       commentCount: 0, // Giả sử không có thông tin comment
       views: post.views,
-      createdAt: createdAt
+      createdAt: createdAt,
+      categories: post.Categories?.map(cat => ({
+        id: cat.id,
+        name: cat.name,
+        slug: cat.name.toLowerCase().replace(/\s+/g, '-')
+      })) || []
     };
   }
 

@@ -1,8 +1,12 @@
-import { Component, OnInit, OnDestroy, Pipe, PipeTransform } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, Pipe, PipeTransform, HostListener } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser'; // Import DomSanitizer
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { Subject, of } from 'rxjs';
+import { switchMap, takeUntil, catchError, finalize } from 'rxjs/operators';
+
+// NG-ZORRO Modules
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
@@ -11,88 +15,84 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { NzListModule } from 'ng-zorro-antd/list'; // For sidebar list
-import { NzSkeletonModule } from 'ng-zorro-antd/skeleton'; // Enhanced skeleton
-import { NzCommentModule } from 'ng-zorro-antd/comment'; // For comments
-import { NzEmptyModule } from 'ng-zorro-antd/empty'; // For empty state
-import { NzFormModule } from 'ng-zorro-antd/form'; // For form
-import { NzInputModule } from 'ng-zorro-antd/input'; // For input
-import { NzMessageService } from 'ng-zorro-antd/message'; // For notification messages
-import { Subject } from 'rxjs';
-import { switchMap, takeUntil, delay } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { NzListModule } from 'ng-zorro-antd/list';
+import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
+import { NzCommentModule } from 'ng-zorro-antd/comment';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
-// --- Interfaces for Post Detail View ---
+// Services
+import { PostService } from '../../../../core/services/post.service';
+import { CommentService } from '../../../../core/services/comment.service';
+import { AuthService } from '../../../../core/services/auth.service';
+
+// Models
+import { Post } from '../../../../shared/models/post.model';
+import { CommentDto, Comment as CommentModel } from '../../../../shared/models/comment.model';
+import { Category } from '../../../../shared/models/category.model';
+import { User } from '../../../../shared/models/user.model';
+
+// Interface cho API Response
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  status: number;
+  message: string;
+}
+
+// Interfaces cho UI
 interface AuthorInfo {
-  id: string;
+  id: number;
   name: string;
   avatarUrl: string;
-  profileLink?: string; // Link to the author's profile page
+  profileLink?: string;
 }
 
 interface BlogPost {
-  id: string;
+  id: number;
   title: string;
-  /** Full HTML content of the post */
   content: string;
   author: AuthorInfo;
-  publishedDate: string; // Or Date object
+  publishedDate: string;
   readTimeMinutes: number;
   tags: string[];
-  // Add other relevant fields like featured image URL, etc.
-  // featuredImageUrl?: string;
+  categories: {
+    id: number;
+    name: string;
+    slug: string;
+  }[];
 }
 
 interface SidebarPost {
-  id: string;
+  id: number;
   title: string;
   authorName: string;
-  postLink: string; // Link to this post detail
-}
-
-// Comment interfaces
-interface CommentAuthor {
-  id: string;
-  name: string;
-  avatarUrl: string;
-}
-
-interface CommentReply {
-  id: string;
-  content: string;
-  author: CommentAuthor;
-  createdAt: string;
-}
-
-interface Comment {
-  id: string;
-  content: string;
-  author: CommentAuthor;
-  createdAt: string;
-  replies?: CommentReply[];
+  postLink: string;
 }
 
 // --- Security Pipe for [innerHTML] ---
 @Pipe({
   name: 'safeHtml',
-  standalone: true, // Make the pipe standalone
+  standalone: true,
 })
 export class SafeHtmlPipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer) {}
   transform(value: string): SafeHtml {
-    // IMPORTANT: Ensure your backend or editor provides sanitized HTML
-    // or implement more robust sanitization here if needed.
     return this.sanitizer.bypassSecurityTrustHtml(value);
   }
 }
 
 @Component({
-  selector: 'app-blog-post-detail', // Changed selector to reflect purpose
+  selector: 'app-post-detail',
   standalone: true,
   imports: [
     CommonModule,
     RouterModule,
     FormsModule,
+    DatePipe,
     NzGridModule,
     NzAvatarModule,
     NzTypographyModule,
@@ -101,277 +101,385 @@ export class SafeHtmlPipe implements PipeTransform {
     NzTagModule,
     NzCardModule,
     NzDividerModule,
-    NzListModule,       // Added
-    NzSkeletonModule,   // Added
-    NzCommentModule,    // Added for comments
-    NzEmptyModule,      // Added for empty state
-    NzFormModule,       // Added for form
-    NzInputModule,      // Added for input
-    SafeHtmlPipe,       // Added Pipe
+    NzListModule,
+    NzSkeletonModule,
+    NzCommentModule,
+    NzEmptyModule,
+    NzFormModule,
+    NzInputModule,
+    NzSpinModule,
+    SafeHtmlPipe,
   ],
-  templateUrl: './post-detail.component.html', // Keep filename or rename
-  styleUrls: ['./post-detail.component.css']   // Keep filename or rename
+  templateUrl: './post-detail.component.html',
+  styleUrls: ['./post-detail.component.css']
 })
-export class PostDetailComponent implements OnInit, OnDestroy { // Renamed class is optional
-
+export class PostDetailComponent implements OnInit, OnDestroy {
+  // Dữ liệu bài viết
   post: BlogPost | null = null;
+  originalPost: Post | null = null;
   recommendedPosts: SidebarPost[] = [];
   isLoading = true;
   
-  // Comment related properties
-  comments: Comment[] = [];
+  // Bình luận
+  comments: CommentModel[] = [];
   commentContent: string = '';
-  replyContent: string = '';
-  replyTo: string | null = null;
-  commenterName: string = '';
-  commenterEmail: string = '';
-  isLoggedIn: boolean = false; // Set to true if user is logged in
+  isLoadingComments = false;
+  submittingComment = false;
+  
+  // Trạng thái người dùng
+  isLoggedIn: boolean = false;
+  currentUser: User | null = null;
+  
+  // Biến cho back-to-top
+  showBackToTop: boolean = false;
   
   private destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
-    private message: NzMessageService
-    // private postService: PostService // Inject your actual service
+    private messageService: NzMessageService,
+    private postService: PostService,
+    private commentService: CommentService,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
+    // Kiểm tra đăng nhập
+    this.authService.currentUser$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(user => {
+      this.currentUser = user;
+      this.isLoggedIn = !!user;
+    });
+
+    // Lấy ID bài viết từ URL và tải dữ liệu
     this.route.paramMap.pipe(
       takeUntil(this.destroy$),
       switchMap(params => {
-        const postId = params.get('id'); // Expecting post ID like 'post1'
+        const postId = params.get('id');
         if (!postId) {
-          console.error('Post ID not found in route');
-          this.isLoading = false; // Stop loading if no ID
-          // Optionally redirect to a 404 page or post list
-          // this.router.navigate(['/not-found']);
-          return of(null); // Return empty observable
+          this.isLoading = false;
+          return of(null);
         }
+        
         this.isLoading = true;
-        // Replace fetchMockPostData with your actual service call
-        // return this.postService.getPostDetails(postId);
-        return this.fetchMockPostData(postId); // Simulate API call
+        console.log('Đang tải bài viết với ID:', postId);
+        return this.postService.getById(postId).pipe(
+          catchError((error: any) => {
+            this.messageService.error('Không thể tải bài viết. Vui lòng thử lại sau.');
+            console.error('Error fetching post:', error);
+            return of(null);
+          }),
+          finalize(() => {
+            this.isLoading = false;
+          })
+        );
       })
-    ).subscribe(data => {
-      if (data) {
-        this.post = data.post;
-        this.recommendedPosts = data.recommended;
+    ).subscribe((response: any) => {
+      //************** */
+      console.log('Dữ liệu bài viết nhận được:', response);
+      if (response && response.success && response.data) {
+        const post = response.data as Post;
+        this.originalPost = post;
+        this.post = this.mapPostToViewModel(post);
+        //****************   */
+        console.log('Sau khi chuyển đổi:', this.post);
+        this.loadComments(post.id);
+        this.loadRecommendedPosts();
       } else {
-        // Handle case where data loading failed or returned null
-        this.post = null;
-        this.recommendedPosts = [];
+        console.log('Không nhận được dữ liệu bài viết hoặc dữ liệu không hợp lệ');
       }
-      this.isLoading = false;
     });
-    
-    // Load comments for this post
-    this.loadComments();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
-
-  // --- Mock Data Fetching - Replace with actual API calls ---
-  fetchMockPostData(postId: string) {
-    console.log(`Fetching data for post: ${postId}`);
-
-    // Simulate finding the post based on ID
-    const mockAuthor: AuthorInfo = {
-        id: 'rejserin',
-        name: 'Rejserin',
-        avatarUrl: 'https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256',
-        profileLink: '/blog/rejserin' // Link to the author profile component
-    };
-
-    let foundPost: BlogPost | null = null;
-
-    if (postId === 'post1') {
-        foundPost = {
-            id: 'post1',
-            title: 'The Psychology Behind Effective Call-to-Actions',
-            author: mockAuthor,
-            publishedDate: 'Apr 8, 2023',
-            readTimeMinutes: 5,
-            // IMPORTANT: This HTML should be SANITIZED server-side or by the editor
-            content: `
-                <p>Understanding human psychology can dramatically improve conversion rates. This post delves into the cognitive biases and motivations that influence user decisions when faced with a Call-to-Action (CTA).</p>
-                <h2>Why Psychology Matters in CTAs</h2>
-                <p>A CTA isn't just a button; it's a prompt for decision. Effective CTAs leverage psychological principles like:</p>
-                <ul>
-                    <li><strong>Urgency & Scarcity:</strong> "Limited time offer!" or "Only 3 left!"</li>
-                    <li><strong>Social Proof:</strong> "Join 10,000+ happy customers."</li>
-                    <li><strong>Authority:</strong> Featuring expert endorsements.</li>
-                    <li><strong>Clarity & Value Proposition:</strong> Clearly stating what the user gets.</li>
-                </ul>
-                <img src="https://via.placeholder.com/600x300.png?text=CTA+Example" alt="Example CTA" style="max-width: 100%; height: auto; margin: 1em 0;">
-                <h2>Crafting Better CTAs</h2>
-                <p>Focus on action-oriented language, contrasting colors, and strategic placement. A/B testing is crucial to find what resonates best with <em>your</em> audience.</p>
-                <blockquote><p>The goal is to make the desired action the easiest and most compelling choice.</p></blockquote>
-                <pre><code class="language-html"><button class="cta-button cta-primary">Get Started Now</button></code></pre>
-                <p>By applying these psychological insights, you can transform your CTAs from simple links into powerful conversion drivers.</p>
-            `,
-            tags: ['Marketing', 'Psychology', 'UX', 'Conversion Rate Optimization'],
-        };
-    } else if (postId === 'post2') {
-         foundPost = {
-            id: 'post2',
-            title: 'Accessibility in Web Design: More Than Just Compliance',
-            author: mockAuthor,
-            publishedDate: 'Mar 22, 2023',
-            readTimeMinutes: 7,
-            content: `
-                <p>Creating truly inclusive digital experiences requires going beyond minimum WCAG standards. It's about empathy and designing for the diverse range of human abilities.</p>
-                <h2>The Core Principles</h2>
-                <p>Accessibility ensures people with disabilities (visual, auditory, motor, cognitive) can perceive, understand, navigate, and interact with the web. Key areas include:</p>
-                <ul>
-                    <li>Semantic HTML for screen readers</li>
-                    <li>Keyboard navigability</li>
-                    <li>Sufficient color contrast</li>
-                    <li>Clear and concise language</li>
-                    <li>Captions and transcripts for media</li>
-                </ul>
-                <h2>Benefits Beyond Compliance</h2>
-                <p>Accessible design improves usability for <em>everyone</em>, enhances SEO, and strengthens brand reputation. It's not just a checklist; it's a commitment to inclusivity.</p>
-                 <img src="https://via.placeholder.com/600x300.png?text=Accessibility+Demo" alt="Accessibility demonstration" style="max-width: 100%; height: auto; margin: 1em 0;">
-                 <p>Start by testing with real users and incorporating accessibility from the beginning of the design process.</p>
-            `,
-            tags: ['Accessibility', 'Web Design', 'Inclusion', 'WCAG', 'Frontend']
-         };
-    }
-    // Add more mock posts as needed...
-
-    // --- Mock Recommended Posts ---
-    const recommended: SidebarPost[] = [
-      { id: 'post-rec-1', title: 'Understanding Semantic HTML', authorName: 'Web Dev Weekly', postLink: '/post/post-rec-1' },
-      { id: 'post-rec-2', title: 'Color Theory for Designers', authorName: 'Design Hub', postLink: '/post/post-rec-2' },
-      { id: 'post-rec-3', title: 'Introduction to A/B Testing', authorName: 'Marketing Pro', postLink: '/post/post-rec-3' },
-      { id: 'post-rec-4', title: 'Keyboard Navigation Best Practices', authorName: 'Alice Gray', postLink: '/post/post-rec-4' },
-    ];
-
-    // Simulate API delay
-    return of({ post: foundPost, recommended }).pipe(delay(800));
-  }
-
-  // Comment related methods
-  loadComments(): void {
-    // Here you would normally fetch comments from an API
-    // For now, we'll use mock data
-    setTimeout(() => {
-      this.comments = this.getMockComments();
-    }, 1000);
-  }
   
-  getMockComments(): Comment[] {
-    return [
-      {
-        id: 'comment1',
-        content: 'Bài viết rất hay và bổ ích. Cảm ơn tác giả đã chia sẻ!',
-        author: {
-          id: 'user1',
-          name: 'Nguyễn Văn A',
-          avatarUrl: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-        },
-        createdAt: '2 giờ trước',
-        replies: [
-          {
-            id: 'reply1',
-            content: 'Cảm ơn bạn đã đọc và chia sẻ phản hồi!',
-            author: {
-              id: 'author1',
-              name: 'Rejserin',
-              avatarUrl: 'https://gravatar.com/userimage/226055550/371783b5621ab23c89278350e3e85e27.jpeg?size=256'
-            },
-            createdAt: '1 giờ trước'
-          }
-        ]
+  // Theo dõi scroll để hiển thị nút back-to-top
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    this.showBackToTop = window.scrollY > 500;
+  }
+
+  // Chuyển đổi dữ liệu bài viết từ API sang định dạng hiển thị
+  private mapPostToViewModel(post: Post): BlogPost {
+    console.log('mapPostToViewModel - đầu vào:', post);
+    console.log('post.Categories:', post.Categories);
+    console.log('post.User:', post.User);
+    
+    // Tính thời gian đọc dựa trên số từ trong nội dung (trung bình 200 từ/phút)
+    const contentText = this.stripHtmlTags(post.content || '');
+    const wordCount = contentText.split(/\s+/).length;
+    const readTimeMinutes = Math.max(1, Math.ceil(wordCount / 200));
+    
+    // Format ngày tháng
+    const publishedDate = new Date(post.createdAt).toLocaleDateString('vi-VN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    
+    const result: BlogPost = {
+      id: post.id,
+      title: post.title,
+      content: post.content || '',
+      author: {
+        id: post.user_id,
+        name: post.User?.username || 'Người dùng ẩn danh',
+        avatarUrl: post.User?.avatar || './public/images/default-avatar.png',
+        profileLink: `/user/${post.user_id}`
       },
-      {
-        id: 'comment2',
-        content: 'Tôi đã áp dụng những ý tưởng này vào dự án của mình và thấy hiệu quả tức thì. Rất đáng để thử!',
-        author: {
-          id: 'user2',
-          name: 'Trần Thị B',
-          avatarUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-        },
-        createdAt: '5 giờ trước',
-        replies: []
-      }
-    ];
+      publishedDate: publishedDate,
+      readTimeMinutes: readTimeMinutes,
+      tags: post.Categories?.map(cat => cat.name) || [],
+      categories: post.Categories?.map(cat => ({
+        id: cat.id,
+        name: cat.name,
+        slug: cat.name.toLowerCase().replace(/\s+/g, '-')
+      })) || []
+    };
+    
+    console.log('mapPostToViewModel - kết quả:', result);
+    return result;
   }
-  
+
+  // Loại bỏ thẻ HTML để tính số từ
+  private stripHtmlTags(html: string): string {
+    return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+
+  // Tải bình luận cho bài viết
+  loadComments(postId: number): void {
+    this.isLoadingComments = true;
+    this.commentService.getByPost(postId, {
+      orderBy: 'created_at',
+      order: 'DESC',
+      limit: 50
+    })
+    .pipe(
+      finalize(() => this.isLoadingComments = false),
+      catchError(error => {
+        console.error('Error loading comments:', error);
+        this.messageService.error('Không thể tải bình luận. Vui lòng thử lại sau.');
+        return of(null);
+      }),
+      takeUntil(this.destroy$)
+    )
+    .subscribe({
+      next: (response: any) => {
+        console.log('Dữ liệu bình luận:', response);
+        if (response && response.data) {
+          this.comments = response.data as CommentModel[];
+        } else {
+          this.comments = [];
+        }
+      },
+      error: (error) => {
+        console.error('Error loading comments:', error);
+        this.messageService.error('Không thể tải bình luận. Vui lòng thử lại sau.');
+      }
+    });
+  }
+
+  // Tải các bài viết đề xuất
+  loadRecommendedPosts(): void {
+    if (!this.originalPost) return;
+    
+    // Lấy bài viết từ cùng danh mục
+    const categoryIds = this.originalPost.Categories?.map(cat => cat.id) || [];
+    if (categoryIds.length === 0) {
+      // Nếu không có danh mục, lấy bài viết mới nhất
+      this.loadLatestPosts();
+      return;
+    }
+    
+    // Lấy bài viết từ danh mục đầu tiên
+    this.postService.getByCategory(categoryIds[0], {
+      limit: 5,
+      orderBy: 'createdAt',
+      order: 'DESC'
+    })
+    .pipe(
+      catchError(error => {
+        console.error('Error loading recommended posts:', error);
+        this.loadLatestPosts(); // Fallback to latest posts
+        return of(null);
+      }),
+      takeUntil(this.destroy$)
+    )
+    .subscribe({
+      next: (response: any) => {
+        console.log('Dữ liệu bài viết đề xuất:', response);
+        if (response && response.data) {
+          // Lọc bỏ bài viết hiện tại
+          const filteredPosts = response.data.filter((p: any) => p.id !== this.originalPost?.id);
+          this.recommendedPosts = filteredPosts.slice(0, 4).map((post: any) => ({
+            id: post.id,
+            title: post.title,
+            authorName: post.User?.username || 'Người dùng ẩn danh',
+            postLink: `/post/${post.id}`
+          }));
+          
+          // Nếu không đủ bài viết đề xuất, bổ sung thêm bài viết mới nhất
+          if (this.recommendedPosts.length < 4) {
+            this.loadLatestPosts(4 - this.recommendedPosts.length);
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Error loading recommended posts:', error);
+        this.loadLatestPosts(); // Fallback to latest posts
+      }
+    });
+  }
+
+  // Tải bài viết mới nhất
+  loadLatestPosts(limit: number = 4): void {
+    this.postService.getAll({
+      limit: limit + 1, // +1 để dự phòng lọc bài hiện tại
+      orderBy: 'createdAt',
+      order: 'DESC'
+    })
+    .pipe(
+      catchError(error => {
+        console.error('Error loading latest posts:', error);
+        return of(null);
+      }),
+      takeUntil(this.destroy$)
+    )
+    .subscribe({
+      next: (response: any) => {
+        console.log('Dữ liệu bài viết mới nhất:', response);
+        if (response && response.data) {
+          // Lọc bỏ bài viết hiện tại và giới hạn số lượng
+          const filteredPosts = response.data
+            .filter((p: any) => p.id !== this.originalPost?.id)
+            .slice(0, limit);
+            
+          // Nếu đã có bài đề xuất, thêm vào (tránh trùng lặp)
+          if (this.recommendedPosts.length > 0) {
+            const existingIds = this.recommendedPosts.map(p => p.id);
+            const newPosts = filteredPosts
+              .filter((p: any) => !existingIds.includes(p.id))
+              .map((post: any) => ({
+                id: post.id,
+                title: post.title,
+                authorName: post.User?.username || 'Người dùng ẩn danh',
+                postLink: `/post/${post.id}`
+              }));
+              
+            this.recommendedPosts = [...this.recommendedPosts, ...newPosts].slice(0, 4);
+          } else {
+            // Nếu chưa có bài đề xuất nào, gán trực tiếp
+            this.recommendedPosts = filteredPosts.map((post: any) => ({
+              id: post.id,
+              title: post.title,
+              authorName: post.User?.username || 'Người dùng ẩn danh',
+              postLink: `/post/${post.id}`
+            }));
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Error loading latest posts:', error);
+      }
+    });
+  }
+
+  // Gửi bình luận mới
   submitComment(): void {
     if (!this.isCommentValid()) return;
+    if (!this.originalPost) return;
     
-    // In a real app, you'd send this to your API
-    const newComment: Comment = {
-      id: `comment${this.comments.length + 1}`,
-      content: this.commentContent,
-      author: {
-        id: this.isLoggedIn ? 'currentUser' : 'guest',
-        name: this.isLoggedIn ? 'Người dùng hiện tại' : this.commenterName,
-        avatarUrl: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-      },
-      createdAt: 'Vừa xong',
-      replies: []
+    this.submittingComment = true;
+    const commentData: CommentDto = {
+      content: this.commentContent
     };
     
-    this.comments.unshift(newComment);
-    this.message.success('Bình luận của bạn đã được đăng thành công!');
-    this.resetCommentForm();
+    this.commentService.create(this.originalPost.id, commentData)
+      .pipe(
+        finalize(() => this.submittingComment = false),
+        catchError(error => {
+          console.error('Error submitting comment:', error);
+          this.messageService.error('Không thể đăng bình luận. Vui lòng thử lại sau.');
+          return of(null);
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (comment) => {
+          if (comment) {
+            this.messageService.success('Đã đăng bình luận thành công!');
+            this.loadComments(this.originalPost!.id); // Tải lại bình luận
+            this.resetCommentForm();
+          }
+        },
+        error: (error) => {
+          console.error('Error submitting comment:', error);
+          this.messageService.error('Không thể đăng bình luận. Vui lòng thử lại sau.');
+        }
+      });
   }
-  
-  toggleReply(commentId: string): void {
-    this.replyTo = this.replyTo === commentId ? null : commentId;
-    this.replyContent = '';
-  }
-  
-  submitReply(commentId: string): void {
-    if (!this.replyContent) return;
-    
-    const comment = this.comments.find(c => c.id === commentId);
-    if (!comment) return;
-    
-    if (!comment.replies) comment.replies = [];
-    
-    const newReply: CommentReply = {
-      id: `reply${comment.replies.length + 1}`,
-      content: this.replyContent,
-      author: {
-        id: this.isLoggedIn ? 'currentUser' : 'guest',
-        name: this.isLoggedIn ? 'Người dùng hiện tại' : this.commenterName || 'Khách',
-        avatarUrl: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-      },
-      createdAt: 'Vừa xong'
-    };
-    
-    comment.replies.push(newReply);
-    this.message.success('Trả lời của bạn đã được đăng thành công!');
-    this.replyTo = null;
-    this.replyContent = '';
-  }
-  
-  cancelReply(): void {
-    this.replyTo = null;
-    this.replyContent = '';
-  }
-  
+
+  // Kiểm tra bình luận hợp lệ
   isCommentValid(): boolean {
-    if (!this.commentContent) return false;
-    
-    // If not logged in, require name and email
-    if (!this.isLoggedIn) {
-      return !!this.commenterName && !!this.commenterEmail;
-    }
-    
-    return true;
+    return this.commentContent.trim().length > 0 && this.isLoggedIn;
   }
-  
+
+  // Reset form bình luận
   resetCommentForm(): void {
     this.commentContent = '';
-    if (!this.isLoggedIn) {
-      // Don't reset name and email to improve UX for multiple comments
+  }
+
+  // Format thời gian bình luận
+  formatCommentDate(dateString: string): string {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) {
+      // Trong ngày hôm nay
+      const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+      if (diffHours === 0) {
+        const diffMinutes = Math.floor(diffTime / (1000 * 60));
+        return diffMinutes === 0 ? 'Vừa xong' : `${diffMinutes} phút trước`;
+      }
+      return `${diffHours} giờ trước`;
+    } else if (diffDays === 1) {
+      return 'Hôm qua';
+    } else if (diffDays < 7) {
+      return `${diffDays} ngày trước`;
+    } else {
+      return date.toLocaleDateString('vi-VN');
     }
+  }
+
+  // Chia sẻ bài viết
+  sharePost(): void {
+    if (!this.post) return;
+    
+    // Nếu API Share có sẵn, sử dụng
+    if (navigator.share) {
+      navigator.share({
+        title: this.post.title,
+        text: `Đọc bài viết "${this.post.title}" của ${this.post.author.name}`,
+        url: window.location.href
+      })
+      .then(() => this.messageService.success('Đã chia sẻ bài viết thành công!'))
+      .catch((error) => console.error('Không thể chia sẻ:', error));
+    } else {
+      // Sao chép URL vào clipboard
+      navigator.clipboard.writeText(window.location.href)
+        .then(() => this.messageService.success('Đã sao chép đường dẫn bài viết!'))
+        .catch((error) => console.error('Không thể sao chép:', error));
+    }
+  }
+
+  // Cuộn lên đầu trang
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

@@ -26,12 +26,25 @@
         </div>
   
         <!-- Featured Post Nổi bật ở đầu -->
-        <nz-card *ngIf="featuredPost" class="featured-post-card">
+        <nz-card *ngIf="loadingFeatured" class="featured-post-card skeleton-card" [nzLoading]="true">
+          <div class="skeleton-content featured-skeleton">
+            <div class="skeleton-header"></div>
+            <div class="skeleton-body"></div>
+            <div class="skeleton-footer"></div>
+          </div>
+        </nz-card>
+        
+        <nz-card *ngIf="!loadingFeatured && featuredPost" class="featured-post-card animate-in">
           <div class="featured-post-badge">Nổi bật</div>
           <div class="featured-post-content">
-            <!-- <div class="featured-image-container">
-              <img class="featured-image" [src]="featuredPost.image || 'assets/images/placeholder.jpg'" [alt]="featuredPost.title">
-            </div> -->
+            <!-- Thêm thẻ cho danh mục bài viết -->
+            <div class="featured-categories" *ngIf="featuredPost.categories && featuredPost.categories.length > 0">
+              <nz-tag *ngFor="let category of featuredPost.categories" 
+                      [nzColor]="primaryColor" 
+                      class="featured-category-tag">
+                {{ category.name }}
+              </nz-tag>
+            </div>
             <div class="featured-details">
               <h2 class="featured-title">
                 <a [routerLink]="['/post', featuredPost.id]">{{ featuredPost.title }}</a>
@@ -79,6 +92,14 @@
                   [style.animation-delay]="i * 0.1 + 's'">
             <div class="new-post-badge" *ngIf="isNewPost(post)">Mới</div>
             <div class="post-header">
+              <!-- Hiển thị danh mục cho mỗi bài viết -->
+              <div class="post-categories" *ngIf="post.categories && post.categories.length > 0">
+                <nz-tag *ngFor="let category of post.categories" 
+                        [nzColor]="primaryColor" 
+                        class="category-tag">
+                  {{ category.name }}
+                </nz-tag>
+              </div>
               <div class="author-info">
                 <nz-avatar [nzSize]="40" [nzSrc]="post.authorAvatar" nzIcon="user" class="author-avatar"></nz-avatar>
                 <span class="author-name" *ngIf="post.authorName">{{ post.authorName }}</span>
@@ -156,7 +177,11 @@
               <span nz-icon nzType="fire" nzTheme="fill" class="section-icon"></span>
               Bài viết nổi bật
             </h2>
-            <ul class="sidebar-list">
+            
+            <!-- Skeleton loading cho random posts -->
+            <nz-skeleton *ngIf="loadingRandomPosts" [nzActive]="true" [nzParagraph]="{ rows: 5 }"></nz-skeleton>
+            
+            <ul *ngIf="!loadingRandomPosts" class="sidebar-list">
               <li *ngFor="let randomPost of randomPosts; let i = index" 
                   class="sidebar-list-item"
                   [class.animate-item]="true"
@@ -168,6 +193,11 @@
                 </div>
               </li>
             </ul>
+            
+            <!-- Empty state cho random posts -->
+            <div *ngIf="!loadingRandomPosts && randomPosts.length === 0" class="empty-list">
+              <nz-empty nzNotFoundContent="Không có bài viết nổi bật"></nz-empty>
+            </div>
           </div>
   
           <!-- Recommended Topics -->
@@ -176,12 +206,22 @@
               <span nz-icon nzType="tag" nzTheme="fill" class="section-icon"></span>
               Chủ đề đề xuất
             </h2>
-            <div class="topic-tags">
+            
+            <!-- Skeleton loading cho categories -->
+            <nz-skeleton *ngIf="loadingCategories" [nzActive]="true" [nzParagraph]="{ rows: 3 }"></nz-skeleton>
+            
+            <div *ngIf="!loadingCategories" class="topic-tags">
               <a *ngFor="let topic of recommendedTopics"
                  [routerLink]="['/category', topic.slug]"
                  (click)="addFilter(topic)">
                 <nz-tag class="topic-tag">{{ topic.name }}</nz-tag>
               </a>
+              
+              <!-- Empty state cho categories
+              <nz-empty *ngIf="recommendedTopics.length === 0" nzNotFoundContent="Không có chủ đề" [nzNoResult]="noResultTpl"></nz-empty>
+              <ng-template #noResultTpl>
+                <span>Không có chủ đề nào</span>
+              </ng-template> -->
             </div>
           </div>
   

@@ -6,103 +6,95 @@
 
       <!-- Post Content Column (Left) -->
       <div nz-col [nzXs]="24" [nzLg]="16">
+        <!-- Skeleton Loading cho bài viết -->
+        <ng-container *ngIf="isLoading">
+          <div class="post-content-area skeleton-padding">
+            <nz-skeleton [nzActive]="true" [nzAvatar]="{size: 'large'}" [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+          </div>
+        </ng-container>
+
+        <!-- Bài viết không tồn tại -->
+        <ng-container *ngIf="!isLoading && !post">
+          <nz-card class="not-found-card">
+            <h2 nz-typography>Không tìm thấy bài viết</h2>
+            <p nz-typography nzType="secondary">Bài viết bạn đang tìm kiếm không tồn tại hoặc không thể tải.</p>
+            <a routerLink="/home" nz-button nzType="primary">Quay lại trang chủ</a>
+          </nz-card>
+        </ng-container>
+
+        <!-- Nội dung bài viết -->
         <ng-container *ngIf="!isLoading && post">
           <article class="post-content-area">
-            <!-- Post Header -->
+            <!-- Header bài viết -->
             <header class="post-header">
-              <h1 nz-typography class="post-title">{{ post.title }}</h1>
+              <!-- Danh mục -->
+              <div class="post-categories" *ngIf="post.categories && post.categories.length > 0">
+                <a *ngFor="let category of post.categories" 
+                   [routerLink]="['/category', category.slug]" 
+                   class="post-category">
+                  {{ category.name }}
+                </a>
+              </div>
+
+              <!-- Tiêu đề bài viết -->
+              <h1 nz-typography class="post-title animate-in">{{ post.title }}</h1>
+              
+              <!-- Thông tin tác giả và ngày đăng -->
               <div class="post-meta">
                 <div class="author-info">
-                  <a [routerLink]="post.author.profileLink || null">
+                  <a [routerLink]="post.author.profileLink">
                     <nz-avatar [nzSize]="40" [nzSrc]="post.author.avatarUrl" nzIcon="user"></nz-avatar>
                   </a>
                   <div class="meta-text">
-                    <a class="author-name" [routerLink]="post.author.profileLink || null">{{ post.author.name }}</a>
+                    <a class="author-name" [routerLink]="post.author.profileLink">{{ post.author.name }}</a>
                     <span nz-typography nzType="secondary" class="publish-details">
-                      Published on {{ post.publishedDate }} <span class="separator">·</span> {{ post.readTimeMinutes }} min read
+                      Đăng ngày {{ post.publishedDate }} 
+                      <span class="separator">·</span> 
+                      {{ post.readTimeMinutes }} phút đọc
                     </span>
                   </div>
                 </div>
-                <!-- Add share buttons or other actions here if needed -->
+                
+                <!-- Chia sẻ bài viết -->
+                <div class="post-actions">
+                  <button nz-button nzType="text" class="share-button" (click)="sharePost()">
+                    <span nz-icon nzType="share-alt" nzTheme="outline"></span>
+                    Chia sẻ
+                  </button>
+                </div>
               </div>
             </header>
 
-            <!-- Post Body -->
-            <!-- SECURITY WARNING: Use [innerHTML] only with SANITIZED HTML content. -->
-            <!-- The SafeHtmlPipe helps, but ensure the source is trustworthy. -->
-            <div class="post-body" [innerHTML]="post.content | safeHtml">
-              <!-- Content is rendered here -->
-            </div>
+            <!-- Nội dung bài viết -->
+            <div class="post-body animate-body" [innerHTML]="post.content | safeHtml"></div>
 
-            <!-- Post Footer (Tags, Comments Link, etc.) -->
+            <!-- Footer bài viết: tags, bình luận, v.v. -->
             <footer class="post-footer">
+              <!-- Tags bài viết -->
               <div class="post-tags" *ngIf="post.tags && post.tags.length > 0">
-                <nz-tag *ngFor="let tag of post.tags" class="post-tag-item">{{ tag }}</nz-tag>
+                <div class="tags-label"><span nz-icon nzType="tag" nzTheme="outline"></span> Tags:</div>
+                <div class="tags-list">
+                  <nz-tag *ngFor="let tag of post.tags" class="post-tag-item">{{ tag }}</nz-tag>
+                </div>
               </div>
+              
               <nz-divider></nz-divider>
               
-              <!-- Comment Section -->
+              <!-- Phần bình luận -->
               <div class="comments-section">
-                <h3 nz-typography>Bình luận</h3>
+                <h3 nz-typography class="section-title">
+                  <span nz-icon nzType="comment" nzTheme="outline"></span>
+                  Bình luận ({{ comments.length }})
+                </h3>
                 
-                <!-- Comment List -->
-                <ng-container *ngIf="comments.length > 0">
-                  <nz-list [nzDataSource]="comments" [nzRenderItem]="commentTemplate" nzItemLayout="horizontal">
-                    <ng-template #commentTemplate let-comment>
-                      <nz-comment 
-                        [nzAuthor]="comment.author.name"
-                        [nzDatetime]="comment.createdAt"
-                        nzAvatar="comment.author.avatarUrl">
-                        <nz-avatar
-                          nz-comment-avatar
-                          nzIcon="user"
-                          nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                        ></nz-avatar>
-                        <nz-comment-content>
-                          <p>{{ comment.content }}</p>
-                        </nz-comment-content>
-                        
-                        <nz-comment-action>
-                          <span (click)="toggleReply(comment.id)">
-                            <span nz-icon nzType="comment"></span> 
-                            <span class="comment-action">Trả lời</span>
-                          </span>
-                        </nz-comment-action>
-                        
-                        <!-- Reply Form this shit need to fix--> 
-                        <ng-container *ngIf="replyTo === comment.id">
-                          <div class="reply-form">
-                            <nz-form-item>
-                              <nz-textarea-count [nzMaxCharacterCount]="500">
-                                <textarea 
-                                  rows="3"
-                                  nz-input 
-                                  [(ngModel)]="replyContent" 
-                                  placeholder="Viết trả lời của bạn ở đây..."></textarea>
-                              </nz-textarea-count>
-                            </nz-form-item>
-                            <div class="comment-action-buttons">
-                              <button nz-button nzType="default" (click)="cancelReply()">Hủy</button>
-                              <button nz-button nzType="primary" [disabled]="!replyContent" (click)="submitReply(comment.id)">Gửi</button>
-                            </div>
-                          </div>
-                        </ng-container>
-                      </nz-comment>
-                    </ng-template>
-                  </nz-list>
-                </ng-container>
-                
-                <!-- Empty State -->
-                <nz-empty 
-                  *ngIf="!isLoading && comments.length === 0"
-                  nzNotFoundContent="Chưa có bình luận nào. Hãy trở thành người đầu tiên bình luận!"
-                  class="empty-comments">
-                </nz-empty>
-                
-                <!-- Add New Comment Form -->
-                <div class="add-comment-form">
-                  <h4 nz-typography>Write comment</h4>
-                  <nz-form-item >
+                <!-- Form thêm bình luận mới -->
+                <div class="add-comment-form" [class.login-required]="!isLoggedIn">
+                  <div *ngIf="!isLoggedIn" class="login-prompt">
+                    <p>Vui lòng đăng nhập để bình luận</p>
+                    <a routerLink="/auth/login" nz-button nzType="primary">Đăng nhập</a>
+                  </div>
+                  
+                  <nz-form-item *ngIf="isLoggedIn">
                     <nz-textarea-count [nzMaxCharacterCount]="500">
                       <textarea 
                         class="text-area-form"
@@ -113,75 +105,139 @@
                     </nz-textarea-count>
                   </nz-form-item>
                   
-                  <div class="comment-action-buttons">
+                  <div class="comment-action-buttons" *ngIf="isLoggedIn">
                     <button 
                       nz-button 
                       nzType="primary" 
-                      [disabled]="!isCommentValid()" 
+                      [nzLoading]="submittingComment"
+                      [disabled]="!isCommentValid() || submittingComment" 
                       (click)="submitComment()">
                       Đăng bình luận
                     </button>
                   </div>
                 </div>
+                
+                <!-- Danh sách bình luận -->
+                <nz-spin [nzSpinning]="isLoadingComments">
+                  <ng-container *ngIf="comments.length > 0">
+                    <div class="comments-list">
+                      <nz-comment 
+                        *ngFor="let comment of comments; let i = index"
+                        [nzAuthor]="comment.user?.username || 'Người dùng ẩn danh'"
+                        [nzDatetime]="formatCommentDate(comment.created_at || comment.createdAt)"
+                        [class.animate-comment]="true"
+                        [style.animation-delay]="i * 0.1 + 's'">
+                        
+                        <nz-avatar
+                          nz-comment-avatar
+                          nzIcon="user"
+                          [nzSrc]="comment.user?.avatar || 'assets/images/default-avatar.png'"
+                        ></nz-avatar>
+                        
+                        <nz-comment-content>
+                          <p>{{ comment.content }}</p>
+                        </nz-comment-content>
+                      </nz-comment>
+                    </div>
+                  </ng-container>
+                  
+                  <!-- Không có bình luận -->
+                  <nz-empty 
+                    *ngIf="!isLoadingComments && comments.length === 0"
+                    nzNotFoundContent="Chưa có bình luận nào. Hãy trở thành người đầu tiên bình luận!"
+                    class="empty-comments">
+                  </nz-empty>
+                </nz-spin>
               </div>
             </footer>
           </article>
         </ng-container>
-
-        <!-- Skeleton Loading for Post Content -->
-        <ng-container *ngIf="isLoading">
-            <div class="post-content-area skeleton-padding">
-                <nz-skeleton [nzActive]="true" [nzAvatar]="{size: 'large'}" [nzParagraph]="{ rows: 10 }"></nz-skeleton>
-            </div>
-        </ng-container>
-
-        <!-- Post Not Found Message -->
-        <ng-container *ngIf="!isLoading && !post">
-            <nz-card class="not-found-card">
-                <h2 nz-typography>Post Not Found</h2>
-                <p nz-typography nzType="secondary">The post you are looking for does not exist or could not be loaded.</p>
-                <a routerLink="/posts" nz-button nzType="primary">Back to Posts</a> <!-- Adjust link -->
-            </nz-card>
-        </ng-container>
       </div>
 
       <!-- Sidebar Column (Right - Sticky) -->
-      <div nz-col [nzXs]="0" [nzLg]="8"> <!-- Hidden on small screens -->
+      <div nz-col [nzXs]="0" [nzLg]="8">
         <div class="sidebar-sticky-content">
+          <!-- Thông tin tác giả (Card mới) -->
+          <ng-container *ngIf="!isLoading && post">
+            <nz-card class="sidebar-card author-card animate-in" [nzBordered]="false">
+              <div class="author-header">
+                <nz-avatar [nzSize]="64" [nzSrc]="post.author.avatarUrl" nzIcon="user"></nz-avatar>
+                <div class="author-name-container">
+                  <h3 class="author-name">{{ post.author.name }}</h3>
+                  <a [routerLink]="post.author.profileLink" class="author-profile-link">Xem hồ sơ</a>
+                </div>
+              </div>
+              <div class="author-bio">
+                <p>Tác giả của bài viết. Theo dõi để cập nhật các bài viết mới nhất.</p>
+              </div>
+              <div class="author-actions">
+                <button nz-button nzType="primary">Theo dõi</button>
+              </div>
+            </nz-card>
+          </ng-container>
 
-          <!-- Recommended Posts Card -->
+          <!-- Bài viết đề xuất -->
           <nz-card class="sidebar-card" [nzTitle]="recommendedTitle" [nzBordered]="false">
             <ng-template #recommendedTitle>
-              <h3 class="sidebar-card-title">Recommended Posts</h3>
+              <h3 class="sidebar-card-title">
+                <span nz-icon nzType="read" nzTheme="outline"></span>
+                Bài viết đề xuất
+              </h3>
             </ng-template>
 
             <!-- Loading State -->
             <nz-list *ngIf="isLoading">
-                <nz-list-item *ngFor="let i of [1, 2, 3]">
-                    <nz-skeleton [nzActive]="true" [nzAvatar]="false" [nzTitle]="false" [nzParagraph]="{ rows: 2 }"></nz-skeleton>
-                </nz-list-item>
+              <nz-list-item *ngFor="let i of [1, 2, 3]">
+                <nz-skeleton [nzActive]="true" [nzAvatar]="false" [nzTitle]="false" [nzParagraph]="{ rows: 2 }"></nz-skeleton>
+              </nz-list-item>
             </nz-list>
 
-            <!-- Data Loaded State -->
-             <nz-list *ngIf="!isLoading && recommendedPosts.length > 0" [nzDataSource]="recommendedPosts" [nzRenderItem]="recommendedItem" [nzSplit]="false">
-                <ng-template #recommendedItem let-item>
-                  <nz-list-item class="recommended-post-item">
-                    <a [routerLink]="item.postLink" class="item-link">
-                      <h4 class="item-title">{{ item.title }}</h4>
-                      <p nz-typography nzType="secondary" class="item-author">{{ item.authorName }}</p>
-                    </a>
-                  </nz-list-item>
-                </ng-template>
-             </nz-list>
+            <!-- Loaded State -->
+            <nz-list 
+              *ngIf="!isLoading && recommendedPosts.length > 0" 
+              [nzDataSource]="recommendedPosts" 
+              [nzRenderItem]="recommendedItem" 
+              [nzSplit]="false">
+              <ng-template #recommendedItem let-item>
+                <nz-list-item class="recommended-post-item animate-item">
+                  <a [routerLink]="item.postLink" class="item-link">
+                    <h4 class="item-title">{{ item.title }}</h4>
+                    <p nz-typography nzType="secondary" class="item-author">{{ item.authorName }}</p>
+                  </a>
+                </nz-list-item>
+              </ng-template>
+            </nz-list>
 
-             <!-- No Data State -->
-             <div *ngIf="!isLoading && recommendedPosts.length === 0" nz-typography nzType="secondary" class="no-data-message">
-                No recommendations available.
-             </div>
+            <!-- Empty State -->
+            <div *ngIf="!isLoading && recommendedPosts.length === 0" nz-typography nzType="secondary" class="no-data-message">
+              Không có bài viết đề xuất.
+            </div>
+          </nz-card>
+
+          <!-- Thẻ đặc biệt -->
+          <nz-card class="sidebar-card newsletter-card" [nzBordered]="false">
+            <h3 class="sidebar-card-title">
+              <span nz-icon nzType="notification" nzTheme="outline"></span>
+              Theo dõi cập nhật
+            </h3>
+            <p class="newsletter-description">Nhận thông báo khi có bài viết mới</p>
+            <nz-input-group [nzSuffix]="suffixButton" class="newsletter-input">
+              <input type="email" nz-input placeholder="Email của bạn" />
+            </nz-input-group>
+            <ng-template #suffixButton>
+              <button nz-button nzType="primary">
+                <span nz-icon nzType="send"></span>
+              </button>
+            </ng-template>
           </nz-card>
         </div>
       </div>
 
     </div>
+  </div>
+
+  <!-- Back to top button -->
+  <div class="back-to-top" *ngIf="showBackToTop" (click)="scrollToTop()">
+    <span nz-icon nzType="arrow-up" nzTheme="outline"></span>
   </div>
 </div>

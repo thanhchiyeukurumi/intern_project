@@ -22,12 +22,10 @@ class CommentService {
         throw error;
       }
       
-      const {
-        page = 1,
-        limit = 10,
-        orderBy = 'created_at',
-        order = 'DESC'
-      } = options;
+      const page = parseInt(options.page, 10) || 1;
+      const limit = parseInt(options.limit, 10) || 10;
+      const orderBy = options.orderBy || 'created_at';
+      const order = options.order || 'DESC';
 
       const offset = (page - 1) * limit;
       
@@ -247,7 +245,7 @@ class CommentService {
       }
       
       const page = parseInt(options.page, 10) || 1;
-      const limit = parseInt(options.limit, 10) || 1;
+      const limit = parseInt(options.limit, 10) || 10;
       const orderBy = options.orderBy || 'created_at';
       const order = options.order || 'DESC';
 
@@ -407,9 +405,14 @@ class CommentService {
     try {
       const startDate = options.startDate ? new Date(options.startDate) : new Date(new Date().setDate(new Date().getDate() - 30));
       const endDate = options.endDate ? new Date(options.endDate) : new Date();
+      const groupByInterval = options.groupBy || 'day'; // 'day', 'week', 'month'
       
       // Lấy thống kê bình luận theo thời gian
-      const commentStats = await this.getCommentsByDateRange(options);
+      const commentStats = await this.getCommentsByDateRange({
+        startDate,
+        endDate,
+        groupBy: groupByInterval
+      });
       
       // Thống kê bình luận theo bài viết (top 5 bài viết có nhiều bình luận nhất)
       const postDistribution = await db.sequelize.query(`
