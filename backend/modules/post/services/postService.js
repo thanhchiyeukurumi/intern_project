@@ -47,16 +47,27 @@ class PostService {
         where.user_id = userId;
       }
       
-       if (originalPost) { // Nếu yêu cầu chỉ lấy bài gốc
+      if (originalPost) { // Nếu yêu cầu chỉ lấy bài gốc
         where.original_post_id = null;
       } else if (fromOriginalPostId) { // Nếu yêu cầu lấy các bài từ một bài gốc cụ thể
         where.original_post_id = fromOriginalPostId;
       }
 
-      // Tạo query để lấy danh sách bài viết
+      // Xây dựng queryOptions cơ bản
       const queryOptions = {
         where,
-        include: includeRelations ? [ 
+        order: [[orderBy, order]],
+        limit,
+        offset,
+        distinct: true
+      };
+      
+      // Chuẩn bị mảng include với relations phù hợp
+      let includes = [];
+      
+      // Nếu bao gồm relationships, thêm các mối quan hệ cơ bản
+      if (includeRelations) {
+        includes = [
           {
             model: User,
             attributes: ['id', 'username', 'email', 'avatar']
@@ -70,24 +81,31 @@ class PostService {
             attributes: ['id', 'name'],
             through: { attributes: [] }
           }
-        ]:[],
-        order: [[orderBy, order]],
-        limit,
-        offset,
-        distinct: true
-      };
+        ];
+      }
       
-      // Nếu có categoryId, thêm điều kiện lọc theo category
+      // Nếu có categoryId, luôn thêm Category vào include để lọc
       if (categoryId) {
-        queryOptions.include = queryOptions.include.map(inc => {
-          if (inc.model === Category) {
-            return {
-              ...inc,
-              where: { id: categoryId }
-            };
-          }
-          return inc;
-        });
+        // Nếu đã bao gồm Category trong includes
+        const existingCategoryInclude = includes.find(inc => inc.model === Category);
+        
+        if (existingCategoryInclude) {
+          // Cập nhật include hiện có
+          existingCategoryInclude.where = { id: categoryId };
+        } else {
+          // Thêm mới include cho Category
+          includes.push({
+            model: Category,
+            attributes: ['id', 'name'],
+            where: { id: categoryId },
+            through: { attributes: [] }
+          });
+        }
+      }
+      
+      // Gắn include vào queryOptions nếu có include
+      if (includes.length > 0) {
+        queryOptions.include = includes;
       }
       
       // Thực hiện truy vấn

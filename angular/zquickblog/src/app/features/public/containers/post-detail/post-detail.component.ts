@@ -196,7 +196,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
-  
+
   // Theo dõi scroll để hiển thị nút back-to-top
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
@@ -413,8 +413,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
           if (comment) {
             this.messageService.success('Đã đăng bình luận thành công!');
             this.loadComments(this.originalPost!.id); // Tải lại bình luận
-            this.resetCommentForm();
-          }
+    this.resetCommentForm();
+  }
         },
         error: (error) => {
           console.error('Error submitting comment:', error);

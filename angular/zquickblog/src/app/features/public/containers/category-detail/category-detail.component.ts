@@ -27,8 +27,8 @@ import { Post } from '../../../../shared/models/post.model';
 
 // Interface đơn giản cho chủ đề liên quan
 interface RelatedTopic {
-  name: string;
-  slug: string;
+    name: string;
+    slug: string;
 }
 
 // Interface mở rộng cho danh mục
@@ -204,10 +204,10 @@ export class  CategoryDetailComponent implements OnInit {
 
   // Helper: Format số lượng bài viết (ví dụ: 12800 -> 12.8K)
   formatStoryCount(count: number): string {
-    if (count >= 1000) {
-      return (count / 1000).toFixed(1) + 'K';
-    }
-    return count.toString();
+      if (count >= 1000) {
+          return (count / 1000).toFixed(1) + 'K';
+      }
+      return count.toString();
   }
 
   // Helper: Format ngày tháng

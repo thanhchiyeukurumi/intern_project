@@ -13,7 +13,7 @@
 /* Categories Header */
 .categories-header {
   background-color: var(--bg-page);
-  padding: 3rem 1rem; /* Tailwind py-12 px-4 */
+  padding: 1rem 1rem; /* Tailwind py-12 px-4 */
 }
 .categories-header-container {
   max-width: 1120px; /* max-w-7xl */
@@ -81,7 +81,7 @@
 
 /* Categories Content Area */
 .categories-content {
-  padding: 3rem 1rem; /* py-12 px-4 */
+  padding: 1rem 1rem; /* py-12 px-4 */
 }
 .categories-content-container {
   max-width: 1120px; /* max-w-7xl */
@@ -150,12 +150,6 @@
 .scroll-fade-right {
   right: 0;
   background: linear-gradient(to left, var(--bg-page), transparent);
-}
-
-
-/* Featured Topics Grid */
-.topics-grid {
-  /* nz-row và nz-col xử lý grid và gap */
 }
 
 .topic-card {
@@ -379,4 +373,354 @@
 }
 .publication-link:hover {
     text-decoration: underline;
+}
+
+/* Thêm ViewEncapsulation.None trong component để sử dụng các biến CSS toàn cục */
+
+/* Các màu sắc mặc định cho cards */
+:root {
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --card-radius: var(--border-radius-base, 8px);
+  --topic-icon-size: 32px;
+  --topic-icon-radius: 8px;
+}
+
+/* --- Container Layout --- */
+.categories-header,
+.categories-content,
+.publications-section {
+  padding: 2rem 1rem;
+}
+
+.categories-header-container,
+.categories-content-container,
+.publications-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* --- Header Styling --- */
+.categories-header {
+  background-color: var(--component-background, #ffffff);
+  border-bottom: 1px solid var(--border-color-split, #f0f0f0);
+}
+
+.page-title {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.page-description {
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+}
+
+/* --- Search Section --- */
+.search-container {
+  max-width: 600px;
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border-radius: var(--card-radius);
+}
+
+.search-button {
+  font-size: 1.25rem;
+}
+
+/* --- Section Titles --- */
+.section-title {
+  font-size: 1.75rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+/* --- Topic Cards Grid --- */
+.topics-grid {
+  margin-bottom: 3rem;
+}
+
+.topic-card {
+  height: 100%;
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.topic-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.card-content {
+  padding: 0.5rem;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+/* --- Topic Icon Styling --- */
+.topic-icon {
+  width: var(--topic-icon-size);
+  height: var(--topic-icon-size);
+  border-radius: var(--topic-icon-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+}
+
+/* Icon background colors */
+.icon-bg-green {
+  background-color: #e6f7ee;
+}
+.icon-bg-blue {
+  background-color: #e6f4ff;
+}
+.icon-bg-purple {
+  background-color: #f2eaff;
+}
+.icon-bg-yellow {
+  background-color: #fffbe6;
+}
+.icon-bg-red {
+  background-color: #fff1f0;
+}
+.icon-bg-indigo {
+  background-color: #f0f5ff;
+}
+
+/* Icon colors */
+.icon-color-green {
+  color: #52c41a;
+}
+.icon-color-blue {
+  color: #1890ff;
+}
+.icon-color-purple {
+  color: #722ed1;
+}
+.icon-color-yellow {
+  color: #faad14;
+}
+.icon-color-red {
+  color: #f5222d;
+}
+.icon-color-indigo {
+  color: #2f54eb;
+}
+
+.topic-title {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.topic-description {
+  margin-bottom: 1.5rem;
+  color: var(--text-color-secondary);
+  min-height: 3.5rem;
+}
+
+/* Link styling */
+.topic-link {
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* Link colors */
+.link-color-green {
+  color: #52c41a;
+}
+.link-color-blue {
+  color: #1890ff;
+}
+.link-color-purple {
+  color: #722ed1;
+}
+.link-color-yellow {
+  color: #faad14;
+}
+.link-color-red {
+  color: #f5222d;
+}
+.link-color-indigo {
+  color: #2f54eb;
+}
+
+/* --- Popular Articles --- */
+.topic-articles {
+  margin-top: 1.5rem;
+}
+
+.articles-title {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  color: var(--heading-color);
+}
+
+.articles-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.articles-list li {
+  margin-bottom: 0.5rem;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.articles-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--primary-color);
+}
+
+.article-link {
+  color: var(--text-color);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.article-link:hover {
+  color: var(--primary-color);
+}
+
+/* --- More Button --- */
+.more-topics-container {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.explore-more-button {
+  padding: 0.5rem 2rem;
+  border-radius: var(--card-radius);
+  font-size: 1rem;
+}
+
+/* --- Publications Section --- */
+.publications-section {
+  background-color: var(--body-background, #f5f5f5);
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.publication-card {
+  background-color: var(--component-background, #ffffff);
+  border-radius: var(--card-radius);
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: var(--card-shadow);
+  height: 100%;
+}
+
+.publication-image {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  object-fit: cover;
+}
+
+.publication-title {
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+.publication-description {
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  min-height: 4rem;
+}
+
+.publication-link {
+  display: inline-block;
+  padding: 0.375rem 1.5rem;
+  background-color: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  border-radius: var(--card-radius);
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.publication-link:hover {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+/* --- Loading Container --- */
+.loading-container {
+  text-align: center;
+  padding: 3rem 0;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Empty State --- */
+.empty-state {
+  text-align: center;
+  padding: 3rem 0;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-state p {
+  font-size: 1.125rem;
+}
+
+/* --- Articles Loading --- */
+.articles-loading {
+  text-align: center;
+  padding: 1rem 0;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 575.98px) {
+  .page-title {
+    font-size: 2rem;
+  }
+  
+  .page-description {
+    font-size: 1rem;
+  }
+  
+  .publication-card {
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .topic-description {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .categories-header,
+  .categories-content,
+  .publications-section {
+    padding: 1.5rem 1rem;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
 }
