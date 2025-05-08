@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common'; // **** Thêm DatePipe ****
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
@@ -16,6 +17,8 @@ import { NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
 import { PostService } from '../../../../core/services/post.service'; // Đảm bảo đường dẫn đúng
 import { Post } from '../../../../shared/models/post.model'; // Đảm bảo đường dẫn đúng
 import { NzMessageService } from 'ng-zorro-antd/message'; // Import MessageService nếu muốn thông báo lỗi
+import { CategoryService } from '../../../../core/services/category.service';
+import { Category } from '../../../../shared/models/category.model';
 
 @Component({
   selector: 'app-admin-post',
@@ -48,11 +51,14 @@ export class AdminPostComponent implements OnInit {
   // ============================================
   searchValue = '';
   selectedCategory = ''; 
-  selectedDate = null;
+  selectedDate: 'today' | 'week' | 'month' | null = null;
   displayData: Post[] = [];
   checked = false;
   indeterminate = false;
   setOfCheckedId = new Set<number>();
+  
+  // Thêm biến mới
+  categories: Category[] = []; // Danh sách tất cả danh mục
 
   pageIndex = 1;
   pageSize = 5;
@@ -71,7 +77,9 @@ export class AdminPostComponent implements OnInit {
   constructor(
       private postService: PostService,
       private message: NzMessageService,
-      private modalService: NzModalService
+      private modalService: NzModalService,
+      private categoryService: CategoryService,
+      private router: Router
   ) {}
 
   // ============================================ 
@@ -81,6 +89,45 @@ export class AdminPostComponent implements OnInit {
    * Hàm khởi tạo khi component được mount
    */
   ngOnInit(): void {
+    this.fetchCategories();
+    this.fetchPosts();
+  }
+
+  // ============================================ 
+  // **Phương thức lấy danh sách danh mục**
+  // ============================================
+  /**
+   * Lấy danh sách danh mục từ API
+   */
+  fetchCategories(): void {
+    this.categoryService.getAll({limit: 100}).subscribe({
+      next: (res) => {
+        this.categories = res.data || [];
+      },
+      error: (err) => {
+        console.error("Error fetching categories:", err);
+        this.message.error("Failed to load categories");
+      }
+    });
+  }
+
+  // ============================================ 
+  // **Tìm kiếm và lọc**
+  // ============================================
+  /**
+   * Tìm kiếm và lọc bài viết
+   */
+  searchAndFilter(): void {
+    // Reset về trang đầu tiên khi thực hiện tìm kiếm/lọc
+    this.pageIndex = 1;
+    
+    // Đảm bảo giá trị selectedDate được xử lý đúng
+    console.log('Filter values:', {
+      search: this.searchValue,
+      category: this.selectedCategory,
+      date: this.selectedDate
+    });
+    
     this.fetchPosts();
   }
 
@@ -95,26 +142,123 @@ export class AdminPostComponent implements OnInit {
     this.setOfCheckedId.clear();
     this.refreshCheckedStatus(); 
 
-    this.postService.getAll({
+    // Tham số cơ bản cho API
+    const baseParams = {
       page: this.pageIndex,
       limit: this.pageSize,
-      search: this.searchValue || undefined,
       includeRelations: true,
-    }).subscribe({
-      next: (res) => {
+    };
+
+    // Tham số tìm kiếm
+    const searchTerm = this.searchValue && this.searchValue.trim() !== '' ? this.searchValue.trim() : undefined;
+
+    // Nếu chỉ có lọc theo danh mục, sử dụng getByCategory
+    if (this.selectedCategory && !this.selectedDate) {
+      console.log('Using getByCategory with categoryId:', this.selectedCategory);
+      
+      // getByCategory không hỗ trợ tìm kiếm, nên nếu có tìm kiếm phải sử dụng getAll
+      if (searchTerm) {
+        console.log('Search term with category, using getAll instead:', searchTerm);
+        
+        const params = {
+          ...baseParams,
+          search: searchTerm,
+          categoryId: this.selectedCategory
+        };
+        
+        this.postService.getAll(params).subscribe(this.handleApiResponse());
+      } else {
+        this.postService.getByCategory(this.selectedCategory, {
+          ...baseParams
+        }).subscribe(this.handleApiResponse());
+      }
+    }
+    // Nếu có lọc theo thời gian, sử dụng getPostsByDateRange
+    else if (this.selectedDate) {
+      const today = new Date();
+      let startDate: Date | null = null;
+      
+      switch(this.selectedDate) {
+        case 'today':
+          startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
+          break;
+        case 'week':
+          // Lấy ngày đầu tuần (thứ 2)
+          const day = today.getDay();
+          const diff = today.getDate() - day + (day === 0 ? -6 : 1);
+          startDate = new Date(today.getFullYear(), today.getMonth(), diff, 0, 0, 0);
+          break;
+        case 'month':
+          // Lấy ngày đầu tháng
+          startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
+          break;
+      }
+      
+      console.log('Using date filter with startDate:', startDate?.toISOString());
+      
+      // Do getPostsByDateRange không hỗ trợ tốt phân trang và tìm kiếm,
+      // chúng ta sử dụng getAll với tham số startDate
+      const params: any = {
+        ...baseParams,
+        startDate: startDate?.toISOString()
+      };
+      
+      // Thêm categoryId nếu có
+      if (this.selectedCategory) {
+        params.categoryId = this.selectedCategory;
+      }
+      
+      // Thêm tham số tìm kiếm nếu có
+      if (searchTerm) {
+        params.search = searchTerm;
+      }
+      
+      console.log('Using getAll with date filters:', params);
+      this.postService.getAll(params).subscribe(this.handleApiResponse());
+    } 
+    // Nếu không có bộ lọc nào đặc biệt, sử dụng getAll
+    else {
+      console.log('Using getAll with standard filters');
+      
+      const params: any = {
+        ...baseParams
+      };
+      
+      // Thêm tham số tìm kiếm nếu có
+      if (searchTerm) {
+        params.search = searchTerm;
+      }
+      
+      this.postService.getAll(params).subscribe(this.handleApiResponse());
+    }
+  }
+  
+  /**
+   * Tạo handler cho response API để tái sử dụng
+   * @returns Object handler cho các API call
+   */
+  private handleApiResponse() {
+    return {
+      next: (res: any) => {
         this.displayData = res.data || [];
         this.total = res.pagination?.total || 0;
         this.loading = false;
         this.refreshCheckedStatus();
       },
-      error: (err) => {
-        console.error("Error fetching posts:", err);
-        this.message.error("Failed to load posts. Please try again.");
-        this.displayData = [];
-        this.total = 0;
-        this.loading = false;
-      }
-    });
+      error: (err: any) => this.handleApiError(err)
+    };
+  }
+  
+  /**
+   * Xử lý lỗi từ API
+   * @param err Error object
+   */
+  private handleApiError(err: any): void {
+    console.error("Error fetching posts:", err);
+    this.message.error("Failed to load posts. Please try again.");
+    this.displayData = [];
+    this.total = 0;
+    this.loading = false;
   }
 
   // ============================================ 
@@ -126,6 +270,7 @@ export class AdminPostComponent implements OnInit {
    */
   onPageIndexChange(index: number): void {
     this.pageIndex = index;
+    console.log('Page index changed to:', index);
     this.fetchPosts();
   }
 
@@ -135,18 +280,8 @@ export class AdminPostComponent implements OnInit {
    */
   onPageSizeChange(size: number): void {
     this.pageSize = size;
-    this.pageIndex = 1;
-    this.fetchPosts();
-  }
-
-  // ============================================ 
-  // **Tìm kiếm và lọc**
-  // ============================================
-  /**
-   * Tìm kiếm và lọc bài viết
-   */
-  searchAndFilter(): void {
-    this.pageIndex = 1;
+    this.pageIndex = 1; // Reset về trang đầu khi thay đổi số lượng hiển thị
+    console.log('Page size changed to:', size);
     this.fetchPosts();
   }
 
@@ -285,6 +420,7 @@ export class AdminPostComponent implements OnInit {
   /**
    * Xóa bài viết khỏi danh sách hiển thị local và cập nhật lại danh sách
    * @param postId ID bài viết cần xóa
+   * @deprecated toi cung meo biet no hoat dong kieu gi
    */
   deletePostFromList(postId: number): void {
       // Lọc ra bài viết có ID cần xóa
@@ -300,6 +436,24 @@ export class AdminPostComponent implements OnInit {
       this.refreshCheckedStatus(); // Cập nhật trạng thái checkbox header
   }
 
+  /**
+   * Điều hướng đến trang tạo bài viết mới
+   */
+  navigateToCreatePost(): void {
+    this.router.navigate(['/blogger/posts/create']);
+  }
+
+  /**
+   * Reset tất cả bộ lọc về mặc định
+   */
+  resetFilters(): void {
+    this.searchValue = '';
+    this.selectedCategory = '';
+    this.selectedDate = null;
+    this.pageIndex = 1;
+    this.fetchPosts();
+  }
 }
+// cai phan lay theo thoi gian deo hoat dong aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
 

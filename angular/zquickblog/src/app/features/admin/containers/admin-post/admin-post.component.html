@@ -2,8 +2,8 @@
   <div class="header-container">
     <div class="title-section">
       <h2 class="card-title">All Posts</h2>
-      <button nz-button nzType="primary">
-        <i nz-icon nzType="plus"></i> Add New Post
+      <button nz-button nzType="primary" (click)="navigateToCreatePost()">
+        <i nz-icon nzType="plus"></i> <span>Add New Post</span>
       </button>
     </div>
 
@@ -30,8 +30,11 @@
           [(ngModel)]="selectedCategory"
           (ngModelChange)="searchAndFilter()">
           <nz-option nzValue="" nzLabel="All Categories"></nz-option>
-          <nz-option nzValue="Công nghệ" nzLabel="Công nghệ"></nz-option>
-          <nz-option nzValue="Phần mềm" nzLabel="Phần mềm"></nz-option>
+          <nz-option 
+            *ngFor="let category of categories" 
+            [nzValue]="category.id.toString()" 
+            [nzLabel]="category.name">
+          </nz-option>
         </nz-select>
 
         <nz-select
@@ -39,11 +42,20 @@
           nzPlaceHolder="All Time"
           [(ngModel)]="selectedDate"
           (ngModelChange)="searchAndFilter()">
-          <nz-option nzValue="null" nzLabel="All Time"></nz-option>
+          <nz-option [nzValue]="null" nzLabel="All Time"></nz-option>
           <nz-option nzValue="today" nzLabel="Today"></nz-option>
           <nz-option nzValue="week" nzLabel="This Week"></nz-option>
           <nz-option nzValue="month" nzLabel="This Month"></nz-option>
         </nz-select>
+        
+        <button 
+          nz-button 
+          nzType="default" 
+          class="reset-button" 
+          (click)="resetFilters()"
+          *ngIf="searchValue || selectedCategory || selectedDate">
+          <i nz-icon nzType="clear"></i> Clear Filters
+        </button>
       </div>
     </div>
   </div>

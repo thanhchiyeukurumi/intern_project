@@ -32,10 +32,25 @@
 .filters {
   display: flex;
   gap: 12px;
+  align-items: center;
 }
 
 .filter-select {
   min-width: 150px;
+}
+
+.reset-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--admin-text-secondary);
+  border-color: var(--admin-border);
+  transition: all 0.3s;
+}
+
+.reset-button:hover {
+  color: var(--admin-delete);
+  border-color: var(--admin-delete);
 }
 
 .author-cell {
