@@ -5,28 +5,55 @@
   margin-bottom: 24px;
   flex-wrap: wrap;
   gap: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding-bottom: 16px;
 }
 
 .page-header h2 {
   margin-bottom: 0;
+  font-weight: 600;
+  color: #262626;
 }
 
 .page-header .action-area {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 .page-header .action-area .search-box {
-  width: 240px;
+  width: 280px;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 576px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .page-header .action-area {
+    width: 100%;
+  }
+  
+  .page-header .action-area .search-box {
+    width: 100%;
+  }
 }
 
 .comments-list .comment-card {
-  padding: 16px;
-  margin-bottom: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
   border-radius: 8px;
   background-color: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.comments-list .comment-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
 }
 
 .comments-list .comment-card:last-child {
@@ -36,7 +63,8 @@
 .comments-list .comment-card .comment-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 
 .comments-list .comment-card .comment-header .author-info {
@@ -51,10 +79,12 @@
 .comments-list .comment-card .comment-header .author-info .author-details .author-name {
   margin: 0;
   font-size: 16px;
+  font-weight: 500;
+  color: #262626;
 }
 
 .comments-list .comment-card .comment-header .author-info .author-details .author-email {
-  font-size: 12px;
+  font-size: 13px;
   color: rgba(0, 0, 0, 0.45);
 }
 
@@ -64,39 +94,48 @@
 
 .comments-list .comment-card .comment-header .comment-meta .comment-date {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   color: rgba(0, 0, 0, 0.45);
   margin-top: 4px;
 }
 
 .comments-list .comment-card .comment-content {
   margin-bottom: 16px;
+  border-radius: 6px;
+  padding: 4px 0;
 }
 
 .comments-list .comment-card .comment-content .post-title {
-  font-size: 13px;
-  margin-bottom: 8px;
+  font-size: 14px;
+  margin-bottom: 10px;
   color: rgba(0, 0, 0, 0.65);
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.06);
 }
 
 .comments-list .comment-card .comment-content .post-title a {
   color: #1890ff;
+  transition: color 0.3s;
 }
 
 .comments-list .comment-card .comment-content .post-title a:hover {
+  color: #096dd9;
   text-decoration: underline;
 }
 
 .comments-list .comment-card .comment-content .comment-text {
-  margin: 0;
+  margin: 10px 0;
   white-space: pre-line;
+  line-height: 1.6;
+  color: #262626;
 }
 
 .comments-list .comment-card .comment-response {
   background-color: #f9f9f9;
-  border-radius: 4px;
-  padding: 12px;
+  border-radius: 6px;
+  padding: 16px;
   margin-bottom: 16px;
+  border-left: 3px solid #1890ff;
 }
 
 .comments-list .comment-card .comment-response .response-header {
@@ -105,12 +144,14 @@
 
 .comments-list .comment-card .comment-response .response-header .response-label {
   font-weight: 500;
-  font-size: 13px;
+  font-size: 14px;
+  color: #262626;
 }
 
 .comments-list .comment-card .comment-response .response-text {
   margin: 0;
   white-space: pre-line;
+  color: #595959;
 }
 
 .comments-list .comment-card .comment-response .response-actions {
@@ -129,22 +170,67 @@
 
 .comments-list .comment-card .comment-actions {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   justify-content: flex-end;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.comments-list .comment-card .comment-actions button {
+  transition: all 0.3s;
+}
+
+.comments-list .comment-card .comment-actions button:hover {
+  background-color: #fff1f0;
 }
 
 .empty-state {
   text-align: center;
-  padding: 40px 0;
+  padding: 60px 0;
   color: rgba(0, 0, 0, 0.45);
+  background: #fafafa;
+  border-radius: 8px;
+  margin: 20px 0;
 }
 
 .empty-state [nz-icon] {
-  font-size: 48px;
-  margin-bottom: 16px;
+  font-size: 54px;
+  margin-bottom: 20px;
+  color: #d9d9d9;
 }
 
 .empty-state p {
   font-size: 16px;
   margin: 0;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.pagination-info {
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .pagination-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pagination-info {
+    margin-bottom: 10px;
+  }
+}
+
+/* Thêm hiệu ứng loading */
+.loading-overlay {
+  position: relative;
+  min-height: 200px;
 }

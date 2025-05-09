@@ -1,12 +1,12 @@
 <div class="page-header">
-  <h2 nz-typography>Comments</h2>
+  <h2 nz-typography>Bình luận</h2>
 
   <div class="action-area">
-    <!-- Search -->
+    <!-- Tìm kiếm -->
     <nz-input-group [nzSuffix]="suffixIconSearch" class="search-box">
       <input type="text"
-             nz-input placeholder="Search comments..."
-             [(ngModel)]="searchValue" (keyup.enter)="onSearch()" /> <!-- Dùng searchValue -->
+             nz-input placeholder="Tìm kiếm bình luận..."
+             [(ngModel)]="searchValue" (keyup.enter)="onSearch()" />
     </nz-input-group>
     <ng-template #suffixIconSearch>
       <span nz-icon nzType="search"></span>
@@ -14,58 +14,46 @@
   </div>
 </div>
 
-<nz-card ngSkipHydration> <!-- ngSkipHydration trên card chính -->
-  <div class="comments-list">
+<nz-card ngSkipHydration [nzLoading]="loading" [nzBodyStyle]="{ padding: '20px' }">
+  <div class="comments-list" *ngIf="!loading && displayComments.length > 0">
     <!-- Lặp qua displayComments để hiển thị từng bình luận -->
     <div class="comment-card" *ngFor="let comment of displayComments">
       <div class="comment-header">
         <div class="author-info">
-          <!-- Sử dụng hàm hỗ trợ để lấy avatar tác giả comment -->
-          <nz-avatar [nzSrc]="getAuthorAvatar(comment)"></nz-avatar>
+          <nz-avatar [nzSrc]="getAuthorAvatar(comment)" [nzSize]="46"></nz-avatar>
           <div class="author-details">
-            <!-- Sử dụng hàm hỗ trợ để lấy username -->
             <h4 class="author-name">{{ getAuthorUsername(comment) }}</h4>
-            <!-- Email có thể không có trong include User -->
-            <!-- <span class="author-email">{{ comment.User?.email }}</span> -->
+            <span class="comment-date">
+              <span nz-icon nzType="clock-circle" nzTheme="outline"></span> 
+              {{ comment.createdAt | date:'dd/MM/yyyy, HH:mm' }}
+            </span>
           </div>
-        </div>
-        <div class="comment-meta">
-          <!-- TODO: Thêm status nếu API getByUser/comments trả về status cho comment -->
-          <!-- <nz-badge [nzStatus]="getStatusColor(comment.status)" [nzText]="comment.status"></nz-badge> -->
-          <span class="comment-date">{{ comment.createdAt | date:'MMM d, y, h:mm a' }}</span> <!-- Sử dụng DatePipe -->
         </div>
       </div>
 
       <div class="comment-content">
         <div class="post-title">
-          On:
-          <!-- Sử dụng hàm hỗ trợ để lấy title và slug bài viết, tạo link -->
+          <span nz-icon nzType="file-text" nzTheme="outline"></span> Bài viết:
           <a *ngIf="getPostSlug(comment)" [routerLink]="['/post', getPostSlug(comment)]">
              {{ getPostTitle(comment) }}
           </a>
-           <span *ngIf="!getPostSlug(comment)">{{ getPostTitle(comment) }}</span> <!-- Nếu không có slug, chỉ hiển thị title -->
+          <span *ngIf="!getPostSlug(comment)">{{ getPostTitle(comment) }}</span>
         </div>
         <p class="comment-text">{{ comment.content }}</p>
       </div>
 
-      <!-- Bỏ các phần reply, response, approve, spam nếu không cần -->
-      <!-- <div class="comment-response" *ngIf="comment.response"> ... </div> -->
-      <!-- <div class="comment-reply" *ngIf="!comment.response"> ... </div> -->
-
-
-      <!-- Actions chỉ có nút delete -->
+      <!-- Actions -->
       <div class="comment-actions">
-        <!-- Nút Delete -->
         <button
           nz-button
           nzType="text"
           nzDanger
           nzSize="small"
           nz-popconfirm
-          nzPopconfirmTitle="Are you sure you want to delete this comment?"
-          nzPopconfirmPlacement="top"
-          (nzOnConfirm)="confirmDeleteComment(comment)"> <!-- Gắn sự kiện click và truyền comment -->
-          <span nz-icon nzType="delete"></span> Delete
+          nzPopconfirmTitle="Bạn có chắc chắn muốn xóa bình luận này?"
+          nzPopconfirmPlacement="topRight"
+          (nzOnConfirm)="confirmDeleteComment(comment)">
+          <span nz-icon nzType="delete"></span> Xóa
         </button>
       </div>
     </div>
@@ -74,11 +62,11 @@
   <!-- Empty State -->
   <div class="empty-state" *ngIf="!loading && displayComments.length === 0">
     <span nz-icon nzType="message" nzTheme="outline"></span>
-    <p>No comments yet</p>
+    <p>Chưa có bình luận nào</p>
+    <small>Khi có người bình luận vào bài viết của bạn, nó sẽ xuất hiện ở đây</small>
   </div>
 
   <!-- Pagination Container -->
-  <!-- Chỉ hiển thị pagination nếu total > 0 -->
   <div class="pagination-container" *ngIf="total > 0">
     <div class="pagination-info" [innerHTML]="getPaginationInfo()"></div>
     <nz-pagination

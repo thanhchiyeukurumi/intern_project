@@ -35,7 +35,11 @@ class CommentService {
           {
             model: User,
             attributes: ['id', 'username', 'email', 'avatar']
-          }
+          },
+          {
+            model: Post,
+            attributes: ['id', 'title', 'slug']
+          } 
         ],
         order: [[orderBy, order]],
         limit,

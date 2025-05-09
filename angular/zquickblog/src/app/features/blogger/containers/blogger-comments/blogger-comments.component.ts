@@ -16,10 +16,12 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-import { CommentService } from '../../../../core/services/comment.service'; // Correct Import
-import { Comment } from '../../../../shared/models/comment.model'; // Correct Import, use the shared model
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { CommentService } from '../../../../core/services/comment.service';
+import { PostService } from '../../../../core/services/post.service';
+import { Comment } from '../../../../shared/models/comment.model';
 import { AuthService } from '../../../../core/services/auth.service';
-import { switchMap, of } from 'rxjs'; // Import 'of'
+import { switchMap, of, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-blogger-comments',
@@ -42,15 +44,16 @@ import { switchMap, of } from 'rxjs'; // Import 'of'
     NzEmptyModule,
     NzPaginationModule,
     NzModalModule,
-    DatePipe // Import DatePipe ở đây nếu dùng trong template
+    NzSpinModule,
+    DatePipe
   ],
 })
 export class BloggerCommentsComponent implements OnInit {
   // ============================================
   // **Biến trạng thái và thuộc tính**
   // ============================================
-  searchValue = ''; // Dùng cho search
-  displayComments: Comment[] = []; // Dữ liệu hiển thị comment
+  searchValue = '';
+  displayComments: Comment[] = [];
 
   // Biến phân trang
   pageIndex = 1;
@@ -58,66 +61,149 @@ export class BloggerCommentsComponent implements OnInit {
   total = 0;
   loading = false;
 
-  currentUser: any = null; // Thông tin user hiện tại (có thể dùng User | null nếu import User từ auth service)
+  currentUser: any = null;
+  userPosts: any[] = []; // Lưu danh sách bài viết của blogger
 
   constructor(
-    private commentService: CommentService, // Inject CommentService
+    private commentService: CommentService,
+    private postService: PostService, // Thêm PostService để lấy bài viết của user
     private message: NzMessageService,
     private modalService: NzModalService,
-    private authService: AuthService, // Inject AuthService
+    private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.loading = true; // Bật loading ngay khi bắt đầu fetch
+    this.loading = true;
 
     // Lắng nghe sự thay đổi của user hiện tại
     this.authService.currentUser$.pipe(
         switchMap(user => {
-            this.currentUser = user; // Cập nhật biến currentUser của component
-            if (user && user.id) { // Kiểm tra user và user.id
-                // **** Gọi API để lấy dữ liệu bình luận của user hiện tại ****
-                // Khi user có, gọi API comment service
-                return this.commentService.getByUser(user.id, {
-                    page: this.pageIndex,
-                    limit: this.pageSize,
-                    // TODO: Thêm search param nếu API hỗ trợ
-                    // search: this.searchValue || undefined,
-                    orderBy: 'createdAt', // Sắp xếp theo ngày tạo
-                    order: 'DESC',
-                    // API getByUser/comments có include User (tác giả comment) và Post không?
-                    // Nếu có, cần includeRelations: true (kiểm tra trong service backend)
+            this.currentUser = user;
+            if (user && user.id) {
+                // Đầu tiên lấy danh sách bài viết của user hiện tại
+                return this.postService.getByUser(user.id, {
+                    // Có thể thêm các tham số như cần
+                    includeRelations: true,
+                    // Lấy tất cả bài viết nếu có thể
+                    limit: 1000 
                 });
             } else {
-                 // User chưa đăng nhập hoặc không có ID
-                 // Thông báo và chuyển hướng
-                 this.message.warning('Vui lòng đăng nhập để xem bình luận của bạn.');
-                 this.router.navigate(['/login']); // Chuyển hướng về login
-                 // Trả về Observable rỗng với cấu trúc dữ liệu phù hợp
-                 // để đảm bảo khối subscribe không bị lỗi type và set loading = false
-                return of({ data: [], pagination: { total: 0 } }); // TRẢ VỀ OF RỖNG VỚI CẤU TRÚC ĐÚNG
+                 this.message.warning('Vui lòng đăng nhập để xem bình luận của các bài viết của bạn.');
+                 this.router.navigate(['/login']);
+                 return of({ data: [], pagination: { total: 0 } });
+            }
+        }),
+        switchMap(postsResponse => {
+            // Lưu danh sách bài viết của user
+            this.userPosts = postsResponse.data || [];
+            
+            if (this.userPosts.length === 0) {
+                this.loading = false;
+                this.message.info('Bạn chưa có bài viết nào.');
+                return of({ data: [], pagination: { total: 0 } });
+            }
+            
+            console.log(`Đã tìm thấy ${this.userPosts.length} bài viết của blogger`);
+            
+            // Nếu có quá nhiều bài viết, có thể cần xử lý phân trang hoặc giới hạn
+            // Tạo mảng các request để lấy comment cho từng bài viết
+            if (this.userPosts.length <= 5) {
+                // Nếu có ít bài viết, lấy hết comment một lượt
+                const commentRequests = this.userPosts.map(post => 
+                    this.commentService.getByPost(post.id, {
+                        page: this.pageIndex,
+                        limit: this.pageSize,
+                        orderBy: 'createdAt',
+                        order: 'DESC'
+                    })
+                );
+                
+                // Thực hiện tất cả request đồng thời
+                return forkJoin(commentRequests).pipe(
+                    switchMap(responses => {
+                        // Tổng hợp kết quả
+                        const allComments: Comment[] = [];
+                        let totalComments = 0;
+                        
+                        responses.forEach(response => {
+                            allComments.push(...(response.data || []));
+                            totalComments += response.pagination?.total || 0;
+                        });
+                        
+                        // Sắp xếp lại theo thời gian
+                        allComments.sort((a, b) => 
+                            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                        );
+                        
+                        // Giả lập phân trang ở client
+                        const start = (this.pageIndex - 1) * this.pageSize;
+                        const paginatedComments = allComments.slice(start, start + this.pageSize);
+                        
+                        return of({
+                            data: paginatedComments,
+                            pagination: { total: allComments.length }
+                        });
+                    })
+                );
+            } else {
+                // Nếu có nhiều bài viết, lấy comments của 5 bài viết mới nhất
+                const recentPosts = this.userPosts
+                    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                    .slice(0, 5);
+                
+                const commentRequests = recentPosts.map(post => 
+                    this.commentService.getByPost(post.id, {
+                        page: this.pageIndex,
+                        limit: this.pageSize,
+                        orderBy: 'createdAt',
+                        order: 'DESC'
+                    })
+                );
+                
+                return forkJoin(commentRequests).pipe(
+                    switchMap(responses => {
+                        const allComments: Comment[] = [];
+                        
+                        responses.forEach(response => {
+                            allComments.push(...(response.data || []));
+                        });
+                        
+                        // Sắp xếp lại theo thời gian
+                        allComments.sort((a, b) => 
+                            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                        );
+                        
+                        // Giả lập phân trang ở client
+                        const start = (this.pageIndex - 1) * this.pageSize;
+                        const paginatedComments = allComments.slice(start, start + this.pageSize);
+                        
+                        return of({
+                            data: paginatedComments,
+                            pagination: { total: allComments.length }
+                        });
+                    })
+                );
             }
         })
     ).subscribe({
-      next: (res: { data: Comment[]; pagination: any }) => { // Sử dụng kiểu dữ liệu rõ ràng
+      next: (res: { data: Comment[]; pagination: any }) => {
         this.displayComments = res.data || [];
         this.total = res.pagination?.total || 0;
-        this.loading = false; // Tắt loading khi có dữ liệu
-        console.log('Fetched Comments:', this.displayComments); // Log để kiểm tra dữ liệu
+        this.loading = false;
+        console.log('Fetched Comments for blogger posts:', this.displayComments);
       },
       error: (err) => {
-        console.error("Error fetching blogger comments:", err);
-         // Kiểm tra lỗi 401/403 và xử lý chuyển hướng nếu interceptor chưa đủ
+        console.error("Error fetching comments for blogger posts:", err);
         if (err.status === 401 || err.status === 403) {
-             // Interceptor thường xử lý điều này, nhưng thêm ở đây là an toàn
              this.router.navigate(['/login']);
              this.message.error('Phiên làm việc đã hết hạn hoặc không có quyền. Vui lòng đăng nhập lại.');
         } else {
-             this.message.error("Failed to load your comments. Please try again.");
+             this.message.error("Không thể tải bình luận cho bài viết của bạn. Vui lòng thử lại.");
         }
         this.displayComments = [];
         this.total = 0;
-        this.loading = false; // Tắt loading khi có lỗi
+        this.loading = false;
       }
     });
   }
@@ -126,49 +212,127 @@ export class BloggerCommentsComponent implements OnInit {
   // **Hàm fetch comments (để gọi lại)**
   // ============================================
   /**
-   * Lấy danh sách bình luận từ API dựa trên trạng thái hiện tại của component (paging, search)
+   * Lấy danh sách bình luận từ API dựa trên trạng thái hiện tại của component
    */
   fetchComments(): void {
-       // Kiểm tra lại user trước khi fetch (phòng trường hợp subscribe chạy lại hoặc gọi thủ công)
-       if (!this.currentUser || !this.currentUser.id) {
-           // Nếu không có user, không làm gì cả, chỉ xóa dữ liệu cũ
-           this.displayComments = [];
-           this.total = 0;
-           this.loading = false;
-           // Có thể thêm log cảnh báo nếu hàm này bị gọi khi không có user
-           console.warn('fetchComments called but currentUser is not available.');
-           return;
-       }
+    if (!this.currentUser || !this.currentUser.id || this.userPosts.length === 0) {
+        this.displayComments = [];
+        this.total = 0;
+        this.loading = false;
+        console.warn('fetchComments called but userPosts is empty or currentUser is not available.');
+        return;
+    }
 
-       this.loading = true; // Bật loading
+    this.loading = true;
 
-       this.commentService.getByUser(this.currentUser.id, {
-           page: this.pageIndex,
-           limit: this.pageSize,
-           orderBy: 'createdAt',
-           order: 'DESC',
-           // includeRelations: true (kiểm tra service backend)
-       }).subscribe({
-           next: (res) => {
-               this.displayComments = res.data || [];
-               this.total = res.pagination?.total || 0;
-               this.loading = false; // Tắt loading khi thành công
-           },
-           error: (err) => {
-               console.error("Error fetching comments:", err);
-               const errorMessage = err?.error?.message || err?.message || "Failed to load comments.";
-               this.message.error(errorMessage);
-               this.displayComments = [];
-               this.total = 0;
-               this.loading = false; // Tắt loading khi có lỗi
-                // Xử lý lỗi 401/403
-               if (err.status === 401 || err.status === 403) {
+    // Xử lý tương tự như trong ngOnInit
+    if (this.userPosts.length <= 5) {
+        const commentRequests = this.userPosts.map(post => 
+            this.commentService.getByPost(post.id, {
+                page: this.pageIndex,
+                limit: this.pageSize,
+                orderBy: 'createdAt',
+                order: 'DESC'
+            })
+        );
+        
+        forkJoin(commentRequests).pipe(
+            switchMap(responses => {
+                const allComments: Comment[] = [];
+                
+                responses.forEach(response => {
+                    allComments.push(...(response.data || []));
+                });
+                
+                // Sắp xếp lại theo thời gian
+                allComments.sort((a, b) => 
+                    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                );
+                
+                // Giả lập phân trang
+                const start = (this.pageIndex - 1) * this.pageSize;
+                const paginatedComments = allComments.slice(start, start + this.pageSize);
+                
+                return of({
+                    data: paginatedComments,
+                    pagination: { total: allComments.length }
+                });
+            })
+        ).subscribe({
+            next: (res) => {
+                this.displayComments = res.data || [];
+                this.total = res.pagination?.total || 0;
+                this.loading = false;
+            },
+            error: (err) => {
+                console.error("Error fetching comments:", err);
+                const errorMessage = err?.error?.message || err?.message || "Failed to load comments.";
+                this.message.error(errorMessage);
+                this.displayComments = [];
+                this.total = 0;
+                this.loading = false;
+                if (err.status === 401 || err.status === 403) {
                     this.router.navigate(['/login']);
-               }
-           }
-       });
-   }
-
+                }
+            }
+        });
+    } else {
+        // Xử lý tương tự như trên với 5 bài viết mới nhất
+        const recentPosts = this.userPosts
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            .slice(0, 5);
+        
+        const commentRequests = recentPosts.map(post => 
+            this.commentService.getByPost(post.id, {
+                page: this.pageIndex,
+                limit: this.pageSize,
+                orderBy: 'createdAt',
+                order: 'DESC'
+            })
+        );
+        
+        forkJoin(commentRequests).pipe(
+            switchMap(responses => {
+                const allComments: Comment[] = [];
+                
+                responses.forEach(response => {
+                    allComments.push(...(response.data || []));
+                });
+                
+                // Sắp xếp lại theo thời gian
+                allComments.sort((a, b) => 
+                    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                );
+                
+                // Giả lập phân trang
+                const start = (this.pageIndex - 1) * this.pageSize;
+                const paginatedComments = allComments.slice(start, start + this.pageSize);
+                
+                return of({
+                    data: paginatedComments,
+                    pagination: { total: allComments.length }
+                });
+            })
+        ).subscribe({
+            next: (res) => {
+                this.displayComments = res.data || [];
+                this.total = res.pagination?.total || 0;
+                this.loading = false;
+            },
+            error: (err) => {
+                console.error("Error fetching comments:", err);
+                const errorMessage = err?.error?.message || err?.message || "Failed to load comments.";
+                this.message.error(errorMessage);
+                this.displayComments = [];
+                this.total = 0;
+                this.loading = false;
+                if (err.status === 401 || err.status === 403) {
+                    this.router.navigate(['/login']);
+                }
+            }
+        });
+    }
+  }
 
   // ============================================
   // **Xử lý phân trang**
@@ -201,7 +365,6 @@ export class BloggerCommentsComponent implements OnInit {
     // TODO: Implement local search logic on this.displayComments
     // this.message.info('Chức năng tìm kiếm bình luận đang được phát triển (cần API hỗ trợ hoặc lọc local).');
   }
-
 
   // ============================================
   // **Xóa Bình luận**
@@ -268,7 +431,6 @@ export class BloggerCommentsComponent implements OnInit {
       this.fetchComments();
   }
 
-
   // ============================================
   // **Hàm hỗ trợ hiển thị**
   // ============================================
@@ -292,8 +454,8 @@ export class BloggerCommentsComponent implements OnInit {
     * @returns Username hoặc placeholder
     */
    getAuthorUsername(comment: Comment): string {
-      if (comment.user && comment.user.username) {
-          return comment.user.username;
+      if (comment.User.username) {
+          return comment.User.username;
       }
       return 'Unknown User'; // Placeholder
    }
@@ -304,8 +466,8 @@ export class BloggerCommentsComponent implements OnInit {
     * @returns Title bài viết hoặc placeholder
     */
    getPostTitle(comment: Comment): string {
-      if (comment.post && comment.post.title) {
-          return comment.post.title;
+      if (comment.Post.title) {
+          return comment.Post.title;
       }
       return 'Unknown Post'; // Placeholder
    }
@@ -316,23 +478,22 @@ export class BloggerCommentsComponent implements OnInit {
     * @returns Slug bài viết hoặc undefined
     */
    getPostSlug(comment: Comment): string | undefined {
-       if (comment.post && comment.post.slug) {
-           return comment.post.slug;
+       if (comment.Post.slug) {
+           return comment.Post.slug;
        }
        return undefined;
    }
-
 
    /**
     * Lấy thông tin phân trang dạng text
     * @returns Chuỗi mô tả phân trang
     */
    getPaginationInfo(): string {
-     if (this.total === 0) return 'Showing 0 comments';
+     if (this.total === 0) return 'Hiển thị 0 bình luận';
      const startIndex = (this.pageIndex - 1) * this.pageSize + 1;
      const endIndex = Math.min(startIndex + this.pageSize - 1, this.total);
      const displayStartIndex = Math.min(startIndex, this.total);
-     return `Showing <strong>${displayStartIndex}</strong> to <strong>${endIndex}</strong> of <strong>${this.total}</strong> comments`;
+     return `Hiển thị <strong>${displayStartIndex}</strong> đến <strong>${endIndex}</strong> của <strong>${this.total}</strong> bình luận`;
    }
 
 }
