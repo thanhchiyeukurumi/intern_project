@@ -25,59 +25,10 @@
           </div>
         </div>
   
-        <!-- Featured Post Nổi bật ở đầu -->
-        <nz-card *ngIf="loadingFeatured" class="featured-post-card skeleton-card" [nzLoading]="true">
-          <div class="skeleton-content featured-skeleton">
-            <div class="skeleton-header"></div>
-            <div class="skeleton-body"></div>
-            <div class="skeleton-footer"></div>
-          </div>
-        </nz-card>
-        
-        <nz-card *ngIf="!loadingFeatured && featuredPost" class="featured-post-card animate-in">
-          <div class="featured-post-badge">Nổi bật</div>
-          <div class="featured-post-content">
-            <!-- Thêm thẻ cho danh mục bài viết -->
-            <div class="featured-categories" *ngIf="featuredPost.categories && featuredPost.categories.length > 0">
-              <nz-tag *ngFor="let category of featuredPost.categories" 
-                      [nzColor]="primaryColor" 
-                      class="featured-category-tag">
-                {{ category.name }}
-              </nz-tag>
-            </div>
-            <div class="featured-details">
-              <h2 class="featured-title">
-                <a [routerLink]="['/post', featuredPost.id]">{{ featuredPost.title }}</a>
-              </h2>
-              <div class="featured-author">
-                <nz-avatar [nzSize]="36" [nzSrc]="featuredPost.authorAvatar" nzIcon="user"></nz-avatar>
-                <span class="author-name">{{ featuredPost.authorName || 'Anonymous' }}</span>
-              </div>
-              <p nz-typography nzType="secondary" class="featured-description">
-                {{ featuredPost.description }}
-              </p>
-              <div class="featured-meta">
-                <span class="meta-item">
-                  <span nz-icon nzType="calendar" nzTheme="outline"></span>
-                  {{ featuredPost.date }}
-                </span>
-                <span class="meta-item">
-                  <span nz-icon nzType="message" nzTheme="outline"></span>
-                  {{ featuredPost.commentCount }} bình luận
-                </span>
-                <span class="meta-item">
-                  <span nz-icon nzType="eye" nzTheme="outline"></span>
-                  {{ featuredPost.views }} lượt xem
-                </span>
-              </div>
-            </div>
-          </div>
-        </nz-card>
-  
         <!-- Danh sách bài viết chính -->
         <div class="main-posts-list">
           <!-- Skeleton loading khi đang tải -->
-          <nz-card *ngIf="loading && posts.length === 0" class="post-preview-card skeleton-card" [nzLoading]="true">
+          <nz-card *ngIf="loading && posts.length === 0" class="post-preview-card skeleton-card" [nzLoading]="true" [nzBordered]="false">
             <div class="skeleton-content">
               <div class="skeleton-header"></div>
               <div class="skeleton-body"></div>
@@ -89,8 +40,9 @@
           <nz-card *ngFor="let post of posts; let i = index" 
                   class="post-preview-card"
                   [class.animate-card]="true" 
-                  [style.animation-delay]="i * 0.1 + 's'">
-            <div class="new-post-badge" *ngIf="isNewPost(post)">Mới</div>
+                  [style.animation-delay]="i * 0.1 + 's'"
+                  [nzBordered]="false">
+            <!-- <div class="new-post-badge" *ngIf="isNewPost(post)">Mới</div> -->
             <div class="post-header">
               <!-- Hiển thị danh mục cho mỗi bài viết -->
               <div class="post-categories" *ngIf="post.categories && post.categories.length > 0">
@@ -108,7 +60,7 @@
                 <a [routerLink]="['/post', post.id]">{{ post.title }}</a>
               </h3>
             </div>
-            <p nz-typography nzType="secondary" class="post-description">
+            <p nz-typography class="post-description">
               {{ post.description }}
             </p>
             <div class="post-footer">
@@ -129,7 +81,7 @@
           </nz-card>
   
           <!-- Skeleton loading khi tải thêm -->
-          <nz-card *ngIf="loading && posts.length > 0" class="post-preview-card skeleton-card" [nzLoading]="true">
+          <nz-card *ngIf="loading && posts.length > 0" class="post-preview-card skeleton-card" [nzLoading]="true" [nzBordered]="false">
             <div class="skeleton-content">
               <div class="skeleton-header"></div>
               <div class="skeleton-body"></div>
@@ -195,8 +147,9 @@
             </ul>
             
             <!-- Empty state cho random posts -->
-            <div *ngIf="!loadingRandomPosts && randomPosts.length === 0" class="empty-list">
-              <nz-empty nzNotFoundContent="Không có bài viết nổi bật"></nz-empty>
+            <div *ngIf="!loadingRandomPosts && randomPosts.length === 0" class="empty-state">
+              <span nz-icon nzType="file-exclamation" nzTheme="outline"></span>
+              <p>Không có bài viết nổi bật</p>
             </div>
           </div>
   
@@ -216,12 +169,6 @@
                  (click)="addFilter(topic)">
                 <nz-tag class="topic-tag">{{ topic.name }}</nz-tag>
               </a>
-              
-              <!-- Empty state cho categories
-              <nz-empty *ngIf="recommendedTopics.length === 0" nzNotFoundContent="Không có chủ đề" [nzNoResult]="noResultTpl"></nz-empty>
-              <ng-template #noResultTpl>
-                <span>Không có chủ đề nào</span>
-              </ng-template> -->
             </div>
           </div>
   
@@ -231,7 +178,7 @@
               <span nz-icon nzType="mail" nzTheme="fill" class="section-icon"></span>
               Đăng ký nhận bài viết mới
             </h2>
-            <p class="newsletter-description">Nhận thông báo khi có bài viết mới</p>
+            <p class="newsletter-description">Hãy là người đầu tiên đọc các bài viết mới nhất của chúng tôi</p>
             <div class="newsletter-form">
               <nz-input-group [nzSuffix]="suffixButton">
                 <input type="email" nz-input placeholder="Email của bạn" [(ngModel)]="emailSubscribe" />

@@ -94,13 +94,11 @@ export class HomeDetailComponent implements OnInit, OnDestroy {
   posts: PostPreview[] = [];
   randomPosts: RandomPost[] = [];
   recommendedTopics: Topic[] = [];
-  featuredPost: PostPreview | null = null;
   
   // Biến cho phân trang và tải dữ liệu
   currentPage: number = 1;
   pageSize: number = 5;
   loading: boolean = false;
-  loadingFeatured: boolean = false;
   loadingRandomPosts: boolean = false;
   loadingCategories: boolean = false;
   hasMorePosts: boolean = true;
@@ -135,7 +133,6 @@ export class HomeDetailComponent implements OnInit, OnDestroy {
     this.loadPosts();
     this.loadRandomPosts();
     this.loadCategories();
-    this.loadFeaturedPost();
   }
 
   ngOnDestroy(): void {
@@ -272,41 +269,6 @@ export class HomeDetailComponent implements OnInit, OnDestroy {
       error: (error) => {
         console.error('Error loading posts:', error);
         this.messageService.error('Không thể tải bài viết. Vui lòng thử lại sau.');
-      }
-    });
-  }
-
-  // Tải bài viết featured (bài viết nổi bật nhất)
-  loadFeaturedPost(): void {
-    this.loadingFeatured = true;
-    this.postService.getAll({
-      page: 1,
-      limit: 1,
-      orderBy: 'views', // Sắp xếp theo lượt xem
-      order: 'DESC',
-      includeRelations: true
-    })
-    .pipe(
-      finalize(() => this.loadingFeatured = false),
-      catchError(error => {
-        console.error('Error loading featured post:', error);
-        return [];
-      }),
-      takeUntil(this.destroy$)
-    )
-    .subscribe({
-      next: (response) => {
-        if (response.data.length > 0) {
-          const post = response.data[0];
-          this.featuredPost = this.mapPostToPreview(post);
-          
-          // Sử dụng excerpt làm hình ảnh hoặc một hình ảnh mặc định
-          this.featuredPost.image = post.excerpt || 'assets/images/featured-placeholder.jpg';
-          this.featuredPost.views = post.views;
-        }
-      },
-      error: (error) => {
-        console.error('Error loading featured post:', error);
       }
     });
   }

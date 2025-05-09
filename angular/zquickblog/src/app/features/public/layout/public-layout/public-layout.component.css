@@ -227,3 +227,13 @@
     color: #11182c; /* Tailwind hover:text-gray-900 */
     text-decoration: underline; /* Tailwind hover:underline */
   }
+
+  /* Thêm style cho avatar và username */
+  .username-text {
+    font-size: 14px;
+  }
+
+  :host ::ng-deep .ant-menu-submenu-title .ant-avatar {
+    margin-right: 8px;
+  }
+

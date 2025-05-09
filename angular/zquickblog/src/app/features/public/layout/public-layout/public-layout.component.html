@@ -15,13 +15,51 @@
               <!-- Sử dụng routerLink thay cho href -->
               <a routerLink="/public/posts">Posts</a>
             </li>
-            <li nz-menu-item>
-              <a routerLink="/login">Sign in</a>
-            </li>
-            <!-- Sử dụng nz-button cho "Get started" -->
-            <li nz-menu-item class="no-hover-effect"> <!-- Bỏ hiệu ứng hover mặc định -->
-              <a routerLink="/register" nz-button class="get-started-btn">Get started</a>
-            </li>
+            
+            <!-- Menu trạng thái đăng nhập/chưa đăng nhập sử dụng ngIf-else -->
+            <ng-container *ngIf="!isLoggedIn">    
+              <li nz-menu-item>
+                <a routerLink="/login">Sign in</a>
+              </li>
+              <!-- Sử dụng nz-button cho "Get started" -->
+              <li nz-menu-item class="no-hover-effect"> <!-- Bỏ hiệu ứng hover mặc định -->
+                <a routerLink="/register" nz-button class="get-started-btn">Get started</a>
+              </li>
+            </ng-container>
+            
+            <!-- Template cho người dùng đã đăng nhập -->
+            <ng-container *ngIf="isLoggedIn">
+              <!-- Menu cho người dùng đã đăng nhập -->
+              <li nz-menu-item>
+                <a routerLink="/blogger/posts">My Posts</a>
+              </li>
+              <li nz-menu-item>
+                <a routerLink="/admin/dashboard">Admin Panel</a>
+              </li>
+
+              
+              <!-- Avatar và dropdown menu cho người dùng -->
+              <li nz-submenu [nzTitle]="userTemplate">
+                <ng-template #userTemplate>
+                  <nz-avatar 
+                    [nzSrc]="currentUser?.avatar || 'assets/images/default-avatar.png'" 
+                    nzSize="small">
+                  </nz-avatar>
+                  <span class="username-text" *ngIf="currentUser">{{ currentUser.username }}</span>
+                </ng-template>
+                <ul>
+                  <li nz-menu-item>
+                    <a routerLink="/profile">My Profile</a>
+                  </li>
+                  <li nz-menu-item>
+                    <a routerLink="/settings">Settings</a>
+                  </li>
+                  <li nz-menu-item (click)="logout()">
+                    <span>Logout</span>
+                  </li>
+                </ul>
+              </li>
+            </ng-container>
           </ul>
         </div>
   
@@ -46,12 +84,40 @@
           <li nz-menu-item (click)="closeMobileMenu()">
             <a routerLink="/posts">Posts</a>
           </li>
-          <li nz-menu-item (click)="closeMobileMenu()">
-            <a routerLink="/login">Sign in</a>
-          </li>
-          <li nz-menu-item class="no-hover-effect">
-            <a routerLink="/register" nz-button nzType="primary" nzBlock class="get-started-btn-mobile" (click)="closeMobileMenu()">Get started</a>
-          </li>
+          
+          <!-- Menu di động - ngIf-else cho trạng thái đăng nhập -->
+          <ng-container *ngIf="!isLoggedIn; else mobileUserLoggedIn">
+            <li nz-menu-item (click)="closeMobileMenu()">
+              <a routerLink="/login">Sign in</a>
+            </li>
+            <li nz-menu-item class="no-hover-effect">
+              <a routerLink="/register" nz-button nzType="primary" nzBlock class="get-started-btn-mobile" (click)="closeMobileMenu()">Get started</a>
+            </li>
+          </ng-container>
+          
+          <!-- Template menu di động cho người dùng đã đăng nhập -->
+          <ng-template #mobileUserLoggedIn>
+            <li nz-menu-divider></li>
+            <li nz-menu-item *ngIf="hasRole(['blogger', 'admin'])" (click)="closeMobileMenu()">
+              <a routerLink="/dashboard">Dashboard</a>
+            </li>
+            <li nz-menu-item *ngIf="hasRole('blogger')" (click)="closeMobileMenu()">
+              <a routerLink="/blogger/posts">My Posts</a>
+            </li>
+            <li nz-menu-item *ngIf="hasRole('admin')" (click)="closeMobileMenu()">
+              <a routerLink="/admin/dashboard">Admin Panel</a>
+            </li>
+            <li nz-menu-divider></li>
+            <li nz-menu-item (click)="closeMobileMenu()">
+              <a routerLink="/profile">My Profile</a>
+            </li>
+            <li nz-menu-item (click)="closeMobileMenu()">
+              <a routerLink="/settings">Settings</a>
+            </li>
+            <li nz-menu-item (click)="logout(); closeMobileMenu()">
+              <span>Logout</span>
+            </li>
+          </ng-template>
         </ul>
       </ng-container>
     </nz-drawer>
