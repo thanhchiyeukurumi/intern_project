@@ -48,7 +48,6 @@
         <tr>
           <th nzWidth="40px"></th> <!-- Cột cho nút expand -->
           <th nzWidth="30%">Tiêu đề</th>
-          <th>Trạng thái</th>
           <th>Ngày đăng</th>
           <th>Ngôn ngữ</th>
           <th>Danh mục</th>
@@ -73,19 +72,16 @@
                   <nz-typography [nzEllipsis]="true">{{ post.title }}</nz-typography>
                 </a>
                 <div class="post-tags">
-                  <nz-tag *ngIf="post.translations && post.translations.length > 0"
-                        nzColor="blue" class="translation-count-tag">
-                        {{ post.translations.length }} bản dịch
-                  </nz-tag>
+                  <ng-container *ngIf="post.translations && post.translations.length > 0">
+                    <nz-tag nzColor="blue" class="translation-count-tag">
+                      {{ post.translations.length }} bản dịch
+                    </nz-tag>
+                  </ng-container>
                   <nz-tag *ngIf="post.loadingTranslations" nzColor="geekblue">
                     <i nz-icon nzType="loading"></i>
                   </nz-tag>
                 </div>
               </div>
-            </td>
-            <!-- Status -->
-            <td>
-              <nz-tag [nzColor]="getStatusColor(post.status)">{{ post.status | uppercase }}</nz-tag>
             </td>
             <!-- Published Date -->
             <td>
@@ -243,12 +239,9 @@
                   <div class="empty-content">
                     <h4>Chưa có bản dịch nào</h4>
                     <p>Mở rộng phạm vi tiếp cận bài viết của bạn bằng cách thêm các ngôn ngữ khác</p>
-                    <button nz-button nzType="primary" (click)="addLanguageVariant(post.id)" class="add-translation-empty-btn">
-                      <span nz-icon nzType="plus"></span> Thêm bản dịch đầu tiên
-                    </button>
+                    <button nz-button nzType="primary" (click)="addLanguageVariant(post.id)" class="add-translation-empty-btn"> Thêm bản dịch đầu tiên </button>
                   </div>
                 </div>
-
               </div>
             </td>
           </tr>

@@ -153,9 +153,30 @@ export class BloggerPostsComponent implements OnInit, OnDestroy {
                   loadingTranslations: false // Chỉ thêm cờ này
               }));
               this.total = res.pagination?.total || 0;
+              
+              // Pre-load các bản dịch cho từng bài viết để hiển thị số lượng
+              this.preloadAllTranslations();
           }
       });
       this.subscriptions.push(dataFetchSub);
+  }
+  
+  // Phương thức để tải trước tất cả các bản dịch
+  preloadAllTranslations(): void {
+      // Lặp qua từng bài viết và gọi API để lấy các bản dịch
+      this.displayPosts.forEach(post => {
+          if (!post.translations) {
+              this.postService.getPostsFromOriginal(post.id, { includeRelations: true })
+                  .subscribe({
+                      next: (res) => {
+                          post.translations = res.data || [];
+                      },
+                      error: () => {
+                          post.translations = [];
+                      }
+                  });
+          }
+      });
   }
 
   fetchPosts(): void {
@@ -220,7 +241,7 @@ export class BloggerPostsComponent implements OnInit, OnDestroy {
 
       // Kiểm tra post.translations đã được định nghĩa chưa (tức là đã từng load hay chưa)
       // Nếu chưa (undefined) và đang mở expand và chưa loading -> thì mới load
-      if (post.expand && post.translations === undefined && !post.loadingTranslations) {
+      if (post.expand && !post.translations && !post.loadingTranslations) {
           post.loadingTranslations = true;
           // Service PostService.getPostsFromOriginal() của bạn
           const sub = this.postService.getPostsFromOriginal(post.id, { includeRelations: true })
@@ -289,7 +310,7 @@ export class BloggerPostsComponent implements OnInit, OnDestroy {
                         ...updatedPostFromApi, // Dữ liệu mới từ API
                         expand: currentDisplayPost.expand, // Giữ expand
                         loadingTranslations: currentDisplayPost.loadingTranslations, // Giữ loadingTranslations
-                        translations: currentDisplayPost.translations || updatedPostFromApi.translations // Giữ translations nếu đã load
+                        translations: currentDisplayPost.translations // Giữ translations nếu đã load
                     };
                 }
             },
