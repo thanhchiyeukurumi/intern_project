@@ -303,3 +303,456 @@ nz-empty .ant-empty-description { /* Target the description text */
     }
 
 }
+
+/* Main Card Styles */
+.blogger-posts-card {
+  border-radius: 8px;
+  box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.08), 
+              0 9px 28px 0 rgba(0, 0, 0, 0.05), 
+              0 12px 48px 16px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Header Container Styles */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.title-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.card-title {
+  margin-bottom: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.create-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  width: 260px;
+}
+
+.filter-select {
+  width: 160px;
+}
+
+/* Table Container */
+.table-container {
+  margin-bottom: 24px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Main Table Styles */
+.blogger-posts-table {
+  width: 100%;
+}
+
+.blogger-posts-table thead > tr > th {
+  background-color: #fafafa;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.blogger-posts-table tbody > tr {
+  transition: all 0.3s ease;
+}
+
+.blogger-posts-table tbody > tr:hover {
+  background-color: #f5f5f5;
+}
+
+.expanded-row-parent {
+  background-color: rgba(24, 144, 255, 0.05);
+}
+
+/* Post Title Styles */
+.post-title-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.post-title {
+  font-weight: 500;
+  color: #1890ff;
+  display: block;
+}
+
+.post-title:hover {
+  color: #40a9ff;
+  text-decoration: none;
+}
+
+.post-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.translation-count-tag {
+  font-size: 11px;
+  padding: 0 6px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 4px;
+}
+
+/* Language Tag */
+.language-tag {
+  font-weight: 500;
+  padding: 0 8px;
+  border-radius: 4px;
+}
+
+/* Category Tags */
+.category-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.category-tags nz-tag {
+  font-size: 11px;
+  padding: 0 6px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 4px;
+}
+
+/* Views Count */
+.views-count {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Expanded Row Styles - Updated */
+.expanded-row > td {
+  padding: 0 !important;
+  background-color: #f5f8fc !important;
+  border-bottom: 1px solid #e6f0fa;
+  transition: all 0.3s ease;
+}
+
+.language-variants-container {
+  padding: 24px;
+  background-color: #f5f8fc;
+  border-radius: 0 0 8px 8px;
+  transition: all 0.3s ease;
+}
+
+/* Translation Wrapper */
+.translation-wrapper {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Translation Header */
+.translation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background-color: #f9fafc;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.translation-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.add-translation-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  height: 32px;
+}
+
+/* Inner Table Styles - Updated */
+.inner-translation-table {
+  width: 100%;
+  border: none;
+  border-radius: 0;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.inner-translation-table thead > tr > th {
+  background-color: #ffffff;
+  font-weight: 500;
+  padding: 14px 16px;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.85);
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.inner-translation-table tbody > tr > td {
+  padding: 12px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.inner-translation-table tbody > tr:last-child > td {
+  border-bottom: none;
+}
+
+.inner-translation-table tbody > tr:hover {
+  background-color: #f0f7ff;
+}
+
+/* Loading State - Updated */
+.loading-translations {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+  color: rgba(0, 0, 0, 0.45);
+  font-style: italic;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.loading-translations [nz-icon] {
+  font-size: 20px;
+  color: #1890ff;
+}
+
+/* Empty State for No Translations - Completely Redesigned */
+.empty-language-variants {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 0;
+  overflow: hidden;
+}
+
+.empty-illustration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 180px;
+  height: 180px;
+  background-color: rgba(24, 144, 255, 0.08);
+}
+
+.empty-illustration [nz-icon] {
+  font-size: 60px;
+  color: #1890ff;
+}
+
+.empty-content {
+  flex: 1;
+  padding: 32px;
+  text-align: left;
+}
+
+.empty-content h4 {
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.85);
+  margin-bottom: 12px;
+}
+
+.empty-content p {
+  color: rgba(0, 0, 0, 0.45);
+  margin-bottom: 24px;
+  font-size: 14px;
+  max-width: 400px;
+}
+
+.add-translation-empty-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px;
+}
+
+/* Language Tag - Updated */
+.language-tag {
+  font-weight: 500;
+  padding: 0 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* Empty State for No Posts */
+nz-empty {
+  padding: 40px 0;
+}
+
+/* Pagination Container */
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.pagination-info {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.pagination-info strong {
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+/* Responsive Styles */
+@media (max-width: 991px) {
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .filter-section {
+    width: 100%;
+  }
+  
+  .search-input {
+    width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .blogger-posts-card {
+    border-radius: 0;
+    box-shadow: none;
+  }
+  
+  .header-container {
+    gap: 16px;
+  }
+  
+  .title-section {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+  
+  .filter-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .filter-select, 
+  .search-input {
+    width: 100%;
+  }
+  
+  .blogger-posts-table tbody td {
+    padding: 10px 8px;
+  }
+  
+  .blogger-posts-table th:nth-child(4),
+  .blogger-posts-table th:nth-child(5),
+  .blogger-posts-table th:nth-child(6),
+  .blogger-posts-table td:nth-child(4),
+  .blogger-posts-table td:nth-child(5),
+  .blogger-posts-table td:nth-child(6) {
+    display: none;
+  }
+  
+  .inner-translation-table th:nth-child(3),
+  .inner-translation-table th:nth-child(4),
+  .inner-translation-table td:nth-child(3),
+  .inner-translation-table td:nth-child(4) {
+    display: none;
+  }
+  
+  .action-buttons {
+    gap: 4px;
+  }
+  
+  .pagination-container {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  /* Responsive styles for expanded content */
+  .language-variants-container {
+    padding: 16px;
+  }
+  
+  .empty-language-variants {
+    flex-direction: column;
+  }
+  
+  .empty-illustration {
+    width: 100%;
+    height: 120px;
+  }
+  
+  .empty-content {
+    padding: 24px;
+    text-align: center;
+  }
+  
+  .translation-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .add-translation-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .add-translation-empty-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .inner-translation-table thead > tr > th,
+  .inner-translation-table tbody > tr > td {
+    padding: 10px 8px;
+  }
+}
