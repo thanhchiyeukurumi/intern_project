@@ -167,6 +167,7 @@ class PostController {
         orderBy: req.query.orderBy || 'created_at',
         order: req.query.order || 'DESC',
         originalPost: req.query.originalPost === 'true',
+        includeRelations: req.query.includeRelations === 'true',
       };
       
       const result = await postService.getPostsByUser(userId, options);

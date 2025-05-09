@@ -85,10 +85,10 @@
             </td>
             <!-- Published Date -->
             <td>
-              <ng-container *ngIf="post.status === 'published' && post.updatedAt"> <!-- Nên dùng updatedAt nếu có publish date riêng -->
+              <ng-container *ngIf="post.updatedAt"> <!-- Nên dùng updatedAt nếu có publish date riêng -->
                   {{ post.updatedAt | date:'dd/MM/yyyy' }}
               </ng-container>
-              <ng-container *ngIf="post.status !== 'published' || !post.updatedAt">
+              <ng-container *ngIf="!post.updatedAt">
                   -
               </ng-container>
             </td>
@@ -119,10 +119,6 @@
               <a nz-button nzType="link" nzSize="small" [routerLink]="['/blogger/posts/edit', post.id]" nzTooltipTitle="Sửa bài gốc" nz-tooltip>
                 <span nz-icon nzType="edit"></span>
               </a>
-
-              <button *ngIf="post.status !== 'published'" nz-button nzType="link" nzSize="small" (click)="publishPost(post)" nzTooltipTitle="Xuất bản bài gốc" nz-tooltip>
-                <span nz-icon nzType="cloud-upload"></span>
-              </button>
 
               <a nz-button nzType="link" nzSize="small" [routerLink]="['/post', post.slug || post.id]" target="_blank" nzTooltipTitle="Xem bài gốc" nz-tooltip>
                 <span nz-icon nzType="eye"></span>
@@ -172,7 +168,6 @@
                       <tr>
                         <th nzWidth="120px">Ngôn ngữ</th> <!-- Thay đổi cột đầu tiên -->
                         <th nzWidth="30%">Tiêu đề bản dịch</th>
-                        <th>Trạng thái</th>
                         <th>Ngày đăng</th>
                         <th>Lượt xem</th>
                         <th [nzAlign]="'right'">Hành động</th>
@@ -191,13 +186,10 @@
                             </a>
                         </td>
                         <td>
-                          <nz-tag [nzColor]="getStatusColor(variant.status)">{{ variant.status | uppercase }}</nz-tag>
-                        </td>
-                        <td>
-                          <ng-container *ngIf="variant.status === 'published' && variant.updatedAt">
+                          <ng-container *ngIf="variant.updatedAt">
                               {{ variant.updatedAt | date:'dd/MM/yyyy' }}
                           </ng-container>
-                          <ng-container *ngIf="variant.status !== 'published' || !variant.updatedAt">
+                          <ng-container *ngIf="!variant.updatedAt">
                               -
                           </ng-container>
                         </td>
@@ -210,11 +202,7 @@
                           <a nz-button nzType="link" nzSize="small" [routerLink]="['/blogger/posts/edit', variant.id]" nzTooltipTitle="Sửa bản dịch" nz-tooltip>
                             <span nz-icon nzType="edit"></span>
                           </a>
-
-                          <button *ngIf="variant.status !== 'published'" nz-button nzType="link" nzSize="small" (click)="publishLanguageVariant(post, variant)" nzTooltipTitle="Xuất bản bản dịch" nz-tooltip>
-                            <span nz-icon nzType="cloud-upload"></span>
-                          </button>
-
+                          
                           <a nz-button nzType="link" nzSize="small" [routerLink]="['/post', variant.slug || variant.id]" target="_blank" nzTooltipTitle="Xem bản dịch" nz-tooltip>
                             <span nz-icon nzType="eye"></span>
                           </a>

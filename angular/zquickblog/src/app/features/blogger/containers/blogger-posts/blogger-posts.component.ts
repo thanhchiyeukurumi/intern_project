@@ -72,12 +72,11 @@ export class BloggerPostsComponent implements OnInit, OnDestroy {
   listOfColumns = [
      { title: 'Expand' },
      { title: 'Title' },
-    { title: 'Status' },
-    { title: 'Published' },
+     { title: 'Published' },
      { title: 'Language' },
-    { title: 'Category' },
-    { title: 'Views' },
-    { title: 'Actions' }
+     { title: 'Category' },
+     { title: 'Views' },
+     { title: 'Actions' }
   ];
 
   private message = inject(NzMessageService);

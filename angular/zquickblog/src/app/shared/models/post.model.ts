@@ -42,7 +42,7 @@ export interface Post {
     email: string;
     avatar?: string;
   };
-  Language?: {
+  Language: {
     id: number;
     name: string;
     locale: string;

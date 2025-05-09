@@ -337,12 +337,6 @@ nz-empty .ant-empty-description { /* Target the description text */
   color: rgba(0, 0, 0, 0.85);
 }
 
-.create-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .filter-section {
   display: flex;
   align-items: center;
