@@ -1,0 +1,274 @@
+<div class="blogger-detail-container">
+  <!-- Loading skeleton cho toàn trang -->
+  <div *ngIf="isLoadingBlogger" class="loading-container">
+    <nz-skeleton [nzActive]="true" [nzAvatar]="true" [nzParagraph]="{ rows: 4 }"></nz-skeleton>
+    <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 3 }"></nz-skeleton>
+  </div>
+
+  <!-- Không tìm thấy blogger -->
+  <div *ngIf="!isLoadingBlogger && !blogger" class="not-found-container">
+    <div class="not-found-card">
+      <span nz-icon nzType="user-delete" nzTheme="outline" class="not-found-icon"></span>
+      <h2>Không tìm thấy blogger</h2>
+      <p>Blogger bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.</p>
+      <button nz-button nzType="primary" routerLink="/">Quay về trang chủ</button>
+    </div>
+  </div>
+
+  <!-- Thông tin chính của blogger -->
+  <div *ngIf="!isLoadingBlogger && blogger" class="blogger-content">
+    <!-- Header với thông tin cơ bản của blogger -->
+    <div class="blogger-header">
+      <div class="container">
+        <div class="blogger-profile">
+          <div class="blogger-avatar">
+            <nz-avatar [nzSize]="100" [nzSrc]="blogger.data.avatar || 'assets/images/default-avatar.png'" nzIcon="user"></nz-avatar>
+          </div>
+          <div class="blogger-info">
+            <h1 class="blogger-name">{{ blogger.data.fullname || blogger.data.username }}</h1>
+            <p class="blogger-bio" *ngIf="blogger.description">{{ blogger.description }}</p>
+            <div class="blogger-stats">
+              <div class="stat-item">
+                <nz-statistic [nzValue]="bloggerStats.totalPosts" [nzTitle]="'Bài viết'"></nz-statistic>
+              </div>
+              <div class="stat-item">
+                <nz-statistic [nzValue]="bloggerStats.totalViews" [nzTitle]="'Lượt xem'"></nz-statistic>
+              </div>
+              <div class="stat-item">
+                <nz-statistic [nzValue]="bloggerStats.totalComments" [nzTitle]="'Bình luận'"></nz-statistic>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nội dung chính -->
+    <div class="container">
+      <div nz-row [nzGutter]="[32, 0]">
+        
+        <!-- Main Posts Area (chiếm 2/3 width) -->
+        <div nz-col [nzXs]="24" [nzLg]="16">
+          <!-- Thanh tìm kiếm và lọc -->
+          <div class="search-filter-bar">
+            <nz-input-group [nzSuffix]="suffixIconSearch">
+              <input type="text" nz-input [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Tìm kiếm bài viết của blogger này..." />
+            </nz-input-group>
+            <ng-template #suffixIconSearch>
+              <span nz-icon nzType="search"></span>
+            </ng-template>
+            <div class="filter-tags">
+              <span class="filter-label">Lọc theo:</span>
+              <nz-tag *ngFor="let filter of activeFilters; let i = index" 
+                     [nzColor]="primaryColor"
+                     nzMode="closeable"
+                     (nzOnClose)="removeFilter(i)">
+                {{ filter.name }}
+              </nz-tag>
+              <nz-tag *ngIf="activeFilters.length === 0" class="empty-tag">
+                Tất cả
+              </nz-tag>
+            </div>
+          </div>
+
+          <!-- Tab menu: Latest/Popular/Categories -->
+          <nz-tabset class="posts-tabs" [nzSelectedIndex]="selectedTabIndex">
+            <nz-tab nzTitle="Mới nhất" (nzClick)="changeTab('latest')">
+              <!-- Danh sách bài viết mới nhất -->
+              <div class="main-posts-list">
+                <!-- Skeleton loading khi đang tải -->
+                <nz-card *ngIf="loading && posts.length === 0" class="post-preview-card skeleton-card" [nzLoading]="true" [nzBordered]="false">
+                  <div class="skeleton-content">
+                    <div class="skeleton-header"></div>
+                    <div class="skeleton-body"></div>
+                    <div class="skeleton-footer"></div>
+                  </div>
+                </nz-card>
+          
+                <!-- Lặp qua danh sách bài viết -->
+                <nz-card *ngFor="let post of posts; let i = index" 
+                        class="post-preview-card"
+                        [class.animate-card]="true" 
+                        [style.animation-delay]="i * 0.1 + 's'"
+                        [nzBordered]="false">
+                  <div class="new-post-badge" *ngIf="isNewPost(post)">Mới</div>
+                  <div class="post-header">
+                    <!-- Hiển thị danh mục cho mỗi bài viết -->
+                    <div class="post-categories" *ngIf="post.categories && post.categories.length > 0">
+                      <nz-tag *ngFor="let category of post.categories" 
+                              [nzColor]="primaryColor" 
+                              class="category-tag">
+                        {{ category.name }}
+                      </nz-tag>
+                    </div>
+                    <h3 class="post-title">
+                      <a [routerLink]="['/post', post.id]">{{ post.title }}</a>
+                    </h3>
+                  </div>
+                  <p nz-typography class="post-description">
+                    {{ post.description }}
+                  </p>
+                  <div class="post-footer">
+                    <div class="post-meta-left">
+                      <span class="post-meta">
+                        <span nz-icon nzType="calendar" nzTheme="outline"></span>
+                        {{ post.date }}
+                      </span>
+                      <span class="post-meta">
+                        <span nz-icon nzType="message" nzTheme="outline"></span>
+                        {{ post.commentCount }} bình luận
+                      </span>
+                      <span class="post-meta" *ngIf="post.views">
+                        <span nz-icon nzType="eye" nzTheme="outline"></span>
+                        {{ post.views }} lượt xem
+                      </span>
+                    </div>
+                    <span class="read-more-link">
+                      <a [routerLink]="['/post', post.id]">Đọc tiếp <span nz-icon nzType="arrow-right" nzTheme="outline"></span></a>
+                    </span>
+                  </div>
+                </nz-card>
+          
+                <!-- Skeleton loading khi tải thêm -->
+                <nz-card *ngIf="loading && posts.length > 0" class="post-preview-card skeleton-card" [nzLoading]="true" [nzBordered]="false">
+                  <div class="skeleton-content">
+                    <div class="skeleton-header"></div>
+                    <div class="skeleton-body"></div>
+                    <div class="skeleton-footer"></div>
+                  </div>
+                </nz-card>
+          
+                <!-- Không tìm thấy bài viết -->
+                <div *ngIf="!loading && posts.length === 0" class="no-posts-message">
+                  <span nz-icon nzType="inbox" nzTheme="outline" style="font-size: 48px"></span>
+                  <p>Không tìm thấy bài viết nào</p>
+                  <button nz-button nzType="primary" (click)="resetFilters()">Xem tất cả bài viết</button>
+                </div>
+          
+                <!-- More Posts Button -->
+                <div *ngIf="hasMorePosts && posts.length > 0" class="more-posts-action">
+                  <button nz-button class="explore-button" [nzLoading]="loading" (click)="loadMorePosts()">
+                    Xem thêm bài viết
+                  </button>
+                </div>
+          
+                <!-- End of posts message -->
+                <div *ngIf="!hasMorePosts && posts.length > 0" class="end-of-posts">
+                  <nz-divider nzText="Đã xem hết bài viết"></nz-divider>
+                </div>
+              </div>
+            </nz-tab>
+
+            <nz-tab nzTitle="Phổ biến" (nzClick)="changeTab('popular')">
+              <!-- Danh sách bài viết phổ biến -->
+              <div class="popular-posts-list">
+                <!-- Skeleton loading khi đang tải -->
+                <nz-skeleton *ngIf="loadingPopularPosts" [nzActive]="true" [nzParagraph]="{ rows: 5 }"></nz-skeleton>
+                
+                <!-- Lặp qua danh sách bài viết phổ biến -->
+                <nz-card *ngFor="let post of popularPosts; let i = index" 
+                        class="post-preview-card"
+                        [class.animate-card]="true" 
+                        [style.animation-delay]="i * 0.1 + 's'"
+                        [nzBordered]="false">
+                  <div class="post-header">
+                    <!-- Hiển thị danh mục cho mỗi bài viết -->
+                    <div class="post-categories" *ngIf="post.categories && post.categories.length > 0">
+                      <nz-tag *ngFor="let category of post.categories" 
+                              [nzColor]="primaryColor" 
+                              class="category-tag">
+                        {{ category.name }}
+                      </nz-tag>
+                    </div>
+                    <h3 class="post-title">
+                      <a [routerLink]="['/post', post.id]">{{ post.title }}</a>
+                    </h3>
+                  </div>
+                  <p nz-typography class="post-description">
+                    {{ post.description }}
+                  </p>
+                  <div class="post-footer">
+                    <div class="post-meta-left">
+                      <span class="post-meta">
+                        <span nz-icon nzType="calendar" nzTheme="outline"></span>
+                        {{ post.date }}
+                      </span>
+                      <span class="post-meta">
+                        <span nz-icon nzType="eye" nzTheme="outline"></span>
+                        {{ post.views }} lượt xem
+                      </span>
+                    </div>
+                    <span class="read-more-link">
+                      <a [routerLink]="['/post', post.id]">Đọc tiếp <span nz-icon nzType="arrow-right" nzTheme="outline"></span></a>
+                    </span>
+                  </div>
+                </nz-card>
+                
+                <!-- Không tìm thấy bài viết -->
+                <div *ngIf="!loadingPopularPosts && popularPosts.length === 0" class="no-posts-message">
+                  <span nz-icon nzType="container" nzTheme="outline" style="font-size: 48px"></span>
+                  <p>Không có bài viết phổ biến nào</p>
+                </div>
+              </div>
+            </nz-tab>
+          </nz-tabset>
+        </div>
+        
+        <!-- Right Sidebar (chiếm 1/3 width) -->
+        <div nz-col [nzXs]="0" [nzLg]="8" class="right-sidebar">
+          <div class="sidebar-sticky-content">
+            <!-- Thêm search bar cho mobile -->
+            <div class="sidebar-section mobile-search">
+              <nz-input-group [nzSuffix]="suffixIconSearch2">
+                <input type="text" nz-input [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Tìm kiếm..." />
+              </nz-input-group>
+              <ng-template #suffixIconSearch2>
+                <span nz-icon nzType="search"></span>
+              </ng-template>
+            </div>
+            
+            <!-- Chủ đề của blogger -->
+            <div class="sidebar-section">
+              <h2 nz-typography class="sidebar-title">
+                <span nz-icon nzType="tag" nzTheme="fill" class="section-icon"></span>
+                Chủ đề
+              </h2>
+              
+              <!-- Skeleton loading cho categories -->
+              <nz-skeleton *ngIf="loadingCategories" [nzActive]="true" [nzParagraph]="{ rows: 3 }"></nz-skeleton>
+              
+              <div *ngIf="!loadingCategories" class="category-list">
+                <ul class="sidebar-list">
+                  <li *ngFor="let category of categories; let i = index" 
+                      class="sidebar-list-item"
+                      [class.animate-item]="true"
+                      [style.animation-delay]="i * 0.1 + 's'">
+                    <div class="category-info">
+                      <a (click)="addFilter(category)" class="category-link">{{ category.name }}</a>
+                      <span class="category-count" *ngIf="category.postCount">{{ category.postCount }} bài viết</span>
+                    </div>
+                  </li>
+                </ul>
+                
+                <!-- Empty state cho categories -->
+                <div *ngIf="!loadingCategories && categories.length === 0" class="empty-state">
+                  <span nz-icon nzType="file-exclamation" nzTheme="outline"></span>
+                  <p>Không có chủ đề nào</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Back to top button -->
+<div class="back-to-top" *ngIf="showBackToTop" (click)="scrollToTop()">
+  <button nz-button nzType="primary" nzShape="circle">
+    <span nz-icon nzType="arrow-up"></span>
+  </button>
+</div> 

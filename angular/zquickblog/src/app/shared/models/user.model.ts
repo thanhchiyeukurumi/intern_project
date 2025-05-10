@@ -10,4 +10,5 @@ export interface User {
     id: number;
     name: string;
   };
+  data: any;
 }

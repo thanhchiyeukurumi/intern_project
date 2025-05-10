@@ -11,13 +11,14 @@
         <div class="desktop-nav">
           <!-- Sử dụng nz-menu cho navigation -->
           <ul nz-menu nzMode="horizontal" class="header-menu">
-            <li nz-menu-item>
-              <!-- Sử dụng routerLink thay cho href -->
-              <a routerLink="/public/posts">Posts</a>
-            </li>
+
             
             <!-- Menu trạng thái đăng nhập/chưa đăng nhập sử dụng ngIf-else -->
             <ng-container *ngIf="!isLoggedIn">    
+              <li nz-menu-item>
+                <a routerLink="/categories">Categories</a>
+              </li>
+              <!-- Menu trạng thái đăng nhập/chưa đăng nhập sử dụng ngIf-else -->
               <li nz-menu-item>
                 <a routerLink="/login">Sign in</a>
               </li>
@@ -29,7 +30,9 @@
             
             <!-- Template cho người dùng đã đăng nhập -->
             <ng-container *ngIf="isLoggedIn">
-              <!-- Menu cho người dùng đã đăng nhập -->
+              <li nz-menu-item>
+                <a routerLink="/categories">Categories</a>
+              </li>
               <li nz-menu-item *ngIf="hasRole('blogger')">
                 <a routerLink="/blogger/posts">My Posts</a>
               </li>

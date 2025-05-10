@@ -1,19 +1,21 @@
 /* src/app/features/public/containers/category-detail/category-detail.component.css */
 
-/* -- Sử dụng biến từ public.style.css -- */
+/* -- Biến CSS tùy chỉnh -- */
 :host {
-  /* Các biến đã được định nghĩa trong public.style.css */
-}
-
-/* -- Component Styles -- */
-:host {
-  display: block;
-  background-color: var(--bg-page);
-  color: var(--text-primary); /* Màu chữ mặc định cho component */
-}
-
-/* -- Biến từ public.style.css -- */
-.app-category-detail {
+  --bg-page: #f8f9fa;
+  --bg-card: #ffffff;
+  --bg-tag: #f0f2f5;
+  --bg-pill: #f0f2f5;
+  --bg-pill-hover: #e6e8eb;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-tertiary: #888888;
+  --border-color: #e0e0e0;
+  --border-color-light: #eaeaea;
+  --border-color-input: #d9d9d9;
+  --active-border-color: #bfbfbf;
+  --primary-color: #1890ff;
+  --primary-hover: #40a9ff;
   --post-border-radius: 8px;
   --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   --card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.12);
@@ -129,54 +131,55 @@
 }
 
 /* --- Post Card Styling (Chung) --- */
-.post-card { /* Lớp chung cho các card bài viết */
+.post-card {
   background-color: var(--bg-card);
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border-radius: var(--post-border-radius);
+  box-shadow: var(--card-shadow);
   transition: box-shadow 0.3s ease;
-  overflow: hidden; /* Đảm bảo ảnh cover không tràn */
-  height: 100%; /* Cho các card trong grid cao bằng nhau */
-  display: flex;
-  flex-direction: column; /* Để footer đẩy xuống dưới nếu dùng flex-grow */
-}
-.post-card:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-/* Reset padding body của nz-card */
-:host ::ng-deep .post-card .ant-card-body {
-  padding: 1.5rem; /* Padding chung cho nội dung card */
+  overflow: hidden;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Cho phép body card co giãn */
+}
+
+.post-card:hover {
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* Reset padding body của nz-card */
+:host ::ng-deep .post-card .ant-card-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 /* --- Post Meta Top (Author, Date, Read Time, Tag) --- */
 .post-meta-top {
   display: flex;
   align-items: center;
-  flex-wrap: wrap; /* Cho phép xuống dòng nếu không đủ chỗ */
+  flex-wrap: wrap;
   gap: 0.75rem;
   margin-bottom: 0.75rem;
   font-size: 0.875rem;
   color: var(--text-tertiary);
 }
-.post-tag { /* Style chung cho tag */
-  background-color: var(--bg-tag) !important;
-  color: var(--text-secondary) !important;
-  border-radius: 9999px !important;
-  border: none !important;
-  padding: 0.25rem 0.75rem !important;
-  font-size: 0.75rem !important;
-  font-weight: 500 !important;
-  line-height: normal !important;
-  height: auto !important;
-  margin: 0 !important; /* Reset margin của nz-tag */
+
+.post-tag {
+  background-color: var(--bg-tag);
+  color: var(--text-secondary);
+  border-radius: 9999px;
+  border: none;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: normal;
+  height: auto;
+  margin: 0;
 }
-.post-date, .post-read-time { /* Style chung cho date và read time */
-   white-space: nowrap; /* Không xuống dòng */
-}
-.separator { /* Giữ nguyên hoặc điều chỉnh nếu cần */
-  margin: 0 0.25rem;
+
+.post-date, .post-read-time {
+  white-space: nowrap;
 }
 
 /* --- Post Title (Chung) --- */
@@ -186,10 +189,12 @@
   line-height: 1.4;
   color: var(--text-primary);
 }
+
 .post-title a {
   color: inherit;
   text-decoration: none;
 }
+
 .post-title a:hover {
   text-decoration: underline;
 }
@@ -199,6 +204,10 @@
   color: var(--text-secondary);
   margin-bottom: 1rem;
   line-height: 1.6;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
 /* --- Post Author (Chung) --- */
@@ -208,9 +217,11 @@
   gap: 0.5rem;
   margin-top: 0.5rem;
 }
+
 .post-author nz-avatar {
   margin-right: 0.5rem;
 }
+
 .post-author .author-name {
   font-size: 0.875rem;
   font-weight: 500;
@@ -224,71 +235,20 @@
 .featured-post-section {
   margin-bottom: var(--spacing-section);
 }
-.featured-post-card { /* Kế thừa từ .post-card */
-  border-radius: var(--post-border-radius);
-  box-shadow: var(--card-shadow);
-  background-color: var(--bg-card);
-  transition: box-shadow 0.3s;
-  overflow: hidden;
+.featured-post-card {
+  margin-bottom: 1.5rem;
 }
-.featured-post-card:hover {
-  box-shadow: var(--card-shadow-hover);
-}
-/* Reset padding body cho featured card */
-:host ::ng-deep .featured-post-card .ant-card-body {
-  padding: 1.5rem;
-}
-.post-content-featured {
-  padding: 1.5rem; /* Padding cho cột nội dung */
-}
-@media (min-width: 768px) { .post-content-featured { padding: 2rem; } }
 
-.post-title-featured {
-  font-size: 1.5rem; /* Giữ kích thước lớn hơn */
-}
-.post-excerpt-featured {
-  /* Line clamp CSS */
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
-/* Post Cover Image Styling */
-.post-cover {
-    width: 100%;
-    height: 0;
-    padding-top: 56.25%; /* Tỷ lệ 16:9 */
-    position: relative;
-    background-color: var(--border-color); /* Màu nền placeholder */
-}
-.post-cover-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Đảm bảo ảnh cover đẹp */
-    display: block;
-}
-.featured-cover img { /* Đảm bảo ảnh cover trong featured card */
-    border-top-left-radius: 0.5rem;
-    border-bottom-left-radius: 0.5rem;
-}
-@media (max-width: 767px) {
-   .featured-cover img {
-      border-top-right-radius: 0.5rem;
-      border-bottom-left-radius: 0; /* Reset trên mobile nếu layout thay đổi */
-   }
+.featured-post-title {
+  font-size: 1.5rem;
 }
 
 /* --- Trending Post Section --- */
 .trending-posts-section {
   margin-bottom: var(--spacing-section);
 }
-.trending-posts-list { /* Container cho các card trending */
-   /* Không cần style đặc biệt nếu dùng nz-row/nz-col */
-}
-.trending-post-item { /* Card cho từng bài trending */
+
+.trending-post-item {
   background-color: var(--bg-card);
   border-radius: var(--post-border-radius);
   padding: 1.5rem;
@@ -297,22 +257,15 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  margin-bottom: 1.5rem;
 }
+
 .trending-post-item:hover {
   box-shadow: var(--card-shadow-hover);
 }
-.post-title-trending {
-  font-size: 1.25rem; /* Giảm kích thước */
-}
-.post-excerpt-trending {
-  font-size: 0.875rem; /* Giảm kích thước */
-  margin-bottom: 1rem;
-  flex-grow: 1; /* Đẩy author xuống */
-  /* Line clamp */
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3; /* Giới hạn 3 dòng */
-  -webkit-box-orient: vertical;
+
+.trending-post-title {
+  font-size: 1.25rem;
 }
 
 /* --- Latest Post Section --- */
@@ -320,13 +273,16 @@
   margin-top: 2rem;
   margin-bottom: var(--spacing-section);
 }
+
 .latest-posts-grid { /* Container cho grid */
   /* nz-row handles grid */
 }
-.latest-post-col { /* Cột chứa card */
+
+.latest-post-col {
   margin-bottom: 1.5rem;
 }
-.latest-post-card { /* Kế thừa từ .post-card */
+
+.latest-post-card {
   height: 100%;
   border-radius: var(--post-border-radius);
   box-shadow: var(--card-shadow);
@@ -334,26 +290,32 @@
   transition: box-shadow 0.3s;
   overflow: hidden;
 }
+
 .latest-post-card:hover {
   box-shadow: var(--card-shadow-hover);
 }
+
 :host ::ng-deep .latest-post-card .ant-card-cover { /* Target ảnh cover */
   height: 150px; /* Chiều cao cố định cho ảnh latest */
   overflow: hidden;
 }
+
 .latest-cover img { /* Ảnh bên trong cover */
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
+
 /* Reset padding body cho latest card để nội dung sát hơn */
 :host ::ng-deep .latest-post-card .ant-card-body {
   padding: 1.25rem;
 }
-.post-title-latest {
-  font-size: 1rem; /* Kích thước nhỏ hơn */
+
+.latest-post-title {
+  font-size: 1rem;
   margin-bottom: 0.5rem;
 }
+
 /* Meta và Author kế thừa style chung */
 
 /* --- Load More Button --- */
@@ -362,7 +324,8 @@
   justify-content: center;
   margin-top: 1.5rem;
 }
-.load-more-button { /* Style giống các nút outline khác */
+
+.load-more-button {
   border-color: var(--border-color);
   color: var(--text-primary);
   background-color: var(--bg-pill);
@@ -373,10 +336,12 @@
   gap: 0.5rem;
   transition: all 0.2s;
 }
+
 .load-more-button:hover {
-   background-color: var(--bg-pill-hover);
-   border-color: var(--active-border-color);
+  background-color: var(--bg-pill-hover);
+  border-color: var(--active-border-color);
 }
+
 .load-more-button [nz-icon] {
     margin-right: 0.3rem; /* Khoảng cách icon và text */
 }
@@ -384,26 +349,30 @@
 /* --- Sidebar --- */
 .category-sidebar {
   position: sticky;
-  top: 2rem; /* Khoảng cách từ top */
+  top: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; /* Khoảng cách giữa các section sidebar */
+  gap: 1.5rem;
 }
+
 .sidebar-section {
   /* Style chung cho các section sidebar nếu cần */
 }
+
 /* Section title kế thừa style chung */
 
 /* Related Topics */
 .related-topics-section {
-   /* Margin bottom được xử lý bởi gap của category-sidebar */
+  margin-bottom: 1.5rem;
 }
+
 .related-topics-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
 }
-.topic-tag { /* Style chung cho tag trong sidebar */
+
+.topic-tag {
   display: inline-block;
   padding: 0.5rem 1rem;
   background-color: var(--bg-tag);
@@ -413,60 +382,91 @@
   transition: all 0.2s;
   text-decoration: none;
 }
+
 .topic-tag:hover {
-   background-color: var(--bg-pill-hover);
-   color: var(--text-primary);
+  background-color: var(--bg-pill-hover);
+  color: var(--text-primary);
 }
 
 /* --- Newsletter Section --- */
 .newsletter-section {
    /* Margin được xử lý bởi gap */
 }
+
 .newsletter-card {
   border-radius: var(--post-border-radius);
   box-shadow: var(--card-shadow);
   background-color: var(--bg-card);
 }
+
 /* Reset padding body */
 :host ::ng-deep .newsletter-card .ant-card-body {
   padding: 1.5rem;
 }
+
 .newsletter-title {
   font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: var(--text-primary);
 }
+
 .newsletter-description {
   color: var(--text-secondary);
   margin-bottom: 1.25rem;
   font-size: 0.875rem;
   line-height: 1.5;
 }
+
 .newsletter-form {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
+
 @media (min-width: 768px) {
   .newsletter-form {
     flex-direction: row;
   }
 }
+
 .newsletter-input {
   flex-grow: 1; /* Input chiếm phần lớn không gian */
   border-radius: 0.25rem;
   border-color: var(--border-color-input);
 }
+
 .newsletter-button {
   background-color: var(--primary-color);
   border-color: var(--primary-color);
   color: white;
   border-radius: 0.25rem;
 }
+
 .newsletter-button:hover {
   background-color: var(--primary-hover);
   border-color: var(--primary-hover);
+}
+
+/* --- Back to Top Button --- */
+.back-to-top {
+  position: sticky;
+  bottom: 2rem;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.back-to-top-button {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  box-shadow: var(--card-shadow);
+  transition: all 0.2s;
+}
+
+.back-to-top-button:hover {
+  color: var(--primary-color);
+  box-shadow: var(--card-shadow-hover);
 }
 
 /* --- Category Not Found --- */
@@ -479,17 +479,18 @@
   border-radius: var(--post-border-radius);
   box-shadow: var(--card-shadow);
 }
+
 .category-not-found h2 {
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
   color: var(--text-primary);
 }
+
 .category-not-found p {
   color: var(--text-secondary);
   margin-bottom: 1.5rem;
 }
-/* Nút primary kế thừa style chung */
 
 /* --- Skeleton Loading --- */
 .category-loading {
@@ -497,10 +498,10 @@
   margin: 0 auto;
   padding: 2rem 1rem;
 }
+
 .category-loading nz-skeleton {
-    margin-bottom: 2rem; /* Khoảng cách giữa các skeleton */
+  margin-bottom: 2rem;
 }
-/* (Các style skeleton-card, skeleton-title,... đã có và có thể giữ nguyên) */
 
 /* -- Media queries -- */
 @media (min-width: 768px) {
@@ -525,5 +526,9 @@
   .trending-post-title,
   .featured-post-title {
     font-size: 1.25rem;
+  }
+  
+  .back-to-top {
+    justify-content: center;
   }
 }

@@ -1,8 +1,4 @@
-/**
- * Lỗi cực kỳ lớn, sẽ fix sau
- */
-
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NzGridModule } from 'ng-zorro-antd/grid';
@@ -14,7 +10,8 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { catchError, finalize, map } from 'rxjs/operators';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { catchError, finalize, map, Subject, takeUntil } from 'rxjs';
 import { of, forkJoin } from 'rxjs';
 
 // Services
@@ -29,6 +26,7 @@ import { Post } from '../../../../shared/models/post.model';
 interface RelatedTopic {
     name: string;
     slug: string;
+    id: string;
 }
 
 // Interface mở rộng cho danh mục
@@ -49,13 +47,14 @@ interface CategoryInfo extends Category {
     NzButtonModule,
     NzIconModule,
     NzInputModule,
-    NzSkeletonModule
+    NzSkeletonModule,
+    NzToolTipModule
   ],
   templateUrl: './category-detail.component.html',
   styleUrls: ['./category-detail.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class  CategoryDetailComponent implements OnInit {
+export class CategoryDetailComponent implements OnInit, OnDestroy {
   // Dữ liệu cơ bản
   category: CategoryInfo | null = null;
   featuredPost: Post | null = null;
@@ -67,6 +66,7 @@ export class  CategoryDetailComponent implements OnInit {
   isLoading = true;
   currentPage = 1;
   postsPerPage = 4;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
@@ -76,14 +76,23 @@ export class  CategoryDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Lấy ID danh mục từ URL và tải dữ liệu
-    const categoryId = this.route.snapshot.paramMap.get('id');
-    if (categoryId) {
-      this.loadCategoryData(categoryId);
-    } else {
-      this.isLoading = false;
-      this.messageService.error('Không tìm thấy mã danh mục');
-    }
+    // Lấy slug danh mục từ URL và tải dữ liệu
+    this.route.paramMap.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(params => {
+      const categoryId = params.get('id');
+      if (categoryId) {
+        this.loadCategoryData(categoryId);
+      } else {
+        this.isLoading = false;
+        this.messageService.error('Không tìm thấy mã danh mục');
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   // Tải dữ liệu danh mục và bài viết
@@ -104,6 +113,7 @@ export class  CategoryDetailComponent implements OnInit {
       }),
       catchError(error => {
         console.error('Lỗi khi tải thông tin danh mục:', error);
+        this.messageService.error('Không thể tải thông tin danh mục');
         return of(null);
       })
     );
@@ -146,7 +156,8 @@ export class  CategoryDetailComponent implements OnInit {
       trendingPosts: trendingPostsRequest,
       latestPosts: latestPostsRequest
     }).pipe(
-      finalize(() => this.isLoading = false)
+      finalize(() => this.isLoading = false),
+      takeUntil(this.destroy$)
     ).subscribe(result => {
       this.category = result.category;
       this.featuredPost = result.featuredPost;
@@ -168,7 +179,9 @@ export class  CategoryDetailComponent implements OnInit {
       limit: this.postsPerPage,
       orderBy: 'createdAt',
       order: 'DESC'
-    }).subscribe({
+    }).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
       next: response => {
         if (response.data.length > 0) {
           this.latestPosts = [...this.latestPosts, ...response.data];
@@ -186,12 +199,19 @@ export class  CategoryDetailComponent implements OnInit {
     
     // Lấy danh sách danh mục ngẫu nhiên từ service
     this.categoryService.getAll({
-      limit: 6, // Giới hạn số lượng danh mục liên quan
-    }).subscribe({
+      limit: 6 // Giới hạn số lượng danh mục liên quan
+    }).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
       next: (response) => {
         // Lọc ra các danh mục khác với danh mục hiện tại
         this.relatedTopics = response.data
           .filter((cat: Category) => cat.id !== this.category?.id)
+          .map((cat: Category) => ({
+            id: cat.id,
+            name: cat.name,
+            slug: cat.slug
+          }))
           .slice(0, 5); // Chỉ lấy tối đa 5 danh mục
       },
       error: () => {
@@ -200,6 +220,11 @@ export class  CategoryDetailComponent implements OnInit {
         this.relatedTopics = [];
       }
     });
+  }
+
+  // Helper: Quay lại đầu trang
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // Helper: Format số lượng bài viết (ví dụ: 12800 -> 12.8K)

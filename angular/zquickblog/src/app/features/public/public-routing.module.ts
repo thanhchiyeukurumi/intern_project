@@ -13,6 +13,7 @@ import { CategoryDetailComponent } from './containers/category-detail/category-d
 import { LoginComponent } from './containers/login/login.component';
 import { RegisterComponent } from './containers/register/register.component';
 import { HomeDetailComponent } from './containers/home-detail/home-detail.component';
+import { BloggerDetailComponent } from './containers/blogger-detail/blogger-detail.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,9 @@ const routes: Routes = [
       // Danh mục
       { path: 'categories', component: AllCategoriesComponent },
       { path: 'categories/:id', component: CategoryDetailComponent },
+      
+      // Người dùng/Blogger
+      { path: 'blogger/:id', component: BloggerDetailComponent },
       
       // Xác thực
       { path: 'login', component: LoginComponent },

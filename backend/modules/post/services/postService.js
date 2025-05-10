@@ -19,7 +19,7 @@ class PostService {
       const search = options.search || null;
       const languageId = parseInt(options.languageId, 10) || null;
       const userId = parseInt(options.userId, 10) || null;
-      const includeRelations = options.includeRelations || false;
+      const includeRelations = options.includeRelations || true;
       const orderBy = options.orderBy || 'createdAt';
       const order = options.order || 'DESC';
       const originalPost = options.originalPost || false;

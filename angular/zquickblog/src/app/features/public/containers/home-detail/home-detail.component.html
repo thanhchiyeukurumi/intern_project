@@ -165,7 +165,7 @@
             
             <div *ngIf="!loadingCategories" class="topic-tags">
               <a *ngFor="let topic of recommendedTopics"
-                 [routerLink]="['/category', topic.slug]"
+                 [routerLink]="['/categories', topic.id]"
                  (click)="addFilter(topic)">
                 <nz-tag class="topic-tag">{{ topic.name }}</nz-tag>
               </a>
@@ -173,7 +173,7 @@
           </div>
   
           <!-- Theo dõi qua email -->
-          <div class="sidebar-section newsletter-section">
+          <!-- <div class="sidebar-section newsletter-section">
             <h2 nz-typography class="sidebar-title">
               <span nz-icon nzType="mail" nzTheme="fill" class="section-icon"></span>
               Đăng ký nhận bài viết mới
@@ -189,7 +189,7 @@
                 </button>
               </ng-template>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
   

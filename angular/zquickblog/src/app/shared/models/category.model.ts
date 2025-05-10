@@ -11,4 +11,5 @@ export interface Category {
   description?: string;
   slug?: string;
   parent_id?: number | null | undefined;
+  data: any;
 }

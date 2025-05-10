@@ -12,13 +12,8 @@
     <!-- Header của danh mục -->
     <div class="category-header">
       <div class="container">
-        <h1 class="category-title">{{ category.name }}</h1>
+        <h1 class="category-title">{{ category.data.name }}</h1>
         <p class="category-description" *ngIf="category.description">{{ category.description }}</p>
-        <div class="category-meta">
-          <span class="story-count" *ngIf="category.storyCount">
-            {{ formatStoryCount(category.storyCount) }} bài viết
-          </span>
-        </div>
       </div>
     </div>
 
@@ -34,9 +29,9 @@
             <div class="featured-post-card">
               <nz-card [nzCover]="featuredPostCover">
                 <ng-template #featuredPostCover>
-                  <div class="post-cover">
+                  <!-- <div class="post-cover">
                     <img alt="{{ featuredPost.title }}" class="post-cover-image" src="assets/images/post-placeholder.jpg" />
-                  </div>
+                  </div> -->
                 </ng-template>
                 
                 <div class="post-meta-top">
@@ -93,10 +88,13 @@
             <h2 class="section-title">Mới nhất</h2>
             <div class="latest-posts-grid" nz-row [nzGutter]="[16, 16]">
               <div nz-col [nzXs]="24" [nzSm]="12" *ngFor="let post of latestPosts" class="latest-post-col">
-                <nz-card class="latest-post-card" [nzCover]="latestPostCover">
+                <nz-card class="latest-post-card post-card" [nzCover]="latestPostCover">
                   <ng-template #latestPostCover>
                     <div class="post-cover">
-                      <img alt="{{ post.title }}" class="post-cover-image" src="assets/images/post-placeholder.jpg" />
+                      <img 
+                        [alt]="post.title" 
+                        class="post-cover-image" 
+                        >
                     </div>
                   </ng-template>
                   
@@ -137,12 +135,25 @@
             <section class="related-topics-section" *ngIf="relatedTopics.length > 0">
               <h2 class="section-title">Chủ đề liên quan</h2>
               <div class="related-topics-tags">
-                <a *ngFor="let topic of relatedTopics" class="topic-tag" [routerLink]="['/categories', topic.slug]">
+                <a *ngFor="let topic of relatedTopics" class="topic-tag" [routerLink]="['/categories', topic.id]">
                   {{ topic.name }}
                 </a>
               </div>
             </section>
             
+            <!-- Nút quay lại đầu trang -->
+            <div class="back-to-top">
+              <button 
+                nz-button 
+                nzType="default" 
+                nzShape="circle" 
+                class="back-to-top-button" 
+                (click)="scrollToTop()"
+                nz-tooltip
+                nzTooltipTitle="Lên đầu trang">
+                <span nz-icon nzType="arrow-up"></span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

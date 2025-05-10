@@ -82,7 +82,6 @@
   .header-menu .ant-menu-item a:hover,
   .header-menu .ant-menu-item-active a {
     color: #11182c !important; /* Tailwind hover:text-gray-900 */
-    border-bottom: 2px solid transparent !important; /* Vẫn không có border khi hover */
   }
   
   .header-menu .ant-menu-item-selected,
@@ -95,7 +94,7 @@
   .header-menu li.no-hover-effect,
   .header-menu li.no-hover-effect.ant-menu-item:hover,
   .header-menu li.no-hover-effect.ant-menu-item-active {
-    border-bottom: none !important;
+    /* border-bottom: none !important; */
     padding: 0 !important; /* Bỏ padding để button căn chỉnh */
   }
   .header-menu li.no-hover-effect > .ant-menu-title-content > a {
