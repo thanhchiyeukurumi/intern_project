@@ -265,15 +265,25 @@ export class AllCategoriesComponent implements OnInit {
     });
   }
 
+  // Sửa lại hàm tìm kiếm chủ đề
   searchTopics(): void {
-    if (!this.searchText.trim()) {
+    // Kiểm tra nếu searchText đã nhập và không chỉ chứa khoảng trắng
+    const searchQuery = this.searchText.trim();
+    if (!searchQuery) {
+      // Nếu searchText rỗng, hiển thị tất cả danh mục
+      this.messageService.info('Vui lòng nhập từ khóa tìm kiếm.');
       return;
     }
     
     this.isLoading = true;
+    this.featuredTopics = []; // Xóa dữ liệu hiện tại để hiển thị spinner
+    
+    // Gọi API tìm kiếm danh mục với từ khóa
     this.categoryService.getAll({
-      search: this.searchText,
-      limit: 20
+      search: searchQuery,
+      limit: 20,
+      orderBy: 'name',
+      order: 'ASC'
     })
     .pipe(
       finalize(() => this.isLoading = false)
@@ -286,11 +296,12 @@ export class AllCategoriesComponent implements OnInit {
           this.hasMoreCategories = false; // Không hiển thị nút "Xem thêm" khi tìm kiếm
         } else {
           this.featuredTopics = [];
-          this.messageService.info('Không tìm thấy chủ đề nào phù hợp.');
+          this.messageService.info(`Không tìm thấy chủ đề nào phù hợp với "${searchQuery}".`);
         }
       },
-      error: () => {
-        this.messageService.error('Đã xảy ra lỗi khi tìm kiếm.');
+      error: (err) => {
+        console.error('Lỗi khi tìm kiếm chủ đề:', err);
+        this.messageService.error('Đã xảy ra lỗi khi tìm kiếm. Vui lòng thử lại sau.');
       }
     });
   }

@@ -172,11 +172,7 @@
     flex-direction: column;
 }
 
-.card-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem; /* mb-4 */
-}
+
 
 .topic-icon {
   width: 2.5rem; /* w-10 */
@@ -224,7 +220,6 @@
   font-weight: 500; /* font-medium */
   text-decoration: none;
   display: inline-block; /* Cho phép margin */
-  margin-bottom: 1.5rem; /* Thêm khoảng cách trước phần articles */
 }
 .topic-link:hover {
   text-decoration: underline;
@@ -239,12 +234,6 @@
 /* ...Thêm các màu khác nếu cần... */
 
 
-.topic-articles {
-  /* margin-top: 1.5rem; /* mt-6 */ /* nz-divider đã có margin */
-  /* padding-top: 1.5rem; /* pt-6 */ /* nz-divider đã có margin */
-  border-top: 1px solid var(--border-color); /* Thêm border nếu không dùng nz-divider */
-  padding-top: 1.5rem; /* pt-6 */
-}
 :host ::ng-deep .topic-articles nz-divider {
    margin-top: 0 !important; /* Reset margin của divider */
    margin-bottom: 1.5rem !important; /* pt-6 */
@@ -461,7 +450,6 @@
 
 .card-header {
   display: flex;
-  align-items: center;
   margin-bottom: 1rem;
 }
 
