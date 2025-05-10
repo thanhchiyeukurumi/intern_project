@@ -26,17 +26,17 @@
           </div>
           <div class="blogger-info">
             <h1 class="blogger-name">{{ blogger.data.fullname || blogger.data.username }}</h1>
-            <p class="blogger-bio" *ngIf="blogger.description">{{ blogger.description }}</p>
+            <p class="blogger-bio" *ngIf="blogger.data.description">{{ blogger.data.description }}</p>
             <div class="blogger-stats">
               <div class="stat-item">
                 <nz-statistic [nzValue]="bloggerStats.totalPosts" [nzTitle]="'Bài viết'"></nz-statistic>
               </div>
-              <div class="stat-item">
+              <!-- <div class="stat-item">
                 <nz-statistic [nzValue]="bloggerStats.totalViews" [nzTitle]="'Lượt xem'"></nz-statistic>
               </div>
               <div class="stat-item">
                 <nz-statistic [nzValue]="bloggerStats.totalComments" [nzTitle]="'Bình luận'"></nz-statistic>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -228,13 +228,13 @@
             </div>
             
             <!-- Chủ đề của blogger -->
-            <div class="sidebar-section">
+            <!-- <div class="sidebar-section">
               <h2 nz-typography class="sidebar-title">
                 <span nz-icon nzType="tag" nzTheme="fill" class="section-icon"></span>
                 Chủ đề
               </h2>
               
-              <!-- Skeleton loading cho categories -->
+
               <nz-skeleton *ngIf="loadingCategories" [nzActive]="true" [nzParagraph]="{ rows: 3 }"></nz-skeleton>
               
               <div *ngIf="!loadingCategories" class="category-list">
@@ -250,13 +250,13 @@
                   </li>
                 </ul>
                 
-                <!-- Empty state cho categories -->
+>
                 <div *ngIf="!loadingCategories && categories.length === 0" class="empty-state">
                   <span nz-icon nzType="file-exclamation" nzTheme="outline"></span>
                   <p>Không có chủ đề nào</p>
                 </div>
               </div>
-            </div>
+            </div> -->
 
           </div>
         </div>

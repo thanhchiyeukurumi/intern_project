@@ -246,7 +246,7 @@ ngAfterViewChecked() {
         id: post.user_id,
         name: post.User?.username || 'Người dùng ẩn danh',
         avatarUrl: post.User?.avatar || './public/images/default-avatar.png',
-        profileLink: `/user/${post.user_id}`
+        profileLink: `/blogger/${post.user_id}`
       },
       publishedDate: publishedDate,
       readTimeMinutes: readTimeMinutes,
