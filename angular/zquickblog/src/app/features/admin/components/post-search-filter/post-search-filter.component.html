@@ -1,0 +1,60 @@
+<div class="header-container">
+  <div class="title-section">
+    <h2 class="card-title">Tất cả bài viết</h2>
+    <button nz-button nzType="primary" (click)="onAddNewPost()">
+      <i nz-icon nzType="plus"></i> <span>Thêm bài viết mới</span>
+    </button>
+  </div>
+
+  <div class="filter-section">
+    <div class="search-container">
+      <nz-input-group [nzPrefix]="prefixIconSearch">
+        <input
+          type="text"
+          nz-input
+          placeholder="Tìm kiếm bài viết..."
+          [ngModel]="searchValue"
+          (ngModelChange)="onSearchChange($event)"
+          (keyup.enter)="search.emit()" />
+      </nz-input-group>
+      <ng-template #prefixIconSearch>
+        <i nz-icon nzType="search"></i>
+      </ng-template>
+    </div>
+
+    <div class="filters">
+      <nz-select
+        class="filter-select"
+        nzPlaceHolder="Tất cả danh mục"
+        [ngModel]="selectedCategory"
+        (ngModelChange)="onCategoryChange($event)">
+        <nz-option nzValue="" nzLabel="Tất cả danh mục"></nz-option>
+        <nz-option 
+          *ngFor="let category of categories" 
+          [nzValue]="category.id.toString()" 
+          [nzLabel]="category.name">
+        </nz-option>
+      </nz-select>
+
+      <nz-select
+        class="filter-select"
+        nzPlaceHolder="Tất cả thời gian"
+        [ngModel]="selectedDate"
+        (ngModelChange)="onDateFilterChange($event)">
+        <nz-option [nzValue]="null" nzLabel="Tất cả thời gian"></nz-option>
+        <nz-option nzValue="today" nzLabel="Hôm nay"></nz-option>
+        <nz-option nzValue="week" nzLabel="Tuần này"></nz-option>
+        <nz-option nzValue="month" nzLabel="Tháng này"></nz-option>
+      </nz-select>
+      
+      <button 
+        nz-button 
+        nzType="default" 
+        class="reset-button" 
+        (click)="onResetFilters()"
+        *ngIf="searchValue || selectedCategory || selectedDate">
+        <i nz-icon nzType="clear"></i> Xóa bộ lọc
+      </button>
+    </div>
+  </div>
+</div> 

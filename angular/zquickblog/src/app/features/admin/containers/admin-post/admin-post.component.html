@@ -1,135 +1,36 @@
 <nz-card ngSkipHydration>
-  <div class="header-container">
-    <div class="title-section">
-      <h2 class="card-title">All Posts</h2>
-      <button nz-button nzType="primary" (click)="navigateToCreatePost()">
-        <i nz-icon nzType="plus"></i> <span>Add New Post</span>
-      </button>
-    </div>
+  <app-post-search-filter
+    [categories]="categories"
+    [searchValue]="searchValue"
+    [selectedCategory]="selectedCategory"
+    [selectedDate]="selectedDate"
+    (search)="searchAndFilter()"
+    (searchValueChange)="onSearchValueChange($event)"
+    (selectedCategoryChange)="onSelectedCategoryChange($event)"
+    (selectedDateChange)="onSelectedDateChange($event)"
+    (resetFilters)="resetFilters()"
+    (addNewPost)="navigateToCreatePost()">
+  </app-post-search-filter>
 
-    <div class="filter-section">
-      <div class="search-container">
-        <nz-input-group [nzPrefix]="prefixIconSearch">
-          <input
-            type="text"
-            nz-input
-            placeholder="Search posts..."
-            [(ngModel)]="searchValue"
-            (ngModelChange)="searchAndFilter()"
-            (keyup.enter)="searchAndFilter()" />
-        </nz-input-group>
-        <ng-template #prefixIconSearch>
-          <i nz-icon nzType="search"></i>
-        </ng-template>
-      </div>
+  <app-post-table
+    [displayData]="displayData"
+    [loading]="loading"
+    [checked]="checked"
+    [indeterminate]="indeterminate"
+    [setOfCheckedId]="setOfCheckedId"
+    (editPost)="navigateToCreatePost()"
+    (deletePost)="confirmDeletePost($event)"
+    (checkAllChange)="onAllChecked($event)"
+    (itemCheckedChange)="onItemChecked($event)">
+  </app-post-table>
 
-      <div class="filters">
-        <nz-select
-          class="filter-select"
-          nzPlaceHolder="All Categories"
-          [(ngModel)]="selectedCategory"
-          (ngModelChange)="searchAndFilter()">
-          <nz-option nzValue="" nzLabel="All Categories"></nz-option>
-          <nz-option 
-            *ngFor="let category of categories" 
-            [nzValue]="category.id.toString()" 
-            [nzLabel]="category.name">
-          </nz-option>
-        </nz-select>
-
-        <nz-select
-          class="filter-select"
-          nzPlaceHolder="All Time"
-          [(ngModel)]="selectedDate"
-          (ngModelChange)="searchAndFilter()">
-          <nz-option [nzValue]="null" nzLabel="All Time"></nz-option>
-          <nz-option nzValue="today" nzLabel="Today"></nz-option>
-          <nz-option nzValue="week" nzLabel="This Week"></nz-option>
-          <nz-option nzValue="month" nzLabel="This Month"></nz-option>
-        </nz-select>
-        
-        <button 
-          nz-button 
-          nzType="default" 
-          class="reset-button" 
-          (click)="resetFilters()"
-          *ngIf="searchValue || selectedCategory || selectedDate">
-          <i nz-icon nzType="clear"></i> Clear Filters
-        </button>
-      </div>
-    </div>
-  </div>
-  <!-- Table Container -->
-  <nz-table
-    #basicTable
-    [nzData]="displayData"
-    [nzLoading]="loading"
-    [nzShowPagination]="false"
-    class="posts-table">
-    <thead>
-      <tr>
-        <!-- <th>data</th> -->
-        <th [nzWidth]="'50px'"
-            [nzChecked]="checked"
-            [nzIndeterminate]="indeterminate"
-            (nzCheckedChange)="onAllChecked($event)"></th>
-        <th [nzWidth]="'320px'">Post</th>
-        <th [nzWidth]="'320px'">Author</th>
-        <th [nzWidth]="'320px'">Category</th> 
-        <th>Date</th>
-        <th [nzAlign]="'right'">Actions</th>
-      </tr>
-    </thead>
-    <tbody *ngIf="displayData.length > 0">
-      <tr *ngFor="let data of displayData">
-        <!-- <td>{{ data | json }}</td> -->
-        <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
-        <td>{{ data.title }}</td>
-        <!-- Author -->
-        <td>
-          <div class="author-cell">
-            <nz-avatar [nzSrc]="getAuthorAvatar(data.User?.avatar)"></nz-avatar>
-            <span class="author-name">{{ data.User?.username || 'Unknown' }}</span>
-          </div>
-        </td>
-        <!-- Categories -->
-        <td>
-          <ng-container *ngIf="data.Categories && data.Categories.length > 0">
-            <nz-tag *ngFor="let category of data.Categories" [nzColor]="getCategoryColor(category.name)">
-              {{ category.name }}
-            </nz-tag>
-          </ng-container>
-          <span *ngIf="!data.Categories || data.Categories.length === 0">Uncategorized</span>
-        </td> 
-        <!-- Date -->
-        <td>
-           {{ data.createdAt | date:'MMM d, y' }} <!-- Sử dụng DatePipe -->
-        </td>
-        <!-- Actions -->
-        <td [nzAlign]="'right'" class="action-buttons">
-           <button nz-button nzType="link" class="edit-button">
-             <i nz-icon nzType="edit"></i>
-           </button>
-          <button nz-button nzType="link" class="delete-button" (click)="confirmDeletePost(data)">
-            <i nz-icon nzType="delete"></i>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-      <nz-empty *ngIf="!loading && displayData.length === 0" nzNotFoundContent="No posts found"></nz-empty>
-  </nz-table>
-
-  <!-- Pagination Container -->
-  <div class="pagination-container" *ngIf="total > 0">
-    <div class="pagination-info" [innerHTML]="getPaginationInfo()"></div>
-    <nz-pagination
-      [(nzPageIndex)]="pageIndex"
-      [(nzPageSize)]="pageSize"
-      [nzTotal]="total"
-      nzShowSizeChanger
-      (nzPageIndexChange)="onPageIndexChange($event)"
-      (nzPageSizeChange)="onPageSizeChange($event)"
-      [nzPageSizeOptions]="[5, 10, 20, 50]">
-    </nz-pagination>
-  </div>
+  <app-admin-pagination
+    *ngIf="total > 0"
+    [total]="total"
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 20, 50]"
+    (pageIndexChange)="onPageIndexChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)">
+  </app-admin-pagination>
 </nz-card>

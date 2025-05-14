@@ -1,0 +1,54 @@
+.header-container {
+  margin-bottom: 24px;
+}
+
+.title-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--admin-text-primary);
+  margin: 0;
+}
+
+.filter-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.search-container {
+  flex-grow: 1;
+  min-width: 200px;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.filter-select {
+  min-width: 150px;
+}
+
+.reset-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--admin-text-secondary);
+  border-color: var(--admin-border);
+  transition: all 0.3s;
+}
+
+.reset-button:hover {
+  color: var(--admin-delete);
+  border-color: var(--admin-delete);
+} 
