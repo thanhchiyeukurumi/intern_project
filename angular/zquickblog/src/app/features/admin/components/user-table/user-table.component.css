@@ -1,0 +1,32 @@
+.users-table {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-fullname {
+  font-weight: 500;
+}
+
+.user-name {
+  color: var(--text-color-secondary, #666);
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.edit-button {
+  color: var(--primary-color, #1890ff);
+}
+
+.delete-button {
+  color: var(--error-color, #f5222d);
+} 

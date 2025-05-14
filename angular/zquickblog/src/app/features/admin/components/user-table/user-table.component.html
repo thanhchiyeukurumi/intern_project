@@ -1,0 +1,45 @@
+<nz-table
+  #basicTable
+  [nzData]="displayData"      
+  [nzLoading]="loading"       
+  [nzShowPagination]="false"  
+  class="users-table">
+  <thead>
+    <tr>
+      <th [nzWidth]="'50px'"
+          [nzChecked]="checked"
+          [nzIndeterminate]="indeterminate"
+          (nzCheckedChange)="onAllChecked($event)"></th>
+      <th [nzWidth]="'300px'">Tên</th> 
+      <th [nzWidth]="'200px'">Tên đăng nhập</th>
+      <th [nzWidth]="'400px'">Email</th>
+      <th>Vai trò</th>
+      <th [nzAlign]="'right'">Thao tác</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="displayData.length > 0">
+    <tr *ngFor="let data of displayData;"> 
+      <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+      <td>
+        <div class="user-cell">
+          <nz-avatar [nzSrc]="getAuthorAvatar(data.avatar)"></nz-avatar>
+          <span class="user-fullname">{{ data.fullname || data.username }}</span>
+        </div>
+      </td>
+      <td><span class="user-name">{{ data.username || 'Không xác định' }}</span> </td>
+      <td>{{ data.email }}</td>
+      <td>
+        <nz-tag [nzColor]="getRoleColor(data.role?.name)">{{ data.role?.name || 'N/A' }}</nz-tag>
+      </td>
+      <td [nzAlign]="'right'" class="action-buttons">
+        <button nz-button nzType="link" class="edit-button" (click)="showEditForm(data)">
+          <i nz-icon nzType="edit"></i>
+        </button>
+        <button nz-button nzType="link" class="delete-button" (click)="confirmDeleteUser(data)">
+          <i nz-icon nzType="delete"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+  <nz-empty *ngIf="!loading && displayData.length === 0" nzNotFoundContent="Không tìm thấy người dùng nào"></nz-empty>
+</nz-table> 

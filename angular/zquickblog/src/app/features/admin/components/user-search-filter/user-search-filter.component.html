@@ -1,0 +1,36 @@
+<div class="filter-section">
+  <div class="search-container">
+    <nz-input-group [nzPrefix]="prefixIconSearch">
+      <input
+        type="text"
+        nz-input
+        placeholder="Tìm kiếm người dùng..."
+        [(ngModel)]="searchValue"
+        (ngModelChange)="onSearchChange()"
+        (keyup.enter)="onSearchChange()" />
+    </nz-input-group>
+    <ng-template #prefixIconSearch>
+      <i nz-icon nzType="search"></i>
+    </ng-template>
+  </div>
+
+  <div class="filters">
+    <nz-select
+      class="filter-select"
+      nzPlaceHolder="Tất cả vai trò"
+      [(ngModel)]="selectedRole"
+      (ngModelChange)="onRoleChange()">
+      <nz-option [nzValue]="null" nzLabel="Tất cả vai trò"></nz-option>
+      <nz-option *ngFor="let role of roles" [nzValue]="role.name" [nzLabel]="role.name | titlecase"></nz-option>
+    </nz-select>
+    
+    <button 
+      nz-button 
+      nzType="default" 
+      class="reset-button" 
+      (click)="resetFilters()"
+      *ngIf="searchValue || selectedRole">
+      <i nz-icon nzType="clear"></i> Xóa bộ lọc
+    </button>
+  </div>
+</div> 

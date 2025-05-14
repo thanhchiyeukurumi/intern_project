@@ -2,182 +2,57 @@
   <div class="header-container">
     <div class="title-section">
       <div>
-        <h2 class="card-title">All Users</h2>
-        <p class="subtitle">Manage users, add, edit or delete</p>
+        <h2 class="card-title">Tất cả người dùng</h2>
+        <p class="subtitle">Quản lý người dùng: thêm, sửa hoặc xóa</p>
       </div>
-      <!-- Kết nối nút Add User với hàm showForm -->
       <button nz-button nzType="primary" (click)="showForm()">
-        <i nz-icon nzType="plus"></i> <span>Add User</span>
+        <i nz-icon nzType="plus"></i> <span>Thêm người dùng</span>
       </button>
     </div>
 
-    <!-- User Form -->
-    <div *ngIf="isFormVisible" class="form-container">
-      <nz-card class="form-card">
-        <h3 class="form-title">{{ formTitle }}</h3>
+    <!-- Component form người dùng -->
+    <app-user-form
+      [isFormVisible]="isFormVisible"
+      [formTitle]="formTitle"
+      [submitButtonText]="submitButtonText"
+      [editMode]="editMode"
+      [roles]="roles"
+      (formClose)="hideForm()"
+      (formSubmit)="handleFormSubmit($event)">
+    </app-user-form>
 
-        <div class="form-row">
-          <label class="form-label">Username</label>
-          <nz-input-group>
-            <input type="text" nz-input placeholder="Enter username" [(ngModel)]="username" />
-          </nz-input-group>
-        </div>
-
-        <div class="form-row">
-          <label class="form-label">Full Name</label>
-          <nz-input-group>
-            <input type="text" nz-input placeholder="Enter full name" [(ngModel)]="fullname" />
-          </nz-input-group>
-        </div>
-
-        <div class="form-row">
-          <label class="form-label">Email</label>
-          <nz-input-group>
-            <input type="email" nz-input placeholder="Enter email" [(ngModel)]="email" />
-          </nz-input-group>
-        </div>
-
-        <div class="form-row">
-          <label class="form-label">Password {{ editMode ? '(Leave blank to keep current)' : '' }}</label>
-          <nz-input-group>
-            <input type="password" nz-input placeholder="Enter password" [(ngModel)]="password" />
-          </nz-input-group>
-        </div>
-
-        <div class="form-row">
-          <label class="form-label">Confirm Password</label>
-          <nz-input-group>
-            <input type="password" nz-input placeholder="Confirm password" [(ngModel)]="confirmPassword" />
-          </nz-input-group>
-        </div>
-
-        <div class="form-row">
-          <label class="form-label">Role</label>
-          <nz-select class="full-width" nzPlaceholder="Select user role" [(ngModel)]="selectedRoleId">
-            <nz-option *ngFor="let role of roles" [nzValue]="role.id" [nzLabel]="role.name | titlecase"></nz-option>
-          </nz-select>
-        </div>
-
-        <div class="form-row">
-          <label class="form-label">Avatar URL (Optional)</label>
-          <nz-input-group>
-            <input type="text" nz-input placeholder="Enter avatar URL" [(ngModel)]="avatar" />
-          </nz-input-group>
-        </div>
-
-        <div class="form-row">
-          <label class="form-label">Description (Optional)</label>
-          <nz-input-group>
-            <textarea nz-input rows="4" placeholder="Enter user description" [(ngModel)]="description"></textarea>
-          </nz-input-group>
-        </div>
-
-        <div class="form-actions">
-          <button nz-button nzType="default" (click)="hideForm()">Cancel</button>
-          <button nz-button nzType="primary" (click)="addUser()">{{ submitButtonText }}</button>
-        </div>
-      </nz-card>
-    </div>
-
-    <div class="filter-section">
-      <div class="search-container">
-        <nz-input-group [nzPrefix]="prefixIconSearch">
-          <input
-            type="text"
-            nz-input
-            placeholder="Search users..."
-            [(ngModel)]="searchValue"
-            (ngModelChange)="searchAndFilter()"
-            (keyup.enter)="searchAndFilter()" />
-        </nz-input-group>
-        <ng-template #prefixIconSearch>
-          <i nz-icon nzType="search"></i>
-        </ng-template>
-      </div>
-
-      <div class="filters">
-        <nz-select
-          class="filter-select"
-          nzPlaceHolder="All Roles"
-          [(ngModel)]="selectedRole"
-          (ngModelChange)="searchAndFilter()">
-          <nz-option [nzValue]="null" nzLabel="All Roles"></nz-option>
-          <nz-option *ngFor="let role of roles" [nzValue]="role.name" [nzLabel]="role.name | titlecase"></nz-option>
-        </nz-select>
-        
-        <button 
-          nz-button 
-          nzType="default" 
-          class="reset-button" 
-          (click)="resetFilters()"
-          *ngIf="searchValue || selectedRole">
-          <i nz-icon nzType="clear"></i> Clear Filters
-        </button>
-      </div>
-    </div>
+    <!-- Component tìm kiếm và lọc -->
+    <app-user-search-filter
+      [searchValue]="searchValue"
+      [selectedRole]="selectedRole"
+      [roles]="roles"
+      (searchChange)="onSearchChange($event)"
+      (roleChange)="onRoleChange($event)"
+      (resetFiltersEvent)="onResetFilters()">
+    </app-user-search-filter>
   </div>
 
-  <nz-table
-    #basicTable
-    [nzData]="displayData"      
-    [nzLoading]="loading"       
-    [nzShowPagination]="false"  
-    class="users-table">
-    <thead>
-      <tr>
-        <th [nzWidth]="'50px'"
-            [nzChecked]="checked"
-            [nzIndeterminate]="indeterminate"
-            (nzCheckedChange)="onAllChecked($event)"></th>
-        <th [nzWidth]="'300px'">Name</th> 
-        <th [nzWidth]="'200px'">Username</th>
-        <th [nzWidth]="'400px'">Email</th>
-        <th>Role</th>
-        <th [nzAlign]="'right'">Actions</th>
-      </tr>
-    </thead>
-    <tbody *ngIf="displayData.length > 0">
-      <tr *ngFor="let data of displayData;"> <!-- Thêm trackBy -->
-        <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
-        <td>
-          <div class="user-cell">
-            <nz-avatar [nzSrc]="getAuthorAvatar(data.avatar)"></nz-avatar>
-            <span class="user-fullname">{{ data.fullname || data.username }}</span>
-          </div>
-        </td>
-        <td><span class="user-name">{{ data.username || 'Unknown' }}</span> </td>
-        <td>{{ data.email }}</td>
-        <td>
-          <nz-tag [nzColor]="getRoleColor(data.role?.name)">{{ data.role?.name || 'N/A' }}</nz-tag>
-        </td>
-        <td [nzAlign]="'right'" class="action-buttons">
-          <!-- Kết nối nút Edit với hàm showEditForm -->
-           <button nz-button nzType="link" class="edit-button" (click)="showEditForm(data)">
-             <i nz-icon nzType="edit"></i>
-           </button>
-          <!-- Nút Delete - Gắn sự kiện click -->
-          <button nz-button nzType="link" class="delete-button" (click)="confirmDeleteUser(data)">
-            <i nz-icon nzType="delete"></i>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-    <!-- NzEmpty sẽ hiển thị khi displayData rỗng và loading false -->
-    <nz-empty *ngIf="!loading && displayData.length === 0" nzNotFoundContent="No users found"></nz-empty>
-  </nz-table>
+  <!-- Component bảng người dùng -->
+  <app-user-table
+    [displayData]="displayData"
+    [loading]="loading"
+    [checked]="checked"
+    [indeterminate]="indeterminate"
+    [setOfCheckedId]="setOfCheckedId"
+    (itemChecked)="onItemChecked($event)"
+    (allChecked)="onAllChecked($event)"
+    (editUser)="showEditForm($event)"
+    (deleteUser)="confirmDeleteUser($event)">
+  </app-user-table>
 
-  <!-- Pagination Container -->
-  <!-- Chỉ hiển thị pagination nếu total > 0 -->
-  <div class="pagination-container" *ngIf="total > 0">
-    <div class="pagination-info" [innerHTML]="getPaginationInfo()"></div> <!-- Sử dụng getPaginationInfo() tương tự Post -->
-    <nz-pagination
-      [(nzPageIndex)]="pageIndex"
-      [(nzPageSize)]="pageSize"
-      [nzTotal]="total"
-      nzShowSizeChanger
-      (nzPageIndexChange)="onPageIndexChange($event)"
-      (nzPageSizeChange)="onPageSizeChange($event)"
-      [nzPageSizeOptions]="[5, 10, 20, 50, 100]"> <!-- Options phổ biến cho user list -->
-    </nz-pagination>
-  </div>
+  <!-- Component phân trang -->
+  <app-admin-pagination
+    *ngIf="total > 0"
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [total]="total"
+    [pageSizeOptions]="[5, 10, 20, 50, 100]"
+    (pageIndexChange)="onPageIndexChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)">
+  </app-admin-pagination>
 </nz-card>

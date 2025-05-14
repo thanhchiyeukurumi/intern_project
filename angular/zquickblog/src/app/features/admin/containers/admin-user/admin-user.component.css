@@ -2,163 +2,33 @@
 
 /* Users Component Styles */
 .header-container {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .title-section {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 16px;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .card-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--admin-text-primary);
-  margin: 0;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .subtitle {
-  color: var(--admin-text-secondary);
-  font-size: 0.875rem;
-  margin: 0;
+  color: var(--text-color-secondary, #666);
+  margin-bottom: 0;
 }
 
-/* Form Styles */
-.form-container {
-  margin-bottom: 24px;
-}
-
-.form-card {
-  background-color: var(--admin-bg-secondary);
-  border: 1px solid var(--admin-border);
-}
-
-.form-title {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: var(--admin-text-primary);
-}
-
-.form-row {
-  margin-bottom: 16px;
-}
-
-.form-label {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--admin-text-secondary);
-  font-weight: 500;
-}
-
-.full-width {
-  width: 100%;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 24px;
-}
-
-/* Filter section */
-.filter-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  align-items: center;
-  margin-top: 16px;
-}
-
-.search-container {
-  flex-grow: 1;
-  min-width: 200px;
-}
-
-.filters {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.filter-select {
-  min-width: 150px;
-}
-
-.reset-button {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--admin-text-secondary);
-  border-color: var(--admin-border);
-  transition: all 0.3s;
-}
-
-.reset-button:hover {
-  color: var(--admin-delete);
-  border-color: var(--admin-delete);
-}
-
-/* User display */
-.user-cell {
-  display: flex;
-  align-items: center;
-}
-
-.user-fullname {
-  margin-left: 12px;
-  color: var(--admin-text-primary);
-  font-weight: 500;
-}
-
-.user-name {
-  font-weight: 500;
-  color: var(--admin-text-primary);
-}
-
-/* Action buttons */
-.action-buttons {
-  white-space: nowrap;
-}
-
-.edit-button {
-  color: var(--admin-edit);
-}
-
-.edit-button:hover {
-  color: var(--admin-edit-hover);
-}
-
-.delete-button {
-  color: var(--admin-delete);
-}
-
-.delete-button:hover {
-  color: var(--admin-delete-hover);
-}
-
-/* Pagination */
-.pagination-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 24px;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.pagination-info {
-  color: var(--admin-text-secondary);
-  font-size: 0.875rem;
-}
-
-.pagination-buttons {
-  display: flex;
-  gap: 8px;
+@media (max-width: 576px) {
+  .title-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
 }
 
 /* Dark theme is handled by CSS variables */

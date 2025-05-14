@@ -1,0 +1,64 @@
+<nz-card *ngIf="isFormVisible" class="form-card">
+  <h3 class="form-title">{{ formTitle }}</h3>
+
+  <div class="form-row">
+    <label class="form-label">Tên đăng nhập</label>
+    <nz-input-group>
+      <input type="text" nz-input placeholder="Nhập tên đăng nhập" [(ngModel)]="username" />
+    </nz-input-group>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">Họ và tên</label>
+    <nz-input-group>
+      <input type="text" nz-input placeholder="Nhập họ và tên" [(ngModel)]="fullname" />
+    </nz-input-group>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">Email</label>
+    <nz-input-group>
+      <input type="email" nz-input placeholder="Nhập email" [(ngModel)]="email" />
+    </nz-input-group>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">Mật khẩu {{ editMode ? '(Để trống nếu muốn giữ nguyên)' : '' }}</label>
+    <nz-input-group>
+      <input type="password" nz-input placeholder="Nhập mật khẩu" [(ngModel)]="password" />
+    </nz-input-group>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">Xác nhận mật khẩu</label>
+    <nz-input-group>
+      <input type="password" nz-input placeholder="Xác nhận mật khẩu" [(ngModel)]="confirmPassword" />
+    </nz-input-group>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">Vai trò</label>
+    <nz-select class="full-width" nzPlaceholder="Chọn vai trò người dùng" [(ngModel)]="selectedRoleId">
+      <nz-option *ngFor="let role of roles" [nzValue]="role.id" [nzLabel]="role.name | titlecase"></nz-option>
+    </nz-select>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">URL Avatar (Tùy chọn)</label>
+    <nz-input-group>
+      <input type="text" nz-input placeholder="Nhập URL avatar" [(ngModel)]="avatar" />
+    </nz-input-group>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">Mô tả (Tùy chọn)</label>
+    <nz-input-group>
+      <textarea nz-input rows="4" placeholder="Nhập mô tả về người dùng" [(ngModel)]="description"></textarea>
+    </nz-input-group>
+  </div>
+
+  <div class="form-actions">
+    <button nz-button nzType="default" (click)="closeForm()">Hủy</button>
+    <button nz-button nzType="primary" (click)="submitForm()">{{ submitButtonText }}</button>
+  </div>
+</nz-card> 
