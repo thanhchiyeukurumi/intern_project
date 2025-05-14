@@ -1,0 +1,24 @@
+.categories-table {
+  margin-top: 16px;
+}
+
+/* Các nút tác vụ trong bảng */
+.action-buttons {
+  white-space: nowrap;
+}
+
+.edit-button {
+  color: var(--primary-color);
+}
+
+.delete-button {
+  color: var(--error-color);
+}
+
+/* Đảm bảo trên thiết bị di động vẫn hiển thị tốt */
+@media (max-width: 576px) {
+  .action-buttons {
+    display: flex;
+    gap: 4px;
+  }
+} 

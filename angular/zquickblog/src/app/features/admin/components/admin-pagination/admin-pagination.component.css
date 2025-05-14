@@ -1,0 +1,23 @@
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination-info {
+  font-size: 14px;
+  color: var(--text-color-secondary);
+}
+
+/* Đảm bảo pagination hiển thị tốt trên thiết bị di động */
+@media (max-width: 576px) {
+  .pagination-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .pagination-info {
+    margin-bottom: 10px;
+  }
+} 

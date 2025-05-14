@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h2 nz-typography>Settings</h2>
+  <h2 nz-typography>Cài đặt</h2>
   <div class="action-area">
     <!-- Không có action nào cho trang Settings -->
   </div>
@@ -8,32 +8,32 @@
 <nz-card>
   <nz-tabset>
     <!-- General Settings Tab -->
-    <nz-tab nzTitle="General">
+    <nz-tab nzTitle="Chung">
       <form nz-form [formGroup]="generalForm" (ngSubmit)="saveGeneralSettings()">
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="blogName">Blog Name</nz-form-label>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="blogName">Tên Blog</nz-form-label>
           <nz-form-control [nzSm]="12" [nzXs]="24">
-            <input nz-input id="blogName" formControlName="blogName" placeholder="Your blog name" />
+            <input nz-input id="blogName" formControlName="blogName" placeholder="Tên blog của bạn" />
           </nz-form-control>
         </nz-form-item>
         
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="blogDescription">Description</nz-form-label>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="blogDescription">Mô tả</nz-form-label>
           <nz-form-control [nzSm]="12" [nzXs]="24">
             <textarea 
               nz-input 
               id="blogDescription" 
               formControlName="blogDescription"
               [nzAutosize]="{ minRows: 2, maxRows: 6 }" 
-              placeholder="A short description of your blog">
+              placeholder="Mô tả ngắn về blog của bạn">
             </textarea>
           </nz-form-control>
         </nz-form-item>
         
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="defaultLanguage">Default Language</nz-form-label>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="defaultLanguage">Ngôn ngữ mặc định</nz-form-label>
           <nz-form-control [nzSm]="12" [nzXs]="24">
-            <nz-select id="defaultLanguage" formControlName="defaultLanguage" nzPlaceHolder="Select a language">
+            <nz-select id="defaultLanguage" formControlName="defaultLanguage" nzPlaceHolder="Chọn ngôn ngữ">
               <nz-option 
                 *ngFor="let option of defaultLanguageOptions" 
                 [nzValue]="option.value" 
@@ -44,19 +44,19 @@
         </nz-form-item>
         
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="postsPerPage">Posts Per Page</nz-form-label>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="postsPerPage">Số bài viết mỗi trang</nz-form-label>
           <nz-form-control [nzSm]="12" [nzXs]="24">
             <nz-input-number 
               id="postsPerPage" 
               formControlName="postsPerPage" 
-              nzMin="1" 
-              nzMax="50">
+              [nzMin]="1" 
+              [nzMax]="50">
             </nz-input-number>
           </nz-form-control>
         </nz-form-item>
         
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="enableComments">Enable Comments</nz-form-label>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="enableComments">Cho phép bình luận</nz-form-label>
           <nz-form-control [nzSm]="12" [nzXs]="24">
             <nz-switch id="enableComments" formControlName="enableComments"></nz-switch>
           </nz-form-control>
@@ -65,7 +65,7 @@
         <nz-form-item>
           <nz-form-control [nzOffset]="6" [nzSm]="16" [nzXs]="24">
             <button nz-button nzType="primary" [nzLoading]="isLoading" type="submit">
-              Save General Settings
+              Lưu cài đặt
             </button>
           </nz-form-control>
         </nz-form-item>
@@ -73,7 +73,7 @@
     </nz-tab>
     
     <!-- Privacy Settings Tab -->
-    <nz-tab nzTitle="Privacy">
+    <!-- <nz-tab nzTitle="Privacy">
       <form nz-form [formGroup]="privacyForm" (ngSubmit)="savePrivacySettings()">
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="makeProfilePublic">Public Profile</nz-form-label>
@@ -123,10 +123,10 @@
           </nz-form-control>
         </nz-form-item>
       </form>
-    </nz-tab>
+    </nz-tab> -->
     
     <!-- Integrations Tab -->
-    <nz-tab nzTitle="Integrations">
+    <!-- <nz-tab nzTitle="Integrations">
       <form nz-form [formGroup]="integrationForm" (ngSubmit)="saveIntegrationSettings()">
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="googleAnalyticsId">Google Analytics</nz-form-label>
@@ -160,36 +160,21 @@
           </nz-form-control>
         </nz-form-item>
       </form>
-    </nz-tab>
+    </nz-tab> -->
     
     <!-- Data & Account Tab -->
-    <nz-tab nzTitle="Data & Account">
-      <nz-divider nzText="Data Management"></nz-divider>
-      
-      <div class="account-action-card">
-        <div class="action-content">
-          <div class="action-title">Export Your Data</div>
-          <div class="action-description">Download all of your posts, comments, and profile information as a ZIP file.</div>
-        </div>
-        <div class="action-button">
-          <button nz-button (click)="exportData()">
-            <span nz-icon nzType="download"></span>
-            Export Data
-          </button>
-        </div>
-      </div>
-      
-      <nz-divider nzText="Danger Zone"></nz-divider>
+    <nz-tab nzTitle="Tài khoản">  
+      <nz-divider nzText="Vùng nguy hiểm"></nz-divider>
       
       <div class="account-action-card danger-zone">
         <div class="action-content">
-          <div class="action-title">Delete Your Account</div>
-          <div class="action-description">Permanently remove your account and all of your content. This action cannot be undone.</div>
+          <div class="action-title">Xóa tài khoản của bạn</div>
+          <div class="action-description">Xóa vĩnh viễn tài khoản và tất cả nội dung của bạn. Hành động này không thể hoàn tác.</div>
         </div>
         <div class="action-button">
           <button nz-button nzDanger (click)="deleteAccount()">
             <span nz-icon nzType="delete"></span>
-            Delete Account
+            Xóa tài khoản
           </button>
         </div>
       </div>

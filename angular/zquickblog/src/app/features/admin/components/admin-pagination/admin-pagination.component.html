@@ -1,0 +1,19 @@
+<div class="pagination-container" *ngIf="total > 0">
+  <div *ngIf="showTotal" class="pagination-info" [innerHTML]="getPaginationInfo()"></div>
+  <nz-pagination
+    [(nzPageIndex)]="pageIndex"
+    [(nzPageSize)]="pageSize"
+    [nzTotal]="total"
+    nzShowSizeChanger
+    (nzPageIndexChange)="onPageIndexChange($event)"
+    (nzPageSizeChange)="onPageSizeChange($event)"
+    [nzPageSizeOptions]="pageSizeOptions">
+  </nz-pagination>
+</div>
+
+<!-- Nếu không có phân trang nhưng có dữ liệu, hiển thị thông tin số lượng -->
+<div class="pagination-container" *ngIf="total === 0 && pageIndex === 1 && pageSize > 0">
+  <div class="pagination-info">
+    Hiển thị <strong>{{ pageSize }}</strong> kết quả
+  </div>
+</div> 

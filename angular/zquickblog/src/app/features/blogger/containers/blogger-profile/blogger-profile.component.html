@@ -14,13 +14,14 @@
         <nz-upload 
           [(nzFileList)]="fileList"
           [nzBeforeUpload]="beforeUpload"
+          [nzCustomRequest]="customUpload"
           [nzShowUploadList]="false">
           <button nz-button>
             <span nz-icon nzType="upload"></span>
-            Change Avatar
+            Thay đổi avatar
           </button>
         </nz-upload>
-        <div class="upload-hint">Recommended size: 256x256 pixels</div>
+        <div class="upload-hint">Kích thước khuyến nghị: 256x256 pixels</div>
       </div>
     </div>
 
@@ -29,27 +30,27 @@
       <nz-form-label [nzSm]="6" [nzXs]="24">Username</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24">
         <input nz-input formControlName="username" readonly />
-        <div class="form-hint">Username cannot be changed</div>
+        <div class="form-hint">Tên đăng nhập không thể thay đổi</div>
       </nz-form-control>
     </nz-form-item>
 
     <!-- Name (Editable) -->
     <nz-form-item>
-      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>Name</nz-form-label>
-      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input your name!">
-        <input nz-input formControlName="name" placeholder="Your display name" />
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>Họ tên</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Vui lòng nhập họ tên!">
+        <input nz-input formControlName="name" placeholder="Tên hiển thị của bạn" />
       </nz-form-control>
     </nz-form-item>
 
     <!-- About Me (Editable) -->
     <nz-form-item>
-      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>About Me</nz-form-label>
-      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input a short description about yourself!">
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>Giới thiệu</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Vui lòng nhập thông tin giới thiệu ngắn về bản thân!">
         <textarea 
           nz-input 
           formControlName="aboutMe"
           [nzAutosize]="{ minRows: 3, maxRows: 6 }"
-          placeholder="A short bio to show on your profile">
+          placeholder="Mô tả ngắn về bản thân sẽ hiển thị trên hồ sơ">
         </textarea>
       </nz-form-control>
     </nz-form-item>
@@ -57,7 +58,7 @@
     <!-- Submit Button -->
     <nz-form-item>
       <nz-form-control [nzOffset]="6" [nzSm]="14" [nzXs]="24">
-        <button nz-button nzType="primary" [nzLoading]="isLoading" type="submit">Save Changes</button>
+        <button nz-button nzType="primary" [nzLoading]="isLoading" type="submit">Lưu thay đổi</button>
       </nz-form-control>
     </nz-form-item>
   </form>

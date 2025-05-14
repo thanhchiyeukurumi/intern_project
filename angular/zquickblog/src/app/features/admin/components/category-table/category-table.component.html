@@ -1,0 +1,36 @@
+<nz-table
+  #basicTable
+  [nzData]="categories"      
+  [nzLoading]="loading"        
+  [nzShowPagination]="false"   
+  class="categories-table">
+  <thead>
+    <tr>
+      <th [nzWidth]="'50px'" [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
+      <th [nzWidth]="'500px'">Tên</th>
+      <th [nzWidth]="'500px'">Danh mục cha</th>
+      <th [nzAlign]="'right'">Thao tác</th>
+    </tr>
+  </thead>
+
+  <tbody *ngIf="categories.length > 0">
+    <tr *ngFor="let data of categories">
+      <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+      <td>{{ data.name }}</td>
+      <td>{{ getParentCategoryName(data.parent_id) }}</td>
+
+      <td [nzAlign]="'right'" class="action-buttons">
+        <!-- Nút Edit -->
+        <button nz-button nzType="link" class="edit-button" (click)="onEdit(data)">
+          <i nz-icon nzType="edit"></i>
+        </button>
+        <!-- Nút Delete -->
+        <button nz-button nzType="link" class="delete-button" (click)="onDelete(data)">
+          <i nz-icon nzType="delete"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+  <!-- NzEmpty sẽ hiển thị khi categories rỗng và loading false -->
+  <nz-empty *ngIf="!loading && categories.length === 0" nzNotFoundContent="Không tìm thấy danh mục nào" />
+</nz-table> 

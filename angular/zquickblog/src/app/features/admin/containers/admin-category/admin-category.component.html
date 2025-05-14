@@ -3,99 +3,49 @@
   <div class="header-container">
     <div class="title-section">
       <div>
-        <h2 class="card-title">All Categories</h2>
-        <p class="subtitle">Manage categories, add, edit or delete</p>
+        <h2 class="card-title">Tất cả danh mục</h2>
+        <p class="subtitle">Quản lý danh mục: thêm, sửa, xóa danh mục</p>
       </div>
       <button nz-button nzType="primary" (click)="showForm()">
-        <i nz-icon nzType="plus"></i> <span>Add Category</span>
+        <i nz-icon nzType="plus"></i> <span>Thêm danh mục</span>
       </button>
     </div>
 
-    <!-- Category Form -->
-    <div *ngIf="isFormVisible" class="form-container">
-      <nz-card class="form-card">
-        <h3 class="form-title">{{ formTitle }}</h3>
+    <!-- Category Form Component -->
+    <app-category-form
+      [isVisible]="isFormVisible"
+      [formTitle]="formTitle"
+      [submitButtonText]="submitButtonText"
+      [editMode]="editMode"
+      [loading]="loading"
+      [parentCategories]="listOfParentCategories"
+      [editingCategoryId]="editingCategoryId"
+      (formSubmit)="handleFormSubmit($event)"
+      (formCancel)="hideForm()">
+    </app-category-form>
 
-        <div class="form-row">
-          <label class="form-label">Category Name</label>
-          <nz-input-group>
-            <input type="text" nz-input placeholder="Enter category name" [(ngModel)]="categoryName" />
-          </nz-input-group>
-        </div>
+    <!-- Category Table Component -->
+    <app-category-table
+      [categories]="displayData"
+      [loading]="loading"
+      [parentCategories]="listOfParentCategories"
+      [checked]="checked"
+      [indeterminate]="indeterminate"
+      [setOfCheckedId]="setOfCheckedId"
+      (edit)="showEditForm($event)"
+      (delete)="confirmDeleteCategory($event)"
+      (checkAll)="onAllChecked($event)"
+      (checkItem)="onItemChecked($event)">
+    </app-category-table>
 
-        <div class="form-row">
-          <label class="form-label">Parent Category</label>
-          <nz-select class="full-width" nzPlaceholder="Select parent category (optional)" [(ngModel)]="parentCategory">
-            <nz-option [nzValue]="null" nzLabel="None"></nz-option>
-            <!-- Lặp qua listOfParentCategories cho select parent -->
-            <nz-option *ngFor="let category of listOfParentCategories;" [nzValue]="category.id" [nzLabel]="category.name"></nz-option>
-          </nz-select>
-        </div>
-
-        <div class="form-actions">
-          <button nz-button nzType="default" (click)="hideForm()">Cancel</button>
-          <button nz-button nzType="primary" (click)="addCategory()">{{ submitButtonText }}</button>
-        </div>
-      </nz-card>
-    </div>
-
-    <!-- Category Table -->
-    <nz-table
-      #basicTable
-      [nzData]="displayData"      
-      [nzLoading]="loading"        
-      [nzShowPagination]="false"   
-      class="categories-table">
-      <thead>
-        <tr>
-          <th [nzWidth]="'50px'" [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
-          <th [nzWidth]="'500px'">Name</th>
-          <th [nzWidth]="'500px'">Parent</th>
-          <th [nzAlign]="'right'">Actions</th>
-        </tr>
-      </thead>
-
-       <tbody *ngIf="displayData.length > 0">
-        <tr *ngFor="let data of displayData"> <!-- Thêm trackBy -->
-          <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
-          <td>{{ data.name }}</td>
-          <td>{{ getParentCategoryName(data.parent_id) }}</td>
-
-          <td [nzAlign]="'right'" class="action-buttons">
-            <!-- Nút Edit - Kết nối với showEditForm -->
-            <button nz-button nzType="link" class="edit-button" (click)="showEditForm(data)">
-              <i nz-icon nzType="edit"></i>
-            </button>
-            <!-- Nút Delete - Gắn sự kiện click -->
-            <button nz-button nzType="link" class="delete-button" (click)="confirmDeleteCategory(data)">
-              <i nz-icon nzType="delete"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-       <!-- NzEmpty sẽ hiển thị khi displayData rỗng và loading false -->
-       <nz-empty *ngIf="!loading && displayData.length === 0" nzNotFoundContent="No categories found" />
-    </nz-table>
-
-    <!-- Pagination Container -->
-    <!-- Chỉ hiển thị pagination nếu total > 0 -->
-    <div class="pagination-container" *ngIf="total > 0">
-      <div class="pagination-info" [innerHTML]="getPaginationInfo()"></div> <!-- Sử dụng getPaginationInfo() -->
-      <nz-pagination
-        [(nzPageIndex)]="pageIndex"
-        [(nzPageSize)]="pageSize"
-        [nzTotal]="total"
-        nzShowSizeChanger
-        (nzPageIndexChange)="onPageIndexChange($event)"
-        (nzPageSizeChange)="onPageSizeChange($event)"
-        [nzPageSizeOptions]="[5, 10, 20, 50, 100]">
-      </nz-pagination>
-    </div>
-     <!-- Nếu API không có paging, ẩn pagination và chỉ hiển thị thông tin số lượng -->
-     <div class="pagination-container" *ngIf="total === 0 && displayData.length > 0">
-          <div class="pagination-info">
-             Showing <strong>{{ displayData.length }}</strong> categories
-           </div>
-     </div>
+    <!-- Pagination Component -->
+    <app-admin-pagination
+      [total]="total"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 20, 50, 100]"
+      (pageIndexChange)="onPageIndexChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)">
+    </app-admin-pagination>
   </div>
 </nz-card>

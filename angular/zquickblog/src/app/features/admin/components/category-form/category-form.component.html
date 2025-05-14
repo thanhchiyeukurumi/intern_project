@@ -1,0 +1,26 @@
+<div *ngIf="isVisible" class="form-container">
+  <nz-card class="form-card">
+    <h3 class="form-title">{{ formTitle }}</h3>
+
+    <div class="form-row">
+      <label class="form-label">Tên danh mục</label>
+      <nz-input-group>
+        <input type="text" nz-input placeholder="Nhập tên danh mục" [(ngModel)]="categoryName" />
+      </nz-input-group>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">Danh mục cha</label>
+      <nz-select class="full-width" nzPlaceHolder="Chọn danh mục cha (tùy chọn)" [(ngModel)]="parentCategory">
+        <nz-option [nzValue]="null" nzLabel="Không có"></nz-option>
+        <!-- Lặp qua listOfParentCategories cho select parent -->
+        <nz-option *ngFor="let category of parentCategories;" [nzValue]="category.id" [nzLabel]="category.name"></nz-option>
+      </nz-select>
+    </div>
+
+    <div class="form-actions">
+      <button nz-button nzType="default" (click)="onCancel()">Hủy</button>
+      <button nz-button nzType="primary" [nzLoading]="loading" (click)="onSubmit()">{{ submitButtonText }}</button>
+    </div>
+  </nz-card>
+</div> 

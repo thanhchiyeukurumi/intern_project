@@ -2,28 +2,25 @@
 
 /* Categories Component Styles */
 .header-container {
-  margin-bottom: 24px;
+  padding: 0;
 }
 
 .title-section {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 16px;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
 .card-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--admin-text-primary);
   margin: 0;
-  margin-bottom: 4px;
+  font-size: 20px;
+  color: var(--heading-color);
 }
 
 .subtitle {
-  color: var(--admin-text-secondary);
-  font-size: 0.875rem;
-  margin: 0;
+  margin: 4px 0 0;
+  color: var(--text-color-secondary);
 }
 
 /* Form Styles */
