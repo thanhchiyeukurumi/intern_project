@@ -30,7 +30,7 @@
               <!-- Danh mục -->
               <div class="post-categories" *ngIf="post.categories && post.categories.length > 0">
                 <a *ngFor="let category of post.categories" 
-                   [routerLink]="['/category', category.slug]" 
+                   [routerLink]="['/categories', category.id]" 
                    class="post-category">
                   {{ category.name }}
                 </a>

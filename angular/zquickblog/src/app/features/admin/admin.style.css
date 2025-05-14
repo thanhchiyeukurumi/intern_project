@@ -35,6 +35,43 @@
   /* Icon Colors */
   --admin-icon-bg-primary: #e0e7ff;
   --admin-icon-color-primary: #4f46e5;
+
+  /* Form Colors */
+  --admin-input-bg: #ffffff;
+  --admin-input-placeholder: #9ca3af;
+  --admin-input-border: #d1d5db;
+  --admin-input-hover-border: #3730a3;
+  --admin-input-focus-border: #4f46e5;
+  --admin-input-disabled-bg: #f3f4f6;
+  --admin-input-disabled-border: #e5e7eb;
+
+  /* Table Colors */
+  --admin-table-header-bg: #f9fafb;
+  --admin-table-row-hover: #f3f4f6;
+  --admin-table-stripe-bg: #f9fafb;
+  --admin-table-selected-row: #eef2ff;
+  --admin-table-expanded-row: #f3f4f6;
+  --admin-table-border: #e5e7eb;
+
+  /* Pagination Colors */
+  --admin-pagination-item-bg: #ffffff;
+  --admin-pagination-item-active-bg: #ffffff;
+  --admin-pagination-item-active-border: #3730a3;
+  --admin-pagination-item-text: #1f2937;
+  --admin-pagination-item-active-text: #3730a3;
+
+  /* Dropdown Colors */
+  --admin-dropdown-bg: #ffffff;
+  --admin-dropdown-shadow: rgba(0, 0, 0, 0.05);
+  --admin-dropdown-item-hover: #f3f4f6;
+  --admin-dropdown-item-selected: #eef2ff;
+
+  /* Button Colors */
+  --admin-btn-default-bg: #ffffff;
+  --admin-btn-default-border: #d1d5db;
+  --admin-btn-default-text: #1f2937;
+  --admin-btn-default-hover-border: #3730a3;
+  --admin-btn-default-hover-text: #3730a3;
 }
 
 /* Dark Theme Colors */
@@ -67,6 +104,43 @@
   /* Icon Colors */
   --admin-icon-bg-primary: #312e81;
   --admin-icon-color-primary: #6366f1;
+
+  /* Form Colors */
+  --admin-input-bg: #1f2937;
+  --admin-input-placeholder: #9ca3af;
+  --admin-input-border: #4b5563;
+  --admin-input-hover-border: #6366f1;
+  --admin-input-focus-border: #818cf8;
+  --admin-input-disabled-bg: #374151;
+  --admin-input-disabled-border: #4b5563;
+
+  /* Table Colors */
+  --admin-table-header-bg: #1f2937;
+  --admin-table-row-hover: #374151;
+  --admin-table-stripe-bg: #1f2937;
+  --admin-table-selected-row: #292563;
+  --admin-table-expanded-row: #1f2937;
+  --admin-table-border: #4b5563;
+
+  /* Pagination Colors */
+  --admin-pagination-item-bg: #1f2937;
+  --admin-pagination-item-active-bg: #1f2937;
+  --admin-pagination-item-active-border: #6366f1;
+  --admin-pagination-item-text: #f3f4f6;
+  --admin-pagination-item-active-text: #6366f1;
+
+  /* Dropdown Colors */
+  --admin-dropdown-bg: #1f2937;
+  --admin-dropdown-shadow: rgba(0, 0, 0, 0.2);
+  --admin-dropdown-item-hover: #374151;
+  --admin-dropdown-item-selected: #312e81;
+
+  /* Button Colors */
+  --admin-btn-default-bg: #1f2937;
+  --admin-btn-default-border: #4b5563;
+  --admin-btn-default-text: #f3f4f6;
+  --admin-btn-default-hover-border: #6366f1;
+  --admin-btn-default-hover-text: #6366f1;
 }
 
 /* Table Styles */
@@ -76,26 +150,55 @@
 }
 
 .admin-table-dark .ant-table-thead > tr > th {
-  background-color: var(--admin-bg-tertiary);
+  background-color: var(--admin-table-header-bg);
   color: var(--admin-text-primary);
+  border-bottom: 1px solid var(--admin-table-border);
 }
 
 .admin-table-dark .ant-table-tbody > tr > td {
-  border-bottom: 1px solid var(--admin-border);
+  border-bottom: 1px solid var(--admin-table-border);
 }
 
 .admin-table-dark .ant-table-tbody > tr.ant-table-row:hover > td {
-  background-color: var(--admin-bg-tertiary);
+  background-color: var(--admin-table-row-hover);
 }
 
+/* Form Styles */
+.ant-input, 
+.ant-input-affix-wrapper, 
+.ant-select-selector,
+.ant-picker,
+.ant-input-number,
+.ant-cascader-picker,
+.ant-mention-wrapper,
+.ant-mentions {
+  background-color: var(--admin-input-bg) !important;
+  border-color: var(--admin-input-border) !important;
+  color: var(--admin-text-primary) !important;
+}
 
+.ant-input::placeholder {
+  color: var(--admin-input-placeholder) !important;
+}
 
+.ant-input:hover, 
+.ant-input-affix-wrapper:hover, 
+.ant-select-selector:hover,
+.ant-picker:hover,
+.ant-input-number:hover,
+.ant-cascader-picker:hover {
+  border-color: var(--admin-input-hover-border) !important;
+}
 
-
-
-
-
-/* --- Thêm các quy tắc này --- */
+.ant-input:focus, 
+.ant-input-affix-wrapper-focused, 
+.ant-select-focused .ant-select-selector,
+.ant-picker-focused,
+.ant-input-number-focused,
+.ant-cascader-picker-focused {
+  border-color: var(--admin-input-focus-border) !important;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2) !important;
+}
 
 /* Áp dụng style cơ bản cho nz-card */
 .ant-card {
@@ -134,4 +237,65 @@
    color: var(--admin-text-primary);
 }
 
-/* --- Kết thúc phần thêm --- */
+/* Pagination Styles */
+.ant-pagination-item {
+  background-color: var(--admin-pagination-item-bg);
+  border-color: var(--admin-border);
+}
+
+.ant-pagination-item a {
+  color: var(--admin-pagination-item-text);
+}
+
+.ant-pagination-item-active {
+  background-color: var(--admin-pagination-item-active-bg);
+  border-color: var(--admin-pagination-item-active-border);
+}
+
+.ant-pagination-item-active a {
+  color: var(--admin-pagination-item-active-text);
+}
+
+/* Button Styles */
+.ant-btn-default {
+  background-color: var(--admin-btn-default-bg);
+  border-color: var(--admin-btn-default-border);
+  color: var(--admin-btn-default-text);
+}
+
+.ant-btn-default:hover {
+  color: var(--admin-btn-default-hover-text);
+  border-color: var(--admin-btn-default-hover-border);
+}
+
+.ant-btn-primary {
+  background-color: var(--admin-primary);
+  border-color: var(--admin-primary);
+}
+
+.ant-btn-primary:hover {
+  background-color: var(--admin-primary-hover);
+  border-color: var(--admin-primary-hover);
+}
+
+/* Tag Styles */
+.ant-tag {
+  background-color: var(--admin-bg-secondary);
+  border-color: var(--admin-border);
+  color: var(--admin-text-primary);
+}
+
+/* Dropdown Styles */
+.ant-dropdown-menu {
+  background-color: var(--admin-dropdown-bg);
+  box-shadow: 0 3px 6px var(--admin-dropdown-shadow);
+}
+
+.ant-dropdown-menu-item:hover {
+  background-color: var(--admin-dropdown-item-hover);
+}
+
+.ant-dropdown-menu-item-selected {
+  background-color: var(--admin-dropdown-item-selected);
+  color: var(--admin-primary);
+}

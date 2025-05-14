@@ -127,6 +127,7 @@ export class AuthService {
     
     this.removeToken();
     this.storageService.removeLocalItem(USER_INFO_KEY);
+    this.storageService.clearLocalStorage();
     this.currentUserSubject.next(null);
     this.isLoggedInSubject.next(false);
     this.router.navigate(['/login']);

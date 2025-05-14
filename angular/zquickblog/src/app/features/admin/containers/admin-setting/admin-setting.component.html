@@ -20,7 +20,7 @@
           </div>
         </div>
 
-        <div class="form-row">
+        <!-- <div class="form-row">
           <div class="form-label">Backup Frequency</div>
           <div class="form-control">
             <nz-select class="select-control" [(ngModel)]="backupFrequency">
@@ -29,7 +29,7 @@
               <nz-option nzValue="monthly" nzLabel="Monthly"></nz-option>
             </nz-select>
           </div>
-        </div>
+        </div> -->
         
         <div class="action-container">
           <button nz-button nzType="primary">Save Changes</button>
@@ -82,7 +82,7 @@
       </div>
     </nz-tab>
     
-    <nz-tab nzTitle="Security">
+    <!-- <nz-tab nzTitle="Security">
       <div class="section-container">
         <h3 class="section-title">Security Settings</h3>
         
@@ -109,6 +109,32 @@
         
         <div class="action-container">
           <button nz-button nzType="primary">Change Password</button>
+        </div>
+      </div>
+    </nz-tab> -->
+
+    <nz-tab nzTitle="Avatar">
+      <div class="section-container">
+        <h3 class="section-title">Quản lý Avatar</h3>
+        
+        <div class="avatar-upload-container">
+          <div class="current-avatar" *ngIf="currentAvatar">
+            <img [src]="currentAvatar" alt="Current Avatar" />
+          </div>
+          
+          <div class="upload-section">
+            <nz-upload
+              [nzBeforeUpload]="beforeUpload"
+              [nzShowUploadList]="false"
+              [nzCustomRequest]="handleUpload">
+              <button nz-button>
+                <i nz-icon nzType="upload"></i>Chọn ảnh mới
+              </button>
+            </nz-upload>
+            <div class="upload-tip">
+              Chỉ chấp nhận file JPG/PNG. Kích thước tối đa 2MB.
+            </div>
+          </div>
         </div>
       </div>
     </nz-tab>

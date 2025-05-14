@@ -86,16 +86,17 @@
           <!-- Bài viết mới nhất -->
           <section class="latest-posts-section" *ngIf="latestPosts.length > 0">
             <h2 class="section-title">Mới nhất</h2>
+
             <div class="latest-posts-grid" nz-row [nzGutter]="[16, 16]">
               <div nz-col [nzXs]="24" [nzSm]="12" *ngFor="let post of latestPosts" class="latest-post-col">
                 <nz-card class="latest-post-card post-card" [nzCover]="latestPostCover">
                   <ng-template #latestPostCover>
-                    <div class="post-cover">
+                    <!-- <div class="post-cover">
                       <img 
                         [alt]="post.title" 
                         class="post-cover-image" 
                         >
-                    </div>
+                    </div> -->
                   </ng-template>
                   
                   <div class="post-meta-top">
