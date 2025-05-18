@@ -15,6 +15,9 @@ import { RegisterComponent } from './containers/register/register.component';
 import { HomeDetailComponent } from './containers/home-detail/home-detail.component';
 import { BloggerDetailComponent } from './containers/blogger-detail/blogger-detail.component';
 
+// Import Route Guard
+import { PublicAuthGuard } from '../../core/guards/public-auth.guard';
+
 const routes: Routes = [
   {
     path: '',
@@ -35,17 +38,9 @@ const routes: Routes = [
       // Người dùng/Blogger
       { path: 'blogger/:id', component: BloggerDetailComponent },
       
-      // Xác thực
-      { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent },
-      // {
-      //   path: 'auth',
-      //   children: [
-      //     { path: '', redirectTo: 'login', pathMatch: 'full' },
-      //     { path: 'login', component: LoginComponent },
-      //     { path: 'register', component: RegisterComponent }
-      //   ]
-      // }
+      // Xác thực - áp dụng guard
+      { path: 'login', component: LoginComponent, canActivate: [PublicAuthGuard] },
+      { path: 'register', component: RegisterComponent, canActivate: [PublicAuthGuard] },
     ]
   },
 ];

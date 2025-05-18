@@ -177,7 +177,7 @@ router.group("/comments", (router) => {
   router.get("/me", auth.authenticateJWT, commentController.getCommentsByUserId);
   router.get("/:id", commentController.getCommentById);
   router.put("/:id", auth.authenticateJWT, role.isOwner(), validate(updateCommentValidation), commentController.updateComment);
-  router.delete("/:id", auth.authenticateJWT, role.isAdminOrCommentOwner(), commentController.deleteComment);
+  router.delete("/:id", auth.authenticateJWT,  commentController.deleteComment);
   router.get("/stats/date-range", auth.authenticateJWT, role.hasRole(["admin"]), commentController.getCommentsByDateRange);
   router.get("/stats/dashboard", auth.authenticateJWT, role.hasRole(["admin"]), commentController.getCommentStats);
 });

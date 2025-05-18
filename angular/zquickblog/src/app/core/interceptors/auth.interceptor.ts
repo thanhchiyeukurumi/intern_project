@@ -2,6 +2,7 @@ import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { catchError, switchMap, throwError } from 'rxjs';
+import { AUTH_API } from '../constants/api-endpoints';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
@@ -23,19 +24,21 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       // Bắt lỗi 401 Unauthorized
       if (error.status === 401) {
         // Kiểm tra xem request này có phải là request refresh token không
-        // (Để tránh vòng lặp vô hạn nếu request refresh token cũng trả về 401)
-        // Cần một cách để đánh dấu request refresh token, ví dụ: thêm header tùy chỉnh
-        // Hoặc kiểm tra URL của request
-        if (req.url.includes('/api/auth/refresh-token')) { // Điều chỉnh URL endpoint refresh token của bạn
+        if (req.url.includes('/auth/refresh-token')) {
             // Nếu chính request refresh token bị lỗi 401, đăng xuất người dùng
             authService.logout();
-            return throwError(() => new Error('Refresh token failed. Please log in again.'));
+            return throwError(() => new Error('Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.'));
+        }
+        
+        // Kiểm tra nếu đây là request đăng nhập, không thực hiện refresh token
+        if (req.url.includes('/auth/login')) {
+            // Đây là lỗi đăng nhập thông thường, chỉ ném lỗi và không cố gắng refresh token
+            return throwError(() => error);
         }
 
         // Token hết hạn, thử refresh token
-        // Sử dụng switchMap để chuyển từ Observable lỗi sang Observable refresh token, sau đó retry request ban đầu
         return authService.refreshToken().pipe(
-          switchMap((newToken: string | null) => {
+          switchMap((newToken: string) => {
             if (newToken) {
               // Refresh token thành công, lưu token mới (đã được xử lý trong authService.refreshToken)
               // Clone request ban đầu với token MỚI
@@ -48,13 +51,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               return next(newModifiedReq);
             } else {
               // Refresh token thất bại (refreshToken() đã xử lý logout)
-              return throwError(() => new Error('Token expired. Please log in again.'));
+              return throwError(() => new Error('Token hết hạn. Vui lòng đăng nhập lại.'));
             }
           }),
           catchError((refreshError) => {
              // Xảy ra lỗi trong quá trình refresh token (ví dụ: refresh token cũng hết hạn)
              // AuthService.refreshToken() nên xử lý logout trong trường hợp này
-             return throwError(() => new Error('Session expired. Please log in again.'));
+             return throwError(() => new Error('Phiên làm việc hết hạn. Vui lòng đăng nhập lại.'));
           })
         );
       }

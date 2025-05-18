@@ -14,7 +14,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { AuthService } from '../../../../core/services/auth.service'
-import { finalize } from 'rxjs';
+import { finalize, catchError, of } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -51,7 +52,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private message: NzMessageService,
     private modalService: NzModalService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -79,17 +81,31 @@ export class LoginComponent implements OnInit {
     this.isLoading = true;
     const { email, password, rememberMe } = this.loginForm.value;
 
+    // Sử dụng catchError để xử lý lỗi trước khi finalize
     this.authService.login({ email: email, password, rememberMe })
       .pipe(
-        finalize(() => this.isLoading = false) // Tắt loading kể cả khi thành công hay lỗi
+        catchError((error: HttpErrorResponse) => {
+          // Nếu lỗi là Unauthorized (401), xử lý ngay tại đây
+          if (error.status === 401) {
+            this.message.error('Email hoặc mật khẩu không chính xác');
+            // Đảm bảo không có token nào được lưu trong storage khi đăng nhập thất bại
+            this.authService.removeToken();
+          } else {
+            this.message.error(error.error?.message || 'Đăng nhập thất bại. Vui lòng thử xem lại email và mật khẩu');
+          }
+          // Trả về một Observable rỗng để tiếp tục chuỗi xử lý
+          return of(null);
+        }),
+        finalize(() => this.isLoading = false)
       )
       .subscribe({
         next: (response: any) => {
-          this.message.success('Đăng nhập thành công!');
-          // Chuyển hướng sẽ được quản lý bởi AuthService
-        },
-        error: (error: any) => {
-          this.message.error(error.message || 'Đăng nhập thất bại. Vui lòng kiểm tra thông tin đăng nhập.');
+          // Chỉ xử lý khi response không phải null (tức là không có lỗi)
+          if (response) {
+            this.message.success('Đăng nhập thành công!');
+            // Chuyển hướng đến trang dashboard
+            this.router.navigate(['/dashboard']);
+          }
         }
       });
   }

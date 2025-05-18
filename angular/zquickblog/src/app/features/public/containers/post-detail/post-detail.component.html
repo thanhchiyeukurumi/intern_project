@@ -70,15 +70,6 @@
 
             <!-- Footer bài viết: tags, bình luận, v.v. -->
             <footer class="post-footer">
-              <!-- Tags bài viết -->
-              <div class="post-tags" *ngIf="post.tags && post.tags.length > 0">
-                <div class="tags-label"><span nz-icon nzType="tag" nzTheme="outline"></span> Tags:</div>
-                <div class="tags-list">
-                  <nz-tag *ngFor="let tag of post.tags" class="post-tag-item">{{ tag }}</nz-tag>
-                </div>
-              </div>
-              
-              <nz-divider></nz-divider>
               
               <!-- Phần bình luận -->
               <div class="comments-section">
