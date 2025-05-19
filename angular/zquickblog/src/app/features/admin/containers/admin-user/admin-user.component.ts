@@ -62,8 +62,8 @@ export class AdminUserComponent implements OnInit {
   loading = false;
   roles: Role[] = [
     { id: 1, name: 'admin' },
-    { id: 2, name: 'blogger' },
-    { id: 3, name: 'user' }
+    { id: 3, name: 'blogger' },
+    { id: 2, name: 'user' }
   ];
 
   constructor(
@@ -186,17 +186,13 @@ export class AdminUserComponent implements OnInit {
       fullname: userData.fullname,
       email: userData.email,
       avatar: userData.avatar,
-      description: userData.description
+      description: userData.description,
+      role_id: userData.role_id
     };
     
     // Chỉ thêm mật khẩu nếu được cung cấp
     if (userData.password) {
       apiData.password = userData.password;
-    }
-    
-    // Xử lý role_id
-    if (userData.role_id !== null) {
-      apiData.role_id = userData.role_id;
     }
     
     if (this.editMode && this.editingUserId) {

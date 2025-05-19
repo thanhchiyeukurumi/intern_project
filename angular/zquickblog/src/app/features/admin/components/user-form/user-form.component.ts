@@ -105,14 +105,25 @@ export class UserFormComponent implements OnInit {
       alert('Vui lòng nhập email');
       return false;
     }
+    
+    // Chỉ kiểm tra mật khẩu khi không ở chế độ chỉnh sửa
     if (!this.editMode && !this.password) {
       alert('Vui lòng nhập mật khẩu');
       return false;
     }
+    
+    // Kiểm tra xem mật khẩu và xác nhận có khớp không nếu có nhập mật khẩu
     if (this.password && this.password !== this.confirmPassword) {
       alert('Mật khẩu và xác nhận mật khẩu không khớp');
       return false;
     }
+    
+    // Kiểm tra vai trò đã được chọn chưa
+    if (this.selectedRoleId === null) {
+      alert('Vui lòng chọn vai trò cho người dùng');
+      return false;
+    }
+    
     return true;
   }
 } 

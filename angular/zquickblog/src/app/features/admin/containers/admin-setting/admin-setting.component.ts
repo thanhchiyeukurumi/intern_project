@@ -211,8 +211,6 @@ export class AdminSettingComponent implements OnInit {
                     updatedUser = updatedUserResponse;
                   }
                   
-                  console.log('Updated user extracted:', updatedUser);
-                  
                   this.currentUser = updatedUser;
                   this.currentAvatar = updatedUser.avatar;
                   

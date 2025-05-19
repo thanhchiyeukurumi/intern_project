@@ -22,14 +22,14 @@
     </nz-input-group>
   </div>
 
-  <div class="form-row">
-    <label class="form-label">Mật khẩu {{ editMode ? '(Để trống nếu muốn giữ nguyên)' : '' }}</label>
+  <div class="form-row" *ngIf="!editMode">
+    <label class="form-label">Mật khẩu</label>
     <nz-input-group>
       <input type="password" nz-input placeholder="Nhập mật khẩu" [(ngModel)]="password" />
     </nz-input-group>
   </div>
 
-  <div class="form-row">
+  <div class="form-row" *ngIf="!editMode">
     <label class="form-label">Xác nhận mật khẩu</label>
     <nz-input-group>
       <input type="password" nz-input placeholder="Xác nhận mật khẩu" [(ngModel)]="confirmPassword" />

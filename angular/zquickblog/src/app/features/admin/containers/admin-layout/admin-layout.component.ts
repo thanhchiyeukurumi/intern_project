@@ -37,7 +37,6 @@ export class AdminLayoutComponent implements OnInit {
   
   ngOnInit(): void {
     this.authService.currentUser$.subscribe(user => {
-      console.log('user', user);
       this.currentUser = user;
       this.cdr.detectChanges();
     });
@@ -49,8 +48,6 @@ export class AdminLayoutComponent implements OnInit {
   
   // Hàm lấy avatar của người dùng với fallback
   getUserAvatar(): string {
-    console.log('Current User in getUserAvatar:', this.currentUser); // Log toàn bộ currentUser
-    
     // Nếu currentUser là null hoặc undefined
     if (!this.currentUser) {
       return '';
@@ -58,18 +55,15 @@ export class AdminLayoutComponent implements OnInit {
     
     // Nếu currentUser có thuộc tính avatar
     if (this.currentUser.avatar) {
-      console.log('Using avatar from currentUser:', this.currentUser.avatar);
       return this.currentUser.avatar;
     }
     
     // Nếu currentUser có thuộc tính data (trường hợp là response API)
     if (this.currentUser.data && this.currentUser.data.avatar) {
-      console.log('Using avatar from currentUser.data:', this.currentUser.data.avatar);
       return this.currentUser.data.avatar;
     }
     
-    console.log('No avatar found, returning empty string');
-    return '';
+    return '';  
   }
   
   // Hàm lấy tên hiển thị của người dùng
