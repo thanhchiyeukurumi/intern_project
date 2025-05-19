@@ -43,10 +43,13 @@
       </td>
       <!-- Actions -->
       <td [nzAlign]="'right'" class="action-buttons">
-          <button nz-button nzType="link" class="edit-button" (click)="editPost.emit(data)">
-            <i nz-icon nzType="edit"></i>
+          <button nz-button nzType="link" class="view-button" (click)="viewPost.emit(data)" title="Xem chi tiết">
+            <i nz-icon nzType="eye"></i>
           </button>
-        <button nz-button nzType="link" class="delete-button" (click)="deletePost.emit(data)">
+          <!-- <button nz-button nzType="link" class="edit-button" (click)="editPost.emit(data)" title="Chỉnh sửa">
+            <i nz-icon nzType="edit"></i>
+          </button> -->
+        <button nz-button nzType="link" class="delete-button" (click)="deletePost.emit(data)" title="Xóa">
           <i nz-icon nzType="delete"></i>
         </button>
       </td>

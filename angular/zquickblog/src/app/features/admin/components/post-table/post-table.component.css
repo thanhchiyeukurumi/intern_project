@@ -13,6 +13,14 @@
   white-space: nowrap;
 }
 
+.view-button {
+  color: var(--admin-primary, #4e73df);
+}
+
+.view-button:hover {
+  color: var(--admin-primary-hover, #375bcc);
+}
+
 .edit-button {
   color: var(--admin-edit);
 }

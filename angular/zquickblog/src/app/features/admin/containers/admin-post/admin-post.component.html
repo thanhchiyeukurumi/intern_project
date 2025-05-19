@@ -18,7 +18,8 @@
     [checked]="checked"
     [indeterminate]="indeterminate"
     [setOfCheckedId]="setOfCheckedId"
-    (editPost)="navigateToCreatePost()"
+    (editPost)="navigateToEditPost($event)"
+    (viewPost)="navigateToViewPost($event)"
     (deletePost)="confirmDeletePost($event)"
     (checkAllChange)="onAllChecked($event)"
     (itemCheckedChange)="onItemChecked($event)">

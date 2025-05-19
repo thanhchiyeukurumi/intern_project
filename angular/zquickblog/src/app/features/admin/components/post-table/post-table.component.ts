@@ -32,6 +32,7 @@ export class PostTableComponent {
   @Input() setOfCheckedId = new Set<number>();
 
   @Output() editPost = new EventEmitter<Post>();
+  @Output() viewPost = new EventEmitter<Post>();
   @Output() deletePost = new EventEmitter<Post>();
   @Output() checkAllChange = new EventEmitter<boolean>();
   @Output() itemCheckedChange = new EventEmitter<{id: number, checked: boolean}>();

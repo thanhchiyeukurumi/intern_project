@@ -11,6 +11,7 @@ import { Category } from '../../../../shared/models/category.model';
 import { PostTableComponent } from '../../components/post-table/post-table.component';
 import { PostSearchFilterComponent } from '../../components/post-search-filter/post-search-filter.component';
 import { AdminPaginationComponent } from '../../components/admin-pagination/admin-pagination.component';
+import { API_ENDPOINTS } from '../../../../core/constants/api-endpoints';
 
 @Component({
   selector: 'app-admin-post',
@@ -266,6 +267,36 @@ export class AdminPostComponent implements OnInit {
    */
   navigateToCreatePost(): void {
     this.router.navigate(['/blogger/posts/create']);
+  }
+
+  /**
+   * Điều hướng đến trang chỉnh sửa bài viết
+   */
+  navigateToEditPost(post: Post): void {
+    this.router.navigate(['/blogger/posts/edit', post.id]);
+  }
+
+  /**
+   * Điều hướng đến trang xem chi tiết bài viết
+   */
+  navigateToViewPost(post: Post): void {
+    // Log thông tin để debug
+    console.log('Đang chuyển đến bài viết:', post);
+    console.log('Slug:', post.slug);
+    console.log('ID:', post.id);
+    
+    try {
+      // Sử dụng window.open để mở trong tab mới với đường dẫn chính xác
+      if (post.id) {
+        // Đường dẫn đúng là /post/:id theo định nghĩa trong public-routing.module.ts
+        window.open(`/post/${post.id}`, '_blank');
+      } else {
+        this.message.error('Không thể mở bài viết. ID bài viết không hợp lệ.');
+      }
+    } catch (error) {
+      console.error('Lỗi khi mở bài viết:', error);
+      this.message.error('Không thể mở bài viết. Vui lòng thử lại sau.');
+    }
   }
 
   // ============================================ 
