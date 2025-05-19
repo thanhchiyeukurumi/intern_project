@@ -52,6 +52,9 @@ export class AdminSettingComponent implements OnInit {
   isUploading = false;
   currentUser: User | null = null;
   
+  // Bản đồ lưu trữ kết quả kiểm tra hình ảnh cờ tồn tại hay không
+  flagExistsCache: Record<string, boolean> = {};
+  
   constructor(
     private themeService: ThemeService,
     private languageService: LanguageService,
@@ -169,6 +172,62 @@ export class AdminSettingComponent implements OnInit {
     this.themeService.toggleDarkMode();
   }
 
+  /**
+   * Lấy đường dẫn đến cờ quốc gia dựa trên mã ngôn ngữ
+   * @param localeCode Mã ngôn ngữ (VD: en, vi, fr)
+   * @returns Đường dẫn đến hình ảnh cờ hoặc null nếu không tìm thấy
+   */
+  getLanguageFlag(localeCode: string): string | null {
+    if (!localeCode) return null;
+    
+    // Xử lý mã ngôn ngữ để lấy mã quốc gia
+    let countryCode = localeCode.trim().toLowerCase();
+    
+    // Xử lý các trường hợp mã đặc biệt
+    const specialMappings: Record<string, string> = {
+      'en': 'gb', // English -> Cờ Anh
+      'zh': 'cn', // Chinese -> Cờ Trung Quốc
+      'ja': 'jp', // Japanese -> Cờ Nhật Bản
+      'ko': 'kr', // Korean -> Cờ Hàn Quốc
+      'ar': 'sa', // Arabic -> Cờ Ả Rập Saudi
+      'cs': 'cz', // Czech -> Cờ Czech Republic
+      'da': 'dk', // Danish -> Cờ Đan Mạch
+      'el': 'gr', // Greek -> Cờ Hy Lạp
+      'et': 'ee', // Estonian -> Cờ Estonia
+      'fa': 'ir', // Persian/Farsi -> Cờ Iran
+      'he': 'il', // Hebrew -> Cờ Israel
+      'uk': 'ua', // Ukrainian -> Cờ Ukraine
+    };
+    
+    // Nếu là mã ngôn ngữ 2 ký tự đặc biệt, sử dụng mapping
+    if (countryCode.length === 2 && specialMappings[countryCode]) {
+      countryCode = specialMappings[countryCode];
+    }
+    // Nếu mã ngôn ngữ có dạng xx-XX hoặc xx_XX, lấy phần sau dấu gạch
+    else if (countryCode.includes('-')) {
+      countryCode = countryCode.split('-')[1].toLowerCase();
+    } else if (countryCode.includes('_')) {
+      countryCode = countryCode.split('_')[1].toLowerCase();
+    }
+    
+    // Tạo đường dẫn đến file cờ
+    return `/images/flag/${countryCode}.svg`;
+  }
+
+  /**
+   * Kiểm tra xem cờ có tồn tại không
+   * @param url Đường dẫn đến hình ảnh cờ
+   * @returns Promise<boolean> - true nếu cờ tồn tại, false nếu không
+   */
+  checkImageExists(url: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = url;
+    });
+  }
+
   beforeUpload = (file: NzUploadFile): boolean => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
@@ -242,4 +301,24 @@ export class AdminSettingComponent implements OnInit {
         }
       });
   };
+
+  // Kiểm tra hình ảnh cờ có tồn tại không và lưu cache
+  async checkFlagExists(locale: string): Promise<boolean> {
+    if (locale in this.flagExistsCache) {
+      return this.flagExistsCache[locale];
+    }
+    
+    const flagUrl = this.getLanguageFlag(locale);
+    if (!flagUrl) return false;
+    
+    try {
+      const exists = await this.checkImageExists(flagUrl);
+      this.flagExistsCache[locale] = exists;
+      return exists;
+    } catch (error) {
+      console.error('Lỗi khi kiểm tra hình ảnh cờ:', error);
+      this.flagExistsCache[locale] = false;
+      return false;
+    }
+  }
 }

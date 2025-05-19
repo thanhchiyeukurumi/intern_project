@@ -65,6 +65,12 @@
         <div class="language-list">
           <div class="language-item" *ngFor="let language of languages">
             <div class="language-info">
+              <div class="flag-container" *ngIf="getLanguageFlag(language.locale)">
+                <img [src]="getLanguageFlag(language.locale)" 
+                     [alt]="language.name" 
+                     class="language-flag"
+                     (error)="flagExistsCache[language.locale] = false">
+              </div>
               <span class="language-name">{{ language.name }}</span>
               <span class="language-locale">{{ language.locale }}</span>
             </div>
