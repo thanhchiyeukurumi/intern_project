@@ -2,6 +2,17 @@
   <h2 nz-typography>Bình luận</h2>
 
   <div class="action-area">
+    <!-- Dropdown chọn bài viết để lọc bình luận -->
+    <nz-select
+      class="post-filter"
+      nzPlaceHolder="Lọc theo bài viết"
+      [(ngModel)]="selectedPostId"
+      (ngModelChange)="onPostFilterChange($event)"
+      nzAllowClear>
+      <nz-option nzValue="null" nzLabel="Tất cả bài viết"></nz-option>
+      <nz-option *ngFor="let post of userPosts" [nzValue]="post.id" [nzLabel]="post.title"></nz-option>
+    </nz-select>
+
     <!-- Tìm kiếm -->
     <nz-input-group [nzSuffix]="suffixIconSearch" class="search-box">
       <input type="text"

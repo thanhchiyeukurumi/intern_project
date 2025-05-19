@@ -17,6 +17,7 @@ import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { CommentService } from '../../../../core/services/comment.service';
 import { PostService } from '../../../../core/services/post.service';
 import { Comment } from '../../../../shared/models/comment.model';
@@ -45,6 +46,7 @@ import { switchMap, of, forkJoin } from 'rxjs';
     NzPaginationModule,
     NzModalModule,
     NzSpinModule,
+    NzSelectModule,
     DatePipe
   ],
 })
@@ -54,6 +56,7 @@ export class BloggerCommentsComponent implements OnInit {
   // ============================================
   searchValue = '';
   displayComments: Comment[] = [];
+  selectedPostId: number | null = null; // Biến lưu ID bài viết được chọn để lọc
 
   // Biến phân trang
   pageIndex = 1;
@@ -225,7 +228,35 @@ export class BloggerCommentsComponent implements OnInit {
 
     this.loading = true;
 
-    // Xử lý tương tự như trong ngOnInit
+    // Nếu đã chọn bài viết cụ thể, chỉ lấy bình luận của bài viết đó
+    if (this.selectedPostId) {
+        this.commentService.getByPost(this.selectedPostId, {
+            page: this.pageIndex,
+            limit: this.pageSize,
+            orderBy: 'createdAt',
+            order: 'DESC'
+        }).subscribe({
+            next: (res) => {
+                this.displayComments = res.data || [];
+                this.total = res.pagination?.total || 0;
+                this.loading = false;
+            },
+            error: (err) => {
+                console.error("Error fetching comments for selected post:", err);
+                const errorMessage = err?.error?.message || err?.message || "Failed to load comments.";
+                this.message.error(errorMessage);
+                this.displayComments = [];
+                this.total = 0;
+                this.loading = false;
+                if (err.status === 401 || err.status === 403) {
+                    this.router.navigate(['/login']);
+                }
+            }
+        });
+        return;
+    }
+
+    // Xử lý tương tự như trong ngOnInit nếu không có bài viết cụ thể được chọn
     if (this.userPosts.length <= 5) {
         const commentRequests = this.userPosts.map(post => 
             this.commentService.getByPost(post.id, {
@@ -332,6 +363,20 @@ export class BloggerCommentsComponent implements OnInit {
             }
         });
     }
+  }
+
+  // ============================================
+  // **Xử lý thay đổi bài viết được chọn**
+  // ============================================
+  /**
+   * Xử lý khi người dùng chọn một bài viết từ dropdown
+   * @param value ID của bài viết được chọn
+   */
+  onPostFilterChange(value: number | null): void {
+    if (value === this.selectedPostId) return; // Tránh fetch lại nếu filter không đổi
+    this.selectedPostId = value;
+    this.pageIndex = 1; // Reset về trang 1 khi thay đổi filter
+    this.fetchComments();
   }
 
   // ============================================

@@ -26,6 +26,12 @@
   transition: all 0.3s ease;
 }
 
+/* Style cho dropdown filter bài viết */
+.page-header .action-area .post-filter {
+  width: 220px;
+  transition: all 0.3s ease;
+}
+
 @media (max-width: 576px) {
   .page-header {
     flex-direction: column;
@@ -34,9 +40,11 @@
   
   .page-header .action-area {
     width: 100%;
+    flex-wrap: wrap;
   }
   
-  .page-header .action-area .search-box {
+  .page-header .action-area .search-box,
+  .page-header .action-area .post-filter {
     width: 100%;
   }
 }
