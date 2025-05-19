@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -35,7 +35,7 @@ import { Subscription } from 'rxjs';
     NzInputModule,
     NzIconModule,
     NzSpinModule,
-    NzUploadModule
+    NzUploadModule,
   ],
   templateUrl: './admin-setting.component.html',
   styleUrl: './admin-setting.component.css'
@@ -58,7 +58,8 @@ export class AdminSettingComponent implements OnInit {
     private uploadService: UploadService,
     private userService: UserService,
     private authService: AuthService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -78,6 +79,7 @@ export class AdminSettingComponent implements OnInit {
       if (user) {
         this.currentUser = user;
         this.currentAvatar = user.avatar;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -197,9 +199,27 @@ export class AdminSettingComponent implements OnInit {
             // Cập nhật avatar trong database
             this.userService.update(this.currentUser.id, { avatar: response.data.url })
               .subscribe({
-                next: (updatedUser) => {
+                next: (updatedUserResponse) => {
+                  // Kiểm tra cấu trúc của dữ liệu trả về và trích xuất user
+                  let updatedUser: User;
+                  
+                  if (updatedUserResponse && 'data' in updatedUserResponse) {
+                    // Trường hợp response có dạng { data: User, success: boolean, ... }
+                    updatedUser = (updatedUserResponse as any).data;
+                  } else {
+                    // Trường hợp response trực tiếp là User
+                    updatedUser = updatedUserResponse;
+                  }
+                  
+                  console.log('Updated user extracted:', updatedUser);
+                  
                   this.currentUser = updatedUser;
                   this.currentAvatar = updatedUser.avatar;
+                  
+                  // Cập nhật thông tin người dùng trong AuthService với đối tượng User đã được trích xuất
+                  this.authService.updateCurrentUser(updatedUser);
+                  this.cdr.detectChanges();
+                  
                   this.message.success('Cập nhật avatar thành công!');
                   if (item.onSuccess) {
                     item.onSuccess(response, item.file, item.file);

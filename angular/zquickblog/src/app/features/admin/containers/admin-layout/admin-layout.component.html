@@ -45,7 +45,7 @@
 
       <div class="header-right">
         <a nz-dropdown [nzDropdownMenu]="menu" [nzTrigger]="'click'">
-          <nz-avatar [nzSrc]="getUserAvatar()"></nz-avatar>
+          <nz-avatar *ngIf="currentUser" [nzSrc]="getUserAvatar()"></nz-avatar>
           <span class="admin-profile-name">{{ getUserDisplayName() }}</span>
           <i nz-icon nzType="down"></i>
         </a>

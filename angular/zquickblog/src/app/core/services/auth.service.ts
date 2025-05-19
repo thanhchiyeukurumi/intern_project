@@ -270,4 +270,30 @@ export class AuthService {
       })
     );
   }
+
+  // ============================================
+  // CẬP NHẬT THÔNG TIN NGƯỜI DÙNG HIỆN TẠI - updateCurrentUser
+  // ============================================
+  /**
+   * Cập nhật thông tin người dùng hiện tại trong AuthService
+   * @param user - Thông tin người dùng đã cập nhật
+   */
+  updateCurrentUser(user: User | any): void {
+    // Đảm bảo chỉ lưu đối tượng User, không phải toàn bộ response API
+    let userData: User;
+    
+    if (user && 'data' in user && user.data) {
+      // Trường hợp user là response API có dạng { data: User, ... }
+      userData = user.data;
+      console.log('Extracted user from response data', userData);
+    } else {
+      // Trường hợp user đã được trích xuất
+      userData = user as User;
+      console.log('Using provided user directly', userData);
+    }
+    
+    // Cập nhật BehaviorSubject và localStorage
+    this.currentUserSubject.next(userData);
+    this.storageService.setLocalItem(USER_INFO_KEY, userData);
+  }
 }
