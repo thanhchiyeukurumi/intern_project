@@ -78,10 +78,18 @@ export class AdminDashboardComponent implements OnInit {
   
   public postsChartOptions: ChartOptions<'line'> = {
     responsive: true,
+    maintainAspectRatio: false,
     scales: {
       y: {
         ticks: {
           stepSize: 1
+        }
+      },
+      x: {
+        ticks: {
+          autoSkip: false,
+          maxRotation: 0,
+          minRotation: 0
         }
       }
     },
@@ -109,10 +117,18 @@ export class AdminDashboardComponent implements OnInit {
   
   public usersChartOptions: ChartOptions<'line'> = {
     responsive: true,
+    maintainAspectRatio: false,
     scales: {
       y: {
         ticks: {
           stepSize: 5
+        }
+      },
+      x: {
+        ticks: {
+          autoSkip: false,
+          maxRotation: 0,
+          minRotation: 0
         }
       }
     },
