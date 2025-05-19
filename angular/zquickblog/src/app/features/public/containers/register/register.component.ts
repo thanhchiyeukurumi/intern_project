@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router'; // Import RouterModule for routerLink
+import { Router, RouterModule, ActivatedRoute } from '@angular/router'; // Thêm ActivatedRoute
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -54,7 +54,8 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private message: NzMessageService,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute // Thêm ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -96,6 +97,7 @@ export class RegisterComponent implements OnInit {
 
     this.isLoading = true;
     const { fullName, email, password, userName, newsletter } = this.registerForm.value;
+    const returnUrl = this.route.snapshot.queryParams['returnUrl'];
 
     console.log('Registering with:', { fullName, email, password, newsletter });
 
@@ -103,7 +105,13 @@ export class RegisterComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
         this.message.success('Account created successfully! Please check your email for verification.');
-        this.router.navigate(['/auth/login']); // Chuyển đến trang đăng nhập
+        
+        // Chuyển hướng đến trang đăng nhập với returnUrl nếu có
+        if (returnUrl) {
+          this.router.navigate(['/login'], { queryParams: { returnUrl } });
+        } else {
+          this.router.navigate(['/login']);
+        }
       },
       error: (error) => {
         this.isLoading = false;

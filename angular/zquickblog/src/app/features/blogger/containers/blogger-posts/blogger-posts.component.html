@@ -137,102 +137,96 @@
             </td>
           </tr>
 
-          <!-- Hàng mở rộng (Translations) -->
-          <tr [nzExpand]="post.expand" class="expanded-row"> <!-- post.expand từ model Post -->
+          <!-- Hiển thị loading translations -->
+          <tr *ngIf="post.expand && post.loadingTranslations" class="translation-row">
             <td></td> <!-- Cột trống để căn lề -->
-            <!-- Sử dụng listOfColumns.length để tính colspan (đã có trong TS) -->
-            <td [attr.colspan]="listOfColumns.length -1">
-              <div class="language-variants-container">
-                <!-- Loading state cho translations -->
-                <div class="loading-translations text-center" *ngIf="post.loadingTranslations">
-                    <i nz-icon nzType="loading" nzSpin></i> <span>Đang tải các bản dịch...</span>
-                </div>
-
-                <!-- Bảng con chỉ hiển thị khi không loading VÀ có bản dịch -->
-                <div class="translation-wrapper" *ngIf="!post.loadingTranslations && post.translations && post.translations.length > 0">
-                  <div class="translation-header">
-                    <h4 class="translation-title">Các bản dịch của bài viết</h4>
-                    <button nz-button nzType="primary" (click)="addLanguageVariant(post.id)" class="add-translation-btn">
-                      <span nz-icon nzType="plus"></span> Thêm bản dịch
-                    </button>
-                  </div>
-                  
-                  <nz-table
-                    #innerTable
-                    [nzData]="post.translations"
-                    nzSize="small"
-                    [nzShowPagination]="false"
-                    [nzFrontPagination]="false"
-                    class="inner-translation-table">
-                    <thead>
-                      <tr>
-                        <th nzWidth="120px">Ngôn ngữ</th> <!-- Thay đổi cột đầu tiên -->
-                        <th nzWidth="30%">Tiêu đề bản dịch</th>
-                        <th>Ngày đăng</th>
-                        <th>Lượt xem</th>
-                        <th [nzAlign]="'right'">Hành động</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let variant of innerTable.data"> <!-- variant ở đây là Post -->
-                        <td>
-                          <!-- variant.Language từ model Post -->
-                          <nz-tag *ngIf="variant.Language" class="language-tag">{{ variant.Language.name }}</nz-tag>
-                          <span *ngIf="!variant.Language">-</span>
-                        </td>
-                        <td>
-                            <a [routerLink]="['/blogger/posts/edit', variant.id]" nz-tooltip [nzTooltipTitle]="variant.title">
-                                <nz-typography [nzEllipsis]="true">{{ variant.title }}</nz-typography>
-                            </a>
-                        </td>
-                        <td>
-                          <ng-container *ngIf="variant.updatedAt">
-                              {{ variant.updatedAt | date:'dd/MM/yyyy' }}
-                          </ng-container>
-                          <ng-container *ngIf="!variant.updatedAt">
-                              -
-                          </ng-container>
-                        </td>
-                        <td>
-                          <div class="views-count">
-                            <span nz-icon nzType="eye"></span> {{ variant.views || 0 }}
-                          </div>
-                        </td>
-                        <td [nzAlign]="'right'" class="action-buttons">
-                          <a nz-button nzType="link" nzSize="small" [routerLink]="['/blogger/posts/edit', variant.id]" nzTooltipTitle="Sửa bản dịch" nz-tooltip>
-                            <span nz-icon nzType="edit"></span>
-                          </a>
-                          
-                          <a nz-button nzType="link" nzSize="small" [routerLink]="['/post', variant.slug || variant.id]" target="_blank" nzTooltipTitle="Xem bản dịch" nz-tooltip>
-                            <span nz-icon nzType="eye"></span>
-                          </a>
-
-                          <!-- Sử dụng hàm confirm mới -->
-                          <button nz-button nzType="link" nzSize="small" nzDanger
-                                  (click)="confirmDeleteLanguageVariant(post, variant)"
-                                  nzTooltipTitle="Xóa bản dịch" nz-tooltip>
-                            <span nz-icon nzType="delete"></span>
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </nz-table>
-                </div>
-
-                <!-- Empty State for No Language Variants - Cải thiện thiết kế -->
-                <div class="empty-language-variants" *ngIf="!post.loadingTranslations && post.translations && post.translations.length === 0">
-                  <div class="empty-illustration">
-                    <span nz-icon nzType="global" nzTheme="outline"></span>
-                  </div>
-                  <div class="empty-content">
-                    <h4>Chưa có bản dịch nào</h4>
-                    <p>Mở rộng phạm vi tiếp cận bài viết của bạn bằng cách thêm các ngôn ngữ khác</p>
-                    <button nz-button nzType="primary" (click)="addLanguageVariant(post.id)" class="add-translation-empty-btn"> Thêm bản dịch đầu tiên </button>
-                  </div>
-                </div>
+            <td colspan="6" class="loading-cell">
+              <div class="loading-translations">
+                <i nz-icon nzType="loading" nzSpin></i> <span>Đang tải các bản dịch...</span>
               </div>
             </td>
           </tr>
+
+          <!-- Hiển thị trạng thái trống khi không có bản dịch -->
+          <tr *ngIf="post.expand && !post.loadingTranslations && (!post.translations || post.translations.length === 0)" class="translation-row">
+            <td></td> <!-- Cột trống để căn lề -->
+            <td colspan="6" class="empty-cell">
+              <div class="empty-state">
+                <span>Chưa có bản dịch nào.</span>
+                <button nz-button nzType="primary" nzSize="small" (click)="addLanguageVariant(post.id)">
+                  <i nz-icon nzType="plus"></i> Thêm bản dịch đầu tiên
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Hiển thị các hàng bản dịch -->
+          <ng-container *ngIf="post.expand && !post.loadingTranslations && post.translations && post.translations.length > 0">
+            <tr class="translation-action-row">
+              <td></td> <!-- Cột trống để căn lề -->
+              <td colspan="6" class="translation-action-cell">
+                <div class="translation-action">
+                  <span class="translation-label">Bản dịch ({{ post.translations.length }})</span>
+                  <button nz-button nzType="primary" nzSize="small" (click)="addLanguageVariant(post.id)">
+                    <i nz-icon nzType="plus"></i> Thêm bản dịch
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngFor="let variant of post.translations" class="translation-row">
+              <td></td> <!-- Cột trống để căn lề -->
+              <td>
+                <div class="post-title-container">
+                  <a [routerLink]="['/blogger/posts/edit', variant.id]" class="post-title" nz-tooltip [nzTooltipTitle]="variant.title">
+                    <nz-typography [nzEllipsis]="true">{{ variant.title }}</nz-typography>
+                  </a>
+                  <div class="language-indicator">
+                    <nz-tag *ngIf="variant.Language" class="language-tag">{{ variant.Language.name }}</nz-tag>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <ng-container *ngIf="variant.updatedAt">
+                  {{ variant.updatedAt | date:'dd/MM/yyyy' }}
+                </ng-container>
+                <ng-container *ngIf="!variant.updatedAt">
+                  -
+                </ng-container>
+              </td>
+              <td>
+                <nz-tag *ngIf="variant.Language" class="language-tag">{{ variant.Language.name }}</nz-tag>
+                <span *ngIf="!variant.Language">-</span>
+              </td>
+              <td>
+                <div class="category-tags">
+                  <ng-container *ngIf="variant.Categories && variant.Categories.length > 0">
+                    <nz-tag *ngFor="let cat of variant.Categories" [nzColor]="getCategoryColor(cat.name)">{{ cat.name }}</nz-tag>
+                  </ng-container>
+                  <span *ngIf="!variant.Categories || variant.Categories.length === 0">-</span>
+                </div>
+              </td>
+              <td>
+                <div class="views-count">
+                  <span nz-icon nzType="eye"></span> {{ variant.views || 0 }}
+                </div>
+              </td>
+              <td [nzAlign]="'right'" class="action-buttons">
+                <a nz-button nzType="link" nzSize="small" [routerLink]="['/blogger/posts/edit', variant.id]" nzTooltipTitle="Sửa bản dịch" nz-tooltip>
+                  <span nz-icon nzType="edit"></span>
+                </a>
+                
+                <a nz-button nzType="link" nzSize="small" [routerLink]="['/post', variant.slug || variant.id]" target="_blank" nzTooltipTitle="Xem bản dịch" nz-tooltip>
+                  <span nz-icon nzType="eye"></span>
+                </a>
+
+                <button nz-button nzType="link" nzSize="small" nzDanger
+                        (click)="confirmDeleteLanguageVariant(post, variant)"
+                        nzTooltipTitle="Xóa bản dịch" nz-tooltip>
+                  <span nz-icon nzType="delete"></span>
+                </button>
+              </td>
+            </tr>
+          </ng-container>
         </ng-container>
       </tbody>
         <nz-empty *ngIf="!loading && displayPosts.length === 0" nzNotFoundContent="Không tìm thấy bài viết nào."></nz-empty>

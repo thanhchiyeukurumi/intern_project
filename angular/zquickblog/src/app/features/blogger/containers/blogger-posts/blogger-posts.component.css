@@ -750,3 +750,65 @@ nz-empty {
     padding: 10px 8px;
   }
 }
+
+/* Hàng bản dịch - thiết kế liền mạch với bảng chính */
+.translation-row > td {
+  background-color: #f9f9f9;
+  vertical-align: middle;
+  border-top: none !important;
+}
+
+.translation-row:hover > td {
+  background-color: #f5f5f5 !important;
+}
+
+/* Loading cell */
+.loading-cell {
+  padding: 10px !important;
+  text-align: center;
+}
+
+/* Empty state */
+.empty-cell {
+  padding: 12px !important;
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Translation action row */
+.translation-action-row > td {
+  background-color: #f5f5f5;
+  padding: 8px 16px !important;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.translation-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.translation-label {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+/* Hàng trống để nhóm bản dịch với bài viết gốc */
+.translation-spacing {
+  height: 4px;
+}
+
+.translation-spacing > td {
+  padding: 0 !important;
+  background-color: transparent !important;
+  border: none !important;
+}
+
+/* Language indicator trong tiêu đề bản dịch */
+.language-indicator {
+  margin-top: 4px;
+}

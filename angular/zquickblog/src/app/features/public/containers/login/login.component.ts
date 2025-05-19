@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -53,7 +53,8 @@ export class LoginComponent implements OnInit {
     private message: NzMessageService,
     private modalService: NzModalService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -80,9 +81,10 @@ export class LoginComponent implements OnInit {
 
     this.isLoading = true;
     const { email, password, rememberMe } = this.loginForm.value;
+    const returnUrl = this.route.snapshot.queryParams['returnUrl'];
 
     // Sử dụng catchError để xử lý lỗi trước khi finalize
-    this.authService.login({ email: email, password, rememberMe })
+    this.authService.login({ email: email, password, rememberMe }, returnUrl)
       .pipe(
         catchError((error: HttpErrorResponse) => {
           // Nếu lỗi là Unauthorized (401), xử lý ngay tại đây
@@ -100,11 +102,9 @@ export class LoginComponent implements OnInit {
       )
       .subscribe({
         next: (response: any) => {
-          // Chỉ xử lý khi response không phải null (tức là không có lỗi)
           if (response) {
             this.message.success('Đăng nhập thành công!');
-            // Chuyển hướng đến trang dashboard
-            this.router.navigate(['/dashboard']);
+            this.router.navigate([returnUrl || '/']);   
           }
         }
       });

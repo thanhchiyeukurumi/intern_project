@@ -73,7 +73,7 @@ export class AuthService {
    * @param credentials - Thông tin đăng nhập
    * @returns Observable - Dữ liệu đăng nhập
    */
-  login(credentials: { email: string; password: string; rememberMe?: boolean }): Observable<any> {
+  login(credentials: { email: string; password: string; rememberMe?: boolean }, returnUrl?: string): Observable<any> {
     return this.http.post<any>(AUTH_API.LOGIN, credentials).pipe(
       map(response => {
         if (response && response.success && response.data) {
@@ -89,7 +89,7 @@ export class AuthService {
             this.isLoggedInSubject.next(true);
           }
           
-          this.router.navigate(['/dashboard']);
+          this.router.navigate([returnUrl || '/dashboard']);
           return response.data;
         }
          

@@ -13,7 +13,6 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (authService.isLoggedIn()) {
     return true;
   }
-
   // Lưu URL hiện tại để có thể redirect sau khi đăng nhập
   router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
   return false;
