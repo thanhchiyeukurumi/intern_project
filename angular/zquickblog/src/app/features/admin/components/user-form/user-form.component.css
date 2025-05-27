@@ -1,11 +1,17 @@
+@import '../../admin.style.css';
+
 .form-card {
   margin-bottom: 20px;
+  background-color: var(--admin-bg-tertiary);
+  border: 1px solid var(--admin-border);
+  color: var(--admin-text-primary);
 }
 
 .form-title {
   margin-bottom: 20px;
   font-size: 18px;
   font-weight: 500;
+  color: var(--admin-text-primary);
 }
 
 .form-row {
@@ -16,6 +22,7 @@
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
+  color: var(--admin-text-secondary);
 }
 
 .full-width {

@@ -75,6 +75,7 @@ export class AdminSettingComponent implements OnInit {
     // Subscribe to theme changes
     this.themeService.darkMode$.subscribe(isDarkMode => {
       this.darkModeEnabled = isDarkMode;
+      this.cdr.detectChanges();
     });
 
     // Subscribe to user changes

@@ -19,6 +19,9 @@
   transition: transform 0.3s ease;
   height: 100%;
   margin-bottom: 16px;
+  background-color: var(--admin-bg-tertiary);
+  border: 1px solid var(--admin-border);
+  color: var(--admin-text-primary);
 }
 
 .stats-card:hover {
@@ -61,23 +64,23 @@
 }
 
 .stats-icon.primary {
-  background-color: rgba(78, 115, 223, 0.15);
-  color: #4e73df;
+  background-color: var(--admin-icon-bg-primary);
+  color: var(--admin-icon-color-primary);
 }
 
 .stats-icon.success {
-  background-color: rgba(28, 200, 138, 0.15);
-  color: #1cc88a;
+  background-color: var(--admin-icon-bg-success);
+  color: var(--admin-success);
 }
 
 .stats-icon.warning {
-  background-color: rgba(246, 194, 62, 0.15);
-  color: #f6c23e;
+  background-color: var(--admin-icon-bg-warning);
+  color: var(--admin-warning);
 }
 
 .stats-icon.error {
-  background-color: rgba(231, 74, 59, 0.15);
-  color: #e74a3b;
+  background-color: var(--admin-icon-bg-error);
+  color: var(--admin-error);
 }
 
 :host ::ng-deep .ant-statistic-title {
@@ -114,7 +117,7 @@
 }
 
 .trend-period {
-  color: #858796;
+  color: var(--admin-text-tertiary);
 }
 
 /* Bộ lọc khoảng thời gian */
@@ -122,16 +125,17 @@
   display: flex;
   align-items: center;
   margin-bottom: 24px;
-  background-color: #f9f9f9;
+  background-color: var(--admin-bg-secondary);
   padding: 16px;
   border-radius: 8px;
   box-shadow: 0 0 5px rgba(0,0,0,0.05);
+  border: 1px solid var(--admin-border);
 }
 
 .filter-label {
   margin-right: 16px;
   font-weight: 500;
-  color: #484848;
+  color: var(--admin-text-primary);
 }
 
 :host ::ng-deep .ant-radio-button-wrapper {
@@ -142,14 +146,15 @@
 /* Thông báo lỗi */
 .error-card {
   margin-bottom: 24px;
-  background-color: #fff8f8;
-  border-left: 4px solid #e74a3b;
+  background-color: var(--admin-error-bg);
+  border-left: 4px solid var(--admin-error);
+  border: 1px solid var(--admin-border);
 }
 
 .error-message {
   display: flex;
   align-items: center;
-  color: #e74a3b;
+  color: var(--admin-error);
 }
 
 .error-message i {
@@ -162,12 +167,16 @@
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0,0,0,0.05);
   margin-bottom: 24px;
+  background-color: var(--admin-bg-tertiary);
+  border: 1px solid var(--admin-border);
+  color: var(--admin-text-primary);
 }
 
 .chart-title {
   font-size: 18px;
   font-weight: 500;
   margin-bottom: 16px;
+  color: var(--admin-text-primary);
 }
 
 .chart-container {

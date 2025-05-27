@@ -35,6 +35,9 @@
   /* Icon Colors */
   --admin-icon-bg-primary: #e0e7ff;
   --admin-icon-color-primary: #4f46e5;
+  --admin-icon-bg-success: rgba(28, 200, 138, 0.15);
+  --admin-icon-bg-warning: rgba(246, 194, 62, 0.15);
+  --admin-icon-bg-error: rgba(231, 74, 59, 0.15);
 
   /* Form Colors */
   --admin-input-bg: #ffffff;
@@ -104,6 +107,9 @@
   /* Icon Colors */
   --admin-icon-bg-primary: #312e81;
   --admin-icon-color-primary: #6366f1;
+  --admin-icon-bg-success: rgba(16, 185, 129, 0.15);
+  --admin-icon-bg-warning: rgba(245, 158, 11, 0.15);
+  --admin-icon-bg-error: rgba(239, 68, 68, 0.15);
 
   /* Form Colors */
   --admin-input-bg: #1f2937;
