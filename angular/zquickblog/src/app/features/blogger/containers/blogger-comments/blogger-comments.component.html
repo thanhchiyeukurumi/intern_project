@@ -9,7 +9,7 @@
       [(ngModel)]="selectedPostId"
       (ngModelChange)="onPostFilterChange($event)"
       nzAllowClear>
-      <nz-option nzValue="null" nzLabel="Tất cả bài viết"></nz-option>
+      <nz-option [nzValue]="null" nzLabel="Tất cả bài viết"></nz-option>
       <nz-option *ngFor="let post of userPosts" [nzValue]="post.id" [nzLabel]="post.title"></nz-option>
     </nz-select>
 

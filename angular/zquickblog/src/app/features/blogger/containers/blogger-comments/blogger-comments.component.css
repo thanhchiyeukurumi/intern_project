@@ -21,9 +21,21 @@
   gap: 12px;
 }
 
-.page-header .action-area .search-box {
-  width: 280px;
-  transition: all 0.3s ease;
+.page-header .action-area .search-container {
+  display: flex;
+  align-items: center;
+}
+
+.page-header .action-area .search-container .search-box {
+  flex: 1;
+  margin-right: 8px;
+}
+
+.page-header .action-area .search-container button {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Style cho dropdown filter bài viết */
@@ -43,7 +55,7 @@
     flex-wrap: wrap;
   }
   
-  .page-header .action-area .search-box,
+  .page-header .action-area .search-container .search-box,
   .page-header .action-area .post-filter {
     width: 100%;
   }

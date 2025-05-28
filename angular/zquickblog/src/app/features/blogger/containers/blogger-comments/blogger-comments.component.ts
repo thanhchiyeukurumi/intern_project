@@ -230,12 +230,19 @@ export class BloggerCommentsComponent implements OnInit {
 
     // Nếu đã chọn bài viết cụ thể, chỉ lấy bình luận của bài viết đó
     if (this.selectedPostId) {
-        this.commentService.getByPost(this.selectedPostId, {
+        const params: any = {
             page: this.pageIndex,
             limit: this.pageSize,
             orderBy: 'createdAt',
             order: 'DESC'
-        }).subscribe({
+        };
+        
+        // Thêm tham số search nếu có giá trị tìm kiếm
+        if (this.searchValue && this.searchValue.trim() !== '') {
+            params.search = this.searchValue.trim();
+        }
+        
+        this.commentService.getByPost(this.selectedPostId, params).subscribe({
             next: (res) => {
                 this.displayComments = res.data || [];
                 this.total = res.pagination?.total || 0;
@@ -248,78 +255,32 @@ export class BloggerCommentsComponent implements OnInit {
                 this.displayComments = [];
                 this.total = 0;
                 this.loading = false;
-                if (err.status === 401 || err.status === 403) {
-                    this.router.navigate(['/login']);
-                }
-            }
-        });
-        return;
-    }
-
-    // Xử lý tương tự như trong ngOnInit nếu không có bài viết cụ thể được chọn
-    if (this.userPosts.length <= 5) {
-        const commentRequests = this.userPosts.map(post => 
-            this.commentService.getByPost(post.id, {
-                page: this.pageIndex,
-                limit: this.pageSize,
-                orderBy: 'createdAt',
-                order: 'DESC'
-            })
-        );
-        
-        forkJoin(commentRequests).pipe(
-            switchMap(responses => {
-                const allComments: Comment[] = [];
-                
-                responses.forEach(response => {
-                    allComments.push(...(response.data || []));
-                });
-                
-                // Sắp xếp lại theo thời gian
-                allComments.sort((a, b) => 
-                    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-                );
-                
-                // Giả lập phân trang
-                const start = (this.pageIndex - 1) * this.pageSize;
-                const paginatedComments = allComments.slice(start, start + this.pageSize);
-                
-                return of({
-                    data: paginatedComments,
-                    pagination: { total: allComments.length }
-                });
-            })
-        ).subscribe({
-            next: (res) => {
-                this.displayComments = res.data || [];
-                this.total = res.pagination?.total || 0;
-                this.loading = false;
-            },
-            error: (err) => {
-                console.error("Error fetching comments:", err);
-                const errorMessage = err?.error?.message || err?.message || "Failed to load comments.";
-                this.message.error(errorMessage);
-                this.displayComments = [];
-                this.total = 0;
-                this.loading = false;
-                if (err.status === 401 || err.status === 403) {
-                    this.router.navigate(['/login']);
-                }
             }
         });
     } else {
-        // Xử lý tương tự như trên với 5 bài viết mới nhất
+        // Logic lấy bình luận từ tất cả bài viết (giữ nguyên code hiện tại)
+        // Tạo danh sách posts IDs để truy vấn
+        const postIds = this.userPosts.map(post => post.id);
+        
+        // Tạo params với search nếu có
+        const params: any = {
+            page: this.pageIndex,
+            limit: this.pageSize,
+            orderBy: 'createdAt',
+            order: 'DESC'
+        };
+        
+        if (this.searchValue && this.searchValue.trim() !== '') {
+            params.search = this.searchValue.trim();
+        }
+        
+        // Lấy 5 bài viết mới nhất hoặc tất cả nếu ít hơn 5
         const recentPosts = this.userPosts
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
             .slice(0, 5);
-        
+            
         const commentRequests = recentPosts.map(post => 
-            this.commentService.getByPost(post.id, {
-                page: this.pageIndex,
-                limit: this.pageSize,
-                orderBy: 'createdAt',
-                order: 'DESC'
-            })
+            this.commentService.getByPost(post.id, params)
         );
         
         forkJoin(commentRequests).pipe(
@@ -335,7 +296,7 @@ export class BloggerCommentsComponent implements OnInit {
                     new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
                 );
                 
-                // Giả lập phân trang
+                // Giả lập phân trang ở client
                 const start = (this.pageIndex - 1) * this.pageSize;
                 const paginatedComments = allComments.slice(start, start + this.pageSize);
                 
@@ -373,10 +334,15 @@ export class BloggerCommentsComponent implements OnInit {
    * @param value ID của bài viết được chọn
    */
   onPostFilterChange(value: number | null): void {
-    if (value === this.selectedPostId) return; // Tránh fetch lại nếu filter không đổi
-    this.selectedPostId = value;
+    // Kiểm tra giá trị và cập nhật selectedPostId
+    if (value === null) {
+      this.selectedPostId = null;
+    } else {
+      this.selectedPostId = value;
+    }
+    
     this.pageIndex = 1; // Reset về trang 1 khi thay đổi filter
-    this.fetchComments();
+    this.fetchComments(); // Gọi API ngay khi chọn bài viết
   }
 
   // ============================================
@@ -400,15 +366,11 @@ export class BloggerCommentsComponent implements OnInit {
   // ============================================
   onSearch(): void {
     // Trim whitespace from search value
-    const trimmedSearch = this.searchValue.trim();
-    // Nếu API getByUser/comments có search param
-    // Cập nhật searchValue (nếu dùng cho API) hoặc chỉ dùng trimmedSearch
-     // TODO: Kiểm tra nếu searchValue trống sau trim, có cần reset không?
-     this.pageIndex = 1; // Reset về trang 1 khi search
-     this.fetchComments(); // Fetch dữ liệu với search param
-    // Nếu search chỉ lọc local:
-    // TODO: Implement local search logic on this.displayComments
-    // this.message.info('Chức năng tìm kiếm bình luận đang được phát triển (cần API hỗ trợ hoặc lọc local).');
+    this.searchValue = this.searchValue.trim();
+    // Reset về trang 1 khi search
+    this.pageIndex = 1;
+    // Gọi API với tham số search
+    this.fetchComments();
   }
 
   // ============================================
