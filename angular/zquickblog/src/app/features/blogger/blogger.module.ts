@@ -1,7 +1,5 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { APP_INITIALIZER } from '@angular/core';
-
+import { NgModule, APP_INITIALIZER, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { BloggerRoutingModule } from './blogger-routing.module';
 import { BloggerLayoutComponent } from './layout/blogger-layout/blogger-layout.component';
 import { BloggerDashboardComponent } from './containers/blogger-dashboard/blogger-dashboard.component';
@@ -11,18 +9,17 @@ import { BloggerSettingsComponent } from './containers/blogger-settings/blogger-
 import { BloggerProfileComponent } from './containers/blogger-profile/blogger-profile.component';
 import { BloggerMediaComponent } from './containers/blogger-media/blogger-media.component';
 import { BloggerPostCreateComponent } from './containers/blogger-post-create/blogger-post-create.component';
+import { BloggerPostEditComponent } from './containers/blogger-post-edit/blogger-post-edit.component';
+import { BloggerNewLanComponent } from './containers/blogger-new-lan/blogger-new-lan.component';
 
-// Kiểm tra môi trường khi khởi tạo module
+// Factory function để kiểm tra nếu đang chạy trong trình duyệt
 export function browserCheckFactory() {
+  const platformId = inject(PLATFORM_ID);
   return () => {
-    // Không làm gì khi ở server, chỉ phục vụ SSR
-    if (typeof window === 'undefined' || typeof document === 'undefined') {
-      console.log('[SSR] Quill editor sẽ được nạp trong môi trường browser');
-      return Promise.resolve();
+    if (!isPlatformBrowser(platformId)) {
+      console.warn('Blogger module requires browser environment for certain features');
     }
-    
-    // Khởi tạo nếu ở browser
-    return Promise.resolve();
+    return true;
   };
 }
 
@@ -38,7 +35,9 @@ export function browserCheckFactory() {
     BloggerSettingsComponent,
     BloggerProfileComponent,
     BloggerMediaComponent,
-    BloggerPostCreateComponent
+    BloggerPostCreateComponent,
+    BloggerPostEditComponent,
+    BloggerNewLanComponent
   ],
   providers: [
     {

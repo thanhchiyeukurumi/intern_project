@@ -318,8 +318,8 @@ export class BloggerPostsComponent implements OnInit, OnDestroy {
   }
 
    addLanguageVariant(originalPostId: number): void {
-      this.router.navigate(['/blogger/posts/create'], { queryParams: { originalPostId } });
-   }
+    this.router.navigate(['/blogger/posts/translate', originalPostId]);
+  }
 
    confirmDeleteLanguageVariant(originalPost: PostForDisplay, translation: Post): void {
         this.modalService.confirm({

@@ -9,6 +9,7 @@ import { BloggerProfileComponent } from './containers/blogger-profile/blogger-pr
 import { BloggerMediaComponent } from './containers/blogger-media/blogger-media.component';
 import { BloggerPostCreateComponent } from './containers/blogger-post-create/blogger-post-create.component';
 import { BloggerPostEditComponent } from './containers/blogger-post-edit/blogger-post-edit.component';
+import { BloggerNewLanComponent } from './containers/blogger-new-lan/blogger-new-lan.component';
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID, inject } from '@angular/core';
 
@@ -35,6 +36,11 @@ const routes: Routes = [
       { 
         path: 'posts/edit/:id', 
         component: BloggerPostEditComponent,
+        canActivate: [browserOnlyGuard]
+      },
+      {
+        path: 'posts/translate/:id',
+        component: BloggerNewLanComponent,
         canActivate: [browserOnlyGuard]
       },
       

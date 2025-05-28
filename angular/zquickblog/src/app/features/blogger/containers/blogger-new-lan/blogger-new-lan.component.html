@@ -1,0 +1,171 @@
+<div class="translation-container">
+  <h1 class="page-title">Tạo bản dịch mới</h1>
+
+  <nz-alert 
+    *ngIf="originalPost"
+    nzType="info" 
+    nzMessage="Đang tạo bản dịch từ bài viết gốc" 
+    [nzDescription]="'Bài viết gốc: ' + originalPost.title + ' (' + originalPost.Language?.name + ')'"
+    nzShowIcon
+    class="mb-4">
+  </nz-alert>
+
+  <div class="loading-container" *ngIf="isLoadingData">
+    <nz-spin nzTip="Đang tải dữ liệu..."></nz-spin>
+  </div>
+
+  <div class="translation-content" *ngIf="!isLoadingData && originalPost">
+    <div nz-row [nzGutter]="16">
+      <!-- Cột trái - Bài viết gốc (chỉ đọc) -->
+      <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" class="original-post-column">
+        <nz-card nzTitle="Bài viết gốc (Chỉ đọc)" class="original-post-card">
+          <h2 class="original-title">{{ originalPost.title }}</h2>
+          
+          <nz-divider></nz-divider>
+          
+          <div class="scroll-container">
+            <!-- Ngôn ngữ -->
+            <div class="meta-info">
+              <span class="meta-label">Ngôn ngữ:</span>
+              <span class="meta-value">{{ originalPost.Language?.name }}</span>
+            </div>
+            
+            <!-- Danh mục -->
+            <div class="meta-info">
+              <span class="meta-label">Danh mục:</span>
+              <span class="meta-value">
+                <nz-tag *ngFor="let category of originalPost.Categories">{{ category.name }}</nz-tag>
+              </span>
+            </div>
+            
+            <!-- Mô tả -->
+            <div class="description-box">
+              <h3>Mô tả</h3>
+              <div class="description-content">{{ originalPost.description }}</div>
+            </div>
+            
+            <!-- Nội dung -->
+            <div class="content-box">
+              <h3>Nội dung</h3>
+              <div class="content-preview" [innerHTML]="originalPost.content"></div>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+
+      <!-- Cột phải - Form nhập bản dịch -->
+      <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" class="translation-form-column">
+        <nz-card nzTitle="Bản dịch mới" class="translation-form-card">
+          <form [formGroup]="translationForm" (ngSubmit)="submitTranslation()">
+            <!-- ID bài viết gốc (ẩn) -->
+            <nz-form-item *ngIf="translationForm.get('original_post_id')?.value">
+              <nz-form-label [nzSpan]="24">Bài viết gốc ID</nz-form-label>
+              <nz-form-control [nzSpan]="24">
+                <input nz-input formControlName="original_post_id" readonly />
+              </nz-form-control>
+            </nz-form-item>
+
+            <div class="scroll-container">
+              <!-- Tiêu đề -->
+              <nz-form-item>
+                <nz-form-label [nzSpan]="24" nzRequired>Tiêu đề</nz-form-label>
+                <nz-form-control [nzSpan]="24" [nzErrorTip]="titleErrorTpl">
+                  <input nz-input formControlName="title" placeholder="Nhập tiêu đề bản dịch" />
+                </nz-form-control>
+                <ng-template #titleErrorTpl let-control>
+                  <ng-container *ngIf="control.hasError('required')">Vui lòng nhập tiêu đề.</ng-container>
+                  <ng-container *ngIf="control.hasError('minlength')">Tiêu đề phải có ít nhất 5 ký tự.</ng-container>
+                  <ng-container *ngIf="control.hasError('maxlength')">Tiêu đề không được vượt quá 200 ký tự.</ng-container>
+                </ng-template>
+              </nz-form-item>
+
+              <!-- Ngôn ngữ -->
+              <nz-form-item>
+                <nz-form-label [nzSpan]="24" nzRequired>Ngôn ngữ</nz-form-label>
+                <nz-form-control [nzSpan]="24" nzErrorTip="Vui lòng chọn ngôn ngữ">
+                  <nz-select
+                    formControlName="language_id"
+                    nzPlaceHolder="Chọn ngôn ngữ cho bản dịch">
+                    <nz-option
+                      *ngFor="let lang of languagesForSelect"
+                      [nzLabel]="lang.label"
+                      [nzValue]="lang.value"
+                      [nzDisabled]="isLanguageUsed(+lang.value)">
+                    </nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+
+              <!-- Danh mục -->
+              <nz-form-item>
+                <nz-form-label [nzSpan]="24" nzRequired>Danh mục</nz-form-label>
+                <nz-form-control [nzSpan]="24" nzErrorTip="Vui lòng chọn ít nhất một danh mục">
+                  <nz-select
+                    formControlName="categories"
+                    nzMode="multiple"
+                    nzPlaceHolder="Chọn danh mục">
+                    <nz-option
+                      *ngFor="let category of categoriesForSelect"
+                      [nzLabel]="category.label"
+                      [nzValue]="category.value">
+                    </nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+
+              <!-- Mô tả -->
+              <nz-form-item>
+                <nz-form-label [nzSpan]="24" nzRequired>Mô tả / Tóm tắt</nz-form-label>
+                <nz-form-control [nzSpan]="24" [nzErrorTip]="descriptionErrorTpl">
+                  <textarea
+                    nz-input
+                    formControlName="description"
+                    placeholder="Nhập mô tả ngắn hoặc tóm tắt cho bản dịch"
+                    [nzAutosize]="{ minRows: 3, maxRows: 6 }">
+                  </textarea>
+                </nz-form-control>
+                <ng-template #descriptionErrorTpl let-control>
+                  <ng-container *ngIf="control.hasError('required')">Vui lòng nhập mô tả/tóm tắt.</ng-container>
+                  <ng-container *ngIf="control.hasError('minlength')">Mô tả phải có ít nhất 10 ký tự.</ng-container>
+                  <ng-container *ngIf="control.hasError('maxlength')">Mô tả không được vượt quá 500 ký tự.</ng-container>
+                </ng-template>
+              </nz-form-item>
+
+              <!-- Nội dung -->
+              <nz-form-item>
+                <nz-form-label [nzSpan]="24" nzRequired>Nội dung</nz-form-label>
+                <nz-form-control [nzSpan]="24" nzErrorTip="Vui lòng nhập nội dung bản dịch">
+                  <app-quill-editor
+                    #translationEditor
+                    formControlName="content"
+                    [placeholder]="'Bắt đầu viết nội dung của bản dịch...'"
+                    [minHeight]="'400px'"
+                    (editorCreated)="handleEditorCreated($event)">
+                  </app-quill-editor>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <!-- Nút submit -->
+            <div class="action-buttons">
+              <button
+                nz-button
+                nzType="default"
+                (click)="router.navigate(['/blogger/posts'])"
+                [disabled]="isSubmitting">
+                Hủy bỏ
+              </button>
+              <button
+                nz-button
+                nzType="primary"
+                type="submit"
+                [nzLoading]="isSubmitting">
+                {{ isSubmitting ? 'Đang xử lý...' : 'Tạo bản dịch' }}
+              </button>
+            </div>
+          </form>
+        </nz-card>
+      </div>
+    </div>
+  </div>
+</div> 
