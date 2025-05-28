@@ -56,11 +56,15 @@ nz-header {
   padding: 15px;
 }
 
-.user-profile-dropdown {
-  margin-right: 24px;
-  cursor: pointer;
+.header-right {
   display: flex;
-  justify-content: end;
+  align-items: center;
+  height: 100%;
+  padding-right: 20px;
+}
+
+.user-profile-dropdown {
+  cursor: pointer;
   
   a {
     display: flex;
@@ -70,6 +74,15 @@ nz-header {
   .username {
     margin: 0 8px;
     font-size: 14px;
+  }
+
+  nz-avatar {
+    margin-right: 4px;
+  }
+
+  [nz-icon] {
+    font-size: 12px;
+    margin-left: 4px;
   }
 }
 

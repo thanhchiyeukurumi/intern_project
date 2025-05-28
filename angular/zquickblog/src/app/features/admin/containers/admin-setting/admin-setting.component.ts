@@ -70,13 +70,13 @@ export class AdminSettingComponent implements OnInit {
     this.loadCurrentUser();
     
     // Initialize dark mode state from ThemeService
-    this.darkModeEnabled = this.themeService.isDarkMode();
+    // this.darkModeEnabled = this.themeService.isDarkMode();
     
     // Subscribe to theme changes
-    this.themeService.darkMode$.subscribe(isDarkMode => {
-      this.darkModeEnabled = isDarkMode;
-      this.cdr.detectChanges();
-    });
+    // this.themeService.darkMode$.subscribe(isDarkMode => {
+    //   this.darkModeEnabled = isDarkMode;
+    //   this.cdr.detectChanges();
+    // });
 
     // Subscribe to user changes
     this.authService.currentUser$.subscribe(user => {

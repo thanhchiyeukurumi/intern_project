@@ -22,7 +22,7 @@ const routes: Routes = [
     path: '',
     component: BloggerLayoutComponent,
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: '', redirectTo: 'posts', pathMatch: 'full' },
       { path: 'dashboard', component: BloggerDashboardComponent },
       
       // Quản lý bài viết

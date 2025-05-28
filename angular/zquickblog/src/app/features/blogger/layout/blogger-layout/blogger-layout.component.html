@@ -12,12 +12,12 @@
       </a>
     </div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-menu-item nzMatchRouter>
+      <!-- <li nz-menu-item nzMatchRouter>
         <a routerLink="/blogger/dashboard">
           <span nz-icon nzType="dashboard"></span>
           <span>Dashboard</span>
         </a>
-      </li>
+      </li> -->
       <li nz-menu-item nzMatchRouter>
         <a routerLink="/blogger/posts">
           <span nz-icon nzType="file-text"></span>
@@ -56,35 +56,37 @@
         <span class="trigger-icon" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" 
               (click)="toggleCollapsed()"></span>
       </div>
-      <div class="header-rightuser-profile-dropdown">
-        <a nz-dropdown [nzDropdownMenu]="menu">
-          <nz-avatar [nzSrc]="avatarUrl" nzSize="small"></nz-avatar>
-          <span class="username" *ngIf="fullname">{{ fullname }}</span>
-          <span class="username" *ngIf="!fullname">{{ username }}</span>
-          <span nz-icon nzType="down"></span>
-        </a>
-        <nz-dropdown-menu #menu="nzDropdownMenu">
-          <ul nz-menu>
-            <li nz-menu-item routerLink="/blogger/profile">
-              <span nz-icon nzType="user" nzTheme="outline"></span>
-              Chỉnh sửa hồ sơ
-            </li>
-            <li nz-menu-item routerLink="/blogger/settings">
-              <span nz-icon nzType="setting" nzTheme="outline"></span>
-              Cài đặt
-            </li>
-            <li nz-menu-divider></li>
-            <li nz-menu-item (click)="toggleTheme()">
-              <span nz-icon [nzType]="isDarkMode ? 'bulb' : 'bulb'" nzTheme="outline"></span>
-              {{ isDarkMode ? 'Chế độ sáng' : 'Chế độ tối' }}
-            </li>
-            <li nz-menu-divider></li>
-            <li nz-menu-item (click)="logout()">
-              <span nz-icon nzType="logout" nzTheme="outline"></span>
-              Đăng xuất
-            </li>
-          </ul>
-        </nz-dropdown-menu>
+      <div class="header-right">
+        <div class="user-profile-dropdown">
+          <a nz-dropdown [nzDropdownMenu]="menu">
+            <nz-avatar [nzSrc]="avatarUrl" nzSize="small"></nz-avatar>
+            <span class="username" *ngIf="fullname">{{ fullname }}</span>
+            <span class="username" *ngIf="!fullname">{{ username }}</span>
+            <span nz-icon nzType="down"></span>
+          </a>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item routerLink="/blogger/profile">
+                <span nz-icon nzType="user" nzTheme="outline"></span>
+                Chỉnh sửa hồ sơ
+              </li>
+              <li nz-menu-item routerLink="/blogger/settings">
+                <span nz-icon nzType="setting" nzTheme="outline"></span>
+                Cài đặt
+              </li>
+              <li nz-menu-divider></li>
+              <li nz-menu-item (click)="toggleTheme()">
+                <span nz-icon [nzType]="isDarkMode ? 'bulb' : 'bulb'" nzTheme="outline"></span>
+                {{ isDarkMode ? 'Chế độ sáng' : 'Chế độ tối' }}
+              </li>
+              <li nz-menu-divider></li>
+              <li nz-menu-item (click)="logout()">
+                <span nz-icon nzType="logout" nzTheme="outline"></span>
+                Đăng xuất
+              </li>
+            </ul>
+          </nz-dropdown-menu>
+        </div>
       </div>
     </nz-header>
     <nz-content>
