@@ -1,0 +1,167 @@
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Đăng ký tài khoản mới
+      description: Đăng ký tài khoản người dùng mới
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - email
+                - password
+              properties:
+                username:
+                  type: string
+                  description: Tên đăng nhập
+                email:
+                  type: string
+                  format: email
+                  description: Email đăng ký
+                password:
+                  type: string
+                  format: password
+                  description: Mật khẩu
+                fullName:
+                  type: string
+                  description: Tên đầy đủ
+      responses:
+        '201':
+          description: Tạo tài khoản thành công
+        '400':
+          description: Dữ liệu không hợp lệ
+        '409':
+          description: Email hoặc tên đăng nhập đã tồn tại
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Đăng nhập
+      description: Đăng nhập vào hệ thống
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: Email đăng nhập
+                password:
+                  type: string
+                  format: password
+                  description: Mật khẩu
+      responses:
+        '200':
+          description: Đăng nhập thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: string
+                  user:
+                    type: object
+        '401':
+          description: Thông tin đăng nhập không chính xác
+
+  /auth/refresh-token:
+    post:
+      tags:
+        - Authentication
+      summary: Làm mới access token
+      description: Sử dụng refresh token để lấy access token mới
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: Token được làm mới thành công
+        '401':
+          description: Refresh token không hợp lệ
+
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Đăng xuất
+      description: Đăng xuất khỏi hệ thống
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Đăng xuất thành công
+        '401':
+          description: Token không hợp lệ
+
+  /auth/me:
+    get:
+      tags:
+        - Authentication
+      summary: Lấy thông tin người dùng hiện tại
+      description: Lấy thông tin chi tiết của người dùng đang đăng nhập
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Thông tin người dùng
+        '401':
+          description: Token không hợp lệ
+
+  /auth/verify-token:
+    get:
+      tags:
+        - Authentication
+      summary: Xác thực token
+      description: Kiểm tra tính hợp lệ của token
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Token hợp lệ
+        '401':
+          description: Token không hợp lệ
+
+  /auth/google:
+    get:
+      tags:
+        - Authentication
+      summary: Google OAuth
+      description: Chuyển hướng đến trang đăng nhập Google
+      responses:
+        '302':
+          description: Chuyển hướng đến Google
+
+  /auth/google/callback:
+    get:
+      tags:
+        - Authentication
+      summary: Google OAuth callback
+      description: URL callback sau khi xác thực Google
+      responses:
+        '200':
+          description: Xác thực thành công
+        '401':
+          description: Xác thực thất bại 

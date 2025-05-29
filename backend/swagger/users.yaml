@@ -1,0 +1,263 @@
+paths:
+  /user:
+    get:
+      tags:
+        - Users
+      summary: Lấy danh sách người dùng
+      description: Lấy danh sách tất cả người dùng trong hệ thống
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Danh sách người dùng
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        username:
+                          type: string
+                        email:
+                          type: string
+                        fullName:
+                          type: string
+                        avatar:
+                          type: string
+                        role:
+                          type: string
+                        isActive:
+                          type: boolean
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                  status:
+                    type: integer
+                  message:
+                    type: string
+    post:
+      tags:
+        - Users
+      summary: Tạo người dùng mới
+      description: Tạo người dùng mới (yêu cầu quyền admin)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - email
+                - password
+              properties:
+                username:
+                  type: string
+                  description: Tên đăng nhập
+                email:
+                  type: string
+                  format: email
+                  description: Email
+                password:
+                  type: string
+                  format: password
+                  description: Mật khẩu
+                fullName:
+                  type: string
+                  description: Tên đầy đủ
+                role:
+                  type: string
+                  enum: [user, blogger, admin]
+                  description: Vai trò
+                isActive:
+                  type: boolean
+                  description: Trạng thái kích hoạt
+      responses:
+        '201':
+          description: Tạo người dùng thành công
+        '400':
+          description: Dữ liệu không hợp lệ
+        '401':
+          description: Không có quyền truy cập
+        '409':
+          description: Email hoặc tên đăng nhập đã tồn tại
+
+  /user/{id}:
+    get:
+      tags:
+        - Users
+      summary: Lấy thông tin người dùng
+      description: Lấy thông tin chi tiết của người dùng theo ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID của người dùng
+      responses:
+        '200':
+          description: Thông tin người dùng
+        '404':
+          description: Không tìm thấy người dùng
+    put:
+      tags:
+        - Users
+      summary: Cập nhật người dùng
+      description: Cập nhật thông tin người dùng (yêu cầu quyền admin hoặc chủ sở hữu)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID của người dùng
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Tên đăng nhập
+                email:
+                  type: string
+                  format: email
+                  description: Email
+                fullName:
+                  type: string
+                  description: Tên đầy đủ
+                role:
+                  type: string
+                  enum: [user, blogger, admin]
+                  description: Vai trò (chỉ admin mới có thể thay đổi)
+                isActive:
+                  type: boolean
+                  description: Trạng thái kích hoạt (chỉ admin mới có thể thay đổi)
+      responses:
+        '200':
+          description: Cập nhật thành công
+        '400':
+          description: Dữ liệu không hợp lệ
+        '401':
+          description: Không có quyền truy cập
+        '404':
+          description: Không tìm thấy người dùng
+        '409':
+          description: Email hoặc tên đăng nhập đã tồn tại
+    delete:
+      tags:
+        - Users
+      summary: Xóa người dùng
+      description: Xóa người dùng khỏi hệ thống (yêu cầu quyền admin hoặc chủ sở hữu)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID của người dùng
+      responses:
+        '200':
+          description: Xóa thành công
+        '401':
+          description: Không có quyền truy cập
+        '404':
+          description: Không tìm thấy người dùng
+
+  /user/{userId}/comments:
+    get:
+      tags:
+        - Users
+        - Comments
+      summary: Lấy bình luận theo người dùng
+      description: Lấy danh sách bình luận của người dùng
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID của người dùng
+      responses:
+        '200':
+          description: Danh sách bình luận của người dùng
+        '404':
+          description: Không tìm thấy người dùng
+
+  /user/stats/date-range:
+    get:
+      tags:
+        - Users
+        - Statistics
+      summary: Thống kê người dùng theo khoảng thời gian
+      description: Lấy thống kê người dùng trong khoảng thời gian (yêu cầu quyền admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Ngày bắt đầu (YYYY-MM-DD)
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Ngày kết thúc (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Dữ liệu thống kê
+        '401':
+          description: Không có quyền truy cập
+
+  /user/stats/dashboard:
+    get:
+      tags:
+        - Users
+        - Statistics
+      summary: Thống kê tổng quan người dùng
+      description: Lấy thống kê tổng quan về người dùng (yêu cầu quyền admin)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Dữ liệu thống kê
+        '401':
+          description: Không có quyền truy cập
+
+  /user/stats/top-contributors:
+    get:
+      tags:
+        - Users
+        - Statistics
+      summary: Danh sách người dùng đóng góp nhiều nhất
+      description: Lấy danh sách người dùng đóng góp nhiều nhất (yêu cầu quyền admin)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Danh sách người dùng đóng góp nhiều nhất
+        '401':
+          description: Không có quyền truy cập 

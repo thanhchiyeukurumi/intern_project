@@ -1,0 +1,155 @@
+paths:
+  /categories:
+    get:
+      tags:
+        - Categories
+      summary: Lấy danh sách danh mục
+      description: Lấy danh sách tất cả danh mục trong hệ thống
+      responses:
+        '200':
+          description: Danh sách danh mục
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        slug:
+                          type: string
+                        description:
+                          type: string
+                        isActive:
+                          type: boolean
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                  status:
+                    type: integer
+                  message:
+                    type: string
+    post:
+      tags:
+        - Categories
+      summary: Thêm danh mục mới
+      description: Thêm danh mục mới vào hệ thống (yêu cầu quyền admin)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  description: Tên danh mục
+                description:
+                  type: string
+                  description: Mô tả danh mục
+                isActive:
+                  type: boolean
+                  description: Trạng thái kích hoạt
+      responses:
+        '201':
+          description: Tạo danh mục thành công
+        '400':
+          description: Dữ liệu không hợp lệ
+        '401':
+          description: Không có quyền truy cập
+        '409':
+          description: Danh mục đã tồn tại
+
+  /categories/{id}:
+    get:
+      tags:
+        - Categories
+      summary: Lấy thông tin danh mục
+      description: Lấy thông tin chi tiết của danh mục theo ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID của danh mục
+      responses:
+        '200':
+          description: Thông tin danh mục
+        '404':
+          description: Không tìm thấy danh mục
+    put:
+      tags:
+        - Categories
+      summary: Cập nhật danh mục
+      description: Cập nhật thông tin danh mục (yêu cầu quyền admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID của danh mục
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Tên danh mục
+                description:
+                  type: string
+                  description: Mô tả danh mục
+                isActive:
+                  type: boolean
+                  description: Trạng thái kích hoạt
+      responses:
+        '200':
+          description: Cập nhật thành công
+        '400':
+          description: Dữ liệu không hợp lệ
+        '401':
+          description: Không có quyền truy cập
+        '404':
+          description: Không tìm thấy danh mục
+    delete:
+      tags:
+        - Categories
+      summary: Xóa danh mục
+      description: Xóa danh mục khỏi hệ thống (yêu cầu quyền admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID của danh mục
+      responses:
+        '200':
+          description: Xóa thành công
+        '401':
+          description: Không có quyền truy cập
+        '404':
+          description: Không tìm thấy danh mục 

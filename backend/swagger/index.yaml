@@ -1,0 +1,165 @@
+openapi: 3.0.0
+info:
+  title: Blog API
+  description: API cho hệ thống blog
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local Development Server
+
+tags:
+  - name: Authentication
+    description: Quản lý xác thực người dùng
+  - name: Languages
+    description: Quản lý ngôn ngữ hệ thống
+  - name: Categories
+    description: Quản lý danh mục bài viết
+  - name: Users
+    description: Quản lý người dùng
+  - name: Posts
+    description: Quản lý bài viết
+  - name: Comments
+    description: Quản lý bình luận
+  - name: Uploads
+    description: Quản lý upload file
+  - name: Statistics
+    description: Thống kê hệ thống
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+        fullName:
+          type: string
+        avatar:
+          type: string
+        role:
+          type: string
+          enum: [user, blogger, admin]
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        slug:
+          type: string
+        content:
+          type: string
+        thumbnail:
+          type: string
+        status:
+          type: string
+          enum: [draft, published, archived]
+        userId:
+          type: integer
+        categoryId:
+          type: integer
+        languageId:
+          type: integer
+        originalPostId:
+          type: integer
+        viewCount:
+          type: integer
+        commentCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        userId:
+          type: integer
+        postId:
+          type: integer
+        parentId:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Language:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        code:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          type: integer
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string 

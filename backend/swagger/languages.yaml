@@ -1,0 +1,154 @@
+paths:
+  /languages:
+    get:
+      tags:
+        - Languages
+      summary: Lấy danh sách ngôn ngữ
+      description: Lấy danh sách tất cả ngôn ngữ trong hệ thống
+      responses:
+        '200':
+          description: Danh sách ngôn ngữ
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        code:
+                          type: string
+                        isActive:
+                          type: boolean
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                  status:
+                    type: integer
+                  message:
+                    type: string
+    post:
+      tags:
+        - Languages
+      summary: Thêm ngôn ngữ mới
+      description: Thêm ngôn ngữ mới vào hệ thống (yêu cầu quyền admin)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - code
+              properties:
+                name:
+                  type: string
+                  description: Tên ngôn ngữ
+                code:
+                  type: string
+                  description: Mã ngôn ngữ (ví dụ: vi, en)
+                isActive:
+                  type: boolean
+                  description: Trạng thái kích hoạt
+      responses:
+        '201':
+          description: Tạo ngôn ngữ thành công
+        '400':
+          description: Dữ liệu không hợp lệ
+        '401':
+          description: Không có quyền truy cập
+        '409':
+          description: Ngôn ngữ đã tồn tại
+
+  /languages/{id}:
+    get:
+      tags:
+        - Languages
+      summary: Lấy thông tin ngôn ngữ
+      description: Lấy thông tin chi tiết của ngôn ngữ theo ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID của ngôn ngữ
+      responses:
+        '200':
+          description: Thông tin ngôn ngữ
+        '404':
+          description: Không tìm thấy ngôn ngữ
+    put:
+      tags:
+        - Languages
+      summary: Cập nhật ngôn ngữ
+      description: Cập nhật thông tin ngôn ngữ (yêu cầu quyền admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID của ngôn ngữ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Tên ngôn ngữ
+                code:
+                  type: string
+                  description: Mã ngôn ngữ (ví dụ: vi, en)
+                isActive:
+                  type: boolean
+                  description: Trạng thái kích hoạt
+      responses:
+        '200':
+          description: Cập nhật thành công
+        '400':
+          description: Dữ liệu không hợp lệ
+        '401':
+          description: Không có quyền truy cập
+        '404':
+          description: Không tìm thấy ngôn ngữ
+    delete:
+      tags:
+        - Languages
+      summary: Xóa ngôn ngữ
+      description: Xóa ngôn ngữ khỏi hệ thống (yêu cầu quyền admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID của ngôn ngữ
+      responses:
+        '200':
+          description: Xóa thành công
+        '401':
+          description: Không có quyền truy cập
+        '404':
+          description: Không tìm thấy ngôn ngữ 

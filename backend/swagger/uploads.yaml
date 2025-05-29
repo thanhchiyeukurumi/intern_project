@@ -1,0 +1,165 @@
+paths:
+  /uploads/image:
+    post:
+      tags:
+        - Uploads
+      summary: Upload một ảnh
+      description: Upload một ảnh lên hệ thống
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: File ảnh cần upload
+      responses:
+        '200':
+          description: Upload thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                      publicId:
+                        type: string
+                  status:
+                    type: integer
+                  message:
+                    type: string
+        '400':
+          description: Dữ liệu không hợp lệ
+        '401':
+          description: Không có quyền truy cập
+
+  /uploads/images:
+    post:
+      tags:
+        - Uploads
+      summary: Upload nhiều ảnh
+      description: Upload nhiều ảnh lên hệ thống
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - files
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: Danh sách file ảnh cần upload
+      responses:
+        '200':
+          description: Upload thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                        publicId:
+                          type: string
+                  status:
+                    type: integer
+                  message:
+                    type: string
+        '400':
+          description: Dữ liệu không hợp lệ
+        '401':
+          description: Không có quyền truy cập
+
+  /uploads/editor:
+    post:
+      tags:
+        - Uploads
+      summary: Upload ảnh cho trình soạn thảo
+      description: Upload ảnh từ trình soạn thảo lên hệ thống
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: File ảnh cần upload
+      responses:
+        '200':
+          description: Upload thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  url:
+                    type: string
+                  status:
+                    type: integer
+                  message:
+                    type: string
+        '400':
+          description: Dữ liệu không hợp lệ
+        '401':
+          description: Không có quyền truy cập
+
+  /uploads/{publicId}:
+    delete:
+      tags:
+        - Uploads
+      summary: Xóa file đã upload
+      description: Xóa file đã upload theo publicId
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: publicId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Public ID của file trên Cloudinary
+      responses:
+        '200':
+          description: Xóa thành công
+        '400':
+          description: Dữ liệu không hợp lệ
+        '401':
+          description: Không có quyền truy cập
+        '404':
+          description: Không tìm thấy file 
