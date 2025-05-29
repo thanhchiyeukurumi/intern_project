@@ -143,14 +143,6 @@
   text-align: center;
 }
 
-/* Thông báo lỗi */
-.error-card {
-  margin-bottom: 24px;
-  background-color: var(--admin-error-bg);
-  border-left: 4px solid var(--admin-error);
-  border: 1px solid var(--admin-border);
-}
-
 .error-message {
   display: flex;
   align-items: center;
